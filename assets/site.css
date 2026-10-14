@@ -31,6 +31,9 @@ a:focus-visible, summary:focus-visible { outline: 2px solid rgba(35, 131, 226, 0
 .crumbs { display: flex; align-items: center; min-width: 0; font-size: 14px; line-height: 1.2; }
 .crumb { display: inline-flex; align-items: center; min-width: 0; height: 24px; padding: 0 5px 0 6px; border-radius: var(--r-s); color: var(--text); text-decoration: none; white-space: nowrap; }
 .crumb span { overflow: hidden; text-overflow: ellipsis; }
+/* only the current page shortens when space runs out; the home and Work crumbs stay whole (review 11) */
+.crumb:not(.here) { flex: none; }
+.crumb.here { flex: 0 1 auto; }
 .crumb:hover { background: var(--hover); }
 .crumb-icon { width: 18px; height: 18px; margin-right: 5px; border-radius: var(--r-xs); object-fit: cover; flex: none; }
 .sep { flex: none; width: 6px; text-align: center; font-size: 13px; line-height: 1.2; color: rgb(230, 229, 227); }
@@ -155,6 +158,11 @@ a.ln:hover { opacity: 1; }
   .b-h3 { padding-top: 18.7px; }
   .crumb:not(:first-child), .sep { display: none; }
   .mi { padding: 0 6px; }
+  /* phone: file names wrap instead of being cut, so the English and Russian CV differ (review 11) */
+  .file { height: auto; min-height: 28px; align-items: flex-start; padding-top: 2px; padding-bottom: 2px; }
+  .fname { white-space: normal; overflow-wrap: anywhere; }
+  .ic-file { margin-top: 1px; }
+  .fsize { margin-top: 4px; }
 }
 @media (max-width: 360px) {
   .crumb span { display: none; }
