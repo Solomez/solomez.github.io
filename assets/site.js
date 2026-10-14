@@ -24,3 +24,52 @@
   window.addEventListener('resize', tick);
   tick();
 })();
+
+// D-55: videos play by themselves like moving pictures, without the player bar.
+// They load only near the screen, play only while at least half visible, and pause when scrolled away or the tab
+// is hidden. A tap, a click or Enter/Space pauses and resumes. With reduced motion or data saver on, or when the
+// browser blocks autoplay (iOS Low Power Mode), the video waits with a play mark. Without JS the usual player stays.
+(() => {
+  const vids = [...document.querySelectorAll('.b-video video')];
+  if (!vids.length || !('IntersectionObserver' in window)) return;
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const save = !!(navigator.connection && navigator.connection.saveData);
+  const auto = () => !calm.matches && !save;
+  const fig = (v) => v.closest('.b-video');
+  const stop = (v, on) => fig(v).classList.toggle('stopped', on);
+  const play = (v) => {
+    const p = v.play();
+    if (p && p.catch) p.catch(() => stop(v, true));
+  };
+  const near = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting && e.target.preload !== 'auto') { e.target.preload = 'auto'; near.unobserve(e.target); }
+  }), { rootMargin: '800px 0px' });
+  const seen = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target;
+    v.dataset.seen = e.intersectionRatio >= 0.5 ? '1' : '';
+    if (v.dataset.seen && auto() && !v.dataset.held) play(v);
+    else if (!v.dataset.seen && !v.paused) v.pause();
+  }), { threshold: [0, 0.5, 1] });
+  const toggle = (v) => {
+    if (v.paused) { delete v.dataset.held; if (v.preload !== 'auto') v.preload = 'auto'; play(v); }
+    else { v.dataset.held = '1'; v.pause(); stop(v, true); }
+  };
+  vids.forEach((v) => {
+    v.controls = false;
+    v.removeAttribute('controls');
+    v.muted = true;
+    v.tabIndex = 0;
+    v.setAttribute('aria-label', v.getAttribute('aria-label') + '. Video, plays by itself; press to pause or play.');
+    fig(v).classList.add('auto');
+    if (!auto()) stop(v, true);
+    v.addEventListener('playing', () => stop(v, false));
+    v.addEventListener('click', () => toggle(v));
+    v.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(v); } });
+    near.observe(v);
+    seen.observe(v);
+  });
+  document.addEventListener('visibilitychange', () => vids.forEach((v) => {
+    if (document.hidden) v.pause();
+    else if (v.dataset.seen && auto() && !v.dataset.held) play(v);
+  }));
+})();
