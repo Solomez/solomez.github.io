@@ -1,0 +1,163 @@
+/* site.css: the published Notion page, measured on 2026-10-14 (site/MEASUREMENTS.md), plus the site menu.
+   Desktop numbers are from notion.site at 1440x900; phone numbers from notion.site at 390x844. */
+:root {
+  --text: rgb(44, 44, 43);
+  --muted: rgb(120, 117, 112);   /* Notion: rgb(125, 122, 117) = 4.28:1; 5 steps darker gives 4.6:1 (contrast rule 4.5:1, CHECKLISTS) */
+  --line: rgba(28, 19, 1, 0.11);
+  --link-line: rgba(55, 53, 47, 0.4);
+  --icon: rgb(142, 139, 134);
+  --hover: rgba(55, 53, 47, 0.06);
+  --side: 96px;
+  /* corner radii by size (designer, 2026-10-14): 24 px for the biggest content, smaller for smaller things */
+  --r-l: 16px;   /* text cards (callout) */
+  --r-m: 12px;   /* page photo, outline panel */
+  --r-s: 8px;    /* rows and buttons: menu, page links, file, toggle */
+  --r-xs: 4px;   /* tiny: icon in the top bar, inline code, focus ring */
+  --lh: 24px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 56px; }
+body {
+  margin: 0; background: #fff; color: var(--text);
+  font-family: ui-sans-serif, -apple-system, "system-ui", "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px; line-height: var(--lh);
+  -webkit-tap-highlight-color: transparent;
+}
+img, video { max-width: 100%; }
+a:focus-visible, summary:focus-visible { outline: 2px solid rgba(35, 131, 226, 0.57); outline-offset: 1px; border-radius: var(--r-xs); }
+
+/* top bar: breadcrumbs as on notion.site (icon 18 px at 15,13; text 14 px at x 38), menu instead of Notion's buttons */
+.topbar { position: sticky; top: 0; z-index: 20; height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 10px 0 9px; background: #fff; }
+.crumbs { display: flex; align-items: center; min-width: 0; font-size: 14px; line-height: 1.2; }
+.crumb { display: inline-flex; align-items: center; min-width: 0; height: 24px; padding: 0 5px 0 6px; border-radius: var(--r-s); color: var(--text); text-decoration: none; white-space: nowrap; }
+.crumb span { overflow: hidden; text-overflow: ellipsis; }
+.crumb:hover { background: var(--hover); }
+.crumb-icon { width: 18px; height: 18px; margin-right: 5px; border-radius: var(--r-xs); object-fit: cover; flex: none; }
+.sep { flex: none; width: 6px; text-align: center; font-size: 13px; line-height: 1.2; color: rgb(230, 229, 227); }
+.menu { display: flex; align-items: center; gap: 2px; flex: none; }
+.mi { display: inline-flex; align-items: center; height: 28px; padding: 0 8px; border-radius: var(--r-s); font-size: 14px; line-height: 1.2; color: var(--text); text-decoration: none; white-space: nowrap; }
+.mi:hover, .mi.here { background: var(--hover); }
+
+/* frame: a 720 px column with at least 96 px on each side (Notion's grid) */
+.layout { display: grid; grid-template-columns: minmax(var(--side), 1fr) minmax(auto, 720px) minmax(var(--side), 1fr); }
+.layout > * { grid-column: 2; min-width: 0; }
+.cover { height: 30vh; overflow: hidden; }
+.cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.page-head { position: relative; }
+.controls { padding: 80px 0 4px; }
+.page-head.has-icon .controls { padding: 8px 0 4px; }
+.page-icon { position: relative; height: 60.1px; margin-left: 15.8px; }
+.page-icon img { position: absolute; left: 0; bottom: 8px; width: 124.3px; height: 124.3px; border-radius: var(--r-m); object-fit: cover; }
+.title { margin: 0; padding: 0 8px; font-size: 40px; line-height: 1.2; font-weight: 700; word-break: break-word; }
+.page-content { margin-top: 8px; padding: 8px 0 30vh; }
+
+/* blocks: outer padding per type, text leaf 2 px; lists and page links group with 1 px inside a group */
+.b { position: relative; margin: 0; }
+.leaf { padding: 2px; min-height: calc(var(--lh) + 4px); }
+/* Notion keeps spaces at line ends (break-spaces), so its lines wrap a little earlier than pre-wrap would */
+.leaf, h2, h3, .title, .cap { white-space: break-spaces; word-break: break-word; overflow-wrap: break-word; }
+.b-text { padding: 6px; }
+.b-h2 { padding: 26px 6px 6px; }
+.b-h3 { padding: 22px 6px 6px; }
+h2, h3 { margin: 0; padding: 2px; font-weight: 600; line-height: 1.3; word-break: break-word; }
+h2 { font-size: 24px; }
+h3 { font-size: 20px; }
+strong { font-weight: 600; }
+code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; font-size: 85%; line-height: normal; padding: 0.2em 0.4em; border-radius: var(--r-xs); background: rgba(135, 131, 120, 0.15); color: #eb5757; }
+a.ln { color: inherit; opacity: 0.7; text-decoration: underline; text-decoration-color: var(--link-line); text-decoration-thickness: 0.05em; text-underline-offset: 0.1em; }
+a.ln:hover { opacity: 1; }
+
+/* case cards on the home page and Work: the whole card (cover, title, line) is one link */
+.card { position: relative; }
+.card > .b { position: static; }
+.card h3 a.ln::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.card .b-text a.ln { position: relative; z-index: 2; }
+.card img { transition: filter 0.15s ease; }
+.card:hover h3 a.ln { opacity: 1; }
+.card:hover img { filter: brightness(0.96); }
+.card:has(h3 a.ln:focus-visible) { outline: 2px solid rgba(35, 131, 226, 0.57); outline-offset: 2px; border-radius: 24px; }
+.card:has(h3 a.ln:focus-visible) h3 a.ln { outline: none; }
+
+.b-list, .b-page { padding: 1px 6px; }
+.b-list.first, .b-page.first { padding-top: 6px; }
+.b-list.last, .b-page.last { padding-bottom: 6px; }
+.row { display: flex; padding-left: 2px; }
+.mk { flex: none; width: 24px; display: flex; justify-content: center; padding: 2px 0; }
+.mk-bullet { font-size: 24px; line-height: 24px; height: 28px; align-items: center; }
+.mk-num { font-size: 16px; line-height: var(--lh); }
+.row .leaf { flex: 1; min-width: 0; padding: 2px 0 2px 6px; }
+.kids { padding-left: 26px; }
+
+.b-image, .b-video { padding: 8px; }
+/* pictures and videos: 24 px at the full column (704 px), down to 16 px on a phone; the radius follows the width of the block (container units) */
+.b-image, .b-video { container-type: inline-size; }
+.b-image img, .b-video video { border-radius: clamp(16px, 3.47cqi, 24px); }
+.b-image img { display: block; width: 100%; height: auto; object-fit: cover; }
+.b-video { margin-left: 6px; width: var(--w, auto); max-width: calc(100% - 12px); }
+.b-video video { display: block; width: 100%; height: auto; }
+.cap { padding: 6px 0 6px 2px; font-size: 14px; line-height: 1.4; color: var(--muted); }
+
+.b-divider { padding: 6px 8px; }
+.b-divider div { height: 1px; background: var(--line); }
+
+.b-callout { padding: 8px; }
+.b-callout .box { border: 1px solid var(--line); border-radius: var(--r-l); padding: 12px; }
+
+.b-file { padding: 6px; }
+.file { display: flex; align-items: center; height: 28px; padding-left: 1.8px; border-radius: var(--r-s); color: var(--text); text-decoration: none; }
+.file:hover { background: var(--hover); }
+.ic-file { width: 22px; height: 22px; flex: none; fill: var(--text); }
+.fname { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: -0.2px; }
+.fsize { flex: none; margin-left: 6.8px; font-size: 12px; line-height: 14px; color: var(--muted); }
+
+.b-page .pg { display: flex; align-items: center; height: 28px; padding: 0 2px; border-radius: var(--r-s); color: var(--text); text-decoration: none; }
+.b-page .pg:hover { background: var(--hover); }
+.ic-page { width: 19.8px; height: 19.8px; flex: none; margin: 0 6.1px 0 2.1px; fill: var(--icon); }
+.pg-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; line-height: 1.3; border-bottom: 1px solid var(--line); }
+
+.b-toggle { padding: 6px; }
+.b-toggle > summary { display: flex; padding-left: 2px; list-style: none; cursor: pointer; border-radius: var(--r-s); }
+.b-toggle > summary::-webkit-details-marker { display: none; }
+.b-toggle > summary .mk { height: 28px; align-items: center; padding: 0; }
+.ic-caret { width: 12.8px; height: 12.8px; fill: var(--text); transition: transform 0.2s ease; }
+.b-toggle[open] > summary .ic-caret { transform: rotate(90deg); }
+.b-toggle > summary .leaf { flex: 1; padding: 2px 0 2px 6px; }
+.b-toggle > .kids { padding-left: 26px; }
+
+.b-cols { display: flex; gap: 46px; }
+.b-cols .col { min-width: 0; }
+
+/* Notion's floating outline: 16x2 px dashes, 14 px apart, 20 px from the right edge */
+.toc { position: fixed; right: 8px; top: 146px; z-index: 10; display: none; }
+.toc-dashes { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; padding: 0 12px 0 16px; }
+.toc .d { display: block; width: 16px; height: 2px; border-radius: 2px; background: rgba(55, 53, 47, 0.16); }
+.toc .d.l3 { width: 10px; }
+.toc .d.on { background: var(--text); }
+.toc-panel { position: absolute; right: 8px; top: -12px; width: 240px; max-height: 70vh; overflow: auto; padding: 8px; border-radius: var(--r-m); background: #fff; box-shadow: rgba(15, 15, 15, 0.05) 0 0 0 1px, rgba(15, 15, 15, 0.1) 0 3px 6px, rgba(15, 15, 15, 0.2) 0 9px 24px; opacity: 0; visibility: hidden; transition: opacity 0.12s ease, visibility 0.12s; }
+.toc:hover .toc-panel, .toc:focus-within .toc-panel { opacity: 1; visibility: visible; }
+.toc .t { display: block; padding: 4px 8px; border-radius: var(--r-s); font-size: 14px; line-height: 1.4; color: var(--muted); text-decoration: none; }
+.toc .t.l3 { padding-left: 20px; }
+.toc .t:hover { background: var(--hover); }
+.toc .t.on { color: var(--text); }
+@media (min-width: 1100px) { .toc { display: block; } }
+
+/* phone (notion.site at 390x844): 18 px sides, body line 22 px, title 28 px, cover 200 px */
+@media (max-width: 600px) {
+  :root { --side: 18px; --lh: 22px; }
+  .cover { height: 200px; }
+  .page-head.has-icon .controls { padding-top: 16px; }
+  .page-icon { height: 68.1px; }
+  .page-icon img { bottom: 16px; }
+  .controls { padding-top: 48px; }
+  .title { font-size: 28px; }
+  .b-h2 { padding-top: 20.8px; }
+  .b-h3 { padding-top: 18.7px; }
+  .crumb:not(:first-child), .sep { display: none; }
+  .mi { padding: 0 6px; }
+}
+@media (max-width: 360px) {
+  .crumb span { display: none; }
+  .crumb-icon { margin-right: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .ic-caret, .toc-panel, .card img { transition: none; } }
