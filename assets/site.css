@@ -45,6 +45,7 @@ a:focus-visible, summary:focus-visible { outline: 2px solid rgba(35, 131, 226, 0
 .layout { display: grid; grid-template-columns: minmax(var(--side), 1fr) minmax(auto, 720px) minmax(var(--side), 1fr); }
 .layout > * { grid-column: 2; min-width: 0; }
 .cover { height: 30vh; overflow: hidden; }
+.cover picture { display: block; height: 100%; }
 .cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 .page-head { position: relative; }
