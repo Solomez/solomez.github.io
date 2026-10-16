@@ -1,5 +1,5 @@
 import { h, num, eur, seg, toast, download, humanDate } from '../ui.js';
-import { state, save, targets, IS_ARTIFACT, dropMissing } from '../state.js';
+import { state, save, targets, IS_ARTIFACT, dropMissing, claimAll } from '../state.js';
 import { ACTIVITY, GOALS, DEFAULT_PROFILE } from '../core/nutrition.js';
 import { TOOLS, has, canCook } from '../core/equipment.js';
 import { ACCOUNTS_ENABLED, sendCode, verifyCode, startAccount, signOut, signedIn } from '../account.js';
@@ -131,7 +131,11 @@ function accountCard(rerender) {
         h('p', { class: 'muted', style: { margin: 0 } }, state.sync === 'cloud'
           ? 'План, отметки покупок, запасы дома, ваш список, профиль и настройки одинаковы на всех устройствах, где вы вошли.'
           : 'Подключаю синхронизацию…'),
-        h('button', { class: 'btn ghost', onclick: async () => { await signOut(); acc.step = 'email'; toast('Вы вышли. Данные остались в этом браузере.'); rerender({ keepScroll: true }); } }, 'Выйти'));
+        state.lastSync ? h('p', { class: 'muted', style: { margin: 0 } }, `Последняя сверка с аккаунтом: ${new Date(state.lastSync).toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' })}. Изменения с другого устройства подтягиваются, когда вы возвращаетесь в приложение, и раз в полминуты.`) : null,
+        h('div', { class: 'row' },
+          h('button', { class: 'btn', onclick: async () => { await claimAll(); toast('Данные этого устройства отправлены в аккаунт. На другом устройстве обновятся при следующем открытии.'); draw(); } }, 'Сделать данные этого устройства главными'),
+          h('button', { class: 'btn ghost', onclick: async () => { await signOut(); acc.step = 'email'; toast('Вы вышли. Данные остались в этом браузере.'); rerender({ keepScroll: true }); } }, 'Выйти')),
+        h('p', { class: 'muted small-print', style: { margin: 0 } }, 'Если на двух устройствах были разные планы, остаётся тот, что менялся позже. Не тот? Откройте приложение на нужном устройстве и нажмите «Сделать данные этого устройства главными».'));
       return;
     }
     const email = h('input', { type: 'email', autocomplete: 'email', inputmode: 'email', placeholder: 'you@example.com', value: acc.email, 'aria-label': 'Почта' });

@@ -44,6 +44,10 @@ export const state = {
   account: null, // { email } — вход через Supabase на своём сайте
 };
 
+// У разделов без метки (данные до этого обновления) — время прошлого сохранения на этом устройстве.
+// Фиксируем его сразу: иначе любое следующее сохранение сделало бы «свежими» и все нетронутые разделы.
+for (const k of SECTIONS) if (state.stamps[k] == null) state.stamps[k] = saved.savedAt || 0;
+
 function snapshot() {
   // отметки и замены храним только для текущего плана — иначе запись растёт неделя за неделей
   const only = (m) => (state.plan && m[state.plan.id] ? { [state.plan.id]: m[state.plan.id] } : {});
@@ -95,6 +99,7 @@ async function flushCloud() {
   dirty = false;
   try {
     await backend.push(snapshot());
+    state.lastSync = Date.now();
   } catch (e) {
     if (e?.fatal) { backend = null; state.sync = 'local'; } else dirty = true;
   } finally {
@@ -104,14 +109,17 @@ async function flushCloud() {
 }
 
 // Слияние: по каждому разделу берём более свежую версию. Возвращает true, если что-то пришло с другого устройства.
+// Время изменения раздела; у раздела без метки (старые данные, или раздел не меняли после обновления) —
+// время последнего сохранения на том устройстве
+const stampOf = (d, k) => d?.stamps?.[k] ?? d?.savedAt ?? 0;
+export const localStamp = (k) => stampOf(state, k);
+
 export function mergeRemote(d) {
   if (!d) return false;
-  const rs = d.stamps || {};
   let changed = false;
   for (const k of SECTIONS) {
-    // старые записи без меток разделов: доверяем общему времени сохранения
-    const remoteT = rs[k] ?? (d.stamps ? 0 : d.savedAt || 0);
-    const localT = state.stamps[k] ?? (Object.keys(state.stamps).length ? 0 : state.savedAt || 0);
+    const remoteT = stampOf(d, k);
+    const localT = localStamp(k);
     if (d[k] === undefined || remoteT <= localT) continue;
     state[k] = k === 'profile' ? { ...DEFAULT_PROFILE, ...(d[k] || {}) } : k === 'prefs' ? { ...DEFAULT_PREFS, ...(d[k] || {}) } : d[k];
     state.stamps[k] = remoteT;
@@ -132,9 +140,10 @@ export async function attachBackend(b, onChange) {
   try {
     const remote = await b.pull();
     state.sync = 'cloud';
+    state.lastSync = Date.now();
     const changed = mergeRemote(remote);
     // на сервере нет того, что есть здесь (или здесь новее) — отправляем
-    if (!remote || SECTIONS.some((k) => (state.stamps[k] || 0) > ((remote.stamps || {})[k] || 0))) { dirty = true; flushCloud(); }
+    if (newerHere(remote)) { dirty = true; flushCloud(); }
     onChange(changed);
   } catch (e) {
     backend = null;
@@ -149,7 +158,27 @@ let pulling = false;
 export async function pullNow(onChange) {
   if (!backend || pulling || writing) return;
   pulling = true;
-  try { if (mergeRemote(await backend.pull())) onChange(true); } catch { /* сеть — попробуем позже */ } finally { pulling = false; }
+  try {
+    const remote = await backend.pull();
+    state.lastSync = Date.now();
+    if (mergeRemote(remote)) onChange(true);
+    if (newerHere(remote)) { dirty = true; flushCloud(); } // здесь есть что-то новее, чем на сервере
+  } catch { /* сеть — попробуем позже */ } finally { pulling = false; }
+}
+
+// Есть ли здесь разделы новее, чем на сервере (или на сервере ещё ничего нет)
+function newerHere(remote) {
+  return !remote || SECTIONS.some((k) => localStamp(k) > stampOf(remote, k));
+}
+
+// «Сделать данные этого устройства главными»: все разделы получают текущее время и уходят на сервер
+export function claimAll() {
+  const t = Date.now();
+  for (const k of SECTIONS) { state.stamps[k] = t; prints[k] = printOf(k); }
+  state.savedAt = t;
+  try { localStorage.setItem(KEY, JSON.stringify({ ...snapshot(), libFilters: state.libFilters })); } catch { /* ignore */ }
+  if (backend) { dirty = true; clearTimeout(timer); return flushCloud(); }
+  return Promise.resolve();
 }
 
 export async function connectCloud(onChange) {
