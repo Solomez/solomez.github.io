@@ -51,7 +51,8 @@ export function remainingPlan(plan, now = new Date()) {
       const first = b.slots[0]; // первый приём пищи приготовления — момент готовки
       return !cookPast(plan, first.day, first.meal, now);
     }),
-    extras: (plan.extras || []).filter((x) => !mealPast(plan, x.day, x.meal, now)),
+    // завтрак и перекус тоже: к их времени продукты уже должны быть дома
+    extras: (plan.extras || []).filter((x) => !cookPast(plan, x.day, x.meal, now)),
   };
 }
 

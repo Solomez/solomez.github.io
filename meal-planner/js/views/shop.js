@@ -1,4 +1,4 @@
-import { h, eur, num, sheet, copyText, download, icon, meter } from '../ui.js';
+import { h, eur, num, sheet, copyText, download, icon, meter, plural, selectForCopy } from '../ui.js';
 import { state, save, IS_ARTIFACT } from '../state.js';
 import { buildShoppingList, formatAmount, formatPack, chooseOffer } from '../core/shopping.js';
 import { planTrips, buyAheadDays } from '../core/trips.js';
@@ -46,7 +46,7 @@ export function renderShop(root, rerender) {
   // Прогресс и итог
   root.append(h('section', { class: 'summary' },
     h('div', { class: 'row between' },
-      h('div', null, h('span', { class: 'big' }, eur(list.total)), h('span', { class: 'muted' }, ` · ${list.items.length} позиций`)),
+      h('div', null, h('span', { class: 'big' }, eur(list.total)), h('span', { class: 'muted' }, ` · ${list.items.length} ${plural(list.items.length, 'позиция', 'позиции', 'позиций')}`)),
       h('span', { class: 'muted' }, `куплено ${bought.length} из ${list.items.length}`)),
     meter(boughtSum, list.total || 1, 'progress'),
     h('div', { class: 'store-sums' }, Object.entries(list.byStore).sort((a, b) => b[1].total - a[1].total).map(([s, v]) =>
@@ -124,8 +124,9 @@ export function renderShop(root, rerender) {
 
 function renderTrips(root, { list, listPlan, plan, now, products, checked, toggle, redraw, freezeNote, placeOf }) {
   const need = lastBuyDay(listPlan);
-  // магазины работают примерно до 19:30 — вечером первый поход переносится на завтра
-  const firstDay = todayIndex(plan, now) + (now.getHours() >= 19 ? 1 : 0);
+  // магазины работают примерно до 19:30, в субботу — до 18:00: вечером первый поход переносится на завтра
+  const firstDay = todayIndex(plan, now) + (now.getHours() >= (now.getDay() === 6 ? 17 : 19) ? 1 : 0);
+  const cookDay = firstNeededDay(listPlan);
   const byKey = new Map(list.items.map((i) => [i.key, i]));
   const allowTwo = !!state.prefs.allowTwoStores;
   const altCost = (key, store) => {
@@ -161,7 +162,10 @@ function renderTrips(root, { list, listPlan, plan, now, products, checked, toggl
     root.append(h('ul', { class: 'shop-list' }, t.items.map((ti) => {
       const base = byKey.get(ti.key);
       const it = ti.switchedFrom ? { ...base, offer: chooseOffer({ packs: (products[ti.key].packs || []).filter((p) => p.store === t.store && !p.stale) }, base.needGrams) } : base;
-      const note = ti.switchedFrom ? `Здесь, а не в ${ti.switchedFrom}: ${ti.extra > 0 ? '+' + eur(ti.extra) : 'та же цена'} — зато на один поход меньше.` : null;
+      const note = [
+        ti.lateFor != null ? `Нужно уже ${dayIn(plan, cookDay[ti.key] ?? ti.lateFor)}, а раньше магазины закрыты — проверьте, нет ли дома, или поменяйте блюда местами в плане.` : null,
+        ti.switchedFrom ? `Здесь, а не в ${ti.switchedFrom}: ${ti.extra > 0 ? '+' + eur(ti.extra) : 'та же цена'} — зато на один поход меньше.` : null,
+      ].filter(Boolean).join(' ') || null;
       // купили раньше срока свежести — заморозить и достать накануне
       const frozen = ti.freezeUntil != null
         ? `Купите сейчас и сразу заморозьте; переложите в холодильник ${dayIn(plan, ti.freezeUntil - 1)}, вечером.`
@@ -195,7 +199,7 @@ function renderBasics(root, list, checked, toggle) {
 // «N вариантов в магазинах» и «если нет» под товаром
 function altLinks(product, { pack, needGrams, before } = {}) {
   const nPacks = (product?.packs || []).filter((p) => p.store !== 'любой').length;
-  const hasAlt = pack && pack.store !== 'любой' && (substitutesOf(product.key).length || (product.packs || []).some((p) => p !== pack && p.store === pack.store));
+  const hasAlt = pack && pack.store !== 'любой' && (substitutesOf(product.key).length || (product.packs || []).some((p) => p.store === pack.store && p.name_de !== pack.name_de));
   if (!before && nPacks < 2 && !hasAlt) return null;
   return h('div', { class: 'item-links' }, before || null,
     nPacks > 1 ? h('button', { class: 'uses-toggle linkbtn', onclick: () => showVariants(product, { needGrams }) }, `${nPacks} ${plural(nPacks, 'вариант', 'варианта', 'вариантов')} в магазинах`) : null,
@@ -234,6 +238,10 @@ function lastBuyDay(plan) {
   return out;
 }
 
+// сколько разных блюд (одно блюдо, приготовленное дважды, — одно)
+const dishes = (it) => new Set(it.uses.map((u) => u.title)).size;
+const usesByDish = (it) => [...it.uses.reduce((m, u) => m.set(u.title, (m.get(u.title) || 0) + u.grams), new Map())];
+
 function itemRow(it, products, isChecked, onToggle, byStore, redraw, extra = {}) {
   const o = it.offer;
   const flags = [];
@@ -252,13 +260,8 @@ function itemRow(it, products, isChecked, onToggle, byStore, redraw, extra = {})
     h('span', { class: 'price' }, o ? eur(o.cost) : '—'),
     altLinks(products[it.key], { pack: o?.pack, needGrams: it.needGrams,
       before: h('button', { class: 'uses-toggle linkbtn', 'aria-expanded': String(open), onclick: () => { ui.openUses = open ? null : it.key; redraw(); } },
-        `нужно ${formatAmount(it.key, it.needGrams, products[it.key])} · ${it.uses.length === 1 ? '1 блюдо' : `${it.uses.length} блюд${it.uses.length < 5 ? 'а' : ''}`}`) }),
-    open ? h('ul', { class: 'uses muted' }, it.uses.map((u) => h('li', null, `${u.title} — ${num(u.grams)} г`))) : null);
-}
-
-function plural(n, one, few, many) {
-  const a = n % 10, b = n % 100;
-  return a === 1 && b !== 11 ? one : a >= 2 && a <= 4 && (b < 12 || b > 14) ? few : many;
+        `нужно ${formatAmount(it.key, it.needGrams, products[it.key])} · ${dishes(it)} ${plural(dishes(it), 'блюдо', 'блюда', 'блюд')}`) }),
+    open ? h('ul', { class: 'uses muted' }, usesByDish(it).map(([title, g]) => h('li', null, `${title} — ${num(g)} г`))) : null);
 }
 
 function exportList(list, products, departments, checked) {
@@ -266,7 +269,7 @@ function exportList(list, products, departments, checked) {
   let close;
   close = sheet('Экспорт списка', h('div', { class: 'stack' },
     h('div', { class: 'row' },
-      h('button', { class: 'btn primary', onclick: () => { copyText(text); close(); } }, 'Скопировать'),
+      h('button', { class: 'btn primary', onclick: async () => { if (await copyText(text)) close(); else selectForCopy('export-shop'); } }, 'Скопировать'),
       !IS_ARTIFACT && h('button', { class: 'btn', onclick: () => download('pokupki.txt', text) }, 'Скачать .txt'),
       !IS_ARTIFACT && h('button', { class: 'btn', onclick: () => { close(); setTimeout(() => window.print(), 50); } }, 'Печать')),
     h('textarea', { class: 'export-text', id: 'export-shop', readonly: true, rows: 10, 'aria-label': 'Текст списка', onfocus: (e) => e.target.select() }, text)));

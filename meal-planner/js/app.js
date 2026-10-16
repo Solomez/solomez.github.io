@@ -1,4 +1,4 @@
-import { h, icon } from './ui.js';
+import { h, icon, closeAllLayers } from './ui.js';
 import { state, loadData, connectCloud } from './state.js';
 import { renderPlan } from './views/plan.js';
 import { renderLibrary } from './views/library.js';
@@ -6,7 +6,7 @@ import { renderRecipe, rememberRoute } from './views/recipe.js';
 import { renderShop } from './views/shop.js';
 import { renderCook, leaveCook } from './views/cook.js';
 import { renderStats } from './views/stats.js';
-import { renderProfile } from './views/profile.js';
+import { renderProfile, refreshSyncText } from './views/profile.js';
 
 const TABS = [
   ['plan', 'План', 'plan'],
@@ -24,7 +24,9 @@ function parseHash() {
   const raw = location.hash.replace(/^#\/?/, '') || 'plan';
   const [path, query] = raw.split('?');
   const [view, id] = path.split('/');
-  return { view, id: id && decodeURIComponent(id), params: new URLSearchParams(query || '') };
+  let dec = id;
+  try { dec = id && decodeURIComponent(id); } catch { /* битая ссылка — покажем «не найдено» */ }
+  return { view, id: dec, params: new URLSearchParams(query || '') };
 }
 
 function renderNav(view) {
@@ -70,16 +72,18 @@ function render(opts = {}) {
 }
 
 // Наверх — только при переходе на другой экран; смена параметров (порций) сохраняет прокрутку
+// Окна (листы, просмотр фото) при смене экрана закрываются — в том числе по кнопке «назад» на телефоне
 window.addEventListener('hashchange', (e) => {
-  const oldHash = e.oldURL ? new URL(e.oldURL).hash : '';
+  const oldHash = e.oldURL ? new URL(e.oldURL).hash : location.hash; // без oldURL — перерисовка того же экрана
   rememberRoute(oldHash);
   const samePage = oldHash.split('?')[0] === location.hash.split('?')[0];
+  if (!samePage) closeAllLayers();
   render({ keepScroll: samePage });
   if (!samePage) window.scrollTo(0, 0);
 });
 
 loadData()
-  .then(() => { render(); connectCloud((changed) => { if (changed || location.hash.startsWith('#/profile')) render({ keepScroll: true }); }); })
+  .then(() => { render(); connectCloud((changed) => { if (changed) render({ keepScroll: true }); else refreshSyncText(); }); })
   .catch((err) => {
     console.error(err);
     main.replaceChildren(h('p', { class: 'notice' }, 'Не удалось загрузить данные (data/recipes.json). Запустите приложение командой python3 serve.py из папки проекта.'));

@@ -1,7 +1,7 @@
 // Фото товаров и варианты по магазинам. Фото показываются прямо с сайтов магазинов (не копируются).
 // На claude.ai внешние картинки на странице запрещены, но ссылки разрешены: там фото открывается
 // во весь экран в новой вкладке по кнопке с камерой.
-import { h, eur, num, sheet, icon } from '../ui.js';
+import { h, eur, num, sheet, icon, openLayer, closedLayer, isTopLayer } from '../ui.js';
 import { IS_ARTIFACT, state } from '../state.js';
 import { formatPack, chooseOffer } from '../core/shopping.js';
 
@@ -63,7 +63,7 @@ export function openLightbox(product, startPack) {
   const count = h('span', { class: 'lb-count' });
   const prev = h('button', { class: 'lb-nav lb-prev', 'aria-label': 'Предыдущий вариант', onclick: (e) => { e.stopPropagation(); go(-1); } }, icon('back'));
   const next = h('button', { class: 'lb-nav lb-next', 'aria-label': 'Следующий вариант', onclick: (e) => { e.stopPropagation(); go(1); } }, icon('back'));
-  const close = () => { box.remove(); document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
+  const close = () => { box.remove(); document.removeEventListener('keydown', onKey, true); closedLayer(close); };
   const box = h('div', { class: 'lightbox', role: 'dialog', 'aria-modal': 'true', 'aria-label': `Фото: ${product.name_ru}`, onclick: (e) => { if (e.target === box || e.target === stage) close(); } },
     h('div', { class: 'lb-top' }, count, h('button', { class: 'lb-close', 'aria-label': 'Закрыть', onclick: close }, icon('close'))));
   const stage = h('div', { class: 'lb-stage' }, img);
@@ -81,14 +81,18 @@ export function openLightbox(product, startPack) {
         p.url && /^https?:/.test(p.url) ? [' · ', h('a', { href: p.url, target: '_blank', rel: 'noopener' }, 'в магазине')] : null));
   }
   const go = (d) => { i = (i + d + list.length) % list.length; draw(); };
-  const onKey = (e) => { if (e.key === 'Escape') close(); if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(-1); };
+  // Escape закрывает общий стек окон; стрелки листают, только пока просмотр — верхнее окно
+  const onKey = (e) => {
+    if (!isTopLayer(close)) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.stopImmediatePropagation(); go(e.key === 'ArrowRight' ? 1 : -1); }
+  };
   let x0 = null;
   stage.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
   stage.addEventListener('touchend', (e) => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); x0 = null; });
-  document.addEventListener('keydown', onKey);
-  document.body.style.overflow = 'hidden';
+  document.addEventListener('keydown', onKey, true);
   draw();
   document.body.append(box);
+  openLayer(close);
 }
 
 // ---------- Хранение ----------
@@ -148,7 +152,9 @@ export function showVariants(product, { needGrams } = {}) {
 
 // ---------- Если нет в наличии ----------
 const productOf = (key) => state.data?.products?.[key] || null;
-export const substitutesOf = (key) => (state.data?.substitutes?.[key] || []).filter(([k]) => productOf(k)?.packs?.length);
+// без продуктов, которые человек исключил в профиле
+export const substitutesOf = (key) => (state.data?.substitutes?.[key] || [])
+  .filter(([k]) => productOf(k)?.packs?.length && !(state.prefs?.excludedKeys || []).includes(k));
 
 // Лучшая упаковка продукта в магазине (с учётом нужного количества); null — там его нет
 function packIn(product, store, needGrams) {
@@ -175,11 +181,12 @@ function substituteList(product, store, needGrams, limit = 99) {
   if (!subs.length) return null;
   return h('section', { class: 'alt-section' },
     h('div', { class: 'eyebrow' }, 'Если нет в наличии — чем заменить'),
-    h('ul', { class: 'variants' }, subs.map(([k, note]) => {
+    h('ul', { class: 'variants' }, subs.map(([k, note, ratio = 1]) => {
       const sp = productOf(k);
-      const here = store ? packIn(sp, store, needGrams) : null;
-      const p = here || packIn(sp, sortedPacks(sp)[0]?.store, needGrams) || bestPack(sp);
-      return altRow(sp, p, { note, needGrams, otherStore: !here });
+      const g = needGrams ? Math.max(1, Math.round(needGrams * ratio)) : undefined;
+      const here = store ? packIn(sp, store, g) : null;
+      const p = here || packIn(sp, sortedPacks(sp)[0]?.store, g) || bestPack(sp);
+      return altRow(sp, p, { note, needGrams: g, otherStore: !here });
     })));
 }
 

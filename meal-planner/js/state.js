@@ -102,7 +102,7 @@ export async function connectCloud(onChange) {
     const remote = snap.exists ? snap.data() : null;
     if (remote && (remote.savedAt || 0) > (state.savedAt || 0)) {
       applyRemote(remote);
-      if (state.plan && state.recipeMap.size) state.plan.batches = state.plan.batches.filter((b) => state.recipeMap.has(b.recipeId));
+      dropMissing(state.plan);
       onChange(true);
     } else {
       if (state.savedAt) scheduleCloud();
@@ -124,6 +124,13 @@ if (typeof window !== 'undefined') {
 
 export const targets = () => dailyTargets(state.profile);
 
+// План мог ссылаться на удалённые рецепты — убираем такие приготовления, завтраки и перекусы
+export function dropMissing(plan) {
+  if (!plan || !state.recipeMap.size) return;
+  plan.batches = (plan.batches || []).filter((b) => state.recipeMap.has(b.recipeId));
+  if (plan.extras) plan.extras = plan.extras.filter((x) => state.recipeMap.has(x.recipeId));
+}
+
 export async function loadData() {
   const base = document.querySelector('meta[name="data-base"]')?.content || '../data/';
   const [r, p, st, sub] = await Promise.all([
@@ -135,7 +142,7 @@ export async function loadData() {
   state.data = { recipes: r.recipes, products: p.products, meta: r.meta, storage: st, substitutes: sub };
   state.recipeMap = new Map(r.recipes.map((x) => [x.id, x]));
   // план мог ссылаться на удалённый рецепт — убираем такие приготовления
-  if (state.plan) state.plan.batches = state.plan.batches.filter((b) => state.recipeMap.has(b.recipeId));
+  dropMissing(state.plan);
 }
 
 export function toggleIn(listName, id) {

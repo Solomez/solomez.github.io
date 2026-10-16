@@ -1,63 +1,77 @@
-import { h, num, eur, seg, toast, download } from '../ui.js';
-import { state, save, targets, IS_ARTIFACT } from '../state.js';
+import { h, num, eur, seg, toast, download, humanDate } from '../ui.js';
+import { state, save, targets, IS_ARTIFACT, dropMissing } from '../state.js';
 import { ACTIVITY, GOALS, DEFAULT_PROFILE } from '../core/nutrition.js';
 
 export function renderProfile(root, rerender) {
   const p = state.profile;
   const pr = state.prefs;
-  const setP = (k, v, live) => {
+  // Числа: сохраняем и обновляем только расчёт нормы и бюджета — поля ввода не пересоздаются,
+  // иначе касание следующего поля теряет фокус (на blur срабатывает change, а страница перерисовывается)
+  const setN = (k, v) => {
     p[k] = v;
     save();
-    if (live) markSaved();
-    else rerender({ keepScroll: true, keepFocus: true });
+    markSaved();
+    drawLive();
   };
+  const setP = (k, v) => { p[k] = v; save(); rerender({ keepScroll: true }); };
   const setPr = (k, v) => { pr[k] = v; save(); rerender({ keepScroll: true }); };
-  const t = targets();
+
+  const normSlot = h('div', { class: 'stack' });
+  const budgetSlot = h('p', { class: 'muted', style: { margin: 0 } });
+  function drawLive() {
+    const t = targets();
+    normSlot.replaceChildren(
+      !t.complete ? h('p', { class: 'notice' }, 'Заполните пол, рост и вес — пока показан расчёт для 178 см / 72 кг.') : null,
+      h('div', { class: 'kpis' },
+        kpi(`${num(t.kcal)} ккал`, `в день (поддержание ${num(t.tdee)})`),
+        kpi(`${num(t.protein)} г`, 'белка в день'),
+        kpi(`${num(t.perMeal.kcal)} ккал`, 'на обед или ужин'),
+        kpi(`${num(t.perMeal.protein)} г`, 'белка на обед или ужин')),
+      h('p', { class: 'muted', style: { margin: 0 } },
+        `Формула Миффлина — Сан-Жеора: базовый обмен ${num(t.bmr)} ккал × активность = ${num(t.tdee)} ккал (поддержание)`,
+        p.goal === 'gain' ? `, плюс ${num(p.surplusPct)}% для набора.` : '.',
+        ` Жиры ≈ ${num(t.fat)} г, углеводы ≈ ${num(t.carbs)} г в день.`));
+    budgetSlot.textContent = `На обед и ужин остаётся ${eur((p.budget || 0) - (p.reserve || 0))} в неделю — генератор старается уложиться в эту сумму.`;
+  }
+  drawLive();
 
   root.append(h('div', { class: 'topbar' }, h('h1', null, 'Профиль'),
     h('span', { class: 'save-status muted', id: 'save-status', 'aria-live': 'polite' }, state.savedAt ? 'Сохранено' : '')));
-  root.append(h('p', { class: 'muted', style: { marginTop: '-8px' } }, 'Ответы сохраняются автоматически. ', whereText()));
+  root.append(h('p', { class: 'muted', style: { marginTop: '-8px' } }, 'Ответы сохраняются автоматически. ', h('span', { id: 'where-text' }, whereText())));
 
   root.append(h('div', { class: 'card stack' },
     h('h2', { style: { marginTop: 0 } }, 'О вас'),
     h('div', null, h('div', { class: 'muted', style: { marginBottom: '6px' } }, 'Пол'),
-      seg([['male', 'Мужской'], ['female', 'Женский']], p.sex, (v, live) => setP('sex', v, live))),
+      seg([['male', 'Мужской'], ['female', 'Женский']], p.sex, (v) => setP('sex', v))),
     h('div', { class: 'grid two' },
-      numField('Возраст, лет', p.age, (v, live) => setP('age', v, live), { min: 14, max: 99, id: 'f-age' }),
-      numField('Рост, см', p.height, (v, live) => setP('height', v, live), { min: 120, max: 230, id: 'f-height' }),
-      numField('Вес, кг', p.weight, (v, live) => setP('weight', v, live), { min: 35, max: 250, step: 0.1, id: 'f-weight' })),
+      numField('Возраст, лет', p.age, (v) => setN('age', v), { min: 14, max: 99, id: 'f-age' }),
+      numField('Рост, см', p.height, (v) => setN('height', v), { min: 120, max: 230, id: 'f-height' }),
+      numField('Вес, кг', p.weight, (v) => setN('weight', v), { min: 35, max: 250, step: 0.1, id: 'f-weight' })),
     h('fieldset', { class: 'radios' }, h('legend', null, 'Активность'),
       ACTIVITY.map((a) => h('label', { class: 'radio' + (a.id === p.activity ? ' on' : '') },
         h('input', { type: 'radio', name: 'activity', id: `act-${a.id}`, value: a.id, checked: a.id === p.activity, onchange: () => setP('activity', a.id) }),
         h('span', null, a.label), h('span', { class: 'muted' }, `×${String(a.factor).replace('.', ',')}`)))),
     h('label', { class: 'field' }, h('span', null, 'Цель'),
       h('select', { onchange: (e) => { setP('goal', e.target.value); } }, Object.entries(GOALS).map(([id, g]) => h('option', { value: id, selected: id === p.goal }, g.label)))),
-    p.goal === 'gain' ? numField('Профицит калорий, %', p.surplusPct, (v, live) => setP('surplusPct', v, live), { min: 0, max: 25, id: 'f-surplus' }) : null,
-    numField('Белок, г на кг веса', p.proteinPerKg, (v, live) => setP('proteinPerKg', v, live), { min: 1.2, max: 3, step: 0.1, id: 'f-ppk' })));
+    p.goal === 'gain' ? numField('Профицит калорий, %', p.surplusPct, (v) => setN('surplusPct', v), { min: 0, max: 25, id: 'f-surplus' }) : null,
+    numField('Белок, г на кг веса', p.proteinPerKg, (v) => setN('proteinPerKg', v), { min: 1.2, max: 3, step: 0.1, id: 'f-ppk' })));
 
   root.append(h('div', { class: 'card stack' },
     h('h2', { style: { marginTop: 0 } }, 'Ваша норма'),
-    !t.complete ? h('p', { class: 'notice' }, 'Заполните пол, рост и вес — пока показан расчёт для 178 см / 72 кг.') : null,
-    h('div', { class: 'kpis' },
-      kpi(`${num(t.kcal)} ккал`, `в день (поддержание ${num(t.tdee)})`),
-      kpi(`${num(t.protein)} г`, 'белка в день'),
-      kpi(`${num(t.perMeal.kcal)} ккал`, 'на обед или ужин'),
-      kpi(`${num(t.perMeal.protein)} г`, 'белка на обед или ужин')),
-    h('p', { class: 'muted', style: { margin: 0 } },
-      `Формула Миффлина — Сан-Жеора: базовый обмен ${num(t.bmr)} ккал × активность = ${num(t.tdee)} ккал (поддержание)`,
-      p.goal === 'gain' ? `, плюс ${num(p.surplusPct)}% для набора.` : '.',
-      ` Жиры ≈ ${num(t.fat)} г, углеводы ≈ ${num(t.carbs)} г в день.`),
-    numField('Доля нормы на обед + ужин, %', p.mealShare, (v, live) => setP('mealShare', v, live), { min: 40, max: 90, id: 'f-share' }),
+    normSlot,
+    numField('Доля нормы на обед + ужин, %', p.mealShare, (v) => setN('mealShare', v), { min: 40, max: 90, id: 'f-share' }),
     h('p', { class: 'muted', style: { margin: 0 } }, 'Остальное — завтрак и перекусы (в плане не готовятся).')));
 
   root.append(h('div', { class: 'card stack' },
     h('h2', { style: { marginTop: 0 } }, 'Бюджет'),
     h('div', { class: 'grid two' },
-      numField('Бюджет на продукты, € в неделю', p.budget, (v, live) => setP('budget', v, live), { min: 20, max: 300, id: 'f-budget' }),
-      numField('Из них на завтраки и перекусы, €', p.reserve, (v, live) => setP('reserve', v, live), { min: 0, max: 200, id: 'f-reserve' })),
-    h('p', { class: 'muted', style: { margin: 0 } }, `На обед и ужин остаётся ${eur(p.budget - p.reserve)} в неделю — генератор старается уложиться в эту сумму.`)));
+      numField('Бюджет на продукты, € в неделю', p.budget, (v) => setN('budget', v), { min: 20, max: 300, id: 'f-budget' }),
+      numField('Из них на завтраки и перекусы, €', p.reserve, (v) => setN('reserve', v), { min: 0, max: 200, id: 'f-reserve' })),
+    budgetSlot));
 
-  const products = Object.values(state.data.products).filter((x) => !x.basic).sort((a, b) => (a.name_ru || '').localeCompare(b.name_ru || '', 'ru'));
+  const inRecipes = new Set(state.data.recipes.flatMap((r) => r.ingredients.map((i) => i.key)));
+  // только то, что встречается в рецептах (продукты-замены из «если нет» сюда не попадают)
+  const products = Object.values(state.data.products).filter((x) => !x.basic && inRecipes.has(x.key)).sort((a, b) => (a.name_ru || '').localeCompare(b.name_ru || '', 'ru'));
   const excluded = new Set(pr.excludedKeys || []);
   root.append(h('div', { class: 'card stack' },
     h('h2', { style: { marginTop: 0 } }, 'Рацион и ограничения'),
@@ -79,11 +93,19 @@ export function renderProfile(root, rerender) {
 
   root.append(h('div', { class: 'card stack' },
     h('h2', { style: { marginTop: 0 } }, 'Данные'),
-    h('p', { class: 'muted', style: { margin: 0 } }, `Цены от ${state.data.meta.price_date}. `, syncText()),
+    h('p', { class: 'muted', style: { margin: 0 } }, `Цены от ${humanDate(state.data.meta.price_date)}. `, h('span', { id: 'sync-text' }, syncText())),
     h('div', { class: 'row' },
       !IS_ARTIFACT && h('button', { class: 'btn', onclick: () => download('mealplanner-backup.json', JSON.stringify({ profile: state.profile, prefs: state.prefs, plan: state.plan }, null, 1)) }, 'Сохранить копию настроек'),
       !IS_ARTIFACT && h('label', { class: 'btn' }, 'Загрузить копию', h('input', { type: 'file', id: 'f-import', accept: 'application/json', class: 'sr-only', onchange: (e) => importBackup(e, rerender) })),
       resetButton(rerender))));
+}
+
+// Подключилось сохранение в аккаунте — обновить подписи, не перерисовывая форму (вдруг сейчас идёт ввод)
+export function refreshSyncText() {
+  const a = document.getElementById('where-text');
+  const b = document.getElementById('sync-text');
+  if (a) a.textContent = whereText();
+  if (b) b.textContent = syncText();
 }
 
 function whereText() {
@@ -128,7 +150,7 @@ async function importBackup(e, rerender) {
     const data = JSON.parse(await e.target.files[0].text());
     if (data.profile) Object.assign(state.profile, data.profile);
     if (data.prefs) Object.assign(state.prefs, data.prefs);
-    if (data.plan) state.plan = data.plan;
+    if (data.plan && Array.isArray(data.plan.batches)) { state.plan = data.plan; dropMissing(state.plan); }
     save();
     toast('Настройки загружены');
     rerender();

@@ -1,6 +1,6 @@
-import { h, icon, num, sheet, nb } from '../ui.js';
+import { h, icon, num, sheet, nb, toast, hasLayer } from '../ui.js';
 import { state, save } from '../state.js';
-import { ingredientAmount, ingredientList } from './recipe.js';
+import { ingredientAmount, ingredientList, portionParams } from './recipe.js';
 
 // Таймеры живут вне перерисовок: key → { label, total, endAt | null, left, ringing }
 const timers = new Map();
@@ -32,8 +32,8 @@ function beep() {
 const leftOf = (t) => (t.endAt ? Math.max(0, Math.round((t.endAt - Date.now()) / 1000)) : t.left);
 const clock = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
-function startTimer(key, label, seconds) {
-  const t = timers.get(key) || { label, total: seconds, left: seconds, endAt: null, ringing: false };
+function startTimer(key, label, seconds, href) {
+  const t = timers.get(key) || { label, total: seconds, left: seconds, endAt: null, ringing: false, href };
   if (t.ringing || leftOf(t) === 0) Object.assign(t, { left: seconds, ringing: false });
   t.endAt = Date.now() + leftOf(t) * 1000;
   timers.set(key, t);
@@ -45,27 +45,39 @@ function pauseTimer(key) {
   if (t?.endAt) { t.left = leftOf(t); t.endAt = null; }
 }
 
+// Закончившиеся таймеры: звук, вибрация, уведомление; вне режима готовки — ещё и сообщение со ссылкой
+function ringFinished(inCook) {
+  for (const t of timers.values()) {
+    if (t.endAt && leftOf(t) === 0 && !t.ringing) {
+      t.ringing = true;
+      t.endAt = null;
+      t.left = 0;
+      beep();
+      if ('Notification' in window && Notification.permission === 'granted') {
+        try { new Notification('Таймер: ' + t.label); } catch { /* ignore */ }
+      }
+      if (!inCook) toast(`⏰ Таймер: ${t.label}`, t.href ? { label: 'К готовке', onClick: () => { location.hash = t.href; } } : undefined);
+    }
+  }
+}
+
 function ensureTick(update) {
   clearInterval(tick);
-  tick = setInterval(() => {
-    for (const t of timers.values()) {
-      if (t.endAt && leftOf(t) === 0 && !t.ringing) {
-        t.ringing = true;
-        t.endAt = null;
-        t.left = 0;
-        beep();
-        if ('Notification' in window && Notification.permission === 'granted') {
-          try { new Notification('Таймер: ' + t.label); } catch { /* ignore */ }
-        }
-      }
-    }
-    update(true);
-  }, 500);
+  tick = setInterval(() => { ringFinished(true); update(true); }, 500);
 }
 
 async function keepAwake() {
-  try { if ('wakeLock' in navigator && !wakeLock) wakeLock = await navigator.wakeLock.request('screen'); } catch { /* ignore */ }
+  try {
+    if ('wakeLock' in navigator && (!wakeLock || wakeLock.released)) wakeLock = await navigator.wakeLock.request('screen');
+  } catch { /* ignore */ }
 }
+// Экран снова виден (вернулись в приложение) — браузер уже снял блокировку сна, просим снова
+if (typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && location.hash.startsWith('#/cook/')) keepAwake();
+  });
+}
+
 export function leaveCook() {
   if (keyHandler) document.removeEventListener('keydown', keyHandler);
   keyHandler = null;
@@ -73,13 +85,23 @@ export function leaveCook() {
   tick = null;
   try { wakeLock?.release(); } catch { /* ignore */ }
   wakeLock = null;
+  // ушли из режима готовки, а таймер идёт — продолжаем следить, чтобы сигнал прозвучал
+  if ([...timers.values()].some((t) => t.endAt)) {
+    tick = setInterval(() => {
+      ringFinished(false);
+      if (![...timers.values()].some((t) => t.endAt)) { clearInterval(tick); tick = null; }
+    }, 1000);
+  }
 }
 
 export function renderCook(root, rerender, id, params) {
   const r = state.recipeMap.get(id);
-  if (!r) { root.append(h('p', null, 'Рецепт не найден.')); return; }
-  const factor = +params.get('f') || 1;
-  const portions = +params.get('p') || r.servings;
+  if (!r) {
+    document.getElementById('nav').hidden = false;
+    root.append(h('p', null, 'Рецепт не найден. ', h('a', { href: '#/recipes' }, 'К рецептам')));
+    return;
+  }
+  const { factor, portions } = portionParams(params, r);
   const scale = (factor * portions) / r.servings;
   const prog = (state.cook[id] = state.cook[id] || { step: 0, done: [] });
   const n = r.steps.length;
@@ -134,7 +156,7 @@ export function renderCook(root, rerender, id, params) {
         big,
         t?.ringing
           ? h('button', { class: 'btn primary', onclick: () => { timers.delete(tkey); drawTimers(); } }, 'Выключить сигнал')
-          : h('button', { class: 'btn primary', onclick: () => { running ? pauseTimer(tkey) : startTimer(tkey, `${r.title}, шаг ${prog.step + 1}`, secs); drawTimers(); } },
+          : h('button', { class: 'btn primary', onclick: () => { running ? pauseTimer(tkey) : startTimer(tkey, `${r.title}, шаг ${prog.step + 1}`, secs, `#/cook/${id}?f=${factor}&p=${portions}`); drawTimers(); } },
             icon(running ? 'pause' : 'play'), running ? 'Пауза' : t ? 'Продолжить' : `Запустить ${num(step.timer_min, 1)} мин`),
         ...(t ? [h('button', { class: 'btn', onclick: () => { timers.delete(tkey); drawTimers(); } }, 'Сброс')] : []));
     } else {
@@ -149,7 +171,12 @@ export function renderCook(root, rerender, id, params) {
   }
 
   const isDone = prog.done.includes(prog.step);
-  const showIngredients = () => sheet('Ингредиенты', h('div', { class: 'cook-ings' }, ingredientList(r, scale)));
+  const showIngredients = () => {
+    const box = h('div', { class: 'cook-ings' });
+    const draw = () => box.replaceChildren(ingredientList(r, scale, { onToggle: draw }));
+    draw();
+    sheet('Ингредиенты', box);
+  };
 
   // Продукты, которые упоминаются в тексте шага, — с количеством, чтобы не листать список
   const stepText = step.text.toLowerCase();
@@ -171,7 +198,7 @@ export function renderCook(root, rerender, id, params) {
     h('div', { class: 'cook-body' },
       h('div', { class: 'cook-step-n' }, `Шаг ${prog.step + 1} из ${n}`, isDone ? ' · выполнен ✓' : '', leftMin > 0 ? ` · осталось ≈ ${leftMin} мин` : ''),
       h('div', { class: 'cook-text' }, nb(step.text)),
-      stepIngs.length ? h('ul', { class: 'step-ings' }, stepIngs.map((i) => h('li', null, h('span', null, i.name_ru), h('b', null, ingredientAmount(i, scale, state.data.products).main)))) : null,
+      stepIngs.length ? h('ul', { class: 'step-ings' }, stepIngs.map((i) => h('li', null, h('span', null, i.name_ru), h('b', null, ingredientAmount(i, scale, state.data.products, r.servings).main)))) : null,
       step.heat ? h('div', { class: 'cook-heat' }, h('span', { class: 'badge accent' }, `Огонь: ${step.heat}`)) : null,
       stepTimer,
       prog.done.length === n ? h('p', { class: 'notice', style: { marginTop: '20px' } }, 'Все шаги выполнены. Приятного аппетита! ',
@@ -193,10 +220,12 @@ export function renderCook(root, rerender, id, params) {
   // клавиатура: слушаем документ, чтобы стрелки работали, даже если фокус ушёл с кнопки
   if (keyHandler) document.removeEventListener('keydown', keyHandler);
   keyHandler = (e) => {
-    if (e.target.closest && e.target.closest('.sheet')) return;
+    // поверх открыт список ингредиентов или фото — клавиши для них; с модификаторами — браузеру
+    if (hasLayer() || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
     if (e.key === 'ArrowRight') go(1);
     if (e.key === 'ArrowLeft') go(-1);
-    if ((e.key === ' ' || e.key === 'Enter') && !(e.target instanceof HTMLButtonElement)) { e.preventDefault(); toggleDone(); }
+    const onControl = e.target.closest?.('a, button, input, select, textarea, label');
+    if ((e.key === ' ' || e.key === 'Enter') && !onControl) { e.preventDefault(); toggleDone(); }
   };
   document.addEventListener('keydown', keyHandler);
   root.append(el);

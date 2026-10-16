@@ -276,7 +276,7 @@ details summary { cursor: pointer; color: var(--muted); font-size: .86rem; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
 
 /* Нижний лист (замена) */
-.sheet-backdrop { position: fixed; inset: 0; background: var(--backdrop); z-index: 40; display: flex; align-items: flex-end; justify-content: center; }
+.sheet-backdrop { position: fixed; inset: 0; background: var(--backdrop); z-index: 55; display: flex; align-items: flex-end; justify-content: center; }
 .sheet {
   background: var(--surface); width: 100%; max-width: 640px; max-height: 82vh; overflow: auto;
   border-radius: 18px 18px 0 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom));

@@ -29,6 +29,7 @@ export function buyAheadDays(key, storage) {
  * altCost(key, store) — цена продукта в другом магазине (null — там его нет): чтобы не ходить в два магазина в один день;
  * firstDay — первый день, когда можно идти в магазин; dateOf(day) — дата дня (для выходных и праздников).
  * Возвращает [{ day, store, items, total, early }] по возрастанию дня; early — пришлось купить раньше и заморозить.
+ * У товара lateFor — день, к которому его не успеть купить (до него магазины закрыты).
  */
 export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost = () => null, canFreeze = () => false, maxExtra = 2 }) {
   const open = (d) => !storesClosed(dateOf(d));
@@ -41,6 +42,7 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
     for (let d = b; d >= a; d--) if (open(d) && !avoid.has(d)) return d;
     return null;
   };
+  const firstOpenFrom = (d) => { for (let x = d; x < d + 14; x++) if (open(x)) return x; return d; };
 
   // 1) по каждому магазину — минимум походов: жадное покрытие окон точками (по концу окна)
   const byStore = new Map();
@@ -57,8 +59,17 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
       if (t) { t.ws.push(w); continue; }
       let day = latestOpen(w.a, w.b);
       let early = false;
-      if (day == null) { day = latestOpen(firstDay, w.a); early = true; } // в окне только выходные — купить раньше
-      if (day == null) day = w.b;
+      if (day == null) {
+        // в окне свежести магазины закрыты: купить раньше (и заморозить), а если раньше уже нельзя —
+        // в первый рабочий день после (к этому приёму пищи не успеть). Окно расширяем до этого дня,
+        // чтобы дальше продукт можно было перекладывать только в походы, которые реально возможны.
+        day = latestOpen(firstDay, w.a);
+        if (day != null) { early = true; w.forcedUntil = w.b; w.a = day; } else {
+          day = firstOpenFrom(w.b + 1);
+          w.it = { ...w.it, lateFor: w.b };
+          w.b = day;
+        }
+      }
       mine.push({ store, day, ws: [w], early });
     }
     trips.push(...mine);
@@ -67,41 +78,58 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
   // 2) разводим магазины по разным дням: меньший поход переносим на свободный день внутри общего окна
   const rangeOf = (t) => ({ a: Math.max(...t.ws.map((w) => w.a)), b: Math.min(...t.ws.map((w) => w.b)) });
   const total = (t) => t.ws.reduce((s, w) => s + (w.it.cost || 0), 0);
-  for (let pass = 0; pass < 6; pass++) {
-    const byDay = new Map();
-    for (const t of trips) { if (!byDay.has(t.day)) byDay.set(t.day, []); byDay.get(t.day).push(t); }
-    let moved = false;
-    for (const [day, ts] of byDay) {
-      const stores = new Set(ts.map((t) => t.store));
-      if (stores.size < 2) continue;
-      ts.sort((x, y) => total(y) - total(x));
-      const keep = ts[0].store;
-      for (const t of ts.filter((x) => x.store !== keep)) {
-        const used = new Set(trips.filter((x) => x !== t && x.store !== t.store).map((x) => x.day));
-        const r = rangeOf(t);
-        // сначала — день, где этот магазин уже есть (сольются), затем любой свободный
-        const same = trips.find((x) => x !== t && x.store === t.store && x.day >= r.a && x.day <= r.b && !used.has(x.day));
-        if (same) { same.ws.push(...t.ws); trips = trips.filter((x) => x !== t); moved = true; continue; }
-        const d = latestOpen(r.a, r.b, used);
-        if (d != null) { t.day = d; moved = true; continue; }
-        // целиком не переносится — раскладываем товары: в другой поход того же магазина, где позволяет свежесть,
-        // иначе покупаем в магазине, куда и так идём (если продукт там продаётся)
-        const rest = [];
-        for (const w of t.ws) {
-          const other = trips.find((x) => x !== t && x.store === t.store && x.day >= w.a && x.day <= w.b && !used.has(x.day));
-          if (other) { other.ws.push(w); moved = true; continue; }
-          const hosts = trips.filter((x) => x !== t && x.store !== t.store && x.day >= w.a && x.day <= w.b)
-            .map((x) => ({ x, cost: altCost(w.it.key, x.store) })).filter((o) => o.cost != null)
-            .sort((p, q) => p.cost - q.cost || (q.x.day === day) - (p.x.day === day)); // сначала дешевле
-          if (hosts.length) {
-            const { x, cost } = hosts[0];
-            x.ws.push({ ...w, it: { ...w.it, store: x.store, cost, switchedFrom: w.it.store, extra: Math.round((cost - (w.it.cost || 0)) * 100) / 100 } });
-            moved = true;
-          } else rest.push(w);
-        }
-        t.ws = rest;
+  // Развести один день: оставляем магазин keep, остальные походы этого дня переносим или раскладываем.
+  // Работает на копии; возвращает новые походы, сколько товаров не удалось развести и доплату.
+  const resolveDay = (src, day, keep) => {
+    let all = src.map((t) => ({ ...t, ws: [...t.ws] }));
+    let left = 0;
+    let extra = 0;
+    for (const t of all.filter((x) => x.day === day && x.store !== keep)) {
+      const used = new Set(all.filter((x) => x !== t && x.store !== t.store).map((x) => x.day));
+      const r = rangeOf(t);
+      // сначала — день, где этот магазин уже есть (сольются), затем любой свободный
+      const same = all.find((x) => x !== t && x.store === t.store && x.day >= r.a && x.day <= r.b && !used.has(x.day));
+      if (same) { same.ws.push(...t.ws); all = all.filter((x) => x !== t); continue; }
+      const d = latestOpen(r.a, r.b, used);
+      if (d != null) { t.day = d; continue; }
+      // целиком не переносится — раскладываем товары: в другой поход того же магазина, где позволяет свежесть,
+      // иначе покупаем в магазине, куда и так идём (если продукт там продаётся)
+      const rest = [];
+      for (const w of t.ws) {
+        const other = all.find((x) => x !== t && x.store === t.store && x.day >= w.a && x.day <= w.b && !used.has(x.day));
+        if (other) { other.ws.push(w); continue; }
+        const hosts = all.filter((x) => x !== t && x.store !== t.store && x.day >= w.a && x.day <= w.b)
+          .map((x) => ({ x, cost: altCost(w.it.key, x.store) })).filter((o) => o.cost != null)
+          .sort((p, q) => p.cost - q.cost || (q.x.day === day) - (p.x.day === day)); // сначала дешевле
+        if (hosts.length) {
+          const { x, cost } = hosts[0];
+          const home = w.it.switchedFrom || w.it.store;
+          const it = { ...w.it, store: x.store, cost };
+          if (x.store === home) { delete it.switchedFrom; delete it.extra; } else { it.switchedFrom = home; it.extra = Math.round(((w.it.extra || 0) + cost - (w.it.cost || 0)) * 100) / 100; }
+          extra += cost - (w.it.cost || 0);
+          x.ws.push({ ...w, it });
+        } else { rest.push(w); left++; }
       }
-      trips = trips.filter((t) => t.ws.length);
+      t.ws = rest;
+    }
+    return { all: all.filter((t) => t.ws.length), left, extra };
+  };
+  for (let pass = 0; pass < 6; pass++) {
+    let moved = false;
+    const days = [...new Set(trips.map((t) => t.day))].sort((x, y) => x - y);
+    for (const day of days) {
+      const ts = trips.filter((t) => t.day === day);
+      if (new Set(ts.map((t) => t.store)).size < 2) continue;
+      // какой магазин оставить в этот день: тот, при котором всё разводится, затем — дешевле, затем — больший поход
+      const keeps = [...new Set(ts.sort((x, y) => total(y) - total(x)).map((t) => t.store))];
+      let best = null;
+      for (const keep of keeps) {
+        const r = resolveDay(trips, day, keep);
+        if (!best || r.left < best.left || (r.left === best.left && r.extra < best.extra - 0.01)) best = r;
+      }
+      const before = JSON.stringify(trips.map((t) => [t.store, t.day, t.ws.length]));
+      trips = best.all;
+      if (JSON.stringify(trips.map((t) => [t.store, t.day, t.ws.length])) !== before) moved = true;
     }
     if (!moved) break;
   }
@@ -133,7 +161,12 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
       }
       if (extraSum > maxExtra) continue;
       for (const m of moves) {
-        const it = m.x.store === m.w.it.store ? { ...m.w.it } : { ...m.w.it, store: m.x.store, cost: m.cost, switchedFrom: m.w.it.switchedFrom || m.w.it.store, extra: Math.round(((m.w.it.extra || 0) + m.extra) * 100) / 100 };
+        const home = m.w.it.switchedFrom || m.w.it.store; // магазин, где продукт выгоднее всего
+        let it;
+        if (m.x.store === m.w.it.store) it = { ...m.w.it };
+        else if (m.x.store === home) { it = { ...m.w.it, store: home, cost: m.cost }; delete it.switchedFrom; delete it.extra; }
+        else it = { ...m.w.it, store: m.x.store, cost: m.cost, switchedFrom: home, extra: Math.round(((m.w.it.extra || 0) + m.extra) * 100) / 100 };
+        delete it.freezeUntil;
         if (m.frozen) it.freezeUntil = m.w.b;
         m.x.ws.push({ ...m.w, it });
       }
@@ -147,9 +180,18 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
   const merged = new Map();
   for (const t of trips) {
     const k = t.store + '|' + t.day;
-    if (merged.has(k)) { merged.get(k).ws.push(...t.ws); merged.get(k).early ||= t.early; } else merged.set(k, { ...t, ws: [...t.ws] });
+    if (merged.has(k)) merged.get(k).ws.push(...t.ws); else merged.set(k, { ...t, ws: [...t.ws] });
   }
   return [...merged.values()]
-    .map((t) => ({ day: t.day, store: t.store, early: t.early, items: t.ws.map((w) => (w.it.store === t.store ? w.it : { ...w.it, store: t.store })), total: Math.round(total(t) * 100) / 100 }))
+    .map((t) => ({
+      day: t.day, store: t.store, early: t.ws.some((w) => w.forcedUntil != null),
+      items: t.ws.map((w) => {
+        const it = { ...w.it, store: t.store };
+        // купили раньше срока свежести из-за выходных — мясо и фарш сразу в морозилку
+        if (w.forcedUntil != null && it.freezeUntil == null && canFreeze(it.key) && t.day < w.forcedUntil - 1) it.freezeUntil = w.forcedUntil;
+        return it;
+      }),
+      total: Math.round(total(t) * 100) / 100,
+    }))
     .sort((x, y) => x.day - y.day || y.total - x.total);
 }

@@ -51,7 +51,7 @@ export function dailyTargets(profile) {
   const b = bmr(base);
   const tdee = b * activityFactor(p.activity);
   let factor = GOALS[p.goal]?.kcalFactor ?? 1.1;
-  if (p.goal === 'gain' && Number.isFinite(+p.surplusPct)) factor = 1 + (+p.surplusPct) / 100;
+  if (p.goal === 'gain') factor = 1 + (p.surplusPct == null || p.surplusPct === '' || !Number.isFinite(+p.surplusPct) ? 10 : +p.surplusPct) / 100;
   const kcal = tdee * factor;
   const ppk = Number.isFinite(+p.proteinPerKg) && +p.proteinPerKg > 0 ? +p.proteinPerKg : (GOALS[p.goal]?.proteinPerKg ?? 2);
   const protein = base.weight * ppk;

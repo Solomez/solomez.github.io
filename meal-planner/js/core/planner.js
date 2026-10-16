@@ -260,8 +260,16 @@ export function extraAlternatives(plan, extraId, { recipes, prefs = DEFAULT_PREF
     .map((a) => a.recipe);
 }
 
-export function swapExtra(plan, extraId, recipe) {
-  return { ...plan, extras: plan.extras.map((e) => (e.id === extraId ? { ...e, recipeId: recipe.id } : e)) };
+// Порция при замене завтрака или перекуса: ×1,5 — только если новое блюдо и в полуторной порции не перебирает
+// калорий прежнего (так же, как при составлении плана)
+export function swapFactor(oldRecipe, oldFactor, recipe) {
+  if (!oldRecipe) return 1;
+  const want = oldRecipe.per_serving.kcal * (oldFactor || 1);
+  return want >= recipe.per_serving.kcal * 1.4 ? 1.5 : 1;
+}
+
+export function swapExtra(plan, extraId, recipe, oldRecipe) {
+  return { ...plan, extras: plan.extras.map((e) => (e.id === extraId ? { ...e, recipeId: recipe.id, factor: swapFactor(oldRecipe, e.factor, recipe) } : e)) };
 }
 
 // Похожие блюда для замены: сначала те, что похожи по типу белка и продуктам и дёшевы при текущем плане

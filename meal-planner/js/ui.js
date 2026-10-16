@@ -81,17 +81,58 @@ export function meter(value, goal, cls = '') {
     h('span', { class: 'goal', style: { left: `${(goal / max) * 100}%` } }));
 }
 
+// Окна поверх страницы (листы снизу, просмотр фото): Escape и смена раздела закрывают верхнее,
+// пока окно открыто — страница под ним не прокручивается
+const layers = [];
+export const hasLayer = () => layers.length > 0;
+export const isTopLayer = (close) => layers[layers.length - 1] === close;
+export function openLayer(close) {
+  layers.push(close);
+  document.body.style.overflow = 'hidden';
+}
+export function closedLayer(close) {
+  const i = layers.indexOf(close);
+  if (i >= 0) layers.splice(i, 1);
+  if (!layers.length) document.body.style.overflow = '';
+}
+export function closeAllLayers() {
+  while (layers.length) layers[layers.length - 1]();
+  document.body.style.overflow = '';
+}
+if (typeof document !== 'undefined') {
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || !layers.length) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    layers[layers.length - 1]();
+  }, true);
+}
+
 export function sheet(title, content) {
-  const close = () => back.remove();
-  const back = h('div', { class: 'sheet-backdrop', onclick: (e) => e.target === back && close() },
-    h('div', { class: 'sheet', role: 'dialog', 'aria-label': title },
-      h('div', { class: 'sheet-head' }, h('h2', null, title),
-        h('button', { class: 'btn icon ghost', 'aria-label': 'Закрыть', onclick: close }, icon('close'))),
-      content));
+  const opener = document.activeElement;
+  let closed = false;
+  const close = () => {
+    if (closed) return;
+    closed = true;
+    back.remove();
+    closedLayer(close);
+    if (opener?.isConnected) opener.focus?.({ preventScroll: true });
+  };
+  const box = h('div', { class: 'sheet', role: 'dialog', 'aria-modal': 'true', 'aria-label': title, tabindex: '-1' },
+    h('div', { class: 'sheet-head' }, h('h2', null, title),
+      h('button', { class: 'btn icon ghost', 'aria-label': 'Закрыть', onclick: close }, icon('close'))),
+    content);
+  const back = h('div', { class: 'sheet-backdrop', onclick: (e) => e.target === back && close() }, box);
   document.body.append(back);
-  const onKey = (e) => { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', onKey); } };
-  document.addEventListener('keydown', onKey);
+  openLayer(close);
+  box.focus({ preventScroll: true });
   return close;
+}
+
+// 1 рецепт, 2 рецепта, 5 рецептов
+export function plural(n, one, few, many) {
+  const a = Math.abs(n) % 10, b = Math.abs(n) % 100;
+  return a === 1 && b !== 11 ? one : a >= 2 && a <= 4 && (b < 12 || b > 14) ? few : many;
 }
 
 export function download(filename, text) {
@@ -101,12 +142,23 @@ export function download(filename, text) {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
 }
 
+// Буфер обмена недоступен: выделяем текст в поле, чтобы скопировать его вручную
+export function selectForCopy(id) {
+  const ta = document.getElementById(id);
+  if (!ta) return;
+  ta.focus();
+  ta.select();
+  toast('Текст выделен — скопируйте его (долгое нажатие → «Скопировать»)');
+}
+
+// true — скопировано; false — буфер обмена недоступен (тогда текст нужно выделить и скопировать вручную)
 export async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
     toast('Скопировано в буфер обмена');
+    return true;
   } catch {
-    download('export.txt', text);
+    return false;
   }
 }
 

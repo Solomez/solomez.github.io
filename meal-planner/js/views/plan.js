@@ -1,6 +1,6 @@
-import { h, eur, num, icon, toast, sheet, copyText, download, meter } from '../ui.js';
+import { h, eur, num, icon, toast, sheet, copyText, download, meter, selectForCopy } from '../ui.js';
 import { state, save, targets, IS_ARTIFACT } from '../state.js';
-import { generatePlan, alternatives, swapBatch, planDays, daySums, MEALS, extraAlternatives, swapExtra } from '../core/planner.js';
+import { generatePlan, alternatives, swapBatch, planDays, daySums, MEALS, extraAlternatives, swapExtra, swapFactor } from '../core/planner.js';
 import { dayName, dayShort, dayDate, todayIndex, mealPast, startOptions, defaultStart, fmtDate, isoDate, planFinished, remainingPlan } from '../core/calendar.js';
 import { buildShoppingList, consumedPlanCost } from '../core/shopping.js';
 import { planToText } from '../core/export.js';
@@ -72,7 +72,7 @@ function mealMenu(e, rerender) {
   let close;
   const alts = e.batch
     ? alternatives(state.plan, e.batch.id, { recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs, limit: 12 })
-    : extraAlternatives(state.plan, e.extra.id, { recipes: state.data.recipes, prefs: state.prefs }).slice(0, 12).map((x) => ({ recipe: x, factor: e.factor, deltaCost: null }));
+    : extraAlternatives(state.plan, e.extra.id, { recipes: state.data.recipes, prefs: state.prefs }).slice(0, 12).map((x) => ({ recipe: x, factor: swapFactor(state.recipeMap.get(e.extra.recipeId), e.extra.factor, x), deltaCost: null }));
   const content = h('div', { class: 'stack' },
     h('div', { class: 'row' },
       h('a', { class: 'btn', href: `#/recipe/${r.id}?f=${e.factor}&p=${e.portions}`, onclick: () => close() }, 'Открыть рецепт'),
@@ -82,7 +82,7 @@ function mealMenu(e, rerender) {
       alts.map((a) => h('button', { class: 'alt', onclick: () => {
         close();
         if (e.batch) doSwap(e.batch.id, a.recipe, rerender);
-        else { const prev = state.plan; state.plan = swapExtra(state.plan, e.extra.id, a.recipe); save(); rerender({ keepScroll: true }); toast(a.recipe.title, { label: 'Отменить', onClick: () => { state.plan = prev; save(); rerender({ keepScroll: true }); } }); }
+        else { const prev = state.plan; state.plan = swapExtra(state.plan, e.extra.id, a.recipe, state.recipeMap.get(e.extra.recipeId)); save(); rerender({ keepScroll: true }); toast(a.recipe.title, { label: 'Отменить', onClick: () => { state.plan = prev; save(); rerender({ keepScroll: true }); } }); }
       } },
         h('span', { class: 'alt-main' },
           h('span', { class: 'alt-title' }, a.recipe.title),
@@ -98,7 +98,7 @@ function quickSwapExtra(e, rerender) {
   const i = (state.altCursor[e.extra.id] || 0) % alts.length;
   state.altCursor[e.extra.id] = i + 1;
   const prev = state.plan;
-  state.plan = swapExtra(state.plan, e.extra.id, alts[i]);
+  state.plan = swapExtra(state.plan, e.extra.id, alts[i], state.recipeMap.get(e.extra.recipeId));
   save();
   rerender({ keepScroll: true });
   toast(alts[i].title, { label: 'Отменить', onClick: () => { state.plan = prev; save(); rerender({ keepScroll: true }); } });
@@ -110,7 +110,7 @@ function exportPlan() {
   close = sheet('Экспорт плана', h('div', { class: 'stack' },
     h('p', { class: 'muted', style: { margin: 0 } }, 'Текст для заметок и мессенджеров.'),
     h('div', { class: 'row' },
-      h('button', { class: 'btn primary', onclick: () => { copyText(text); close(); } }, 'Скопировать'),
+      h('button', { class: 'btn primary', onclick: async () => { if (await copyText(text)) close(); else selectForCopy('export-plan'); } }, 'Скопировать'),
       !IS_ARTIFACT && h('button', { class: 'btn', onclick: () => download('plan.txt', text) }, 'Скачать .txt'),
       !IS_ARTIFACT && h('button', { class: 'btn', onclick: () => { close(); ui.mode = 'week'; window.dispatchEvent(new Event('hashchange')); setTimeout(() => window.print(), 150); } }, 'Печать')),
     h('textarea', { class: 'export-text', id: 'export-plan', readonly: true, rows: 10, 'aria-label': 'Текст плана', onfocus: (e) => e.target.select() }, text)));

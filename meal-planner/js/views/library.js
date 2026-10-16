@@ -1,4 +1,4 @@
-import { h, eur, num, icon, seg } from '../ui.js';
+import { h, eur, num, icon, seg, plural } from '../ui.js';
 import { state, save, toggleIn } from '../state.js';
 
 const PROTEIN_TYPES = { chicken: 'Курица', turkey: 'Индейка', pork: 'Свинина', beef: 'Говядина', mince: 'Фарш', eggs: 'Яйца', legumes: 'Бобовые', sausage: 'Колбаски', dairy: 'Молочное', ham: 'Ветчина' };
@@ -28,7 +28,7 @@ export function renderLibrary(root, rerender) {
   const { recipes, products } = state.data;
   const ingOptions = Object.values(products).filter((p) => !p.basic).sort((a, b) => (a.name_ru || '').localeCompare(b.name_ru || '', 'ru'));
 
-  root.append(h('div', { class: 'topbar' }, h('h1', null, 'Рецепты'), h('span', { class: 'muted' }, `${recipes.length} рецептов`)));
+  root.append(h('div', { class: 'topbar' }, h('h1', null, 'Рецепты'), h('span', { class: 'muted' }, `${recipes.length} ${plural(recipes.length, 'рецепт', 'рецепта', 'рецептов')}`)));
   root.append(h('div', { style: { marginBottom: '12px' } }, seg([['main', 'Обеды и ужины'], ['breakfast', 'Завтраки'], ['snack', 'Перекусы']], f.kind || 'main', (v) => set('kind', v))));
   // Быстрые фильтры — одним касанием; полный набор ниже, в «Фильтрах»
   const quick = [

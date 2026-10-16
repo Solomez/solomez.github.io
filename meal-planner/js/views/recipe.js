@@ -1,4 +1,4 @@
-import { h, eur, num, icon, factorText, humanDate, nb } from '../ui.js';
+import { h, eur, num, icon, factorText, humanDate, nb, plural } from '../ui.js';
 import { state, save, toggleIn } from '../state.js';
 import { formatAmount } from '../core/shopping.js';
 import { photo, thumbPack, showVariants, substitutesOf } from './products.js';
@@ -10,11 +10,21 @@ const storeHint = (p) => {
 };
 
 // Количество: бытовая мера из рецепта; при другом размере порции — пересчитанные граммы + исходная мера
-export function ingredientAmount(ing, scale, products) {
+export function ingredientAmount(ing, scale, products, servings = 2) {
   const same = Math.abs(scale - 1) < 0.01;
   if (same) return { main: ing.amount, sub: ing.grams ? `${Math.round(ing.grams)} г` : '' };
   if (ing.basic || !ing.grams) return { main: `${ing.amount} ${factorText(Math.round(scale * 100) / 100)}`, sub: '' };
-  return { main: formatAmount(ing.key, ing.grams * scale, products[ing.key]), sub: `в рецепте на 2 порции: ${ing.amount}` };
+  return { main: formatAmount(ing.key, ing.grams * scale, products[ing.key]), sub: `в рецепте на ${servings} ${plural(servings, 'порцию', 'порции', 'порций')}: ${ing.amount}` };
+}
+
+// Параметры ссылки: размер порции (×0,25–4) и число порций (1–8); мусор — значения по умолчанию
+export function portionParams(params, r) {
+  const f = +params.get('f');
+  const p = Math.round(+params.get('p'));
+  return {
+    factor: Number.isFinite(f) && f > 0 ? Math.min(4, Math.max(0.25, f)) : 1,
+    portions: Number.isFinite(p) && p > 0 ? Math.min(8, p) : r.servings,
+  };
 }
 
 // Отметки «уже подготовлено» — общие для карточки рецепта и режима готовки
@@ -28,7 +38,7 @@ export function ingredientList(r, scale, { checkable = true, onToggle } = {}) {
   const products = state.data.products;
   const prep = prepState(r.id);
   const row = (i) => {
-    const a = ingredientAmount(i, scale, products);
+    const a = ingredientAmount(i, scale, products, r.servings);
     const done = prep.ings.includes(i.key);
     const toggle = () => {
       const s = new Set(prep.ings);
@@ -63,8 +73,7 @@ export function renderRecipe(root, rerender, id, params) {
     root.append(h('p', null, 'Рецепт не найден. ', h('a', { href: '#/recipes' }, 'К рецептам')));
     return;
   }
-  const factor = +params.get('f') || 1;
-  const portions = +params.get('p') || r.servings;
+  const { factor, portions } = portionParams(params, r);
   const scale = (factor * portions) / r.servings;
   const ps = r.per_serving;
   const fav = (state.prefs.favorites || []).includes(r.id);

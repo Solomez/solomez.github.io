@@ -1,4 +1,4 @@
-import { h, eur, num } from '../ui.js';
+import { h, eur, num, plural } from '../ui.js';
 import { state, targets } from '../state.js';
 import { daySums } from '../core/planner.js';
 import { dayShort, dayName, dayDate } from '../core/calendar.js';
@@ -56,7 +56,7 @@ export function renderStats(root) {
   if (hasExtras) {
     const bf = list.total - buildShoppingList(plan, state.recipeMap, state.data.products, { ...opts, only: 'main' }).total;
     root.append(h('h2', null, 'Завтраки и перекусы'));
-    root.append(h('p', { class: 'muted' }, `В плане ${plan.extras.length} завтраков и перекусов. Они добавляют к покупкам ≈ ${eur(bf)} (резерв в профиле — ${eur(state.profile.reserve)}). Отключить можно в профиле.`));
+    root.append(h('p', { class: 'muted' }, `В плане ${plan.extras.length} ${plural(plan.extras.length, 'завтрак или перекус', 'завтрака и перекуса', 'завтраков и перекусов')}. Они добавляют к покупкам ≈ ${eur(bf)} (резерв в профиле — ${eur(state.profile.reserve)}). Отключить можно в профиле.`));
     return;
   }
   const restK = t.kcal - avg('kcal');
