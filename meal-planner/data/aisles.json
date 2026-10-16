@@ -1,0 +1,840 @@
+{
+ "zones": [
+  {
+   "id": "produce",
+   "ru": "Овощи и фрукты",
+   "de": "Obst & Gemüse",
+   "en": "Fruit & vegetables",
+   "hint": "обычно сразу у входа"
+  },
+  {
+   "id": "bakery",
+   "ru": "Хлеб и выпечка",
+   "de": "Brot & Gebäck",
+   "en": "Bread & bakery",
+   "hint": "у входа или у касс; хлеб в пакетах — на отдельной полке"
+  },
+  {
+   "id": "meat",
+   "ru": "Мясо и птица",
+   "de": "Fleisch & Geflügel",
+   "en": "Meat & poultry",
+   "hint": "холодильная витрина, часто вдоль задней стены"
+  },
+  {
+   "id": "deli",
+   "ru": "Колбасы и ветчина",
+   "de": "Wurst & Schinken",
+   "en": "Cold cuts & sausages",
+   "hint": "рядом с мясом; на прилавке Feinkost нарезают на развес"
+  },
+  {
+   "id": "cheese",
+   "ru": "Сыр",
+   "de": "Käse",
+   "en": "Cheese",
+   "hint": "холодильник рядом с молочным"
+  },
+  {
+   "id": "dairy",
+   "ru": "Молочное",
+   "de": "Milchprodukte",
+   "en": "Dairy",
+   "hint": "длинный холодильник: молоко, йогурты, Topfen, масло, сливки"
+  },
+  {
+   "id": "eggs",
+   "ru": "Яйца",
+   "de": "Eier",
+   "en": "Eggs",
+   "hint": "рядом с молочным, иногда на обычной полке"
+  },
+  {
+   "id": "chilled",
+   "ru": "Готовое из холодильника",
+   "de": "Kühlregal: Fertiggerichte & Aufstriche",
+   "en": "Chilled ready meals & spreads",
+   "hint": "холодильник с салатами, намазками, тестом и свежей пастой"
+  },
+  {
+   "id": "grains",
+   "ru": "Макароны, рис, крупы",
+   "de": "Teigwaren, Reis & Getreide",
+   "en": "Pasta, rice & grains",
+   "hint": "ряд бакалеи"
+  },
+  {
+   "id": "cans",
+   "ru": "Консервы и соусы для пасты",
+   "de": "Konserven & Sugo",
+   "en": "Canned food & pasta sauces",
+   "hint": "ряд бакалеи, рядом с макаронами"
+  },
+  {
+   "id": "oils",
+   "ru": "Масло, соусы, специи",
+   "de": "Öl, Saucen & Gewürze",
+   "en": "Oil, sauces & spices",
+   "hint": "ряд бакалеи"
+  },
+  {
+   "id": "baking",
+   "ru": "Мука, сахар, всё для выпечки",
+   "de": "Backen: Mehl & Zucker",
+   "en": "Baking: flour & sugar",
+   "hint": "ряд бакалеи"
+  },
+  {
+   "id": "international",
+   "ru": "Азиатское, балканское, мексиканское",
+   "de": "Internationale Küche",
+   "en": "International food",
+   "hint": "отдельная полка: соевый соус, лапша, тортильи"
+  },
+  {
+   "id": "breakfast",
+   "ru": "Завтрак: хлопья, мёд, пасты",
+   "de": "Frühstück: Müsli, Honig & Aufstriche",
+   "en": "Breakfast: cereal, honey & spreads",
+   "hint": "часто рядом с кофе"
+  },
+  {
+   "id": "coffee",
+   "ru": "Кофе и чай",
+   "de": "Kaffee & Tee",
+   "en": "Coffee & tea",
+   "hint": "рядом с завтраками"
+  },
+  {
+   "id": "sweets",
+   "ru": "Сладкое и снеки",
+   "de": "Süßes & Salziges",
+   "en": "Sweets & snacks",
+   "hint": "отдельный ряд и полки у касс"
+  },
+  {
+   "id": "drinks",
+   "ru": "Напитки",
+   "de": "Getränke",
+   "en": "Drinks",
+   "hint": "обычно в конце зала, вода — упаковками у пола"
+  },
+  {
+   "id": "household",
+   "ru": "Хозтовары",
+   "de": "Haushalt",
+   "en": "Household",
+   "hint": "пекарская бумага, фольга, пакеты, губки"
+  },
+  {
+   "id": "frozen",
+   "ru": "Заморозка",
+   "de": "Tiefkühl",
+   "en": "Frozen food",
+   "hint": "морозильные лари — возьмите в самом конце"
+  }
+ ],
+ "shelves": [
+  {
+   "id": "veg",
+   "zone": "produce",
+   "ru": "Овощи",
+   "en": "Vegetables",
+   "de": "Gemüse",
+   "count": 192
+  },
+  {
+   "id": "potato_onion",
+   "zone": "produce",
+   "ru": "Картофель, лук, чеснок",
+   "en": "Potatoes, onions & garlic",
+   "de": "Kartoffeln, Zwiebeln & Knoblauch",
+   "count": 96
+  },
+  {
+   "id": "tomato_fresh",
+   "zone": "produce",
+   "ru": "Помидоры",
+   "en": "Tomatoes",
+   "de": "Paradeiser / Tomaten",
+   "count": 58
+  },
+  {
+   "id": "fruit",
+   "zone": "produce",
+   "ru": "Фрукты",
+   "en": "Fruit",
+   "de": "Obst",
+   "count": 191
+  },
+  {
+   "id": "salad_herbs",
+   "zone": "produce",
+   "ru": "Салат и свежая зелень",
+   "en": "Salad & fresh herbs",
+   "de": "Salate & Kräuter",
+   "count": 145
+  },
+  {
+   "id": "mushrooms",
+   "zone": "produce",
+   "ru": "Грибы",
+   "en": "Mushrooms",
+   "de": "Pilze",
+   "count": 13
+  },
+  {
+   "id": "nuts_dried",
+   "zone": "produce",
+   "ru": "Орехи и сухофрукты",
+   "en": "Nuts & dried fruit",
+   "de": "Nüsse & Trockenfrüchte",
+   "count": 275
+  },
+  {
+   "id": "bread_fresh",
+   "zone": "bakery",
+   "ru": "Свежий хлеб и булочки",
+   "en": "Fresh bread & rolls",
+   "de": "Ofenfrisches Brot & Gebäck",
+   "count": 364
+  },
+  {
+   "id": "bread_packed",
+   "zone": "bakery",
+   "ru": "Хлеб в упаковке и тостовый",
+   "en": "Packaged bread & toast",
+   "de": "Brot verpackt & Toastbrot",
+   "count": 169
+  },
+  {
+   "id": "crispbread",
+   "zone": "bakery",
+   "ru": "Хлебцы, сухари, рисовые хлебцы",
+   "en": "Crispbread & rice cakes",
+   "de": "Knäckebrot, Zwieback & Reiswaffeln",
+   "count": 143
+  },
+  {
+   "id": "cakes",
+   "zone": "bakery",
+   "ru": "Пирожные, кексы, сдоба",
+   "en": "Cakes & pastries",
+   "de": "Kuchen, Plunder & Mehlspeisen",
+   "count": 461
+  },
+  {
+   "id": "breadcrumbs",
+   "zone": "bakery",
+   "ru": "Панировочные сухари и гренки",
+   "en": "Breadcrumbs & croutons",
+   "de": "Semmelbrösel & Semmelwürfel",
+   "count": 11
+  },
+  {
+   "id": "poultry",
+   "zone": "meat",
+   "ru": "Курица и индейка",
+   "en": "Chicken & turkey",
+   "de": "Geflügel (Huhn & Pute)",
+   "count": 126
+  },
+  {
+   "id": "mince",
+   "zone": "meat",
+   "ru": "Фарш",
+   "en": "Mince",
+   "de": "Faschiertes",
+   "count": 34
+  },
+  {
+   "id": "pork",
+   "zone": "meat",
+   "ru": "Свинина",
+   "en": "Pork",
+   "de": "Schweinefleisch",
+   "count": 82
+  },
+  {
+   "id": "beef",
+   "zone": "meat",
+   "ru": "Говядина",
+   "en": "Beef",
+   "de": "Rindfleisch",
+   "count": 89
+  },
+  {
+   "id": "meat_other",
+   "zone": "meat",
+   "ru": "Маринованное мясо, гриль, прочее",
+   "en": "Marinated & other meat",
+   "de": "Fleisch-Spezialitäten",
+   "count": 92
+  },
+  {
+   "id": "sausages",
+   "zone": "deli",
+   "ru": "Сосиски и колбаски",
+   "en": "Sausages & frankfurters",
+   "de": "Würstel",
+   "count": 117
+  },
+  {
+   "id": "ham",
+   "zone": "deli",
+   "ru": "Ветчина",
+   "en": "Ham",
+   "de": "Schinken",
+   "count": 65
+  },
+  {
+   "id": "coldcuts",
+   "zone": "deli",
+   "ru": "Нарезка, салями, бекон",
+   "en": "Cold cuts, salami & bacon",
+   "de": "Aufschnitt, Salami & Speck",
+   "count": 221
+  },
+  {
+   "id": "feinkost",
+   "zone": "deli",
+   "ru": "Прилавок Feinkost (на развес)",
+   "en": "Deli counter (by weight)",
+   "de": "Feinkost-Theke",
+   "count": 190
+  },
+  {
+   "id": "meat_alt",
+   "zone": "deli",
+   "ru": "Тофу и заменители мяса",
+   "en": "Tofu & meat alternatives",
+   "de": "Tofu & Fleischersatz",
+   "count": 270
+  },
+  {
+   "id": "cheese_hard",
+   "zone": "cheese",
+   "ru": "Твёрдый сыр (в т. ч. ломтиками)",
+   "en": "Hard & sliced cheese",
+   "de": "Hartkäse & Schnittkäse",
+   "count": 429
+  },
+  {
+   "id": "cheese_fresh",
+   "zone": "cheese",
+   "ru": "Творожный сыр и cottage cheese",
+   "en": "Cream cheese & cottage cheese",
+   "de": "Frischkäse & Hüttenkäse",
+   "count": 286
+  },
+  {
+   "id": "cheese_feta",
+   "zone": "cheese",
+   "ru": "Фета и моцарелла",
+   "en": "Feta & mozzarella",
+   "de": "Feta & Mozzarella",
+   "count": 44
+  },
+  {
+   "id": "cheese_grated",
+   "zone": "cheese",
+   "ru": "Тёртый сыр и пармезан",
+   "en": "Grated cheese & parmesan",
+   "de": "Käse gerieben & Parmesan",
+   "count": 48
+  },
+  {
+   "id": "cheese_soft",
+   "zone": "cheese",
+   "ru": "Мягкий сыр, сыр для жарки",
+   "en": "Soft & grilling cheese",
+   "de": "Weichkäse & Grillkäse",
+   "count": 270
+  },
+  {
+   "id": "milk",
+   "zone": "dairy",
+   "ru": "Молоко",
+   "en": "Milk",
+   "de": "Milch",
+   "count": 120
+  },
+  {
+   "id": "yogurt",
+   "zone": "dairy",
+   "ru": "Йогурт и скир",
+   "en": "Yogurt & skyr",
+   "de": "Joghurt & Skyr",
+   "count": 466
+  },
+  {
+   "id": "cream",
+   "zone": "dairy",
+   "ru": "Сливки, сметана, творог (Topfen)",
+   "en": "Cream, sour cream & quark",
+   "de": "Rahm, Obers & Topfen",
+   "count": 198
+  },
+  {
+   "id": "butter",
+   "zone": "dairy",
+   "ru": "Сливочное масло и маргарин",
+   "en": "Butter & margarine",
+   "de": "Butter & Margarine",
+   "count": 128
+  },
+  {
+   "id": "dairy_drinks",
+   "zone": "dairy",
+   "ru": "Молочные напитки",
+   "en": "Milk & yogurt drinks",
+   "de": "Milch- & Joghurtgetränke",
+   "count": 264
+  },
+  {
+   "id": "desserts",
+   "zone": "dairy",
+   "ru": "Пудинги и десерты",
+   "en": "Puddings & desserts",
+   "de": "Pudding & Desserts",
+   "count": 265
+  },
+  {
+   "id": "dairy_alt",
+   "zone": "dairy",
+   "ru": "Растительные йогурты и сыры",
+   "en": "Plant-based yogurt & cheese",
+   "de": "Pflanzliche Alternativen",
+   "count": 105
+  },
+  {
+   "id": "eggs",
+   "zone": "eggs",
+   "ru": "Яйца",
+   "en": "Eggs",
+   "de": "Eier",
+   "count": 49
+  },
+  {
+   "id": "spreads",
+   "zone": "chilled",
+   "ru": "Намазки, хумус, антипасти",
+   "en": "Spreads, hummus & antipasti",
+   "de": "Aufstriche & Antipasti",
+   "count": 244
+  },
+  {
+   "id": "dough",
+   "zone": "chilled",
+   "ru": "Тесто (слоёное, для пиццы)",
+   "en": "Ready-made dough",
+   "de": "Backfertige Teige",
+   "count": 73
+  },
+  {
+   "id": "ready_chilled",
+   "zone": "chilled",
+   "ru": "Готовая еда, салаты, сэндвичи",
+   "en": "Ready meals, salads & sandwiches",
+   "de": "Fertiggerichte gekühlt & Sandwiches",
+   "count": 443
+  },
+  {
+   "id": "fresh_pasta",
+   "zone": "chilled",
+   "ru": "Свежая паста и ньокки",
+   "en": "Fresh pasta & gnocchi",
+   "de": "Frische Pasta",
+   "count": 49
+  },
+  {
+   "id": "pasta",
+   "zone": "grains",
+   "ru": "Макароны",
+   "en": "Pasta",
+   "de": "Teigwaren / Pasta",
+   "count": 558
+  },
+  {
+   "id": "rice",
+   "zone": "grains",
+   "ru": "Рис",
+   "en": "Rice",
+   "de": "Reis",
+   "count": 145
+  },
+  {
+   "id": "grains_legumes",
+   "zone": "grains",
+   "ru": "Крупы и сухие бобовые",
+   "en": "Grains & dried pulses",
+   "de": "Getreide & Hülsenfrüchte",
+   "count": 425
+  },
+  {
+   "id": "sides",
+   "zone": "grains",
+   "ru": "Пюре, кнёдели, суповые добавки",
+   "en": "Mash, dumplings & soup add-ins",
+   "de": "Knödel, Püree & Suppeneinlagen",
+   "count": 34
+  },
+  {
+   "id": "tomato_products",
+   "zone": "cans",
+   "ru": "Томаты, пассата, соусы для пасты, песто",
+   "en": "Tomatoes, passata, pasta sauces & pesto",
+   "de": "Tomatenprodukte, Sugo & Pesto",
+   "count": 234
+  },
+  {
+   "id": "canned_veg",
+   "zone": "cans",
+   "ru": "Овощные консервы, фасоль, нут",
+   "en": "Canned vegetables & beans",
+   "de": "Gemüsekonserven & Hülsenfrüchte",
+   "count": 289
+  },
+  {
+   "id": "pickles",
+   "zone": "cans",
+   "ru": "Соленья, оливки",
+   "en": "Pickles & olives",
+   "de": "Sauerwaren & Oliven",
+   "count": 360
+  },
+  {
+   "id": "canned_fruit",
+   "zone": "cans",
+   "ru": "Фруктовые консервы и пюре",
+   "en": "Canned fruit & purée",
+   "de": "Obstkonserven & Fruchtmus",
+   "count": 140
+  },
+  {
+   "id": "ready_shelf",
+   "zone": "cans",
+   "ru": "Готовые блюда и супы (не в холодильнике)",
+   "en": "Shelf-stable meals & soups",
+   "de": "Fertiggerichte & Suppen",
+   "count": 442
+  },
+  {
+   "id": "canned_spreads",
+   "zone": "cans",
+   "ru": "Паштеты и намазки в банках",
+   "en": "Pâtés & canned spreads",
+   "de": "Aufstriche & Pasteten",
+   "count": 146
+  },
+  {
+   "id": "oil_vinegar",
+   "zone": "oils",
+   "ru": "Масло и уксус",
+   "en": "Oil & vinegar",
+   "de": "Öl & Essig",
+   "count": 313
+  },
+  {
+   "id": "sauces",
+   "zone": "oils",
+   "ru": "Кетчуп, горчица, майонез, соусы",
+   "en": "Ketchup, mustard, mayo & sauces",
+   "de": "Saucen, Senf & Dressings",
+   "count": 402
+  },
+  {
+   "id": "spices",
+   "zone": "oils",
+   "ru": "Специи и соль",
+   "en": "Spices & salt",
+   "de": "Gewürze & Salz",
+   "count": 920
+  },
+  {
+   "id": "stock",
+   "zone": "oils",
+   "ru": "Бульонные кубики и приправы-фикс",
+   "en": "Stock cubes & seasoning mixes",
+   "de": "Suppenwürfel & Fixprodukte",
+   "count": 215
+  },
+  {
+   "id": "flour",
+   "zone": "baking",
+   "ru": "Мука",
+   "en": "Flour",
+   "de": "Mehl",
+   "count": 112
+  },
+  {
+   "id": "sugar",
+   "zone": "baking",
+   "ru": "Сахар и подсластители",
+   "en": "Sugar & sweeteners",
+   "de": "Zucker & Süßungsmittel",
+   "count": 102
+  },
+  {
+   "id": "baking_aids",
+   "zone": "baking",
+   "ru": "Разрыхлитель, дрожжи, ваниль, орехи",
+   "en": "Baking powder, yeast & baking aids",
+   "de": "Backpulver, Germ & Backzutaten",
+   "count": 380
+  },
+  {
+   "id": "dessert_mixes",
+   "zone": "baking",
+   "ru": "Смеси для пудинга и выпечки",
+   "en": "Pudding & baking mixes",
+   "de": "Puddingpulver & Backmischungen",
+   "count": 80
+  },
+  {
+   "id": "asia",
+   "zone": "international",
+   "ru": "Азиатское",
+   "en": "Asian food",
+   "de": "Asien",
+   "count": 143
+  },
+  {
+   "id": "balkan",
+   "zone": "international",
+   "ru": "Балканское",
+   "en": "Balkan food",
+   "de": "Balkan",
+   "count": 35
+  },
+  {
+   "id": "mediterranean",
+   "zone": "international",
+   "ru": "Средиземноморское, восточное, мексиканское",
+   "en": "Mediterranean, Middle Eastern & Mexican",
+   "de": "Mediterran, Orientalisch & Mexikanisch",
+   "count": 39
+  },
+  {
+   "id": "cereal",
+   "zone": "breakfast",
+   "ru": "Мюсли, хлопья, овсянка",
+   "en": "Muesli, cereal & oats",
+   "de": "Müsli, Cerealien & Haferflocken",
+   "count": 360
+  },
+  {
+   "id": "sweet_spreads",
+   "zone": "breakfast",
+   "ru": "Мёд, варенье, ореховые пасты",
+   "en": "Honey, jam & nut butters",
+   "de": "Honig, Marmelade & Nussmus",
+   "count": 403
+  },
+  {
+   "id": "uht_milk",
+   "zone": "breakfast",
+   "ru": "Долгохранящееся и растительное молоко",
+   "en": "Long-life & plant milk",
+   "de": "H-Milch & Milchalternativen",
+   "count": 69
+  },
+  {
+   "id": "coffee",
+   "zone": "coffee",
+   "ru": "Кофе",
+   "en": "Coffee",
+   "de": "Kaffee",
+   "count": 617
+  },
+  {
+   "id": "tea",
+   "zone": "coffee",
+   "ru": "Чай и какао",
+   "en": "Tea & cocoa",
+   "de": "Tee & Kakao",
+   "count": 496
+  },
+  {
+   "id": "chocolate",
+   "zone": "sweets",
+   "ru": "Шоколад и конфеты",
+   "en": "Chocolate & sweets",
+   "de": "Schokolade & Süßes",
+   "count": 1037
+  },
+  {
+   "id": "biscuits",
+   "zone": "sweets",
+   "ru": "Печенье и вафли",
+   "en": "Biscuits & wafers",
+   "de": "Kekse & Waffeln",
+   "count": 466
+  },
+  {
+   "id": "chips",
+   "zone": "sweets",
+   "ru": "Чипсы и солёные снеки",
+   "en": "Crisps & salty snacks",
+   "de": "Chips & Knabbereien",
+   "count": 599
+  },
+  {
+   "id": "bars",
+   "zone": "sweets",
+   "ru": "Батончики и протеиновые снеки",
+   "en": "Cereal & protein bars",
+   "de": "Riegel & Proteinsnacks",
+   "count": 748
+  },
+  {
+   "id": "candy",
+   "zone": "sweets",
+   "ru": "Леденцы и жвачка",
+   "en": "Candy & chewing gum",
+   "de": "Zuckerl & Kaugummi",
+   "count": 471
+  },
+  {
+   "id": "water",
+   "zone": "drinks",
+   "ru": "Вода",
+   "en": "Water",
+   "de": "Mineralwasser",
+   "count": 323
+  },
+  {
+   "id": "juice",
+   "zone": "drinks",
+   "ru": "Соки и смузи",
+   "en": "Juice & smoothies",
+   "de": "Säfte & Smoothies",
+   "count": 596
+  },
+  {
+   "id": "soft_drinks",
+   "zone": "drinks",
+   "ru": "Лимонады, холодный чай, энергетики",
+   "en": "Soft drinks, iced tea & energy drinks",
+   "de": "Limonaden, Eistee & Energydrinks",
+   "count": 885
+  },
+  {
+   "id": "syrup",
+   "zone": "drinks",
+   "ru": "Сиропы",
+   "en": "Syrups",
+   "de": "Sirupe",
+   "count": 171
+  },
+  {
+   "id": "foil_paper",
+   "zone": "household",
+   "ru": "Пекарская бумага, фольга, пакеты",
+   "en": "Baking paper, foil & bags",
+   "de": "Backpapier, Alufolie & Gefrierbeutel",
+   "count": 234
+  },
+  {
+   "id": "kitchen_paper",
+   "zone": "household",
+   "ru": "Бумажные полотенца и салфетки",
+   "en": "Kitchen roll & napkins",
+   "de": "Küchenrolle & Servietten",
+   "count": 65
+  },
+  {
+   "id": "dish_cleaning",
+   "zone": "household",
+   "ru": "Для мытья посуды и кухни",
+   "en": "Dish & kitchen cleaning",
+   "de": "Spülmittel & Küchenreiniger",
+   "count": 235
+  },
+  {
+   "id": "utensils",
+   "zone": "household",
+   "ru": "Кухонные мелочи",
+   "en": "Kitchen utensils",
+   "de": "Küchenutensilien",
+   "count": 306
+  },
+  {
+   "id": "frozen_veg",
+   "zone": "frozen",
+   "ru": "Замороженные овощи и зелень",
+   "en": "Frozen vegetables & herbs",
+   "de": "TK-Gemüse & Kräuter",
+   "count": 212
+  },
+  {
+   "id": "frozen_fruit",
+   "zone": "frozen",
+   "ru": "Замороженные фрукты и ягоды",
+   "en": "Frozen fruit & berries",
+   "de": "TK-Obst",
+   "count": 44
+  },
+  {
+   "id": "frozen_meat",
+   "zone": "frozen",
+   "ru": "Замороженное мясо",
+   "en": "Frozen meat",
+   "de": "TK-Fleisch",
+   "count": 53
+  },
+  {
+   "id": "frozen_potato",
+   "zone": "frozen",
+   "ru": "Картофель фри и др.",
+   "en": "Frozen fries & potato products",
+   "de": "Pommes & Kartoffelprodukte",
+   "count": 83
+  },
+  {
+   "id": "frozen_pizza",
+   "zone": "frozen",
+   "ru": "Пицца и багеты",
+   "en": "Frozen pizza & baguettes",
+   "de": "Pizza & Baguette",
+   "count": 191
+  },
+  {
+   "id": "frozen_meals",
+   "zone": "frozen",
+   "ru": "Готовые блюда, кнёдели",
+   "en": "Frozen meals & dumplings",
+   "de": "TK-Gerichte & Knödel",
+   "count": 255
+  },
+  {
+   "id": "frozen_sweets",
+   "zone": "frozen",
+   "ru": "Мороженое и выпечка",
+   "en": "Ice cream & frozen desserts",
+   "de": "Eis & Mehlspeisen",
+   "count": 542
+  }
+ ],
+ "concepts": [],
+ "stores": [
+  {
+   "key": "billa",
+   "name": "Billa",
+   "count": 9261,
+   "fetched": "2026-10-16"
+  },
+  {
+   "key": "spar",
+   "name": "Spar",
+   "count": 12296,
+   "fetched": "2026-10-16"
+  },
+  {
+   "key": "penny",
+   "name": "Penny",
+   "count": 303,
+   "fetched": "2026-10-16"
+  }
+ ]
+}

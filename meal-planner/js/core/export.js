@@ -24,19 +24,26 @@ export function planToText(plan, recipeMap) {
   return lines.join('\n');
 }
 
-export function shoppingToText(list, products, departments, checked = {}) {
+export function shoppingToText(list, products, departments, checked = {}, cart = []) {
   const lines = ['СПИСОК ПОКУПОК', ''];
   for (const dep of departments) {
     const items = list.items.filter((i) => i.department === dep.id);
     if (!items.length) continue;
-    lines.push(dep.name.toUpperCase());
+    lines.push(dep.de ? `${dep.name.toUpperCase()} · ${dep.de}` : dep.name.toUpperCase());
     for (const it of items) {
       const box = checked[it.key] ? '[x]' : '[ ]';
       const offer = it.offer ? ` — ${formatPack(it.offer)} ${it.offer.pack.name_de}, ${it.offer.pack.store}, ${eur(it.offer.cost)}` : '';
-      lines.push(`${box} ${it.name_ru} (${it.name_de_generic || it.name_de}): нужно ${formatAmount(it.key, it.needGrams, products[it.key])}${offer}`);
+      lines.push(`${box} ${it.name_ru} (${[it.name_de_generic || it.name_de, it.name_en].filter(Boolean).join(' / ')}): нужно ${formatAmount(it.key, it.needGrams, products[it.key])}${offer}`);
     }
     lines.push('');
   }
+  const own = cart.filter((c) => !c.done);
+  if (own.length) {
+    lines.push('ВАШИ ТОВАРЫ');
+    for (const c of own) lines.push(`[ ] ${c.name}${c.byWeight ? '' : ` × ${c.qty}`} — ${c.store}${c.price ? `, ${eur(c.price)}${c.byWeight ? '/кг' : ''}` : ''}`);
+    lines.push('');
+  }
+  if (list.atHome?.length) lines.push(`УЖЕ ДОМА (не покупать): ${list.atHome.map((i) => i.name_ru).join(', ')}`, '');
   lines.push('ИТОГО ПО МАГАЗИНАМ');
   for (const [s, v] of Object.entries(list.byStore)) lines.push(`  ${s}: ${eur(v.total)} (${v.count} поз.)`);
   lines.push(`  Всего: ${eur(list.total)}`, '');

@@ -433,7 +433,7 @@ ul.variants { list-style: none; padding: 0; margin: 0; }
   .nav a > span:first-child { padding: 4px 10px; }
   .cook-foot { gap: 6px; }
   .cook-foot .btn { font-size: .95rem; }
-  .shop-item.with-thumb { grid-template-columns: 24px 40px minmax(0, 1fr) auto; column-gap: 8px; }
+  .shop-item.with-thumb { grid-template-columns: 24px 40px minmax(0, 1fr) auto auto; column-gap: 8px; }
   .shop-item.with-thumb .thumb, .shop-item.with-thumb .photo-link { width: 40px; height: 40px; }
   .day-meters { gap: 10px; }
   .daybtn { min-width: 38px; }
@@ -460,3 +460,63 @@ ul.variants { list-style: none; padding: 0; margin: 0; }
 .seg.scroll button { flex: none; white-space: nowrap; }
 .item-links { row-gap: 0; column-gap: 14px; }
 .shop-item .uses-toggle { padding-block: 2px; }
+
+/* подсказка, как обойтись без утвари */
+.tool-hint { margin-top: 6px; padding: 6px 10px; border-radius: 10px; background: var(--surface-2); color: var(--muted); font-size: .9rem; }
+.cook .tool-hint { font-size: 1rem; }
+
+/* ---------- Отделы в магазине ---------- */
+.shop-item.with-thumb { grid-template-columns: 26px 44px minmax(0, 1fr) auto auto; }
+.item-more { align-self: start; margin: -6px -6px 0 0; }
+.zone-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: 14px 0 0; padding: 6px 10px; border-radius: 10px; background: var(--surface-2); }
+.zone-head .zone-ru { font-weight: 500; }
+.zone-head .zone-de { color: var(--muted); font-size: .86rem; }
+.trip-tools { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 2px; }
+.where { display: inline-flex; align-items: center; gap: 4px; font-size: .82rem; color: var(--accent); }
+.where svg { width: 14px; height: 14px; flex: none; }
+.where.own { color: var(--protein); }
+.swap-note { font-size: .84rem; color: var(--protein); }
+.where-box { padding: 10px 12px; border-radius: var(--radius-sm); background: var(--accent-soft); display: grid; gap: 2px; }
+.where-box .eyebrow { color: var(--accent); margin: 0; }
+.ask { display: grid; gap: 2px; font-size: .92rem; }
+.names { display: grid; gap: 2px; }
+.menu { display: grid; gap: 8px; }
+.menu-item { display: grid; gap: 2px; text-align: left; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); cursor: pointer; font: inherit; color: inherit; }
+.menu-item:hover { border-color: var(--accent); }
+.menu-item .muted { font-size: .86rem; }
+.route-list { list-style: none; padding: 0; margin: 0; counter-reset: r; }
+.route-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); counter-increment: r; }
+.route-list li::before { content: counter(r); color: var(--muted); width: 22px; flex: none; font-variant-numeric: tabular-nums; }
+.route-name { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.route-btns { display: flex; gap: 2px; flex: none; }
+.home-done .home-mark { color: var(--accent); }
+.home-done .home-mark svg { width: 20px; height: 20px; }
+.shop-item.home-done { grid-template-columns: 26px minmax(0, 1fr) auto; align-items: center; }
+
+/* ---------- Каталог и «Дома» ---------- */
+.cat-list, .home-list, .zone-list { list-style: none; padding: 0; margin: 0; }
+.cat-item { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: start; }
+.cat-main { display: grid; gap: 3px; min-width: 0; font-size: .92rem; }
+.cat-name { font-weight: 500; overflow-wrap: anywhere; }
+.cat-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
+.cat-actions .btn svg, .menu .btn svg { width: 16px; height: 16px; }
+.btn.small.on { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.zone-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px; text-align: left; padding: 14px 4px; border: 0; border-bottom: 1px solid var(--line); background: none; cursor: pointer; font: inherit; color: inherit; }
+.zone-btn > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.crumbs { font-size: .9rem; color: var(--muted); margin-bottom: 6px; display: flex; flex-wrap: wrap; gap: 4px; align-items: baseline; }
+.home-row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: center; }
+.home-row:has(> input[type=checkbox]) { grid-template-columns: 26px 40px minmax(0, 1fr); }
+.home-row input[type=checkbox] { width: 22px; height: 22px; accent-color: var(--accent); }
+.home-main { display: grid; gap: 2px; min-width: 0; font-size: .92rem; }
+.home-actions { grid-column: 2 / -1; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.home-row:has(> input[type=checkbox]) .home-actions { grid-column: 3 / -1; }
+.home-row.done .cat-name { text-decoration: line-through; color: var(--muted); }
+.seg.small button { padding: 4px 12px; font-size: .88rem; }
+.grams-field { display: inline-flex; align-items: center; gap: 6px; }
+input.grams { width: 84px; padding: 6px 10px; }
+.shop-list .home-row { padding: 10px 0; }
+@media (max-width: 380px) {
+  .shop-item.with-thumb { grid-template-columns: 24px 40px minmax(0, 1fr) auto auto; }
+  .cat-item { grid-template-columns: 60px minmax(0, 1fr); }
+  .cat-item .thumb.lg { width: 60px; height: 60px; }
+}

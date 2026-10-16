@@ -67,7 +67,7 @@ export function openLightbox(product, startPack) {
   const box = h('div', { class: 'lightbox', role: 'dialog', 'aria-modal': 'true', 'aria-label': `Фото: ${product.name_ru}`, onclick: (e) => { if (e.target === box || e.target === stage) close(); } },
     h('div', { class: 'lb-top' }, count, h('button', { class: 'lb-close', 'aria-label': 'Закрыть', onclick: close }, icon('close'))));
   const stage = h('div', { class: 'lb-stage' }, img);
-  box.append(stage, list.length > 1 ? prev : null, list.length > 1 ? next : null, cap);
+  box.append(...[stage, list.length > 1 ? prev : null, list.length > 1 ? next : null, cap].filter(Boolean));
   function draw() {
     const p = list[i];
     img.onerror = fallbackTo(p.image);
@@ -163,7 +163,7 @@ function packIn(product, store, needGrams) {
   return needGrams ? chooseOffer({ ...product, packs }, needGrams)?.pack : packs[0];
 }
 
-function altRow(product, p, { note, needGrams, best, otherStore } = {}) {
+function altRow(product, p, { note, needGrams, best, otherStore, onPick } = {}) {
   const offer = needGrams ? chooseOffer({ packs: [p] }, needGrams) : null;
   return h('li', { class: 'variant' + (best ? ' best' : '') },
     photo(product, p, { cls: 'thumb lg', label: product.name_ru }),
@@ -172,11 +172,13 @@ function altRow(product, p, { note, needGrams, best, otherStore } = {}) {
       note ? h('span', { class: 'alt-note' }, note) : null,
       h('span', { class: 'variant-name' }, p.name_de),
       h('span', { class: 'muted' }, `${unitText(p)} · ${eur(p.price_eur)} · ${eur(p.eur_per_kg)}/кг`),
-      offer ? h('span', { class: 'muted' }, `на неделю: ${formatPack(offer)} — ${eur(offer.cost)}`) : null));
+      offer ? h('span', { class: 'muted' }, `на неделю: ${formatPack(offer)} — ${eur(offer.cost)}`) : null,
+      onPick ? h('button', { class: 'btn small primary', style: { justifySelf: 'start', marginTop: '6px' },
+        onclick: () => onPick({ ref: product.key, name: `${product.name_ru} — ${p.name_de}`, price: p.price_eur, image: p.image, store: p.store }) }, 'Взял это') : null));
 }
 
 // Замены другим продуктом: сначала те, что есть в этом же магазине, затем — где их найти
-function substituteList(product, store, needGrams, limit = 99) {
+function substituteList(product, store, needGrams, limit = 99, onPick) {
   const subs = substitutesOf(product.key).slice(0, limit);
   if (!subs.length) return null;
   return h('section', { class: 'alt-section' },
@@ -186,26 +188,29 @@ function substituteList(product, store, needGrams, limit = 99) {
       const g = needGrams ? Math.max(1, Math.round(needGrams * ratio)) : undefined;
       const here = store ? packIn(sp, store, g) : null;
       const p = here || packIn(sp, sortedPacks(sp)[0]?.store, g) || bestPack(sp);
-      return altRow(sp, p, { note, needGrams: g, otherStore: !here });
+      return altRow(sp, p, { note, needGrams: g, otherStore: !here, onPick: onPick ? (c) => { closeAlt?.(); onPick(c); } : null });
     })));
 }
 
 // «Нет на полке»: другие упаковки того же продукта в этом магазине, затем замены с пояснением
-export function showAlternatives(product, { store, needGrams, chosen } = {}) {
+let closeAlt = null;
+export function showAlternatives(product, { store, needGrams, chosen, onPick, extra } = {}) {
   if (!product) return;
   store ||= (needGrams ? chooseOffer(product, needGrams)?.pack : bestPack(product))?.store;
   const same = sortedPacks(product).filter((p) => p.store === store && p !== chosen && p.name_de !== chosen?.name_de);
-  const subs = substituteList(product, store, needGrams);
+  const subs = substituteList(product, store, needGrams, 99, onPick);
   let close;
   const content = h('div', null,
     h('p', { class: 'muted', style: { marginTop: 0 } }, store ? `Нет на полке в ${store}? Вот что взять вместо — лучшие варианты сверху.` : 'Что взять вместо — лучшие варианты сверху.'),
     same.length ? h('section', { class: 'alt-section' },
       h('div', { class: 'eyebrow' }, `Тот же продукт в ${store}, другая упаковка`),
-      h('ul', { class: 'variants' }, same.map((p) => altRow(product, p, { needGrams })))) : null,
+      h('ul', { class: 'variants' }, same.map((p) => altRow(product, p, { needGrams, onPick: onPick ? (c) => { closeAlt?.(); onPick(c); } : null })))) : null,
     subs,
     !same.length && !subs ? h('p', null, 'Замены нет: этот продукт лучше купить в другом магазине.') : null,
+    extra ? h('div', { style: { marginTop: '12px' } }, extra) : null,
     (product.packs || []).some((p) => p.store !== store && p.store !== 'любой')
       ? h('button', { class: 'btn', style: { marginTop: '12px' }, onclick: () => { close?.(); showVariants(product, { needGrams }); } }, 'Этот же продукт в других магазинах') : null,
     h('p', { class: 'muted small-print' }, 'Количество замены — как в рецепте, по весу. Пояснения — чем замена отличается при готовке.'));
   close = sheet(`Если нет: ${product.name_ru}`, content);
+  closeAlt = close;
 }

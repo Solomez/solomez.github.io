@@ -69,26 +69,44 @@ export function proportionalCost(product, grams, opts) {
   return (grams * minPerKg) / 1000;
 }
 
+// opts.home: { key: граммы | true } — что уже есть дома (true — есть, количество не указано: хватает);
+// opts.unavailable: Set('магазин|key') — там этого продукта на полке не оказалось, предлагаем другой магазин
+export function withoutUnavailable(product, key, unavailable) {
+  if (!product || !unavailable?.size) return product;
+  const packs = (product.packs || []).filter((p) => !unavailable.has(`${p.store}|${key}`));
+  return packs.length ? { ...product, packs } : product;
+}
+
 export function buildShoppingList(plan, recipeMap, products, opts = {}) {
   const needs = planNeeds(plan, recipeMap, { only: opts.only });
   const items = [];
   const basics = [];
+  const atHome = [];
   for (const [key, need] of needs) {
-    const product = products[key];
-    const offer = product ? chooseOffer(product, need.grams, opts) : null;
+    const product = withoutUnavailable(products[key], key, opts.unavailable);
+    const home = opts.home?.[key];
+    const homeGrams = home === true ? Infinity : +home || 0;
+    const toBuy = Math.max(0, need.grams - homeGrams);
+    const offer = product && toBuy > 0 ? chooseOffer(product, toBuy, opts) : null;
     const item = {
       key,
       name_ru: product?.name_ru || key,
+      name_en: product?.name_en || '',
       name_de: offer?.pack?.name_de || product?.name_de_generic || product?.name_de || '',
       name_de_generic: product?.name_de_generic || '',
-      department: product?.department || 'pantry',
+      department: product?.zone || product?.department || 'pantry',
+      zone: product?.zone || null,
+      shelf: product?.shelf || null,
       basic: !!product?.basic,
-      needGrams: need.grams,
+      needGrams: toBuy,
+      totalGrams: need.grams,
+      homeGrams: homeGrams === Infinity ? null : homeGrams || 0,
       uses: need.uses,
       offer,
       consumedCost: product ? proportionalCost(product, need.grams, opts) : 0,
     };
-    (item.basic ? basics : items).push(item);
+    if (home && toBuy <= 0) atHome.push(item);
+    else (item.basic ? basics : items).push(item);
   }
   const byStore = {};
   let total = 0;
@@ -105,7 +123,8 @@ export function buildShoppingList(plan, recipeMap, products, opts = {}) {
   const sortFn = (a, b) => a.name_ru.localeCompare(b.name_ru, 'ru');
   items.sort(sortFn);
   basics.sort(sortFn);
-  return { items, basics, byStore, total: round2(total), basicsTotal };
+  atHome.sort(sortFn);
+  return { items, basics, atHome, byStore, total: round2(total), basicsTotal };
 }
 
 // Стоимость, которую «съедает» план (без остатков упаковок), включая базовые продукты

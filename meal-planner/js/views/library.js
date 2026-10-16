@@ -1,5 +1,6 @@
 import { h, eur, num, icon, seg, plural } from '../ui.js';
 import { state, save, toggleIn } from '../state.js';
+import { missingTools } from '../core/equipment.js';
 
 const PROTEIN_TYPES = { chicken: 'Курица', turkey: 'Индейка', pork: 'Свинина', beef: 'Говядина', mince: 'Фарш', eggs: 'Яйца', legumes: 'Бобовые', sausage: 'Колбаски', dairy: 'Молочное', ham: 'Ветчина' };
 
@@ -17,6 +18,7 @@ export function matchRecipe(r, f) {
   if (f.ingredient && !r.ingredients.some((i) => i.key === f.ingredient)) return false;
   if (f.type && r.protein_type !== f.type) return false;
   if (f.fav && !(state.prefs.favorites || []).includes(r.id)) return false;
+  if (!f.showNoTools && missingTools(r, state.prefs.equipment).length) return false;
   const hidden = (state.prefs.hidden || []).includes(r.id);
   if (hidden && !f.showHidden) return false;
   return true;
@@ -55,6 +57,7 @@ export function renderLibrary(root, rerender) {
       sel('Основа', f.type, [['', 'любая'], ...Object.entries(PROTEIN_TYPES)], (v) => set('type', v || null)))),
     h('div', { class: 'row' },
       h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: !!f.showHidden, onchange: (e) => set('showHidden', e.target.checked) }), 'Показать скрытые'),
+      h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: !!f.showNoTools, onchange: (e) => set('showNoTools', e.target.checked) }), 'Показать блюда, для которых нет утвари'),
       h('button', { class: 'btn small ghost', onclick: () => { state.libFilters = {}; save(); rerender(); } }, 'Сбросить фильтры'))));
 
   const sortBy = f.sort || 'score';
@@ -81,6 +84,7 @@ export function recipeCard(r, rerender) {
   const fav = (state.prefs.favorites || []).includes(r.id);
   const hidden = (state.prefs.hidden || []).includes(r.id);
   const ps = r.per_serving;
+  const missing = missingTools(r, state.prefs.equipment);
   return h('article', { class: 'card rcard' + (hidden ? ' hidden-r' : '') },
     h('div', { class: 'row between', style: { alignItems: 'flex-start', flexWrap: 'nowrap' } },
       h('a', { class: 'title', href: `#/recipe/${r.id}` }, r.title),
@@ -89,7 +93,9 @@ export function recipeCard(r, rerender) {
         h('button', { class: 'btn icon ghost small', 'aria-label': hidden ? 'Показать блюдо' : 'Скрыть блюдо', title: hidden ? 'Вернуть в подбор' : 'Не предлагать в плане', onclick: () => { toggleIn('hidden', r.id); rerender(); } }, icon(hidden ? 'eye' : 'eyeOff')))),
     h('div', { class: 'desc' }, r.description),
     h('div', { class: 'meta' }, `${r.time.active}\u00a0мин активно · ${eur(ps.cost)} · ${num(ps.protein)}\u00a0г белка · ${num(ps.kcal)}\u00a0ккал`),
-    (r.tags || []).includes('спорное') ? h('div', null, h('span', { class: 'badge warn' }, 'спорное')) : null);
+    (r.tags || []).includes('спорное') || missing.length ? h('div', { class: 'row' },
+      (r.tags || []).includes('спорное') ? h('span', { class: 'badge warn' }, 'спорное') : null,
+      missing.length ? h('span', { class: 'badge warn' }, `нужно: ${missing.join(', ').toLowerCase()}`) : null) : null);
 }
 
 function activeCount(f) {

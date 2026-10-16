@@ -1,6 +1,8 @@
 import { h, num, eur, seg, toast, download, humanDate } from '../ui.js';
 import { state, save, targets, IS_ARTIFACT, dropMissing } from '../state.js';
 import { ACTIVITY, GOALS, DEFAULT_PROFILE } from '../core/nutrition.js';
+import { TOOLS, has, canCook } from '../core/equipment.js';
+import { ACCOUNTS_ENABLED, sendCode, verifyCode, startAccount, signOut, signedIn } from '../account.js';
 
 export function renderProfile(root, rerender) {
   const p = state.profile;
@@ -21,7 +23,7 @@ export function renderProfile(root, rerender) {
   function drawLive() {
     const t = targets();
     normSlot.replaceChildren(
-      !t.complete ? h('p', { class: 'notice' }, 'Заполните пол, рост и вес — пока показан расчёт для 178 см / 72 кг.') : null,
+      !t.complete ? h('p', { class: 'notice' }, 'Заполните пол, рост и вес — пока показан расчёт для 178 см / 72 кг.') : '',
       h('div', { class: 'kpis' },
         kpi(`${num(t.kcal)} ккал`, `в день (поддержание ${num(t.tdee)})`),
         kpi(`${num(t.protein)} г`, 'белка в день'),
@@ -38,6 +40,8 @@ export function renderProfile(root, rerender) {
   root.append(h('div', { class: 'topbar' }, h('h1', null, 'Профиль'),
     h('span', { class: 'save-status muted', id: 'save-status', 'aria-live': 'polite' }, state.savedAt ? 'Сохранено' : '')));
   root.append(h('p', { class: 'muted', style: { marginTop: '-8px' } }, 'Ответы сохраняются автоматически. ', h('span', { id: 'where-text' }, whereText())));
+
+  if (ACCOUNTS_ENABLED) root.append(accountCard(rerender));
 
   root.append(h('div', { class: 'card stack' },
     h('h2', { style: { marginTop: 0 } }, 'О вас'),
@@ -69,6 +73,21 @@ export function renderProfile(root, rerender) {
       numField('Из них на завтраки и перекусы, €', p.reserve, (v) => setN('reserve', v), { min: 0, max: 200, id: 'f-reserve' })),
     budgetSlot));
 
+  // Кухонная утварь: обязательная меняет подбор блюд, заменимая — подсказки в шагах
+  const eq = (pr.equipment = pr.equipment || {});
+  const cookable = state.data.recipes.filter((r) => canCook(r, eq)).length;
+  const toolRow = (t) => h('label', { class: 'switch' },
+    h('input', { type: 'checkbox', checked: has(eq, t.id), onchange: (e) => { eq[t.id] = e.target.checked; setPr('equipment', eq); } }),
+    h('span', null, t.ru, h('span', { class: 'muted' }, ` · ${t.de}`)));
+  root.append(h('div', { class: 'card stack' },
+    h('h2', { style: { marginTop: 0 } }, 'Кухонная утварь'),
+    h('p', { class: 'muted', style: { margin: 0 } }, `Отметьте, что есть дома. Можно приготовить ${cookable} из ${state.data.recipes.length} блюд.`),
+    h('div', { class: 'eyebrow' }, 'Без этого блюдо не приготовить — оно не попадёт в план'),
+    TOOLS.filter((t) => t.hard).map(toolRow),
+    h('div', { class: 'eyebrow', style: { marginTop: '8px' } }, 'Можно обойтись — в рецепте будет подсказка как'),
+    TOOLS.filter((t) => !t.hard).map(toolRow),
+    has(eq, 'microwave') ? h('p', { class: 'muted', style: { margin: 0 } }, 'С микроволновкой в рецептах появится быстрый разогрев готового.') : null));
+
   const inRecipes = new Set(state.data.recipes.flatMap((r) => r.ingredients.map((i) => i.key)));
   // только то, что встречается в рецептах (продукты-замены из «если нет» сюда не попадают)
   const products = Object.values(state.data.products).filter((x) => !x.basic && inRecipes.has(x.key)).sort((a, b) => (a.name_ru || '').localeCompare(b.name_ru || '', 'ru'));
@@ -98,6 +117,63 @@ export function renderProfile(root, rerender) {
       !IS_ARTIFACT && h('button', { class: 'btn', onclick: () => download('mealplanner-backup.json', JSON.stringify({ profile: state.profile, prefs: state.prefs, plan: state.plan }, null, 1)) }, 'Сохранить копию настроек'),
       !IS_ARTIFACT && h('label', { class: 'btn' }, 'Загрузить копию', h('input', { type: 'file', id: 'f-import', accept: 'application/json', class: 'sr-only', onchange: (e) => importBackup(e, rerender) })),
       resetButton(rerender))));
+}
+
+// ---------- Аккаунт (Supabase): вход по коду из письма ----------
+const acc = { step: 'email', email: '', busy: false, error: '' };
+function accountCard(rerender) {
+  const card = h('div', { class: 'card stack', id: 'account-card' });
+  const draw = () => {
+    if (signedIn() && state.account) {
+      card.replaceChildren(
+        h('h2', { style: { marginTop: 0 } }, 'Аккаунт'),
+        h('p', { style: { margin: 0 } }, 'Вы вошли: ', h('b', null, state.account.email)),
+        h('p', { class: 'muted', style: { margin: 0 } }, state.sync === 'cloud'
+          ? 'План, отметки покупок, запасы дома, ваш список, профиль и настройки одинаковы на всех устройствах, где вы вошли.'
+          : 'Подключаю синхронизацию…'),
+        h('button', { class: 'btn ghost', onclick: async () => { await signOut(); acc.step = 'email'; toast('Вы вышли. Данные остались в этом браузере.'); rerender({ keepScroll: true }); } }, 'Выйти'));
+      return;
+    }
+    const email = h('input', { type: 'email', autocomplete: 'email', inputmode: 'email', placeholder: 'you@example.com', value: acc.email, 'aria-label': 'Почта' });
+    const code = h('input', { type: 'text', inputmode: 'numeric', autocomplete: 'one-time-code', maxlength: 8, placeholder: '123456', 'aria-label': 'Код из письма' });
+    const err = acc.error ? h('p', { class: 'notice' }, acc.error) : null;
+    const send = async () => {
+      acc.email = email.value.trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(acc.email)) { acc.error = 'Проверьте адрес почты.'; draw(); return; }
+      acc.busy = true; acc.error = ''; draw();
+      try { await sendCode(acc.email); acc.step = 'code'; } catch (e) { acc.error = e.status === 429 ? 'Слишком много писем подряд — подождите минуту и попробуйте снова.' : `Не получилось отправить письмо: ${e.message}`; }
+      acc.busy = false; draw();
+    };
+    const verify = async () => {
+      acc.busy = true; acc.error = ''; draw();
+      try {
+        await verifyCode(acc.email, code.value);
+        await startAccount((changed) => { rerender({ keepScroll: true }); if (changed) toast('Данные с другого устройства загружены'); });
+        acc.step = 'email';
+        toast('Вы вошли. Данные синхронизируются.');
+        rerender({ keepScroll: true });
+        return;
+      } catch (e) { acc.error = 'Код не подошёл или устарел. Проверьте последнее письмо или запросите новый код.'; }
+      acc.busy = false; draw();
+    };
+    card.replaceChildren(
+      h('h2', { style: { marginTop: 0 } }, 'Аккаунт'),
+      h('p', { class: 'muted', style: { margin: 0 } }, 'Войдите, чтобы план, список покупок и запасы были одинаковыми на телефоне и ноутбуке. Пароль не нужен — придёт письмо со ссылкой для входа. То, что уже есть в этом браузере, перенесётся в аккаунт.'),
+      acc.step === 'email'
+        ? h('div', { class: 'stack' }, h('label', { class: 'field' }, h('span', null, 'Почта'), email),
+          h('button', { class: 'btn primary', disabled: acc.busy, onclick: send }, acc.busy ? 'Отправляю…' : 'Получить ссылку для входа'))
+        : h('div', { class: 'stack' },
+          h('p', { style: { margin: 0 } }, `Письмо отправлено на ${acc.email} (от Supabase Auth, проверьте и «Спам»). Откройте ссылку из письма на этом устройстве, в этом же браузере, — вход произойдёт сам. На другом устройстве запросите письмо там.`),
+          h('label', { class: 'field' }, h('span', null, 'Или код из письма, если он там есть'), code),
+          h('div', { class: 'row' },
+            h('button', { class: 'btn primary', disabled: acc.busy, onclick: verify }, acc.busy ? 'Проверяю…' : 'Войти'),
+            h('button', { class: 'btn ghost', disabled: acc.busy, onclick: () => { acc.step = 'email'; acc.error = ''; draw(); } }, 'Другая почта'))),
+      err || '');
+    if (acc.step === 'code') code.addEventListener('keydown', (e) => { if (e.key === 'Enter') verify(); });
+    else email.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(); });
+  };
+  draw();
+  return card;
 }
 
 // Подключилось сохранение в аккаунте — обновить подписи, не перерисовывая форму (вдруг сейчас идёт ввод)

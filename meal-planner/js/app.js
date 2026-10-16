@@ -1,4 +1,4 @@
-import { h, icon, closeAllLayers } from './ui.js';
+import { h, icon, closeAllLayers, toast } from './ui.js';
 import { state, loadData, connectCloud } from './state.js';
 import { renderPlan } from './views/plan.js';
 import { renderLibrary } from './views/library.js';
@@ -7,15 +7,17 @@ import { renderShop } from './views/shop.js';
 import { renderCook, leaveCook } from './views/cook.js';
 import { renderStats } from './views/stats.js';
 import { renderProfile, refreshSyncText } from './views/profile.js';
+import { renderProducts } from './views/catalog.js';
+import { takeSessionFromUrl, startAccount, ACCOUNTS_ENABLED } from './account.js';
 
 const TABS = [
   ['plan', 'План', 'plan'],
   ['recipes', 'Рецепты', 'book'],
   ['shop', 'Покупки', 'cart'],
-  ['stats', 'Итоги', 'chart'],
+  ['products', 'Продукты', 'box'],
   ['profile', 'Профиль', 'user'],
 ];
-const TITLES = { plan: 'План', recipes: 'Рецепты', recipe: 'Рецепт', shop: 'Покупки', stats: 'Итоги', profile: 'Профиль', cook: 'Готовка' };
+const TITLES = { plan: 'План', recipes: 'Рецепты', recipe: 'Рецепт', shop: 'Покупки', products: 'Продукты', stats: 'Итоги', profile: 'Профиль', cook: 'Готовка' };
 
 const main = document.getElementById('main');
 const nav = document.getElementById('nav');
@@ -30,7 +32,7 @@ function parseHash() {
 }
 
 function renderNav(view) {
-  const active = view === 'recipe' ? 'recipes' : view;
+  const active = view === 'recipe' ? 'recipes' : view === 'stats' ? 'plan' : view;
   nav.replaceChildren(h('div', { class: 'nav-inner' }, TABS.map(([v, label, ic]) =>
     h('a', { href: `#/${v}`, class: v === active ? 'active' : '', 'aria-current': v === active ? 'page' : null }, icon(ic), h('span', null, label)))));
 }
@@ -52,6 +54,7 @@ function render(opts = {}) {
       case 'cook': renderCook(root, rerender, id, params); break;
       case 'shop': renderShop(root, rerender); break;
       case 'stats': renderStats(root); break;
+      case 'products': renderProducts(root, rerender); break;
       case 'profile': renderProfile(root, rerender); break;
       default: renderPlan(root, rerender);
     }
@@ -82,8 +85,16 @@ window.addEventListener('hashchange', (e) => {
   if (!samePage) window.scrollTo(0, 0);
 });
 
+// Вход по ссылке из письма: токены приходят в адресе — забираем их до первой отрисовки
+const fromLink = ACCOUNTS_ENABLED ? takeSessionFromUrl() : null;
+const onSync = (changed) => { if (changed) render({ keepScroll: true, keepFocus: true }); else refreshSyncText(); };
+
 loadData()
-  .then(() => { render(); connectCloud((changed) => { if (changed) render({ keepScroll: true }); else refreshSyncText(); }); })
+  .then(() => {
+    render();
+    connectCloud(onSync);
+    if (ACCOUNTS_ENABLED) startAccount(onSync).then((ok) => { if (fromLink) render(); if (fromLink?.error) alertLink(fromLink.error); else if (fromLink && ok) toastIn(); });
+  })
   .catch((err) => {
     console.error(err);
     main.replaceChildren(h('p', { class: 'notice' }, 'Не удалось загрузить данные (data/recipes.json). Запустите приложение командой python3 serve.py из папки проекта.'));
@@ -94,3 +105,6 @@ if ('serviceWorker' in navigator && !window.claude) {
   navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
   if (window.caches) caches.keys().then((keys) => keys.forEach((k) => caches.delete(k))).catch(() => {});
 }
+
+function toastIn() { toast(`Вы вошли: ${state.account?.email || ''}. Данные синхронизируются.`); }
+function alertLink(msg) { toast(`Ссылка для входа не сработала: ${msg}. Введите код из письма в Профиле.`); }

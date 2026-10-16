@@ -1,10 +1,11 @@
-import { h, eur, num, plural } from '../ui.js';
+import { h, eur, num, plural, icon } from '../ui.js';
 import { state, targets } from '../state.js';
 import { daySums } from '../core/planner.js';
 import { dayShort, dayName, dayDate } from '../core/calendar.js';
 import { buildShoppingList, consumedPlanCost } from '../core/shopping.js';
 
 export function renderStats(root) {
+  root.append(h('div', { class: 'row', style: { marginBottom: '6px' } }, h('a', { class: 'btn icon ghost', href: '#/plan', 'aria-label': 'К плану' }, icon('back'))));
   root.append(h('div', { class: 'topbar' }, h('h1', null, 'Итоги недели')));
   if (!state.plan?.batches?.length) {
     root.append(h('p', null, 'Пока нет плана. ', h('a', { href: '#/plan' }, 'Составить →')));

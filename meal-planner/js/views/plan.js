@@ -5,13 +5,16 @@ import { dayName, dayShort, dayDate, todayIndex, mealPast, startOptions, default
 import { buildShoppingList, consumedPlanCost } from '../core/shopping.js';
 import { planToText } from '../core/export.js';
 
+// Чего из утвари нет (пустой список не меняет ключ — старые планы не считаются устаревшими)
+const noTools = () => { const n = Object.entries(state.prefs.equipment || {}).filter(([k, v]) => v === false && k !== 'microwave').map(([k]) => k).sort(); return n.length ? [n] : []; };
+
 // Настройки, от которых зависит план: если они изменились, план устарел
 function settingsKey() {
   const p = state.profile;
   const pr = state.prefs;
   return JSON.stringify([p.sex, p.age, p.height, p.weight, p.activity, p.goal, p.surplusPct, p.proteinPerKg, p.mealShare, p.budget, p.reserve,
     pr.maxRepeats, pr.batchCooking, pr.showBorderline, pr.planBreakfast, [...(pr.excludedKeys || [])].sort(), [...(pr.hidden || [])].sort(),
-    state.data?.meta?.generated]);
+    state.data?.meta?.generated, ...noTools()]);
 }
 
 const ui = { day: null, mode: 'day', prevPlan: null };
@@ -121,6 +124,7 @@ export function renderPlan(root, rerender) {
   const plan = state.plan;
   root.append(h('div', { class: 'topbar' }, h('h1', null, 'План'),
     plan?.batches?.length ? h('div', { class: 'row no-print', style: { flexWrap: 'nowrap' } },
+      h('a', { class: 'btn icon ghost', href: '#/stats', 'aria-label': 'Итоги недели', title: 'Итоги недели' }, icon('chart')),
       h('button', { class: 'btn icon ghost', 'aria-label': 'Экспорт плана', title: 'Экспорт', onclick: exportPlan }, icon('share')),
       h('button', { class: 'btn', onclick: () => askStart(rerender) }, icon('refresh'), 'Новая неделя')) : null));
 

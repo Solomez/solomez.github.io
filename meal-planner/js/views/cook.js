@@ -1,6 +1,7 @@
 import { h, icon, num, sheet, nb, toast, hasLayer } from '../ui.js';
 import { state, save } from '../state.js';
 import { ingredientAmount, ingredientList, portionParams } from './recipe.js';
+import { stepHints } from '../core/equipment.js';
 
 // Таймеры живут вне перерисовок: key → { label, total, endAt | null, left, ringing }
 const timers = new Map();
@@ -198,6 +199,7 @@ export function renderCook(root, rerender, id, params) {
     h('div', { class: 'cook-body' },
       h('div', { class: 'cook-step-n' }, `Шаг ${prog.step + 1} из ${n}`, isDone ? ' · выполнен ✓' : '', leftMin > 0 ? ` · осталось ≈ ${leftMin} мин` : ''),
       h('div', { class: 'cook-text' }, nb(step.text)),
+      stepHints(step, state.prefs.equipment).map((t) => h('div', { class: 'tool-hint' }, t)),
       stepIngs.length ? h('ul', { class: 'step-ings' }, stepIngs.map((i) => h('li', null, h('span', null, i.name_ru), h('b', null, ingredientAmount(i, scale, state.data.products, r.servings).main)))) : null,
       step.heat ? h('div', { class: 'cook-heat' }, h('span', { class: 'badge accent' }, `Огонь: ${step.heat}`)) : null,
       stepTimer,

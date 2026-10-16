@@ -2,6 +2,7 @@ import { h, eur, num, icon, factorText, humanDate, nb, plural } from '../ui.js';
 import { state, save, toggleIn } from '../state.js';
 import { formatAmount } from '../core/shopping.js';
 import { photo, thumbPack, showVariants, substitutesOf } from './products.js';
+import { missingTools, stepHints, has } from '../core/equipment.js';
 
 const storeHint = (p) => {
   const best = p?.packs?.find((x) => !x.stale) || p?.packs?.[0];
@@ -54,7 +55,8 @@ export function ingredientList(r, scale, { checkable = true, onToggle } = {}) {
         h('span', { class: 'ing-name' }, i.name_ru, i.optional ? h('span', { class: 'muted' }, ' · по желанию') : null),
         h('span', { class: 'de' }, [i.name_de, !i.basic ? storeHint(products[i.key]) : null].filter(Boolean).join(' · ')),
         (products[i.key]?.packs || []).length > 1 || substitutesOf(i.key).length ? h('button', { class: 'linkbtn small-link', type: 'button', onclick: (e) => { e.preventDefault(); showVariants(products[i.key]); } }, substitutesOf(i.key).length ? 'варианты и замены' : 'варианты в магазинах') : null,
-        i.note ? h('span', { class: 'de' }, i.note) : null),
+        i.note ? h('span', { class: 'de' }, i.note) : null,
+        swapOf(i.key) ? h('span', { class: 'swap-note' }, `На этой неделе куплено вместо: ${swapOf(i.key).name}`) : null),
       h('span', { class: 'ing-amount' }, a.main, a.sub ? h('span', { class: 'de' }, a.sub) : null));
   };
   const main = r.ingredients.filter((i) => !i.basic);
@@ -63,6 +65,9 @@ export function ingredientList(r, scale, { checkable = true, onToggle } = {}) {
     h('ul', { class: 'ing-list' }, main.map(row)),
     basic.length ? [h('div', { class: 'eyebrow', style: { marginTop: '14px' } }, 'Базовое: масло, соль, специи'), h('ul', { class: 'ing-list' }, basic.map(row))] : null);
 }
+
+// «Взял другое вместо» в магазине — показываем у ингредиента в рецептах текущей недели
+const swapOf = (key) => (state.plan ? state.swaps?.[state.plan.id]?.[key] : null);
 
 let lastListRoute = '#/recipes';
 export const rememberRoute = (hash) => { if (!/^#\/(recipe|cook)\//.test(hash)) lastListRoute = hash || '#/recipes'; };
@@ -142,11 +147,15 @@ export function renderRecipe(root, rerender, id, params) {
         h('td', { class: 'num' }, eur(c.cost_per_serving * factor)))))),
     h('p', { class: 'muted', style: { marginTop: '8px' } }, 'Стоимость — по доле упаковки, которая уходит в блюдо (самая выгодная обычная цена, без акций).')));
 
+  const eq = state.prefs.equipment;
+  const missing = missingTools(r, eq);
   root.append(h('h2', null, 'Посуда'));
+  if (missing.length) root.append(h('p', { class: 'notice' }, `Для этого блюда нужно то, чего у вас нет: ${missing.join(', ').toLowerCase()}. В план оно не попадает. `, h('a', { href: '#/profile' }, 'Изменить в профиле')));
   root.append(h('div', { class: 'chips' }, r.equipment.map((e) => h('span', { class: 'chip static' }, e))));
 
   root.append(h('h2', null, 'Как готовить'));
   root.append(h('ol', { class: 'steps' }, r.steps.map((s) => h('li', null, nb(s.text),
+    stepHints(s, eq).map((t) => h('div', { class: 'tool-hint' }, t)),
     s.heat || s.timer_min ? h('div', { class: 'row', style: { marginTop: '4px' } },
       s.heat ? h('span', { class: 'badge' }, `огонь: ${s.heat}`) : null,
       s.timer_min ? h('span', { class: 'badge accent' }, `${num(s.timer_min, 1)} мин`) : null) : null))));
@@ -159,7 +168,8 @@ export function renderRecipe(root, rerender, id, params) {
   root.append(h('div', { class: 'stack' },
     h('p', { style: { margin: 0 } }, st.fridge_days ? `В холодильнике: до ${st.fridge_days} ${st.fridge_days === 1 ? 'дня' : 'дней'} в закрытом контейнере.` : 'Лучше есть сразу — блюдо не для хранения.'),
     h('p', { style: { margin: 0 } }, st.freezable ? `Можно заморозить${st.freeze_note ? ': ' + st.freeze_note : ''}.` : `Замораживать не стоит${st.freeze_note ? ': ' + st.freeze_note : ''}.`),
-    st.reheat ? h('p', { style: { margin: 0 } }, h('b', null, 'Разогрев без микроволновки: '), st.reheat) : null));
+    has(eq, 'microwave') ? h('p', { style: { margin: 0 } }, h('b', null, 'В микроволновке: '), 'под крышкой или перевёрнутой тарелкой 2–3 мин на полной мощности, перемешать на середине. Если суховато — добавь 1 ст. л. воды.') : null,
+    st.reheat ? h('p', { style: { margin: 0 } }, h('b', null, has(eq, 'microwave') ? 'Без микроволновки: ' : 'Разогрев: '), st.reheat) : null));
 
   if (r.substitutions?.length) {
     root.append(h('h2', null, 'Замены'));

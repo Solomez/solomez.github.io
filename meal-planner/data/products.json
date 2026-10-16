@@ -4,32 +4,118 @@
   "price_date": "2026-10-16",
   "departments": [
    {
+    "id": "produce",
+    "name": "Овощи и фрукты",
+    "de": "Obst & Gemüse",
+    "en": "Fruit & vegetables"
+   },
+   {
+    "id": "bakery",
+    "name": "Хлеб и выпечка",
+    "de": "Brot & Gebäck",
+    "en": "Bread & bakery"
+   },
+   {
     "id": "meat",
-    "name": "Мясо и птица"
+    "name": "Мясо и птица",
+    "de": "Fleisch & Geflügel",
+    "en": "Meat & poultry"
+   },
+   {
+    "id": "deli",
+    "name": "Колбасы и ветчина",
+    "de": "Wurst & Schinken",
+    "en": "Cold cuts & sausages"
+   },
+   {
+    "id": "cheese",
+    "name": "Сыр",
+    "de": "Käse",
+    "en": "Cheese"
    },
    {
     "id": "dairy",
-    "name": "Молочное и яйца"
+    "name": "Молочное",
+    "de": "Milchprodukte",
+    "en": "Dairy"
    },
    {
-    "id": "veg",
-    "name": "Овощи, фрукты, зелень"
+    "id": "eggs",
+    "name": "Яйца",
+    "de": "Eier",
+    "en": "Eggs"
    },
    {
-    "id": "frozen",
-    "name": "Заморозка"
+    "id": "chilled",
+    "name": "Готовое из холодильника",
+    "de": "Kühlregal: Fertiggerichte & Aufstriche",
+    "en": "Chilled ready meals & spreads"
    },
    {
     "id": "grains",
-    "name": "Крупы, макароны, хлеб"
+    "name": "Макароны, рис, крупы",
+    "de": "Teigwaren, Reis & Getreide",
+    "en": "Pasta, rice & grains"
    },
    {
     "id": "cans",
-    "name": "Консервы и соусы"
+    "name": "Консервы и соусы для пасты",
+    "de": "Konserven & Sugo",
+    "en": "Canned food & pasta sauces"
    },
    {
-    "id": "pantry",
-    "name": "Бакалея, специи, масло"
+    "id": "oils",
+    "name": "Масло, соусы, специи",
+    "de": "Öl, Saucen & Gewürze",
+    "en": "Oil, sauces & spices"
+   },
+   {
+    "id": "baking",
+    "name": "Мука, сахар, всё для выпечки",
+    "de": "Backen: Mehl & Zucker",
+    "en": "Baking: flour & sugar"
+   },
+   {
+    "id": "international",
+    "name": "Азиатское, балканское, мексиканское",
+    "de": "Internationale Küche",
+    "en": "International food"
+   },
+   {
+    "id": "breakfast",
+    "name": "Завтрак: хлопья, мёд, пасты",
+    "de": "Frühstück: Müsli, Honig & Aufstriche",
+    "en": "Breakfast: cereal, honey & spreads"
+   },
+   {
+    "id": "coffee",
+    "name": "Кофе и чай",
+    "de": "Kaffee & Tee",
+    "en": "Coffee & tea"
+   },
+   {
+    "id": "sweets",
+    "name": "Сладкое и снеки",
+    "de": "Süßes & Salziges",
+    "en": "Sweets & snacks"
+   },
+   {
+    "id": "drinks",
+    "name": "Напитки",
+    "de": "Getränke",
+    "en": "Drinks"
+   },
+   {
+    "id": "household",
+    "name": "Хозтовары",
+    "de": "Haushalt",
+    "en": "Household"
+   },
+   {
+    "id": "frozen",
+    "name": "Заморозка",
+    "de": "Tiefkühl",
+    "en": "Frozen food"
    }
   ]
  },
@@ -38,7 +124,7 @@
    "key": "banana",
    "name_ru": "Банан",
    "name_de": "Clever Bananen (per kg)",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     89,
@@ -150,13 +236,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Bananen"
+   "name_de_generic": "Bananen",
+   "name_en": "Banana",
+   "shelf": "fruit",
+   "zone": "produce"
   },
   "bay_leaf": {
    "key": "bay_leaf",
    "name_ru": "Лавровый лист",
    "name_de": "BILLA Bio Lorbeerblätter ganz",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     300,
@@ -200,7 +289,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/634069/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Lorbeerblätter"
+   "name_de_generic": "Lorbeerblätter",
+   "name_en": "Bay leaves",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "beef_goulash": {
    "key": "beef_goulash",
@@ -267,7 +359,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2316512/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Rindsgulasch"
+   "name_de_generic": "Rindsgulasch",
+   "name_en": "Beef for goulash (diced)",
+   "shelf": "beef",
+   "zone": "meat"
   },
   "beef_mince": {
    "key": "beef_mince",
@@ -368,13 +463,16 @@
      "image": "https://imgproxy-retcat.assets.schwarz/rKYbBx6i_pLJ8peqlQHn4EzqH3NNgOpF60i7W2uJo3o/sm:0/exar:1:ce/w:1500/h:1125/cz/M6Ly9wcm9kLWNhd/GFsb2ctbWVkaWEvYXQvMS80RjQ3REE1MDRFQkZERkQyRjIxMTY5N0V/FNzlDNTNBQkFCMDZFOUY4NDMzMjA3NjE0MDQwMEYwMjQ3QTcxM0U4LnBuZw.png"
     }
    ],
-   "name_de_generic": "SONNHOF Rinderfaschiertes"
+   "name_de_generic": "SONNHOF Rinderfaschiertes",
+   "name_en": "Minced beef",
+   "shelf": "mince",
+   "zone": "meat"
   },
   "bell_pepper": {
    "key": "bell_pepper",
    "name_ru": "Перец сладкий",
    "name_de": "Paprika Mix",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     30.0,
@@ -435,13 +533,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-411113-0141447511-Ybqu6n_a.jpg"
     }
    ],
-   "name_de_generic": "Paprika (Gemüsepaprika)"
+   "name_de_generic": "Paprika (Gemüsepaprika)",
+   "name_en": "Bell pepper",
+   "shelf": "veg",
+   "zone": "produce"
   },
   "black_pepper": {
    "key": "black_pepper",
    "name_ru": "Чёрный перец молотый",
    "name_de": "Clever Pfeffer Schwarz Gemahlen",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     373.0,
@@ -485,13 +586,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/1951301/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Pfeffer schwarz gemahlen"
+   "name_de_generic": "Pfeffer schwarz gemahlen",
+   "name_en": "Ground black pepper",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "bread": {
    "key": "bread",
    "name_ru": "Хлеб пшенично-ржаной",
    "name_de": "Clever Mischbrot 45%",
-   "department": "grains",
+   "department": "bakery",
    "basic": false,
    "nutrition_per_100g": [
     239.0,
@@ -654,13 +758,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/787b77ab-692c-4e25-91f4-697690dc3c7c/78-777657-0127946835-b9Zs-UFu.jpg"
     }
    ],
-   "name_de_generic": "Mischbrot"
+   "name_de_generic": "Mischbrot",
+   "name_en": "Mixed wheat-rye bread",
+   "shelf": "bread_fresh",
+   "zone": "bakery"
   },
   "breadcrumbs": {
    "key": "breadcrumbs",
    "name_ru": "Панировочные сухари",
    "name_de": "Clever Semmelbrösel",
-   "department": "pantry",
+   "department": "bakery",
    "basic": true,
    "nutrition_per_100g": [
     356.0,
@@ -704,7 +811,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020001578610/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Semmelbrösel"
+   "name_de_generic": "Semmelbrösel",
+   "name_en": "Breadcrumbs",
+   "shelf": "breadcrumbs",
+   "zone": "bakery"
   },
   "bulgur": {
    "key": "bulgur",
@@ -771,7 +881,10 @@
      "image": null
     }
    ],
-   "name_de_generic": "Bulgur"
+   "name_de_generic": "Bulgur",
+   "name_en": "Bulgur wheat",
+   "shelf": "grains_legumes",
+   "zone": "grains"
   },
   "butter": {
    "key": "butter",
@@ -821,13 +934,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-425413-2016834171-GEotSzUh.jpg"
     }
    ],
-   "name_de_generic": "Butter"
+   "name_de_generic": "Butter",
+   "name_en": "Butter",
+   "shelf": "butter",
+   "zone": "dairy"
   },
   "caraway": {
    "key": "caraway",
    "name_ru": "Тмин",
    "name_de": "S-BUDGET Kümmel ganz 140g",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     300,
@@ -871,13 +987,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-4896-01788673619-LJ5Z4PC2.jpg"
     }
    ],
-   "name_de_generic": "Kümmel ganz"
+   "name_de_generic": "Kümmel ganz",
+   "name_en": "Caraway seeds",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "carrot": {
    "key": "carrot",
    "name_ru": "Морковь",
    "name_de": "SPAR Karotten",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     36,
@@ -955,13 +1074,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Karotten"
+   "name_de_generic": "Karotten",
+   "name_en": "Carrots",
+   "shelf": "veg",
+   "zone": "produce"
   },
   "cauliflower": {
    "key": "cauliflower",
    "name_ru": "Цветная капуста",
    "name_de": "Karfiol",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     23.0,
@@ -1005,7 +1127,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/6666484/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Karfiol"
+   "name_de_generic": "Karfiol",
+   "name_en": "Cauliflower",
+   "shelf": "veg",
+   "zone": "produce"
   },
   "chicken_breast": {
    "key": "chicken_breast",
@@ -1191,7 +1316,10 @@
      "image": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/400/c97ab3e7-bdee-4469-852f-4d16255e5d31/MaishendlFiletschnitzel"
     }
    ],
-   "name_de_generic": "Hühnerbrustfilet / Hendlfilet"
+   "name_de_generic": "Hühnerbrustfilet / Hendlfilet",
+   "name_en": "Chicken breast fillet",
+   "shelf": "poultry",
+   "zone": "meat"
   },
   "chicken_legs": {
    "key": "chicken_legs",
@@ -1343,7 +1471,10 @@
      "image": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/400/6d67e1dd-b6ee-4f0f-9d79-291f747aee20/MaishendlUnterkeulen%20natur"
     }
    ],
-   "name_de_generic": "Hühner-Unterkeulen"
+   "name_de_generic": "Hühner-Unterkeulen",
+   "name_en": "Chicken legs / drumsticks",
+   "shelf": "poultry",
+   "zone": "meat"
   },
   "chicken_thigh_fillet": {
    "key": "chicken_thigh_fillet",
@@ -1444,7 +1575,10 @@
      "image": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/400/ffc09062-ebb0-4353-b219-81f625fb6e31/MaishendlOberkeulenschnitzel"
     }
    ],
-   "name_de_generic": "Hühner-Oberkeulenschnitzel"
+   "name_de_generic": "Hühner-Oberkeulenschnitzel",
+   "name_en": "Boneless chicken thighs",
+   "shelf": "poultry",
+   "zone": "meat"
   },
   "chickpeas_can": {
    "key": "chickpeas_can",
@@ -1528,13 +1662,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Kichererbsen (Dose)"
+   "name_de_generic": "Kichererbsen (Dose)",
+   "name_en": "Canned chickpeas",
+   "shelf": "canned_veg",
+   "zone": "cans"
   },
   "chili_flakes": {
    "key": "chili_flakes",
    "name_ru": "Хлопья чили",
    "name_de": "La Fiesta Mexico Chili Flakes 45g",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     315,
@@ -1578,13 +1715,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-706436-1007114045-bTRRK_UM.jpg"
     }
    ],
-   "name_de_generic": "Chiliflocken"
+   "name_de_generic": "Chiliflocken",
+   "name_en": "Chili flakes",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "chili_powder": {
    "key": "chili_powder",
    "name_ru": "Чили молотый",
    "name_de": "BILLA Cayenne Pfeffer gemahlen",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     300,
@@ -1628,13 +1768,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/4577560/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Chili gemahlen"
+   "name_de_generic": "Chili gemahlen",
+   "name_en": "Chili powder",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "cinnamon": {
    "key": "cinnamon",
    "name_ru": "Корица",
    "name_de": "SPAR Zimt Ceylon gemahlen 40g",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     300,
@@ -1678,7 +1821,10 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-728590-0138906622-YPzeK2jI.jpg"
     }
    ],
-   "name_de_generic": "Zimt gemahlen"
+   "name_de_generic": "Zimt gemahlen",
+   "name_en": "Cinnamon",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "corn_can": {
    "key": "corn_can",
@@ -1728,13 +1874,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-704742-0533286286-W-g4VseJ.jpg"
     }
    ],
-   "name_de_generic": "Gemüsemais (Dose)"
+   "name_de_generic": "Gemüsemais (Dose)",
+   "name_en": "Canned sweetcorn",
+   "shelf": "canned_veg",
+   "zone": "cans"
   },
   "cottage_cheese": {
    "key": "cottage_cheese",
    "name_ru": "Зернистый творог (cottage cheese)",
    "name_de": "Clever Cottage Cheese",
-   "department": "dairy",
+   "department": "cheese",
    "basic": false,
    "nutrition_per_100g": [
     80.0,
@@ -1795,7 +1944,10 @@
      "image": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/400/3991f633-3a80-45f0-8ec3-533785377921/Cottage%20Cheese%20Natur%2005%25"
     }
    ],
-   "name_de_generic": "Hüttenkäse / Cottage Cheese"
+   "name_de_generic": "Hüttenkäse / Cottage Cheese",
+   "name_en": "Cottage cheese",
+   "shelf": "cheese_fresh",
+   "zone": "cheese"
   },
   "couscous": {
    "key": "couscous",
@@ -1862,7 +2014,10 @@
      "image": null
     }
    ],
-   "name_de_generic": "Couscous"
+   "name_de_generic": "Couscous",
+   "name_en": "Couscous",
+   "shelf": "grains_legumes",
+   "zone": "grains"
   },
   "cream": {
    "key": "cream",
@@ -1963,13 +2118,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/787b77ab-692c-4e25-91f4-697690dc3c7c/78-617182-0161465061-lgKYLVhh.jpg"
     }
    ],
-   "name_de_generic": "Schlagobers"
+   "name_de_generic": "Schlagobers",
+   "name_en": "Whipping cream (32%)",
+   "shelf": "cream",
+   "zone": "dairy"
   },
   "cucumber": {
    "key": "cucumber",
    "name_ru": "Огурец",
    "name_de": "Gurke Feldgurke per kg",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     12.0,
@@ -2030,13 +2188,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/6707644/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Gurke"
+   "name_de_generic": "Gurke",
+   "name_en": "Cucumber",
+   "shelf": "tomato_fresh",
+   "zone": "produce"
   },
   "cumin": {
    "key": "cumin",
    "name_ru": "Кумин (зира) молотый",
    "name_de": "Kung Fu Kreuzkümmel gemahlen",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     375,
@@ -2080,13 +2241,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-915970-0108578318-LzTk9p11.jpg"
     }
    ],
-   "name_de_generic": "Kreuzkümmel gemahlen"
+   "name_de_generic": "Kreuzkümmel gemahlen",
+   "name_en": "Ground cumin",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "curry_powder": {
    "key": "curry_powder",
    "name_ru": "Карри молотый",
    "name_de": "SPAR Curry Gewürzzubereitung 45g",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     335.0,
@@ -2130,7 +2294,10 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-728337-903704010-y8L_AYpf.jpg"
     }
    ],
-   "name_de_generic": "Currypulver"
+   "name_de_generic": "Currypulver",
+   "name_en": "Curry powder",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "egg_noodles": {
    "key": "egg_noodles",
@@ -2214,13 +2381,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/787b77ab-692c-4e25-91f4-697690dc3c7c/78-101877-1531938808-0hgrv2bJ.jpg"
     }
    ],
-   "name_de_generic": "Eiernudeln / Mie-Nudeln"
+   "name_de_generic": "Eiernudeln / Mie-Nudeln",
+   "name_en": "Egg noodles",
+   "shelf": "pasta",
+   "zone": "grains"
   },
   "eggs": {
    "key": "eggs",
    "name_ru": "Яйцо",
    "name_de": "Clever Eier aus Bodenhaltung M",
-   "department": "dairy",
+   "department": "eggs",
    "basic": false,
    "nutrition_per_100g": [
     157.0,
@@ -2315,13 +2485,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Eier (Größe M)"
+   "name_de_generic": "Eier (Größe M)",
+   "name_en": "Eggs",
+   "shelf": "eggs",
+   "zone": "eggs"
   },
   "feta": {
    "key": "feta",
    "name_ru": "Фета / брынза",
    "name_de": "S-BUDGET Hirtenkäse greek style",
-   "department": "dairy",
+   "department": "cheese",
    "basic": false,
    "nutrition_per_100g": [
     230.0,
@@ -2467,13 +2640,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Hirtenkäse / Feta"
+   "name_de_generic": "Hirtenkäse / Feta",
+   "name_en": "Feta cheese",
+   "shelf": "cheese_fresh",
+   "zone": "cheese"
   },
   "flour": {
    "key": "flour",
    "name_ru": "Мука пшеничная",
    "name_de": "S-BUDGET Weizenmehl glatt, Type W 700",
-   "department": "pantry",
+   "department": "baking",
    "basic": true,
    "nutrition_per_100g": [
     342.0,
@@ -2534,7 +2710,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/6483661/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Weizenmehl glatt"
+   "name_de_generic": "Weizenmehl glatt",
+   "name_en": "Plain wheat flour",
+   "shelf": "flour",
+   "zone": "baking"
   },
   "frozen_peas": {
    "key": "frozen_peas",
@@ -2584,13 +2763,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020001540457/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Junge Erbsen (tiefgekühlt)"
+   "name_de_generic": "Junge Erbsen (tiefgekühlt)",
+   "name_en": "Frozen peas",
+   "shelf": "frozen_veg",
+   "zone": "frozen"
   },
   "garlic": {
    "key": "garlic",
    "name_ru": "Чеснок",
    "name_de": "Clever Knoblauch",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     149,
@@ -2651,13 +2833,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020003468858/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Knoblauch"
+   "name_de_generic": "Knoblauch",
+   "name_en": "Garlic",
+   "shelf": "potato_onion",
+   "zone": "produce"
   },
   "garlic_powder": {
    "key": "garlic_powder",
    "name_ru": "Чеснок сушёный",
    "name_de": "SPAR Knoblauch granuliert 70g",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     300,
@@ -2701,13 +2886,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-728605-0822032755-TJxeRQUd.jpg"
     }
    ],
-   "name_de_generic": "Knoblauch granuliert"
+   "name_de_generic": "Knoblauch granuliert",
+   "name_en": "Garlic powder",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "ginger": {
    "key": "ginger",
    "name_ru": "Имбирь свежий",
    "name_de": "SPAR Ingwer 150g",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     80,
@@ -2751,13 +2939,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-444674-0432639359-3QwAoZJ-.jpg"
     }
    ],
-   "name_de_generic": "Ingwer"
+   "name_de_generic": "Ingwer",
+   "name_en": "Fresh ginger",
+   "shelf": "fruit",
+   "zone": "produce"
   },
   "gouda": {
    "key": "gouda",
    "name_ru": "Сыр гауда в ломтиках",
    "name_de": "Clever Gouda Scheiben",
-   "department": "dairy",
+   "department": "cheese",
    "basic": false,
    "nutrition_per_100g": [
     348.0,
@@ -2869,7 +3060,10 @@
      "image": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/400/45384ce8-bbcb-479e-930e-417690436e9e/Hollndischer%20Gouda"
     }
    ],
-   "name_de_generic": "Gouda Scheiben"
+   "name_de_generic": "Gouda Scheiben",
+   "name_en": "Sliced Gouda",
+   "shelf": "cheese_hard",
+   "zone": "cheese"
   },
   "greek_yogurt": {
    "key": "greek_yogurt",
@@ -2936,13 +3130,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Clever Joghurt griechische Art"
+   "name_de_generic": "Clever Joghurt griechische Art",
+   "name_en": "Greek yogurt",
+   "shelf": "yogurt",
+   "zone": "dairy"
   },
   "gyros_spice": {
    "key": "gyros_spice",
    "name_ru": "Приправа для гироса / кебаба",
    "name_de": "BILLA Gyros Gewürz",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     172.0,
@@ -2986,13 +3183,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/3205204/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Gyros-Gewürz"
+   "name_de_generic": "Gyros-Gewürz",
+   "name_en": "Gyros / kebab seasoning",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "ham": {
    "key": "ham",
    "name_ru": "Ветчина (тостовая)",
    "name_de": "Clever Toastschinken XXL",
-   "department": "meat",
+   "department": "deli",
    "basic": false,
    "nutrition_per_100g": [
     106.0,
@@ -3155,13 +3355,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/787b77ab-692c-4e25-91f4-697690dc3c7c/78-618816-1736155665-X7HTW22Z.jpg"
     }
    ],
-   "name_de_generic": "Toastschinken"
+   "name_de_generic": "Toastschinken",
+   "name_en": "Sliced ham",
+   "shelf": "ham",
+   "zone": "deli"
   },
   "honey": {
    "key": "honey",
    "name_ru": "Мёд",
    "name_de": "S-BUDGET Blütenhonig",
-   "department": "pantry",
+   "department": "breakfast",
    "basic": true,
    "nutrition_per_100g": [
     304,
@@ -3205,13 +3408,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-762737-0100542271-auSil7pV.jpg"
     }
    ],
-   "name_de_generic": "Blütenhonig"
+   "name_de_generic": "Blütenhonig",
+   "name_en": "Honey",
+   "shelf": "sweet_spreads",
+   "zone": "breakfast"
   },
   "italian_herbs": {
    "key": "italian_herbs",
    "name_ru": "Итальянские травы",
    "name_de": "BILLA Italienische Kräuter",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     260,
@@ -3255,7 +3461,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/627177/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Italienische Kräuter"
+   "name_de_generic": "Italienische Kräuter",
+   "name_en": "Italian herbs",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "kidney_beans_can": {
    "key": "kidney_beans_can",
@@ -3322,13 +3531,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Rote Kidney Bohnen (Dose)"
+   "name_de_generic": "Rote Kidney Bohnen (Dose)",
+   "name_en": "Canned kidney beans",
+   "shelf": "canned_veg",
+   "zone": "cans"
   },
   "leek": {
    "key": "leek",
    "name_ru": "Лук-порей",
    "name_de": "Porree per kg",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     26.0,
@@ -3389,13 +3601,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/787b77ab-692c-4e25-91f4-697690dc3c7c/78-88246-0988625237-xdL5TCDj.jpg"
     }
    ],
-   "name_de_generic": "Porree (Lauch)"
+   "name_de_generic": "Porree (Lauch)",
+   "name_en": "Leek",
+   "shelf": "veg",
+   "zone": "produce"
   },
   "lemon": {
    "key": "lemon",
    "name_ru": "Лимон",
    "name_de": "Zitronen",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     56.0,
@@ -3473,7 +3688,10 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-415755-984946262-R1uZ8Q4V.jpg"
     }
    ],
-   "name_de_generic": "Zitrone"
+   "name_de_generic": "Zitrone",
+   "name_en": "Lemon",
+   "shelf": "fruit",
+   "zone": "produce"
   },
   "lentils_can": {
    "key": "lentils_can",
@@ -3523,7 +3741,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2758800/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Linsen (Dose)"
+   "name_de_generic": "Linsen (Dose)",
+   "name_en": "Canned brown lentils",
+   "shelf": "canned_veg",
+   "zone": "cans"
   },
   "magertopfen": {
    "key": "magertopfen",
@@ -3590,13 +3811,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Magertopfen"
+   "name_de_generic": "Magertopfen",
+   "name_en": "Low-fat quark (Topfen)",
+   "shelf": "cream",
+   "zone": "dairy"
   },
   "marjoram": {
    "key": "marjoram",
    "name_ru": "Майоран сушёный",
    "name_de": "SPAR Majoran gerebelt 10g",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     300,
@@ -3640,7 +3864,10 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-865213-0201744985-mwDwU5Ew.jpg"
     }
    ],
-   "name_de_generic": "Majoran gerebelt"
+   "name_de_generic": "Majoran gerebelt",
+   "name_en": "Dried marjoram",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "milk": {
    "key": "milk",
@@ -3809,7 +4036,10 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/787b77ab-692c-4e25-91f4-697690dc3c7c/78-113037-136332345-iF2IJbdc.jpg"
     }
    ],
-   "name_de_generic": "Vollmilch"
+   "name_de_generic": "Vollmilch",
+   "name_en": "Milk",
+   "shelf": "milk",
+   "zone": "dairy"
   },
   "mixed_mince": {
    "key": "mixed_mince",
@@ -3927,13 +4157,16 @@
      "image": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/400/c1e84456-ae07-4897-98dc-8d42499a13f9/BIOFaschiertes%20gemischt"
     }
    ],
-   "name_de_generic": "Faschiertes gemischt"
+   "name_de_generic": "Faschiertes gemischt",
+   "name_en": "Mixed minced pork and beef",
+   "shelf": "mince",
+   "zone": "meat"
   },
   "mozzarella": {
    "key": "mozzarella",
    "name_ru": "Моцарелла",
    "name_de": "Clever Mozzarella",
-   "department": "dairy",
+   "department": "cheese",
    "basic": false,
    "nutrition_per_100g": [
     247.0,
@@ -4028,13 +4261,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/787b77ab-692c-4e25-91f4-697690dc3c7c/78-472472-039635014-IsCScTm6.jpg"
     }
    ],
-   "name_de_generic": "Mozzarella"
+   "name_de_generic": "Mozzarella",
+   "name_en": "Mozzarella",
+   "shelf": "cheese_fresh",
+   "zone": "cheese"
   },
   "mushrooms": {
    "key": "mushrooms",
    "name_ru": "Шампиньоны",
    "name_de": "Clever Champignons",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     20,
@@ -4095,13 +4331,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/6666521/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Champignons"
+   "name_de_generic": "Champignons",
+   "name_en": "Button mushrooms",
+   "shelf": "mushrooms",
+   "zone": "produce"
   },
   "mustard": {
    "key": "mustard",
    "name_ru": "Горчица",
    "name_de": "Clever Kremser Senf",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     161.0,
@@ -4145,7 +4384,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020001182091/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Kremser Senf / Estragonsenf"
+   "name_de_generic": "Kremser Senf / Estragonsenf",
+   "name_en": "Mustard",
+   "shelf": "sauces",
+   "zone": "oils"
   },
   "natural_yogurt": {
    "key": "natural_yogurt",
@@ -4229,13 +4471,16 @@
      "image": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/400/81ca624c-f735-4bb4-bc24-3f88b9540f9c/High%20Protein%20Naturjoghurt"
     }
    ],
-   "name_de_generic": "Naturjoghurt 3,6 %"
+   "name_de_generic": "Naturjoghurt 3,6 %",
+   "name_en": "Natural yogurt (3.6%)",
+   "shelf": "yogurt",
+   "zone": "dairy"
   },
   "oil": {
    "key": "oil",
    "name_ru": "Растительное масло",
    "name_de": "Clever Rapsöl",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     828.0,
@@ -4313,13 +4558,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-426014-1710346476-NARW7IJq.jpg"
     }
    ],
-   "name_de_generic": "Rapsöl"
+   "name_de_generic": "Rapsöl",
+   "name_en": "Vegetable / sunflower oil",
+   "shelf": "oil_vinegar",
+   "zone": "oils"
   },
   "olive_oil": {
    "key": "olive_oil",
    "name_ru": "Оливковое масло",
    "name_de": "Clever Natives Olivenöl Extra",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     822.0,
@@ -4363,13 +4611,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/5733477/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Olivenöl"
+   "name_de_generic": "Olivenöl",
+   "name_en": "Olive oil",
+   "shelf": "oil_vinegar",
+   "zone": "oils"
   },
   "onion": {
    "key": "onion",
    "name_ru": "Лук репчатый",
    "name_de": "Clever Zwiebel Gelb",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     40,
@@ -4447,13 +4698,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Zwiebel"
+   "name_de_generic": "Zwiebel",
+   "name_en": "Onions",
+   "shelf": "potato_onion",
+   "zone": "produce"
   },
   "oregano": {
    "key": "oregano",
    "name_ru": "Орегано сушёный",
    "name_de": "BILLA Oregano gerebelt",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     265,
@@ -4497,13 +4751,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020004570741/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Oregano gerebelt"
+   "name_de_generic": "Oregano gerebelt",
+   "name_en": "Dried oregano",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "paprika_powder": {
    "key": "paprika_powder",
    "name_ru": "Паприка сладкая",
    "name_de": "S-BUDGET Paprika edelsüß 140g",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     290,
@@ -4547,13 +4804,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-728350-1572986768-AOEBdYkF.jpg"
     }
    ],
-   "name_de_generic": "Paprikapulver edelsüß"
+   "name_de_generic": "Paprikapulver edelsüß",
+   "name_en": "Sweet paprika",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "parmesan": {
    "key": "parmesan",
    "name_ru": "Твёрдый сыр типа пармезан",
    "name_de": "Clever Grana Padano",
-   "department": "dairy",
+   "department": "cheese",
    "basic": false,
    "nutrition_per_100g": [
     398.0,
@@ -4597,13 +4857,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020002645977/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Grana Padano"
+   "name_de_generic": "Grana Padano",
+   "name_en": "Parmesan-style hard cheese",
+   "shelf": "cheese_grated",
+   "zone": "cheese"
   },
   "parsley": {
    "key": "parsley",
    "name_ru": "Петрушка",
    "name_de": "SPAR Natur*pur Bio-Petersilie glatt",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     41.0,
@@ -4647,7 +4910,10 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-696596-0157882629-4tHyfx8A.jpg"
     }
    ],
-   "name_de_generic": "Petersilie"
+   "name_de_generic": "Petersilie",
+   "name_en": "Parsley",
+   "shelf": "salad_herbs",
+   "zone": "produce"
   },
   "passata": {
    "key": "passata",
@@ -4765,7 +5031,10 @@
      "image": null
     }
    ],
-   "name_de_generic": "Passierte Tomaten"
+   "name_de_generic": "Passierte Tomaten",
+   "name_en": "Tomato passata",
+   "shelf": "tomato_products",
+   "zone": "cans"
   },
   "pasta": {
    "key": "pasta",
@@ -4917,13 +5186,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Penne / Spaghetti"
+   "name_de_generic": "Penne / Spaghetti",
+   "name_en": "Pasta (penne or spaghetti)",
+   "shelf": "pasta",
+   "zone": "grains"
   },
   "peanut_butter": {
    "key": "peanut_butter",
    "name_ru": "Арахисовая паста",
    "name_de": "BILLA Erdnusscreme Creamy",
-   "department": "cans",
+   "department": "breakfast",
    "basic": false,
    "nutrition_per_100g": [
     634.0,
@@ -4967,7 +5239,10 @@
      "image": null
     }
    ],
-   "name_de_generic": "Erdnusscreme"
+   "name_de_generic": "Erdnusscreme",
+   "name_en": "Peanut butter",
+   "shelf": "sweet_spreads",
+   "zone": "breakfast"
   },
   "pesto": {
    "key": "pesto",
@@ -5017,7 +5292,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020005787933/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Pesto alla Genovese"
+   "name_de_generic": "Pesto alla Genovese",
+   "name_en": "Pesto Genovese",
+   "shelf": "tomato_products",
+   "zone": "cans"
   },
   "pork_schnitzel": {
    "key": "pork_schnitzel",
@@ -5118,7 +5396,10 @@
      "image": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/400/b6af12be-9e4d-484c-9e5c-299134e0dcc2/Kaiserschnitzel"
     }
    ],
-   "name_de_generic": "Kaiserschnitzel"
+   "name_de_generic": "Kaiserschnitzel",
+   "name_en": "Pork schnitzel (lean pork)",
+   "shelf": "pork",
+   "zone": "meat"
   },
   "pork_shoulder": {
    "key": "pork_shoulder",
@@ -5219,13 +5500,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/3686553/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Schweinefleisch würfelig / Gulaschfleisch"
+   "name_de_generic": "Schweinefleisch würfelig / Gulaschfleisch",
+   "name_en": "Diced pork shoulder",
+   "shelf": "pork",
+   "zone": "meat"
   },
   "potatoes": {
    "key": "potatoes",
    "name_ru": "Картофель",
    "name_de": "SPAR Kartoffel Heurige 1,5kg Netz",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     73.0,
@@ -5439,7 +5723,10 @@
      "image": null
     }
    ],
-   "name_de_generic": "Erdäpfel (speckig)"
+   "name_de_generic": "Erdäpfel (speckig)",
+   "name_en": "Potatoes",
+   "shelf": "potato_onion",
+   "zone": "produce"
   },
   "red_lentils": {
    "key": "red_lentils",
@@ -5523,7 +5810,10 @@
      "image": null
     }
    ],
-   "name_de_generic": "Rote Linsen"
+   "name_de_generic": "Rote Linsen",
+   "name_en": "Red lentils",
+   "shelf": "grains_legumes",
+   "zone": "grains"
   },
   "rice": {
    "key": "rice",
@@ -5607,13 +5897,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Langkornreis"
+   "name_de_generic": "Langkornreis",
+   "name_en": "Long-grain rice",
+   "shelf": "rice",
+   "zone": "grains"
   },
   "salt": {
    "key": "salt",
    "name_ru": "Соль",
    "name_de": "Clever Kristallsalz",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     0.0,
@@ -5657,13 +5950,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/1403022/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Salz"
+   "name_de_generic": "Salz",
+   "name_en": "Salt",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "sausage_frankfurter": {
    "key": "sausage_frankfurter",
    "name_ru": "Сосиски",
    "name_de": "Clever Frankfurter",
-   "department": "meat",
+   "department": "deli",
    "basic": false,
    "nutrition_per_100g": [
     252.0,
@@ -5758,7 +6054,10 @@
      "image": null
     }
    ],
-   "name_de_generic": "Frankfurter Würstel"
+   "name_de_generic": "Frankfurter Würstel",
+   "name_en": "Frankfurters (Wiener sausages)",
+   "shelf": "sausages",
+   "zone": "deli"
   },
   "skyr": {
    "key": "skyr",
@@ -5825,7 +6124,10 @@
      "image": null
     }
    ],
-   "name_de_generic": "Skyr natur"
+   "name_de_generic": "Skyr natur",
+   "name_en": "Skyr",
+   "shelf": "yogurt",
+   "zone": "dairy"
   },
   "sour_cream": {
    "key": "sour_cream",
@@ -5909,13 +6211,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Sauerrahm"
+   "name_de_generic": "Sauerrahm",
+   "name_en": "Sour cream (15%)",
+   "shelf": "cream",
+   "zone": "dairy"
   },
   "soy_sauce": {
    "key": "soy_sauce",
    "name_ru": "Соевый соус",
    "name_de": "BILLA Sojasauce",
-   "department": "pantry",
+   "department": "international",
    "basic": true,
    "nutrition_per_100g": [
     41.0,
@@ -5959,13 +6264,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/6546151/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Sojasauce"
+   "name_de_generic": "Sojasauce",
+   "name_en": "Soy sauce",
+   "shelf": "asia",
+   "zone": "international"
   },
   "spring_onion": {
    "key": "spring_onion",
    "name_ru": "Зелёный лук",
    "name_de": "Da komm ich her! Jungzwiebel",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     42.0,
@@ -6009,13 +6317,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/7888243/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Jungzwiebel"
+   "name_de_generic": "Jungzwiebel",
+   "name_en": "Spring onions",
+   "shelf": "potato_onion",
+   "zone": "produce"
   },
   "sriracha": {
    "key": "sriracha",
    "name_ru": "Соус шрирача",
    "name_de": "Flying Goose Sriracha Scharfe Chilisauce",
-   "department": "pantry",
+   "department": "international",
    "basic": true,
    "nutrition_per_100g": [
     139.0,
@@ -6059,13 +6370,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020004016676/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Sriracha Chilisauce"
+   "name_de_generic": "Sriracha Chilisauce",
+   "name_en": "Sriracha sauce",
+   "shelf": "asia",
+   "zone": "international"
   },
   "stock_cube": {
    "key": "stock_cube",
    "name_ru": "Бульонный кубик овощной",
    "name_de": "Maggi Suppenwürfel Gemüse 12 Stk.",
-   "department": "pantry",
+   "department": "cans",
    "basic": true,
    "nutrition_per_100g": [
     5.0,
@@ -6109,13 +6423,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-311169-0174876841-Ej6H8nhP.jpg"
     }
    ],
-   "name_de_generic": "Gemüsebrühwürfel"
+   "name_de_generic": "Gemüsebrühwürfel",
+   "name_en": "Vegetable stock cube",
+   "shelf": "ready_shelf",
+   "zone": "cans"
   },
   "sugar": {
    "key": "sugar",
    "name_ru": "Сахар",
    "name_de": "Clever Feinkristallzucker",
-   "department": "pantry",
+   "department": "baking",
    "basic": true,
    "nutrition_per_100g": [
     400.0,
@@ -6159,13 +6476,16 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/7109645/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Kristallzucker"
+   "name_de_generic": "Kristallzucker",
+   "name_en": "Sugar",
+   "shelf": "sugar",
+   "zone": "baking"
   },
   "thyme": {
    "key": "thyme",
    "name_ru": "Тимьян сушёный",
    "name_de": "SPAR Thymian gerebelt 20g",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     300,
@@ -6209,13 +6529,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-728595-0185744045-5ijPwN59.jpg"
     }
    ],
-   "name_de_generic": "Thymian gerebelt"
+   "name_de_generic": "Thymian gerebelt",
+   "name_en": "Dried thyme",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "toast_bread": {
    "key": "toast_bread",
    "name_ru": "Тостовый хлеб",
    "name_de": "S-BUDGET Toastbrot",
-   "department": "grains",
+   "department": "bakery",
    "basic": false,
    "nutrition_per_100g": [
     270.0,
@@ -6310,13 +6633,16 @@
      "image": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/400/8285f639-a226-441b-8eb4-285537eb2b91/Proteintoast"
     }
    ],
-   "name_de_generic": "Toastbrot"
+   "name_de_generic": "Toastbrot",
+   "name_en": "Toast bread",
+   "shelf": "bread_packed",
+   "zone": "bakery"
   },
   "tomato": {
    "key": "tomato",
    "name_ru": "Помидор",
    "name_de": "S-BUDGET Tomaten rund per kg",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     17.0,
@@ -6377,13 +6703,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/787b77ab-692c-4e25-91f4-697690dc3c7c/78-112035-594374321-EoY7CYho.jpg"
     }
    ],
-   "name_de_generic": "Paradeiser"
+   "name_de_generic": "Paradeiser",
+   "name_en": "Tomatoes",
+   "shelf": "tomato_fresh",
+   "zone": "produce"
   },
   "tomato_paste": {
    "key": "tomato_paste",
    "name_ru": "Томатная паста",
    "name_de": "Clever Tomatenmark",
-   "department": "pantry",
+   "department": "cans",
    "basic": true,
    "nutrition_per_100g": [
     105.0,
@@ -6427,7 +6756,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/7201431/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Tomatenmark"
+   "name_de_generic": "Tomatenmark",
+   "name_en": "Tomato paste",
+   "shelf": "tomato_products",
+   "zone": "cans"
   },
   "tomatoes_can": {
    "key": "tomatoes_can",
@@ -6511,13 +6843,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Geschälte Tomaten (Dose)"
+   "name_de_generic": "Geschälte Tomaten (Dose)",
+   "name_en": "Canned peeled tomatoes",
+   "shelf": "tomato_products",
+   "zone": "cans"
   },
   "tortilla": {
    "key": "tortilla",
    "name_ru": "Пшеничные тортильи",
    "name_de": "BILLA Soft Tortilla Wraps Weizen",
-   "department": "grains",
+   "department": "international",
    "basic": false,
    "nutrition_per_100g": [
     294.0,
@@ -6561,7 +6896,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020002621759/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Tortilla Wraps Weizen"
+   "name_de_generic": "Tortilla Wraps Weizen",
+   "name_en": "Wheat tortillas / wraps",
+   "shelf": "mediterranean",
+   "zone": "international"
   },
   "turkey_breast": {
    "key": "turkey_breast",
@@ -6713,7 +7051,10 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-719534-0168024835-eDBMfHEd.jpg"
     }
    ],
-   "name_de_generic": "Putenbrust / Putenbrustfilet"
+   "name_de_generic": "Putenbrust / Putenbrustfilet",
+   "name_en": "Turkey breast fillet",
+   "shelf": "poultry",
+   "zone": "meat"
   },
   "turkey_mince": {
    "key": "turkey_mince",
@@ -6763,13 +7104,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-743375-0163664154-eV7B3BFu.jpg"
     }
    ],
-   "name_de_generic": "Puten-Faschiertes"
+   "name_de_generic": "Puten-Faschiertes",
+   "name_en": "Minced turkey",
+   "shelf": "mince",
+   "zone": "meat"
   },
   "turmeric": {
    "key": "turmeric",
    "name_ru": "Куркума",
    "name_de": "Kotányi Curcuma gemahlen 50g",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     300,
@@ -6813,13 +7157,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-706420-273874271-ukJ0AUou.jpg"
     }
    ],
-   "name_de_generic": "Kurkuma gemahlen"
+   "name_de_generic": "Kurkuma gemahlen",
+   "name_en": "Turmeric",
+   "shelf": "spices",
+   "zone": "oils"
   },
   "vinegar": {
    "key": "vinegar",
    "name_ru": "Уксус столовый",
    "name_de": "S-BUDGET Tafelessig",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     15.0,
@@ -6863,13 +7210,16 @@
      "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-501109-1282249606-umJm9AOS.jpg"
     }
    ],
-   "name_de_generic": "Tafelessig"
+   "name_de_generic": "Tafelessig",
+   "name_en": "White vinegar",
+   "shelf": "oil_vinegar",
+   "zone": "oils"
   },
   "water": {
    "key": "water",
    "name_ru": "Вода горячая",
    "name_de": "Wasser",
-   "department": "pantry",
+   "department": "oils",
    "basic": true,
    "nutrition_per_100g": [
     0,
@@ -6896,13 +7246,16 @@
      "image": null
     }
    ],
-   "name_de_generic": "Wasser"
+   "name_de_generic": "Wasser",
+   "name_en": "Hot water",
+   "shelf": null,
+   "zone": "oils"
   },
   "white_cabbage": {
    "key": "white_cabbage",
    "name_ru": "Белокочанная капуста",
    "name_de": "Da komm ich her! Weißkraut",
-   "department": "veg",
+   "department": "produce",
    "basic": false,
    "nutrition_per_100g": [
     20.0,
@@ -6946,7 +7299,10 @@
      "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/6665258/dt_main.jpg"
     }
    ],
-   "name_de_generic": "Weißkraut"
+   "name_de_generic": "Weißkraut",
+   "name_en": "White cabbage",
+   "shelf": "veg",
+   "zone": "produce"
   }
  }
 }

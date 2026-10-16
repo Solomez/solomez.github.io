@@ -1,5 +1,6 @@
 // Генератор рациона на неделю (обед + ужин) и замена блюд.
 import { chooseOffer, proportionalCost, scaledIngredients, round2 } from './shopping.js';
+import { canCook } from './equipment.js';
 
 export const DAYS = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 export const DAYS_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
@@ -15,6 +16,7 @@ export const DEFAULT_PREFS = {
   favorites: [],
   planBreakfast: true, // подбирать завтрак и перекусы под остаток дневной нормы
   allowTwoStores: false, // в плане походов разрешить два магазина в один день, если так дешевле
+  equipment: {}, // кухонная утварь: id → есть ли (не указано — по умолчанию из equipment.js)
 };
 
 export function mulberry32(seed) {
@@ -52,6 +54,7 @@ export function eligibleRecipes(recipes, prefs = DEFAULT_PREFS, type = 'main') {
     if (mealType(r) !== type) return false;
     if (hidden.has(r.id)) return false;
     if (!prefs.showBorderline && (r.tags || []).includes('спорное')) return false;
+    if (!canCook(r, prefs.equipment)) return false; // нет нужной утвари
     return !r.ingredients.some((i) => !i.basic && !i.optional && excluded.has(i.key));
   });
 }
