@@ -141,7 +141,7 @@
    "ru": "Овощи",
    "en": "Vegetables",
    "de": "Gemüse",
-   "count": 192
+   "count": 193
   },
   {
    "id": "potato_onion",
@@ -165,7 +165,7 @@
    "ru": "Фрукты",
    "en": "Fruit",
    "de": "Obst",
-   "count": 191
+   "count": 197
   },
   {
    "id": "salad_herbs",
@@ -173,7 +173,7 @@
    "ru": "Салат и свежая зелень",
    "en": "Salad & fresh herbs",
    "de": "Salate & Kräuter",
-   "count": 145
+   "count": 146
   },
   {
    "id": "mushrooms",
@@ -181,7 +181,7 @@
    "ru": "Грибы",
    "en": "Mushrooms",
    "de": "Pilze",
-   "count": 13
+   "count": 14
   },
   {
    "id": "nuts_dried",
@@ -189,7 +189,7 @@
    "ru": "Орехи и сухофрукты",
    "en": "Nuts & dried fruit",
    "de": "Nüsse & Trockenfrüchte",
-   "count": 275
+   "count": 276
   },
   {
    "id": "bread_fresh",
@@ -197,7 +197,7 @@
    "ru": "Свежий хлеб и булочки",
    "en": "Fresh bread & rolls",
    "de": "Ofenfrisches Brot & Gebäck",
-   "count": 364
+   "count": 376
   },
   {
    "id": "bread_packed",
@@ -213,7 +213,7 @@
    "ru": "Хлебцы, сухари, рисовые хлебцы",
    "en": "Crispbread & rice cakes",
    "de": "Knäckebrot, Zwieback & Reiswaffeln",
-   "count": 143
+   "count": 150
   },
   {
    "id": "cakes",
@@ -221,7 +221,7 @@
    "ru": "Пирожные, кексы, сдоба",
    "en": "Cakes & pastries",
    "de": "Kuchen, Plunder & Mehlspeisen",
-   "count": 461
+   "count": 505
   },
   {
    "id": "breadcrumbs",
@@ -229,7 +229,7 @@
    "ru": "Панировочные сухари и гренки",
    "en": "Breadcrumbs & croutons",
    "de": "Semmelbrösel & Semmelwürfel",
-   "count": 11
+   "count": 26
   },
   {
    "id": "poultry",
@@ -269,7 +269,7 @@
    "ru": "Маринованное мясо, гриль, прочее",
    "en": "Marinated & other meat",
    "de": "Fleisch-Spezialitäten",
-   "count": 92
+   "count": 99
   },
   {
    "id": "sausages",
@@ -277,7 +277,7 @@
    "ru": "Сосиски и колбаски",
    "en": "Sausages & frankfurters",
    "de": "Würstel",
-   "count": 117
+   "count": 232
   },
   {
    "id": "ham",
@@ -285,7 +285,7 @@
    "ru": "Ветчина",
    "en": "Ham",
    "de": "Schinken",
-   "count": 65
+   "count": 67
   },
   {
    "id": "coldcuts",
@@ -293,7 +293,7 @@
    "ru": "Нарезка, салями, бекон",
    "en": "Cold cuts, salami & bacon",
    "de": "Aufschnitt, Salami & Speck",
-   "count": 221
+   "count": 352
   },
   {
    "id": "feinkost",
@@ -301,7 +301,7 @@
    "ru": "Прилавок Feinkost (на развес)",
    "en": "Deli counter (by weight)",
    "de": "Feinkost-Theke",
-   "count": 190
+   "count": 225
   },
   {
    "id": "meat_alt",
@@ -317,7 +317,7 @@
    "ru": "Твёрдый сыр (в т. ч. ломтиками)",
    "en": "Hard & sliced cheese",
    "de": "Hartkäse & Schnittkäse",
-   "count": 429
+   "count": 431
   },
   {
    "id": "cheese_fresh",
@@ -381,7 +381,7 @@
    "ru": "Сливочное масло и маргарин",
    "en": "Butter & margarine",
    "de": "Butter & Margarine",
-   "count": 128
+   "count": 131
   },
   {
    "id": "dairy_drinks",
@@ -397,7 +397,7 @@
    "ru": "Пудинги и десерты",
    "en": "Puddings & desserts",
    "de": "Pudding & Desserts",
-   "count": 265
+   "count": 323
   },
   {
    "id": "dairy_alt",
@@ -413,7 +413,7 @@
    "ru": "Яйца",
    "en": "Eggs",
    "de": "Eier",
-   "count": 49
+   "count": 50
   },
   {
    "id": "spreads",
@@ -421,7 +421,7 @@
    "ru": "Намазки, хумус, антипасти",
    "en": "Spreads, hummus & antipasti",
    "de": "Aufstriche & Antipasti",
-   "count": 244
+   "count": 242
   },
   {
    "id": "dough",
@@ -437,7 +437,7 @@
    "ru": "Готовая еда, салаты, сэндвичи",
    "en": "Ready meals, salads & sandwiches",
    "de": "Fertiggerichte gekühlt & Sandwiches",
-   "count": 443
+   "count": 438
   },
   {
    "id": "fresh_pasta",
@@ -453,7 +453,7 @@
    "ru": "Макароны",
    "en": "Pasta",
    "de": "Teigwaren / Pasta",
-   "count": 558
+   "count": 563
   },
   {
    "id": "rice",
@@ -469,7 +469,7 @@
    "ru": "Крупы и сухие бобовые",
    "en": "Grains & dried pulses",
    "de": "Getreide & Hülsenfrüchte",
-   "count": 425
+   "count": 423
   },
   {
    "id": "sides",
@@ -493,7 +493,7 @@
    "ru": "Овощные консервы, фасоль, нут",
    "en": "Canned vegetables & beans",
    "de": "Gemüsekonserven & Hülsenfrüchte",
-   "count": 289
+   "count": 288
   },
   {
    "id": "pickles",
@@ -501,7 +501,7 @@
    "ru": "Соленья, оливки",
    "en": "Pickles & olives",
    "de": "Sauerwaren & Oliven",
-   "count": 360
+   "count": 363
   },
   {
    "id": "canned_fruit",
@@ -509,7 +509,7 @@
    "ru": "Фруктовые консервы и пюре",
    "en": "Canned fruit & purée",
    "de": "Obstkonserven & Fruchtmus",
-   "count": 140
+   "count": 142
   },
   {
    "id": "ready_shelf",
@@ -517,7 +517,7 @@
    "ru": "Готовые блюда и супы (не в холодильнике)",
    "en": "Shelf-stable meals & soups",
    "de": "Fertiggerichte & Suppen",
-   "count": 442
+   "count": 446
   },
   {
    "id": "canned_spreads",
@@ -525,7 +525,7 @@
    "ru": "Паштеты и намазки в банках",
    "en": "Pâtés & canned spreads",
    "de": "Aufstriche & Pasteten",
-   "count": 146
+   "count": 141
   },
   {
    "id": "oil_vinegar",
@@ -533,7 +533,7 @@
    "ru": "Масло и уксус",
    "en": "Oil & vinegar",
    "de": "Öl & Essig",
-   "count": 313
+   "count": 316
   },
   {
    "id": "sauces",
@@ -541,7 +541,7 @@
    "ru": "Кетчуп, горчица, майонез, соусы",
    "en": "Ketchup, mustard, mayo & sauces",
    "de": "Saucen, Senf & Dressings",
-   "count": 402
+   "count": 404
   },
   {
    "id": "spices",
@@ -549,7 +549,7 @@
    "ru": "Специи и соль",
    "en": "Spices & salt",
    "de": "Gewürze & Salz",
-   "count": 920
+   "count": 932
   },
   {
    "id": "stock",
@@ -557,7 +557,7 @@
    "ru": "Бульонные кубики и приправы-фикс",
    "en": "Stock cubes & seasoning mixes",
    "de": "Suppenwürfel & Fixprodukte",
-   "count": 215
+   "count": 216
   },
   {
    "id": "flour",
@@ -565,7 +565,7 @@
    "ru": "Мука",
    "en": "Flour",
    "de": "Mehl",
-   "count": 112
+   "count": 113
   },
   {
    "id": "sugar",
@@ -597,7 +597,7 @@
    "ru": "Азиатское",
    "en": "Asian food",
    "de": "Asien",
-   "count": 143
+   "count": 145
   },
   {
    "id": "balkan",
@@ -613,7 +613,7 @@
    "ru": "Средиземноморское, восточное, мексиканское",
    "en": "Mediterranean, Middle Eastern & Mexican",
    "de": "Mediterran, Orientalisch & Mexikanisch",
-   "count": 39
+   "count": 45
   },
   {
    "id": "cereal",
@@ -621,7 +621,7 @@
    "ru": "Мюсли, хлопья, овсянка",
    "en": "Muesli, cereal & oats",
    "de": "Müsli, Cerealien & Haferflocken",
-   "count": 360
+   "count": 361
   },
   {
    "id": "sweet_spreads",
@@ -629,7 +629,7 @@
    "ru": "Мёд, варенье, ореховые пасты",
    "en": "Honey, jam & nut butters",
    "de": "Honig, Marmelade & Nussmus",
-   "count": 403
+   "count": 420
   },
   {
    "id": "uht_milk",
@@ -645,7 +645,7 @@
    "ru": "Кофе",
    "en": "Coffee",
    "de": "Kaffee",
-   "count": 617
+   "count": 626
   },
   {
    "id": "tea",
@@ -653,7 +653,7 @@
    "ru": "Чай и какао",
    "en": "Tea & cocoa",
    "de": "Tee & Kakao",
-   "count": 496
+   "count": 498
   },
   {
    "id": "chocolate",
@@ -661,7 +661,7 @@
    "ru": "Шоколад и конфеты",
    "en": "Chocolate & sweets",
    "de": "Schokolade & Süßes",
-   "count": 1037
+   "count": 1049
   },
   {
    "id": "biscuits",
@@ -669,7 +669,7 @@
    "ru": "Печенье и вафли",
    "en": "Biscuits & wafers",
    "de": "Kekse & Waffeln",
-   "count": 466
+   "count": 469
   },
   {
    "id": "chips",
@@ -677,7 +677,7 @@
    "ru": "Чипсы и солёные снеки",
    "en": "Crisps & salty snacks",
    "de": "Chips & Knabbereien",
-   "count": 599
+   "count": 617
   },
   {
    "id": "bars",
@@ -685,7 +685,7 @@
    "ru": "Батончики и протеиновые снеки",
    "en": "Cereal & protein bars",
    "de": "Riegel & Proteinsnacks",
-   "count": 748
+   "count": 750
   },
   {
    "id": "candy",
@@ -693,7 +693,7 @@
    "ru": "Леденцы и жвачка",
    "en": "Candy & chewing gum",
    "de": "Zuckerl & Kaugummi",
-   "count": 471
+   "count": 479
   },
   {
    "id": "water",
@@ -701,7 +701,7 @@
    "ru": "Вода",
    "en": "Water",
    "de": "Mineralwasser",
-   "count": 323
+   "count": 338
   },
   {
    "id": "juice",
@@ -709,7 +709,7 @@
    "ru": "Соки и смузи",
    "en": "Juice & smoothies",
    "de": "Säfte & Smoothies",
-   "count": 596
+   "count": 601
   },
   {
    "id": "soft_drinks",
@@ -717,7 +717,7 @@
    "ru": "Лимонады, холодный чай, энергетики",
    "en": "Soft drinks, iced tea & energy drinks",
    "de": "Limonaden, Eistee & Energydrinks",
-   "count": 885
+   "count": 895
   },
   {
    "id": "syrup",
@@ -765,7 +765,7 @@
    "ru": "Замороженные овощи и зелень",
    "en": "Frozen vegetables & herbs",
    "de": "TK-Gemüse & Kräuter",
-   "count": 212
+   "count": 211
   },
   {
    "id": "frozen_fruit",
@@ -773,7 +773,7 @@
    "ru": "Замороженные фрукты и ягоды",
    "en": "Frozen fruit & berries",
    "de": "TK-Obst",
-   "count": 44
+   "count": 45
   },
   {
    "id": "frozen_meat",
@@ -797,7 +797,7 @@
    "ru": "Пицца и багеты",
    "en": "Frozen pizza & baguettes",
    "de": "Pizza & Baguette",
-   "count": 191
+   "count": 184
   },
   {
    "id": "frozen_meals",
@@ -805,7 +805,7 @@
    "ru": "Готовые блюда, кнёдели",
    "en": "Frozen meals & dumplings",
    "de": "TK-Gerichte & Knödel",
-   "count": 255
+   "count": 252
   },
   {
    "id": "frozen_sweets",
@@ -816,18 +816,8310 @@
    "count": 542
   }
  ],
- "concepts": [],
+ "concepts": [
+  {
+   "id": "potato",
+   "ru": "Картофель",
+   "en": "Potatoes",
+   "de": "Erdäpfel",
+   "ru_alt": [
+    "картошка",
+    "молодой картофель"
+   ],
+   "en_alt": [
+    "potato"
+   ]
+  },
+  {
+   "id": "potato_waxy",
+   "ru": "Картофель для салата (плотный)",
+   "en": "Waxy potatoes",
+   "de": "festkochend",
+   "ru_alt": [
+    "картофель не разваривающийся"
+   ],
+   "en_alt": [
+    "salad potatoes"
+   ]
+  },
+  {
+   "id": "potato_floury",
+   "ru": "Картофель для пюре (рассыпчатый)",
+   "en": "Floury potatoes",
+   "de": "mehlig",
+   "ru_alt": [],
+   "en_alt": [
+    "mashing potatoes"
+   ]
+  },
+  {
+   "id": "sweet_potato",
+   "ru": "Батат",
+   "en": "Sweet potato",
+   "de": "Süßkartoffel",
+   "ru_alt": [
+    "сладкий картофель"
+   ],
+   "en_alt": [
+    "yam"
+   ]
+  },
+  {
+   "id": "carrot",
+   "ru": "Морковь",
+   "en": "Carrots",
+   "de": "Karotte",
+   "ru_alt": [
+    "морковка"
+   ],
+   "en_alt": [
+    "carrot"
+   ]
+  },
+  {
+   "id": "onion",
+   "ru": "Лук репчатый",
+   "en": "Onions",
+   "de": "Zwiebel",
+   "ru_alt": [
+    "лук",
+    "луковица",
+    "красный лук"
+   ],
+   "en_alt": [
+    "onion",
+    "red onion",
+    "brown onion"
+   ]
+  },
+  {
+   "id": "spring_onion",
+   "ru": "Зелёный лук",
+   "en": "Spring onions",
+   "de": "Jungzwiebel",
+   "ru_alt": [
+    "лук зелёный",
+    "перья лука"
+   ],
+   "en_alt": [
+    "scallions",
+    "green onions"
+   ]
+  },
+  {
+   "id": "fried_onion",
+   "ru": "Жареный лук",
+   "en": "Crispy fried onions",
+   "de": "Röstzwiebel",
+   "ru_alt": [
+    "луковые чипсы"
+   ],
+   "en_alt": [
+    "fried onions"
+   ]
+  },
+  {
+   "id": "garlic",
+   "ru": "Чеснок",
+   "en": "Garlic",
+   "de": "Knoblauch",
+   "ru_alt": [
+    "чесночок"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "leek",
+   "ru": "Лук-порей",
+   "en": "Leek",
+   "de": "Lauch",
+   "ru_alt": [
+    "порей"
+   ],
+   "en_alt": [
+    "leeks"
+   ]
+  },
+  {
+   "id": "wild_garlic",
+   "ru": "Черемша",
+   "en": "Wild garlic",
+   "de": "Bärlauch",
+   "ru_alt": [
+    "дикий чеснок",
+    "медвежий лук"
+   ],
+   "en_alt": [
+    "ramsons"
+   ]
+  },
+  {
+   "id": "tomato",
+   "ru": "Помидоры",
+   "en": "Tomatoes",
+   "de": "Paradeiser",
+   "ru_alt": [
+    "томаты",
+    "помидор",
+    "томат"
+   ],
+   "en_alt": [
+    "tomato"
+   ]
+  },
+  {
+   "id": "cherry_tomato",
+   "ru": "Помидоры черри",
+   "en": "Cherry tomatoes",
+   "de": "Cherrytomaten",
+   "ru_alt": [
+    "черри"
+   ],
+   "en_alt": [
+    "grape tomatoes"
+   ]
+  },
+  {
+   "id": "cucumber",
+   "ru": "Огурцы",
+   "en": "Cucumber",
+   "de": "Gurke",
+   "ru_alt": [
+    "огурец",
+    "свежие огурцы"
+   ],
+   "en_alt": [
+    "cucumbers"
+   ]
+  },
+  {
+   "id": "pickles",
+   "ru": "Солёные/маринованные огурцы",
+   "en": "Pickles (gherkins)",
+   "de": "Gurkerl",
+   "ru_alt": [
+    "маринованные огурцы",
+    "солёные огурцы",
+    "огурчики",
+    "корнишоны"
+   ],
+   "en_alt": [
+    "gherkins",
+    "dill pickles",
+    "pickled cucumbers"
+   ]
+  },
+  {
+   "id": "bell_pepper",
+   "ru": "Болгарский перец",
+   "en": "Bell peppers",
+   "de": "Spitzpaprika",
+   "ru_alt": [
+    "сладкий перец",
+    "паприка свежая",
+    "перец"
+   ],
+   "en_alt": [
+    "capsicum",
+    "peppers",
+    "sweet peppers"
+   ]
+  },
+  {
+   "id": "chili_pepper",
+   "ru": "Острый перец",
+   "en": "Chili peppers",
+   "de": "Pfefferoni",
+   "ru_alt": [
+    "перец чили",
+    "перчик",
+    "халапеньо"
+   ],
+   "en_alt": [
+    "hot peppers",
+    "chillies"
+   ]
+  },
+  {
+   "id": "stuffed_peppers_jar",
+   "ru": "Перчики фаршированные (антипасти)",
+   "en": "Stuffed peppers (antipasti)",
+   "de": "Pfefferoni gefüllt",
+   "ru_alt": [
+    "фаршированный перец"
+   ],
+   "en_alt": [
+    "stuffed cherry peppers"
+   ]
+  },
+  {
+   "id": "zucchini",
+   "ru": "Кабачки (цукини)",
+   "en": "Courgettes (zucchini)",
+   "de": "Zucchini",
+   "ru_alt": [
+    "цукини",
+    "кабачок"
+   ],
+   "en_alt": [
+    "zucchini",
+    "courgette"
+   ]
+  },
+  {
+   "id": "eggplant",
+   "ru": "Баклажаны",
+   "en": "Aubergine (eggplant)",
+   "de": "Melanzani",
+   "ru_alt": [
+    "баклажан",
+    "синенькие"
+   ],
+   "en_alt": [
+    "eggplant",
+    "aubergine"
+   ]
+  },
+  {
+   "id": "broccoli",
+   "ru": "Брокколи",
+   "en": "Broccoli",
+   "de": "Brokkoli",
+   "ru_alt": [],
+   "en_alt": []
+  },
+  {
+   "id": "cauliflower",
+   "ru": "Цветная капуста",
+   "en": "Cauliflower",
+   "de": "Karfiol",
+   "ru_alt": [
+    "цветная"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "white_cabbage",
+   "ru": "Белокочанная капуста",
+   "en": "White cabbage",
+   "de": "Weißkraut",
+   "ru_alt": [
+    "капуста",
+    "свежая капуста"
+   ],
+   "en_alt": [
+    "cabbage",
+    "pointed cabbage"
+   ]
+  },
+  {
+   "id": "red_cabbage",
+   "ru": "Краснокочанная капуста",
+   "en": "Red cabbage",
+   "de": "Rotkraut",
+   "ru_alt": [
+    "красная капуста"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "sauerkraut",
+   "ru": "Квашеная капуста",
+   "en": "Sauerkraut",
+   "de": "Sauerkraut",
+   "ru_alt": [
+    "кислая капуста",
+    "кимчи"
+   ],
+   "en_alt": [
+    "kimchi"
+   ]
+  },
+  {
+   "id": "chinese_cabbage",
+   "ru": "Пекинская капуста",
+   "en": "Chinese leaf (napa cabbage)",
+   "de": "Chinakohl",
+   "ru_alt": [
+    "китайская капуста",
+    "бок-чой",
+    "пак-чой"
+   ],
+   "en_alt": [
+    "napa cabbage",
+    "bok choy",
+    "pak choi"
+   ]
+  },
+  {
+   "id": "kohlrabi",
+   "ru": "Кольраби",
+   "en": "Kohlrabi",
+   "de": "Kohlrabi",
+   "ru_alt": [],
+   "en_alt": []
+  },
+  {
+   "id": "brussels_sprouts",
+   "ru": "Брюссельская капуста",
+   "en": "Brussels sprouts",
+   "de": "Kohlsprossen",
+   "ru_alt": [],
+   "en_alt": [
+    "sprouts"
+   ]
+  },
+  {
+   "id": "kale",
+   "ru": "Кале (листовая капуста)",
+   "en": "Kale",
+   "de": "Grünkohl",
+   "ru_alt": [
+    "кейл",
+    "капуста кале"
+   ],
+   "en_alt": [
+    "curly kale"
+   ]
+  },
+  {
+   "id": "spinach",
+   "ru": "Шпинат",
+   "en": "Spinach",
+   "de": "Spinat",
+   "ru_alt": [
+    "шпинат свежий"
+   ],
+   "en_alt": [
+    "baby spinach"
+   ]
+  },
+  {
+   "id": "creamed_spinach",
+   "ru": "Шпинат со сливками (пюре)",
+   "en": "Creamed spinach",
+   "de": "Rahmspinat",
+   "ru_alt": [
+    "шпинат-пюре"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "lettuce",
+   "ru": "Салат листовой",
+   "en": "Lettuce",
+   "de": "Häuptelsalat",
+   "ru_alt": [
+    "салат айсберг",
+    "салат романо",
+    "зелёный салат",
+    "листья салата"
+   ],
+   "en_alt": [
+    "salad leaves",
+    "iceberg lettuce",
+    "romaine",
+    "mixed salad"
+   ]
+  },
+  {
+   "id": "lambs_lettuce",
+   "ru": "Салат корн (валериана)",
+   "en": "Lamb's lettuce",
+   "de": "Vogerlsalat",
+   "ru_alt": [
+    "валерианелла",
+    "корн-салат",
+    "рапунцель"
+   ],
+   "en_alt": [
+    "corn salad",
+    "mache"
+   ]
+  },
+  {
+   "id": "rocket",
+   "ru": "Руккола",
+   "en": "Rocket (arugula)",
+   "de": "Rucola",
+   "ru_alt": [
+    "рукола",
+    "индау"
+   ],
+   "en_alt": [
+    "arugula",
+    "rocket"
+   ]
+  },
+  {
+   "id": "chicory",
+   "ru": "Цикорий / радиккьо",
+   "en": "Chicory / radicchio",
+   "de": "Chicoree",
+   "ru_alt": [
+    "радиккио",
+    "эндивий"
+   ],
+   "en_alt": [
+    "endive",
+    "radicchio"
+   ]
+  },
+  {
+   "id": "radish",
+   "ru": "Редис",
+   "en": "Radishes",
+   "de": "Radieschen",
+   "ru_alt": [
+    "редиска"
+   ],
+   "en_alt": [
+    "radish"
+   ]
+  },
+  {
+   "id": "white_radish",
+   "ru": "Редька / дайкон",
+   "en": "Radish (white/black), daikon",
+   "de": "Rettich",
+   "ru_alt": [
+    "редька",
+    "дайкон",
+    "чёрная редька"
+   ],
+   "en_alt": [
+    "mooli",
+    "daikon"
+   ]
+  },
+  {
+   "id": "beetroot",
+   "ru": "Свёкла",
+   "en": "Beetroot",
+   "de": "Rote Rüben",
+   "ru_alt": [
+    "свекла",
+    "буряк"
+   ],
+   "en_alt": [
+    "beets",
+    "beet"
+   ]
+  },
+  {
+   "id": "celeriac",
+   "ru": "Сельдерей (корень)",
+   "en": "Celeriac",
+   "de": "Knollensellerie",
+   "ru_alt": [
+    "корень сельдерея",
+    "сельдерей"
+   ],
+   "en_alt": [
+    "celery root"
+   ]
+  },
+  {
+   "id": "celery",
+   "ru": "Сельдерей черешковый",
+   "en": "Celery",
+   "de": "Stangensellerie",
+   "ru_alt": [
+    "стебли сельдерея"
+   ],
+   "en_alt": [
+    "celery sticks",
+    "celery stalks"
+   ]
+  },
+  {
+   "id": "parsnip",
+   "ru": "Пастернак",
+   "en": "Parsnips",
+   "de": "Pastinake",
+   "ru_alt": [],
+   "en_alt": [
+    "parsnip"
+   ]
+  },
+  {
+   "id": "parsley_root",
+   "ru": "Корень петрушки",
+   "en": "Parsley root",
+   "de": "Petersilienwurzel",
+   "ru_alt": [
+    "петрушка корень"
+   ],
+   "en_alt": [
+    "hamburg parsley"
+   ]
+  },
+  {
+   "id": "fennel",
+   "ru": "Фенхель",
+   "en": "Fennel",
+   "de": "Fenchel",
+   "ru_alt": [
+    "фенхель свежий"
+   ],
+   "en_alt": [
+    "fennel bulb"
+   ]
+  },
+  {
+   "id": "pumpkin",
+   "ru": "Тыква",
+   "en": "Pumpkin / squash",
+   "de": "Kürbis",
+   "ru_alt": [
+    "тыква хоккайдо",
+    "тыква мускатная",
+    "баттернат"
+   ],
+   "en_alt": [
+    "squash",
+    "butternut squash",
+    "hokkaido pumpkin"
+   ]
+  },
+  {
+   "id": "sweetcorn",
+   "ru": "Кукуруза",
+   "en": "Sweetcorn",
+   "de": "Zuckermais",
+   "ru_alt": [
+    "кукуруза консервированная",
+    "початок кукурузы",
+    "сладкая кукуруза"
+   ],
+   "en_alt": [
+    "corn",
+    "corn on the cob"
+   ]
+  },
+  {
+   "id": "green_beans",
+   "ru": "Стручковая фасоль",
+   "en": "Green beans",
+   "de": "Fisolen",
+   "ru_alt": [
+    "зелёная фасоль",
+    "спаржевая фасоль",
+    "фасоль стручковая"
+   ],
+   "en_alt": [
+    "string beans",
+    "french beans"
+   ]
+  },
+  {
+   "id": "peas",
+   "ru": "Зелёный горошек",
+   "en": "Peas",
+   "de": "Erbsen",
+   "ru_alt": [
+    "горошек",
+    "горох зелёный"
+   ],
+   "en_alt": [
+    "garden peas",
+    "petits pois"
+   ]
+  },
+  {
+   "id": "peas_carrots",
+   "ru": "Горошек с морковью",
+   "en": "Peas and carrots",
+   "de": "Erbsen & Karotten",
+   "ru_alt": [
+    "горошек с морковкой"
+   ],
+   "en_alt": [
+    "peas & carrots"
+   ]
+  },
+  {
+   "id": "snow_peas",
+   "ru": "Сахарный горошек (стручки)",
+   "en": "Mangetout / sugar snap peas",
+   "de": "Zuckerschoten",
+   "ru_alt": [
+    "горох в стручках"
+   ],
+   "en_alt": [
+    "snow peas",
+    "sugar snaps"
+   ]
+  },
+  {
+   "id": "mushrooms",
+   "ru": "Шампиньоны",
+   "en": "Mushrooms (button)",
+   "de": "Champignon",
+   "ru_alt": [
+    "грибы",
+    "шампиньон"
+   ],
+   "en_alt": [
+    "button mushrooms",
+    "chestnut mushrooms"
+   ]
+  },
+  {
+   "id": "mushrooms_other",
+   "ru": "Грибы (вёшенки, шиитаке и др.)",
+   "en": "Mushrooms (oyster, shiitake etc.)",
+   "de": "Austernpilze",
+   "ru_alt": [
+    "вешенки",
+    "шиитаке",
+    "белые грибы",
+    "лесные грибы"
+   ],
+   "en_alt": [
+    "oyster mushrooms",
+    "porcini",
+    "wild mushrooms"
+   ]
+  },
+  {
+   "id": "chanterelles",
+   "ru": "Лисички",
+   "en": "Chanterelles",
+   "de": "Eierschwammerl",
+   "ru_alt": [
+    "грибы лисички"
+   ],
+   "en_alt": [
+    "girolles"
+   ]
+  },
+  {
+   "id": "ginger",
+   "ru": "Имбирь",
+   "en": "Ginger",
+   "de": "Ingwer",
+   "ru_alt": [
+    "корень имбиря",
+    "имбирь молотый"
+   ],
+   "en_alt": [
+    "ginger root",
+    "ground ginger"
+   ]
+  },
+  {
+   "id": "avocado",
+   "ru": "Авокадо",
+   "en": "Avocado",
+   "de": "Avocado",
+   "ru_alt": [],
+   "en_alt": [
+    "avocados"
+   ]
+  },
+  {
+   "id": "artichoke",
+   "ru": "Артишоки",
+   "en": "Artichokes",
+   "de": "Artischocke",
+   "ru_alt": [
+    "артишок"
+   ],
+   "en_alt": [
+    "artichoke hearts"
+   ]
+  },
+  {
+   "id": "asparagus",
+   "ru": "Спаржа",
+   "en": "Asparagus",
+   "de": "Spargel",
+   "ru_alt": [
+    "спаржа белая",
+    "спаржа зелёная"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "sprouts",
+   "ru": "Ростки (проростки)",
+   "en": "Sprouts (bean sprouts)",
+   "de": "Mungobohnensprossen",
+   "ru_alt": [
+    "ростки маша",
+    "проростки"
+   ],
+   "en_alt": [
+    "bean sprouts",
+    "beansprouts"
+   ]
+  },
+  {
+   "id": "cress",
+   "ru": "Кресс-салат",
+   "en": "Cress",
+   "de": "Kresse",
+   "ru_alt": [
+    "кресс"
+   ],
+   "en_alt": [
+    "watercress",
+    "garden cress"
+   ]
+  },
+  {
+   "id": "soup_veg",
+   "ru": "Овощи для супа (суповой набор)",
+   "en": "Soup vegetables",
+   "de": "Suppengemüse",
+   "ru_alt": [
+    "суповой набор овощей",
+    "зелень для супа"
+   ],
+   "en_alt": [
+    "soup greens",
+    "stock vegetables"
+   ]
+  },
+  {
+   "id": "mixed_veg",
+   "ru": "Овощная смесь",
+   "en": "Mixed vegetables",
+   "de": "Gemüsemischung",
+   "ru_alt": [
+    "замороженные овощи",
+    "овощное ассорти",
+    "овощи для жарки"
+   ],
+   "en_alt": [
+    "frozen vegetables",
+    "stir-fry vegetables",
+    "vegetable medley"
+   ]
+  },
+  {
+   "id": "olives",
+   "ru": "Оливки / маслины",
+   "en": "Olives",
+   "de": "Oliven",
+   "ru_alt": [
+    "маслины",
+    "оливки зелёные",
+    "оливки чёрные"
+   ],
+   "en_alt": [
+    "green olives",
+    "black olives",
+    "kalamata olives"
+   ]
+  },
+  {
+   "id": "capers",
+   "ru": "Каперсы",
+   "en": "Capers",
+   "de": "Kapern",
+   "ru_alt": [],
+   "en_alt": []
+  },
+  {
+   "id": "sundried_tomatoes",
+   "ru": "Вяленые томаты",
+   "en": "Sun-dried tomatoes",
+   "de": "getrocknete Tomaten",
+   "ru_alt": [
+    "сушёные помидоры"
+   ],
+   "en_alt": [
+    "semi-dried tomatoes"
+   ]
+  },
+  {
+   "id": "antipasti",
+   "ru": "Антипасти (маринованные овощи)",
+   "en": "Antipasti (marinated vegetables)",
+   "de": "Antipasti",
+   "ru_alt": [
+    "маринованные овощи",
+    "овощи гриль в масле"
+   ],
+   "en_alt": [
+    "marinated vegetables",
+    "grilled vegetables in oil"
+   ]
+  },
+  {
+   "id": "pickled_veg",
+   "ru": "Маринованные овощи (ассорти)",
+   "en": "Pickled vegetables",
+   "de": "Mixed Pickles",
+   "ru_alt": [
+    "маринад",
+    "соленья"
+   ],
+   "en_alt": [
+    "mixed pickles",
+    "pickled onions"
+   ]
+  },
+  {
+   "id": "ajvar",
+   "ru": "Аджика из перца (айвар)",
+   "en": "Ajvar (pepper relish)",
+   "de": "Ajvar",
+   "ru_alt": [
+    "айвар",
+    "овощная икра",
+    "перечная паста",
+    "лютеница"
+   ],
+   "en_alt": [
+    "roasted pepper spread",
+    "pepper relish"
+   ]
+  },
+  {
+   "id": "apple",
+   "ru": "Яблоки",
+   "en": "Apples",
+   "de": "Apfel",
+   "ru_alt": [
+    "яблоко"
+   ],
+   "en_alt": [
+    "apple"
+   ]
+  },
+  {
+   "id": "pear",
+   "ru": "Груши",
+   "en": "Pears",
+   "de": "Birne",
+   "ru_alt": [
+    "груша"
+   ],
+   "en_alt": [
+    "pear"
+   ]
+  },
+  {
+   "id": "banana",
+   "ru": "Бананы",
+   "en": "Bananas",
+   "de": "Banane",
+   "ru_alt": [
+    "банан"
+   ],
+   "en_alt": [
+    "banana"
+   ]
+  },
+  {
+   "id": "orange",
+   "ru": "Апельсины",
+   "en": "Oranges",
+   "de": "Orangen",
+   "ru_alt": [
+    "апельсин"
+   ],
+   "en_alt": [
+    "orange"
+   ]
+  },
+  {
+   "id": "mandarin",
+   "ru": "Мандарины",
+   "en": "Mandarins / clementines",
+   "de": "Mandarinen",
+   "ru_alt": [
+    "мандарин",
+    "клементины"
+   ],
+   "en_alt": [
+    "clementines",
+    "satsumas",
+    "tangerines"
+   ]
+  },
+  {
+   "id": "lemon",
+   "ru": "Лимоны",
+   "en": "Lemons",
+   "de": "Zitronen",
+   "ru_alt": [
+    "лимон"
+   ],
+   "en_alt": [
+    "lemon"
+   ]
+  },
+  {
+   "id": "lime",
+   "ru": "Лаймы",
+   "en": "Limes",
+   "de": "Limetten",
+   "ru_alt": [
+    "лайм"
+   ],
+   "en_alt": [
+    "lime"
+   ]
+  },
+  {
+   "id": "grapefruit",
+   "ru": "Грейпфрут / помело",
+   "en": "Grapefruit / pomelo",
+   "de": "Grapefruit",
+   "ru_alt": [
+    "помело",
+    "грейпфрут"
+   ],
+   "en_alt": [
+    "pomelo"
+   ]
+  },
+  {
+   "id": "grapes",
+   "ru": "Виноград",
+   "en": "Grapes",
+   "de": "Trauben",
+   "ru_alt": [
+    "виноград без косточек",
+    "кишмиш свежий"
+   ],
+   "en_alt": [
+    "seedless grapes",
+    "red grapes",
+    "white grapes"
+   ]
+  },
+  {
+   "id": "strawberry",
+   "ru": "Клубника",
+   "en": "Strawberries",
+   "de": "Erdbeeren",
+   "ru_alt": [
+    "клубничка",
+    "земляника садовая"
+   ],
+   "en_alt": [
+    "strawberry"
+   ]
+  },
+  {
+   "id": "raspberry",
+   "ru": "Малина",
+   "en": "Raspberries",
+   "de": "Himbeeren",
+   "ru_alt": [
+    "малинка"
+   ],
+   "en_alt": [
+    "raspberry"
+   ]
+  },
+  {
+   "id": "blueberry",
+   "ru": "Голубика / черника",
+   "en": "Blueberries",
+   "de": "Heidelbeeren",
+   "ru_alt": [
+    "черника",
+    "голубика"
+   ],
+   "en_alt": [
+    "blueberry",
+    "bilberries"
+   ]
+  },
+  {
+   "id": "mixed_berries",
+   "ru": "Ягоды (ассорти)",
+   "en": "Mixed berries",
+   "de": "Beerenmix",
+   "ru_alt": [
+    "замороженные ягоды",
+    "лесные ягоды",
+    "ягодная смесь"
+   ],
+   "en_alt": [
+    "frozen berries",
+    "forest fruits",
+    "summer berries"
+   ]
+  },
+  {
+   "id": "blackberry",
+   "ru": "Ежевика",
+   "en": "Blackberries",
+   "de": "Brombeeren",
+   "ru_alt": [
+    "ежевика"
+   ],
+   "en_alt": [
+    "blackberry"
+   ]
+  },
+  {
+   "id": "currants",
+   "ru": "Смородина",
+   "en": "Currants",
+   "de": "Ribisel",
+   "ru_alt": [
+    "красная смородина",
+    "чёрная смородина"
+   ],
+   "en_alt": [
+    "redcurrants",
+    "blackcurrants"
+   ]
+  },
+  {
+   "id": "cherries",
+   "ru": "Черешня / вишня",
+   "en": "Cherries",
+   "de": "Kirschen",
+   "ru_alt": [
+    "вишня",
+    "черешня"
+   ],
+   "en_alt": [
+    "sour cherries",
+    "morello cherries"
+   ]
+  },
+  {
+   "id": "apricot",
+   "ru": "Абрикосы",
+   "en": "Apricots",
+   "de": "Marillen",
+   "ru_alt": [
+    "абрикос"
+   ],
+   "en_alt": [
+    "apricot"
+   ]
+  },
+  {
+   "id": "peach",
+   "ru": "Персики / нектарины",
+   "en": "Peaches / nectarines",
+   "de": "Pfirsiche",
+   "ru_alt": [
+    "персик",
+    "нектарин",
+    "плоский персик"
+   ],
+   "en_alt": [
+    "peach",
+    "nectarines",
+    "flat peaches"
+   ]
+  },
+  {
+   "id": "plum",
+   "ru": "Сливы",
+   "en": "Plums",
+   "de": "Zwetschken",
+   "ru_alt": [
+    "слива",
+    "венгерка",
+    "мирабель",
+    "ренклод"
+   ],
+   "en_alt": [
+    "damsons",
+    "plum",
+    "greengages"
+   ]
+  },
+  {
+   "id": "kiwi",
+   "ru": "Киви",
+   "en": "Kiwi fruit",
+   "de": "Kiwi",
+   "ru_alt": [
+    "кивано"
+   ],
+   "en_alt": [
+    "kiwifruit",
+    "kiwis"
+   ]
+  },
+  {
+   "id": "mango",
+   "ru": "Манго",
+   "en": "Mango",
+   "de": "Mango",
+   "ru_alt": [
+    "манго свежий"
+   ],
+   "en_alt": [
+    "mangoes"
+   ]
+  },
+  {
+   "id": "pineapple",
+   "ru": "Ананас",
+   "en": "Pineapple",
+   "de": "Ananas",
+   "ru_alt": [
+    "ананасы"
+   ],
+   "en_alt": [
+    "pineapples"
+   ]
+  },
+  {
+   "id": "pineapple_canned",
+   "ru": "Ананасы консервированные",
+   "en": "Canned pineapple",
+   "de": "Ananas Dose",
+   "ru_alt": [
+    "консервированный ананас"
+   ],
+   "en_alt": [
+    "pineapple chunks",
+    "pineapple rings"
+   ]
+  },
+  {
+   "id": "melon",
+   "ru": "Дыня",
+   "en": "Melon",
+   "de": "Honigmelone",
+   "ru_alt": [
+    "дыня медовая"
+   ],
+   "en_alt": [
+    "honeydew",
+    "cantaloupe"
+   ]
+  },
+  {
+   "id": "watermelon",
+   "ru": "Арбуз",
+   "en": "Watermelon",
+   "de": "Wassermelone",
+   "ru_alt": [
+    "арбузы"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "pomegranate",
+   "ru": "Гранат",
+   "en": "Pomegranate",
+   "de": "Granatapfel",
+   "ru_alt": [
+    "зёрна граната",
+    "гранаты"
+   ],
+   "en_alt": [
+    "pomegranate seeds"
+   ]
+  },
+  {
+   "id": "figs",
+   "ru": "Инжир",
+   "en": "Figs",
+   "de": "Feigen",
+   "ru_alt": [
+    "инжир сушёный",
+    "фиги"
+   ],
+   "en_alt": [
+    "dried figs",
+    "fresh figs"
+   ]
+  },
+  {
+   "id": "dates",
+   "ru": "Финики",
+   "en": "Dates",
+   "de": "Datteln",
+   "ru_alt": [
+    "финик",
+    "финики меджул"
+   ],
+   "en_alt": [
+    "medjool dates"
+   ]
+  },
+  {
+   "id": "persimmon",
+   "ru": "Хурма",
+   "en": "Persimmon (sharon fruit)",
+   "de": "Kaki",
+   "ru_alt": [
+    "хурма шарон",
+    "королёк"
+   ],
+   "en_alt": [
+    "sharon fruit",
+    "kaki"
+   ]
+  },
+  {
+   "id": "passion_fruit",
+   "ru": "Маракуйя",
+   "en": "Passion fruit",
+   "de": "Passionsfrucht",
+   "ru_alt": [
+    "маракуя",
+    "пассифлора"
+   ],
+   "en_alt": [
+    "passionfruit"
+   ]
+  },
+  {
+   "id": "papaya",
+   "ru": "Папайя",
+   "en": "Papaya",
+   "de": "Papaya",
+   "ru_alt": [],
+   "en_alt": [
+    "pawpaw"
+   ]
+  },
+  {
+   "id": "coconut",
+   "ru": "Кокос",
+   "en": "Coconut",
+   "de": "Kokosnuss",
+   "ru_alt": [
+    "кокосовый орех"
+   ],
+   "en_alt": [
+    "coconuts",
+    "drinking coconut"
+   ]
+  },
+  {
+   "id": "exotic_fruit",
+   "ru": "Экзотические фрукты (личи, физалис, питахайя)",
+   "en": "Exotic fruit (lychee, physalis, dragon fruit)",
+   "de": "Physalis",
+   "ru_alt": [
+    "физалис",
+    "личи",
+    "питахайя",
+    "драконий фрукт",
+    "кумкват",
+    "карамбола"
+   ],
+   "en_alt": [
+    "dragon fruit",
+    "lychees",
+    "kumquat",
+    "cape gooseberry"
+   ]
+  },
+  {
+   "id": "rhubarb",
+   "ru": "Ревень",
+   "en": "Rhubarb",
+   "de": "Rhabarber",
+   "ru_alt": [],
+   "en_alt": []
+  },
+  {
+   "id": "mixed_fruit",
+   "ru": "Фрукты (нарезка / ассорти)",
+   "en": "Mixed fruit (cut)",
+   "de": "Obstsalat",
+   "ru_alt": [
+    "фруктовый салат",
+    "фруктовая нарезка"
+   ],
+   "en_alt": [
+    "fruit salad",
+    "fruit cup"
+   ]
+  },
+  {
+   "id": "canned_fruit",
+   "ru": "Фрукты консервированные / компот",
+   "en": "Canned fruit / compote",
+   "de": "Kompott",
+   "ru_alt": [
+    "компот",
+    "консервированные персики",
+    "фруктовые консервы"
+   ],
+   "en_alt": [
+    "fruit cocktail",
+    "tinned fruit",
+    "peach halves"
+   ]
+  },
+  {
+   "id": "apple_sauce",
+   "ru": "Яблочное пюре",
+   "en": "Apple sauce",
+   "de": "Apfelmus",
+   "ru_alt": [
+    "яблочное пюре",
+    "яблочный мусс"
+   ],
+   "en_alt": [
+    "applesauce",
+    "apple puree"
+   ]
+  },
+  {
+   "id": "raisins",
+   "ru": "Изюм",
+   "en": "Raisins",
+   "de": "Rosinen",
+   "ru_alt": [
+    "кишмиш",
+    "изюм без косточек"
+   ],
+   "en_alt": [
+    "sultanas",
+    "currants (dried)"
+   ]
+  },
+  {
+   "id": "dried_apricots",
+   "ru": "Курага",
+   "en": "Dried apricots",
+   "de": "Marillen getrocknet",
+   "ru_alt": [
+    "сушёный абрикос",
+    "урюк"
+   ],
+   "en_alt": [
+    "dried apricot"
+   ]
+  },
+  {
+   "id": "prunes",
+   "ru": "Чернослив",
+   "en": "Prunes",
+   "de": "Trockenpflaumen",
+   "ru_alt": [
+    "сушёные сливы"
+   ],
+   "en_alt": [
+    "dried plums"
+   ]
+  },
+  {
+   "id": "dried_fruit",
+   "ru": "Сухофрукты",
+   "en": "Dried fruit",
+   "de": "Trockenfrüchte",
+   "ru_alt": [
+    "сушёные фрукты",
+    "фруктовые чипсы",
+    "сушёное манго"
+   ],
+   "en_alt": [
+    "dried mango",
+    "fruit chips",
+    "banana chips"
+   ]
+  },
+  {
+   "id": "cranberries",
+   "ru": "Клюква сушёная",
+   "en": "Dried cranberries",
+   "de": "Cranberries",
+   "ru_alt": [
+    "клюква",
+    "брусника"
+   ],
+   "en_alt": [
+    "craisins",
+    "cranberry"
+   ]
+  },
+  {
+   "id": "lingonberry_jam",
+   "ru": "Брусника (варенье/соус)",
+   "en": "Lingonberry / cranberry sauce",
+   "de": "Preiselbeerkompott",
+   "ru_alt": [
+    "брусничное варенье",
+    "брусничный соус"
+   ],
+   "en_alt": [
+    "lingonberry jam",
+    "cranberry sauce"
+   ]
+  },
+  {
+   "id": "walnuts",
+   "ru": "Грецкие орехи",
+   "en": "Walnuts",
+   "de": "Walnüsse",
+   "ru_alt": [
+    "грецкий орех",
+    "орехи грецкие"
+   ],
+   "en_alt": [
+    "walnut"
+   ]
+  },
+  {
+   "id": "hazelnuts",
+   "ru": "Фундук",
+   "en": "Hazelnuts",
+   "de": "Haselnusskerne",
+   "ru_alt": [
+    "лесной орех",
+    "лещина",
+    "фундук молотый"
+   ],
+   "en_alt": [
+    "hazelnut",
+    "ground hazelnuts",
+    "filberts"
+   ]
+  },
+  {
+   "id": "almonds",
+   "ru": "Миндаль",
+   "en": "Almonds",
+   "de": "Mandeln",
+   "ru_alt": [
+    "миндальные лепестки",
+    "миндаль молотый",
+    "миндальный орех"
+   ],
+   "en_alt": [
+    "flaked almonds",
+    "ground almonds",
+    "almond"
+   ]
+  },
+  {
+   "id": "cashews",
+   "ru": "Кешью",
+   "en": "Cashews",
+   "de": "Cashew",
+   "ru_alt": [
+    "орехи кешью"
+   ],
+   "en_alt": [
+    "cashew nuts"
+   ]
+  },
+  {
+   "id": "peanuts",
+   "ru": "Арахис",
+   "en": "Peanuts",
+   "de": "Erdnüsse",
+   "ru_alt": [
+    "арахис солёный",
+    "земляной орех"
+   ],
+   "en_alt": [
+    "salted peanuts",
+    "monkey nuts"
+   ]
+  },
+  {
+   "id": "peanut_butter",
+   "ru": "Арахисовая паста",
+   "en": "Peanut butter",
+   "de": "Erdnussbutter",
+   "ru_alt": [
+    "арахисовое масло",
+    "паста арахисовая"
+   ],
+   "en_alt": [
+    "peanut paste"
+   ]
+  },
+  {
+   "id": "nut_butter",
+   "ru": "Ореховая паста (миндальная и др.)",
+   "en": "Nut butter (almond etc.)",
+   "de": "Mandelmus",
+   "ru_alt": [
+    "миндальная паста",
+    "урбеч"
+   ],
+   "en_alt": [
+    "almond butter",
+    "cashew butter"
+   ]
+  },
+  {
+   "id": "pistachios",
+   "ru": "Фисташки",
+   "en": "Pistachios",
+   "de": "Pistazien",
+   "ru_alt": [
+    "фисташка"
+   ],
+   "en_alt": [
+    "pistachio nuts"
+   ]
+  },
+  {
+   "id": "pine_nuts",
+   "ru": "Кедровые орешки",
+   "en": "Pine nuts",
+   "de": "Pinienkerne",
+   "ru_alt": [
+    "кедровый орех"
+   ],
+   "en_alt": [
+    "pine kernels"
+   ]
+  },
+  {
+   "id": "sunflower_seeds",
+   "ru": "Семечки подсолнечника",
+   "en": "Sunflower seeds",
+   "de": "Sonnenblumenkerne",
+   "ru_alt": [
+    "семечки",
+    "подсолнечные семечки"
+   ],
+   "en_alt": [
+    "sunflower kernels"
+   ]
+  },
+  {
+   "id": "pumpkin_seeds",
+   "ru": "Тыквенные семечки",
+   "en": "Pumpkin seeds",
+   "de": "Kürbiskerne",
+   "ru_alt": [
+    "тыквенные семена"
+   ],
+   "en_alt": [
+    "pepitas"
+   ]
+  },
+  {
+   "id": "mixed_nuts",
+   "ru": "Орехи (ассорти, пекан, бразильский, макадамия)",
+   "en": "Mixed nuts (pecan, brazil, macadamia)",
+   "de": "Pecan",
+   "ru_alt": [
+    "орехи",
+    "орешки",
+    "ореховая смесь",
+    "студенческая смесь",
+    "пекан",
+    "бразильский орех",
+    "макадамия"
+   ],
+   "en_alt": [
+    "nuts",
+    "trail mix",
+    "student mix",
+    "pecans",
+    "brazil nuts"
+   ]
+  },
+  {
+   "id": "chestnuts",
+   "ru": "Каштаны",
+   "en": "Chestnuts",
+   "de": "Maroni",
+   "ru_alt": [
+    "каштан съедобный",
+    "жареные каштаны"
+   ],
+   "en_alt": [
+    "roasted chestnuts",
+    "sweet chestnuts"
+   ]
+  },
+  {
+   "id": "chia_seeds",
+   "ru": "Семена чиа",
+   "en": "Chia seeds",
+   "de": "Chiasamen",
+   "ru_alt": [
+    "чиа"
+   ],
+   "en_alt": [
+    "chia"
+   ]
+  },
+  {
+   "id": "flax_seeds",
+   "ru": "Семена льна",
+   "en": "Flaxseed (linseed)",
+   "de": "Leinsamen",
+   "ru_alt": [
+    "льняное семя",
+    "лён"
+   ],
+   "en_alt": [
+    "linseed",
+    "flaxseed"
+   ]
+  },
+  {
+   "id": "sesame",
+   "ru": "Кунжут",
+   "en": "Sesame seeds",
+   "de": "Sesam",
+   "ru_alt": [
+    "кунжутное семя"
+   ],
+   "en_alt": [
+    "sesame"
+   ]
+  },
+  {
+   "id": "tahini",
+   "ru": "Тахини (кунжутная паста)",
+   "en": "Tahini",
+   "de": "Tahin",
+   "ru_alt": [
+    "тахина",
+    "кунжутная паста"
+   ],
+   "en_alt": [
+    "tahina",
+    "sesame paste"
+   ]
+  },
+  {
+   "id": "coconut_flakes",
+   "ru": "Кокосовая стружка",
+   "en": "Desiccated coconut",
+   "de": "Kokosraspel",
+   "ru_alt": [
+    "кокосовые хлопья",
+    "кокосовые чипсы"
+   ],
+   "en_alt": [
+    "coconut flakes",
+    "shredded coconut"
+   ]
+  },
+  {
+   "id": "seeds_mix",
+   "ru": "Семена (смесь для салата)",
+   "en": "Seed mix",
+   "de": "Salatkerne",
+   "ru_alt": [
+    "смесь семечек",
+    "семена конопли"
+   ],
+   "en_alt": [
+    "salad topping seeds",
+    "hemp seeds"
+   ]
+  },
+  {
+   "id": "parsley",
+   "ru": "Петрушка",
+   "en": "Parsley",
+   "de": "Petersilie",
+   "ru_alt": [
+    "зелень петрушки"
+   ],
+   "en_alt": [
+    "flat-leaf parsley",
+    "curly parsley"
+   ]
+  },
+  {
+   "id": "chives",
+   "ru": "Шнитт-лук",
+   "en": "Chives",
+   "de": "Schnittlauch",
+   "ru_alt": [
+    "лук-резанец",
+    "зелёный лук (шнитт)"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "dill",
+   "ru": "Укроп",
+   "en": "Dill",
+   "de": "Dille",
+   "ru_alt": [
+    "укропчик"
+   ],
+   "en_alt": [
+    "dill weed"
+   ]
+  },
+  {
+   "id": "basil",
+   "ru": "Базилик",
+   "en": "Basil",
+   "de": "Basilikum",
+   "ru_alt": [
+    "базилик свежий"
+   ],
+   "en_alt": [
+    "sweet basil"
+   ]
+  },
+  {
+   "id": "coriander_fresh",
+   "ru": "Кинза",
+   "en": "Coriander (fresh) / cilantro",
+   "de": "Koriander",
+   "ru_alt": [
+    "кориандр свежий",
+    "кинзa"
+   ],
+   "en_alt": [
+    "cilantro",
+    "fresh coriander"
+   ]
+  },
+  {
+   "id": "coriander_ground",
+   "ru": "Кориандр (молотый, семена)",
+   "en": "Ground coriander / coriander seeds",
+   "de": "Koriander gemahlen",
+   "ru_alt": [
+    "кориандр молотый",
+    "семена кориандра"
+   ],
+   "en_alt": [
+    "coriander seeds"
+   ]
+  },
+  {
+   "id": "mint",
+   "ru": "Мята",
+   "en": "Mint",
+   "de": "Minze",
+   "ru_alt": [
+    "мята свежая",
+    "мята перечная"
+   ],
+   "en_alt": [
+    "fresh mint",
+    "peppermint",
+    "spearmint"
+   ]
+  },
+  {
+   "id": "rosemary",
+   "ru": "Розмарин",
+   "en": "Rosemary",
+   "de": "Rosmarin",
+   "ru_alt": [],
+   "en_alt": []
+  },
+  {
+   "id": "thyme",
+   "ru": "Тимьян (чабрец)",
+   "en": "Thyme",
+   "de": "Thymian",
+   "ru_alt": [
+    "чабрец",
+    "тимьян"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "oregano",
+   "ru": "Орегано",
+   "en": "Oregano",
+   "de": "Oregano",
+   "ru_alt": [
+    "душица"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "marjoram",
+   "ru": "Майоран",
+   "en": "Marjoram",
+   "de": "Majoran",
+   "ru_alt": [],
+   "en_alt": []
+  },
+  {
+   "id": "sage",
+   "ru": "Шалфей",
+   "en": "Sage",
+   "de": "Salbei",
+   "ru_alt": [],
+   "en_alt": []
+  },
+  {
+   "id": "lovage",
+   "ru": "Любисток",
+   "en": "Lovage",
+   "de": "Liebstöckel",
+   "ru_alt": [
+    "любисток (магги-трава)"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "bay_leaf",
+   "ru": "Лавровый лист",
+   "en": "Bay leaves",
+   "de": "Lorbeerblätter",
+   "ru_alt": [
+    "лаврушка",
+    "лавровый"
+   ],
+   "en_alt": [
+    "bay leaf"
+   ]
+  },
+  {
+   "id": "tarragon",
+   "ru": "Эстрагон",
+   "en": "Tarragon",
+   "de": "Estragon",
+   "ru_alt": [
+    "тархун"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "savory",
+   "ru": "Чабер",
+   "en": "Savory",
+   "de": "Bohnenkraut",
+   "ru_alt": [
+    "чабер садовый"
+   ],
+   "en_alt": [
+    "summer savory"
+   ]
+  },
+  {
+   "id": "lemongrass",
+   "ru": "Лемонграсс",
+   "en": "Lemongrass",
+   "de": "Zitronengras",
+   "ru_alt": [
+    "лимонное сорго"
+   ],
+   "en_alt": [
+    "lemon grass"
+   ]
+  },
+  {
+   "id": "herb_mix",
+   "ru": "Смесь трав (прованские, итальянские)",
+   "en": "Mixed herbs",
+   "de": "Kräuter der Provence",
+   "ru_alt": [
+    "прованские травы",
+    "итальянские травы",
+    "сушёные травы",
+    "зелень"
+   ],
+   "en_alt": [
+    "herbes de provence",
+    "italian herbs",
+    "dried herbs",
+    "fresh herbs"
+   ]
+  },
+  {
+   "id": "pork",
+   "ru": "Свинина",
+   "en": "Pork",
+   "de": "Schweinefleisch",
+   "ru_alt": [
+    "свиное мясо",
+    "свинина свежая"
+   ],
+   "en_alt": [
+    "pork meat"
+   ]
+  },
+  {
+   "id": "pork_neck",
+   "ru": "Свиная шея",
+   "en": "Pork neck (collar)",
+   "de": "Schopf",
+   "ru_alt": [
+    "свиная шейка",
+    "ошеек",
+    "шея свиная"
+   ],
+   "en_alt": [
+    "pork collar",
+    "pork shoulder steak",
+    "pork butt"
+   ]
+  },
+  {
+   "id": "pork_loin",
+   "ru": "Свиная корейка",
+   "en": "Pork loin (chops)",
+   "de": "Karree",
+   "ru_alt": [
+    "корейка",
+    "свиные отбивные",
+    "отбивная на кости",
+    "карре"
+   ],
+   "en_alt": [
+    "pork chops",
+    "pork loin steaks",
+    "loin chops"
+   ]
+  },
+  {
+   "id": "pork_tenderloin",
+   "ru": "Свиная вырезка",
+   "en": "Pork tenderloin",
+   "de": "Lungenbraten",
+   "ru_alt": [
+    "вырезка свиная",
+    "свиное филе",
+    "медальоны из свинины"
+   ],
+   "en_alt": [
+    "pork fillet",
+    "pork medallions"
+   ]
+  },
+  {
+   "id": "pork_schnitzel",
+   "ru": "Свиной шницель (для отбивных)",
+   "en": "Pork escalopes (schnitzel)",
+   "de": "Schweinsschnitzel",
+   "ru_alt": [
+    "шницель свиной",
+    "свиные отбивные",
+    "эскалоп"
+   ],
+   "en_alt": [
+    "pork schnitzel",
+    "pork cutlets",
+    "minute steaks"
+   ]
+  },
+  {
+   "id": "pork_leg",
+   "ru": "Свиной окорок (шлегель)",
+   "en": "Pork leg",
+   "de": "Schlögel",
+   "ru_alt": [
+    "окорок свиной",
+    "свиная нога"
+   ],
+   "en_alt": [
+    "leg of pork",
+    "pork topside",
+    "fricandeau"
+   ]
+  },
+  {
+   "id": "pork_shoulder",
+   "ru": "Свиная лопатка",
+   "en": "Pork shoulder",
+   "de": "Schulter",
+   "ru_alt": [
+    "лопатка свиная"
+   ],
+   "en_alt": [
+    "pork shoulder"
+   ]
+  },
+  {
+   "id": "pork_belly",
+   "ru": "Свиная грудинка",
+   "en": "Pork belly",
+   "de": "Bauchfleisch",
+   "ru_alt": [
+    "грудинка",
+    "свиная грудинка свежая",
+    "свиной бок"
+   ],
+   "en_alt": [
+    "belly pork",
+    "pork belly slices"
+   ]
+  },
+  {
+   "id": "pork_ribs",
+   "ru": "Свиные рёбрышки",
+   "en": "Pork ribs (spare ribs)",
+   "de": "Spareribs",
+   "ru_alt": [
+    "рёбра",
+    "свиные рёбра",
+    "ребрышки барбекю"
+   ],
+   "en_alt": [
+    "spare ribs",
+    "baby back ribs",
+    "pork ribs"
+   ]
+  },
+  {
+   "id": "pork_knuckle",
+   "ru": "Свиная рулька",
+   "en": "Pork knuckle",
+   "de": "Stelze",
+   "ru_alt": [
+    "рулька",
+    "свиная голяшка"
+   ],
+   "en_alt": [
+    "ham hock",
+    "pork shank"
+   ]
+  },
+  {
+   "id": "pork_stew",
+   "ru": "Свинина для гуляша / поджарки",
+   "en": "Diced pork / pork stir-fry strips",
+   "de": "Schweinefleisch würfelig",
+   "ru_alt": [
+    "свинина кубиками",
+    "свиной гуляш",
+    "поджарка",
+    "бефстроганов из свинины"
+   ],
+   "en_alt": [
+    "diced pork",
+    "pork strips",
+    "pork stew meat"
+   ]
+  },
+  {
+   "id": "pork_mince",
+   "ru": "Свиной фарш",
+   "en": "Pork mince",
+   "de": "Schweinefleisch faschiert",
+   "ru_alt": [
+    "фарш свиной"
+   ],
+   "en_alt": [
+    "ground pork",
+    "minced pork"
+   ]
+  },
+  {
+   "id": "smoked_pork",
+   "ru": "Копчёная свинина (корейка, шея)",
+   "en": "Smoked pork (Kassler)",
+   "de": "Selchfleisch",
+   "ru_alt": [
+    "копчёная корейка",
+    "касселер",
+    "копчёное мясо",
+    "солонина"
+   ],
+   "en_alt": [
+    "smoked pork loin",
+    "kassler",
+    "cured pork"
+   ]
+  },
+  {
+   "id": "pork_offal",
+   "ru": "Свиные субпродукты (печень, сердце, почки)",
+   "en": "Pork offal",
+   "de": "Schweinsleber",
+   "ru_alt": [
+    "свиная печень",
+    "свиные щёчки",
+    "субпродукты"
+   ],
+   "en_alt": [
+    "pork liver",
+    "pork cheeks"
+   ]
+  },
+  {
+   "id": "pork_bones",
+   "ru": "Кости (для бульона)",
+   "en": "Bones (for stock)",
+   "de": "Knochen",
+   "ru_alt": [
+    "мозговые кости",
+    "суповые кости"
+   ],
+   "en_alt": [
+    "marrow bones",
+    "soup bones"
+   ]
+  },
+  {
+   "id": "mince",
+   "ru": "Фарш",
+   "en": "Mince",
+   "de": "Faschiertes",
+   "ru_alt": [
+    "фарш мясной",
+    "мясной фарш"
+   ],
+   "en_alt": [
+    "ground meat",
+    "minced meat"
+   ]
+  },
+  {
+   "id": "mince_mixed",
+   "ru": "Фарш смешанный (свинина + говядина)",
+   "en": "Mixed mince (pork & beef)",
+   "de": "Faschiertes gemischt",
+   "ru_alt": [
+    "фарш свино-говяжий",
+    "фарш домашний",
+    "смешанный фарш"
+   ],
+   "en_alt": [
+    "beef and pork mince",
+    "mixed ground meat"
+   ]
+  },
+  {
+   "id": "beef_mince",
+   "ru": "Говяжий фарш",
+   "en": "Beef mince",
+   "de": "Rinderfaschiertes",
+   "ru_alt": [
+    "фарш говяжий",
+    "говяжий фарш постный"
+   ],
+   "en_alt": [
+    "ground beef",
+    "minced beef"
+   ]
+  },
+  {
+   "id": "chicken_mince",
+   "ru": "Куриный фарш",
+   "en": "Chicken mince",
+   "de": "Hendlfaschiertes",
+   "ru_alt": [
+    "фарш куриный"
+   ],
+   "en_alt": [
+    "ground chicken",
+    "minced chicken"
+   ]
+  },
+  {
+   "id": "turkey_mince",
+   "ru": "Фарш из индейки",
+   "en": "Turkey mince",
+   "de": "Putenfaschiertes",
+   "ru_alt": [
+    "индюшиный фарш",
+    "фарш индейки"
+   ],
+   "en_alt": [
+    "ground turkey",
+    "minced turkey"
+   ]
+  },
+  {
+   "id": "meatballs",
+   "ru": "Котлеты / фрикадельки",
+   "en": "Meatballs / meat patties",
+   "de": "Faschierte Laibchen",
+   "ru_alt": [
+    "котлеты",
+    "тефтели",
+    "фрикадельки",
+    "биточки"
+   ],
+   "en_alt": [
+    "meat patties",
+    "rissoles",
+    "meatballs"
+   ]
+  },
+  {
+   "id": "cevapcici",
+   "ru": "Чевапчичи",
+   "en": "Cevapcici (skinless sausages)",
+   "de": "Cevapcici",
+   "ru_alt": [
+    "чевапи",
+    "плескавица",
+    "кебабчета"
+   ],
+   "en_alt": [
+    "cevapi",
+    "skinless sausages"
+   ]
+  },
+  {
+   "id": "burger_patty",
+   "ru": "Котлеты для бургера",
+   "en": "Burger patties",
+   "de": "Beefburger",
+   "ru_alt": [
+    "бургерные котлеты",
+    "котлета для гамбургера"
+   ],
+   "en_alt": [
+    "beef burgers",
+    "hamburger patties"
+   ]
+  },
+  {
+   "id": "beef",
+   "ru": "Говядина",
+   "en": "Beef",
+   "de": "Rindfleisch",
+   "ru_alt": [
+    "говяжье мясо",
+    "мясо говядины"
+   ],
+   "en_alt": [
+    "beef meat"
+   ]
+  },
+  {
+   "id": "beef_steak",
+   "ru": "Стейк говяжий",
+   "en": "Beef steak",
+   "de": "Rib Eye",
+   "ru_alt": [
+    "стейк",
+    "рибай",
+    "антрекот",
+    "стейк из говядины"
+   ],
+   "en_alt": [
+    "steak",
+    "ribeye",
+    "rump steak",
+    "sirloin steak",
+    "t-bone steak"
+   ]
+  },
+  {
+   "id": "beef_tenderloin",
+   "ru": "Говяжья вырезка",
+   "en": "Beef fillet (tenderloin)",
+   "de": "Rindsfilet",
+   "ru_alt": [
+    "вырезка говяжья",
+    "филе говядины",
+    "филе миньон"
+   ],
+   "en_alt": [
+    "beef tenderloin",
+    "fillet steak"
+   ]
+  },
+  {
+   "id": "beef_stew",
+   "ru": "Говядина для гуляша",
+   "en": "Diced beef (stewing beef)",
+   "de": "Rindsgulasch",
+   "ru_alt": [
+    "говядина кубиками",
+    "мясо для гуляша",
+    "говядина для тушения"
+   ],
+   "en_alt": [
+    "stewing beef",
+    "beef chunks",
+    "goulash meat"
+   ]
+  },
+  {
+   "id": "beef_soup_meat",
+   "ru": "Говядина для супа (с костью)",
+   "en": "Beef for boiling / soup beef",
+   "de": "Suppenfleisch",
+   "ru_alt": [
+    "суповой набор",
+    "грудинка говяжья",
+    "мясо на кости для бульона"
+   ],
+   "en_alt": [
+    "boiling beef",
+    "beef brisket",
+    "beef shin"
+   ]
+  },
+  {
+   "id": "beef_schnitzel",
+   "ru": "Говяжий шницель / отбивная",
+   "en": "Beef escalopes (schnitzel)",
+   "de": "Rindsschnitzel",
+   "ru_alt": [
+    "говяжьи отбивные",
+    "шницель из говядины",
+    "рулеты говяжьи"
+   ],
+   "en_alt": [
+    "beef escalope",
+    "beef olives",
+    "beef cutlets",
+    "minute steak"
+   ]
+  },
+  {
+   "id": "beef_strips",
+   "ru": "Говядина нарезка (бефстроганов)",
+   "en": "Beef strips (stir-fry)",
+   "de": "Rindfleisch geschnetzelt",
+   "ru_alt": [
+    "бефстроганов",
+    "говядина соломкой",
+    "мясо для вока"
+   ],
+   "en_alt": [
+    "beef stir-fry",
+    "sliced beef"
+   ]
+  },
+  {
+   "id": "veal",
+   "ru": "Телятина",
+   "en": "Veal",
+   "de": "Kalbfleisch",
+   "ru_alt": [
+    "телячье мясо",
+    "телячья вырезка",
+    "телячий шницель"
+   ],
+   "en_alt": [
+    "veal escalope",
+    "veal cutlet"
+   ]
+  },
+  {
+   "id": "lamb",
+   "ru": "Баранина / ягнятина",
+   "en": "Lamb",
+   "de": "Lamm",
+   "ru_alt": [
+    "ягнёнок",
+    "баранья нога",
+    "бараньи рёбрышки",
+    "мясо ягнёнка"
+   ],
+   "en_alt": [
+    "lamb meat",
+    "lamb chops",
+    "leg of lamb",
+    "mutton"
+   ]
+  },
+  {
+   "id": "game",
+   "ru": "Дичь (оленина, косуля, кабан)",
+   "en": "Game (venison, wild boar)",
+   "de": "Hirsch",
+   "ru_alt": [
+    "оленина",
+    "косуля",
+    "кабан",
+    "кролик",
+    "крольчатина",
+    "перепёлка",
+    "фазан",
+    "мясо дичи"
+   ],
+   "en_alt": [
+    "venison",
+    "wild boar",
+    "rabbit",
+    "quail",
+    "pheasant"
+   ]
+  },
+  {
+   "id": "pulled_meat",
+   "ru": "Мясо pulled (тушёное, рваное)",
+   "en": "Pulled meat (sous-vide)",
+   "de": "Pulled Pork",
+   "ru_alt": [
+    "рваная свинина",
+    "томлёное мясо",
+    "су-вид"
+   ],
+   "en_alt": [
+    "pulled pork",
+    "slow-cooked meat",
+    "sous vide meat"
+   ]
+  },
+  {
+   "id": "skewers",
+   "ru": "Шашлык / шпажки",
+   "en": "Kebab skewers",
+   "de": "Schaschlik",
+   "ru_alt": [
+    "шашлык",
+    "шпажки мясные",
+    "сувлаки"
+   ],
+   "en_alt": [
+    "skewers",
+    "kebabs",
+    "shish kebab",
+    "souvlaki"
+   ]
+  },
+  {
+   "id": "gyros",
+   "ru": "Гирос / кебаб (мясо)",
+   "en": "Gyros / doner meat",
+   "de": "Gyros",
+   "ru_alt": [
+    "шаурма",
+    "донер",
+    "кебаб",
+    "гирос"
+   ],
+   "en_alt": [
+    "doner kebab",
+    "shawarma",
+    "gyro"
+   ]
+  },
+  {
+   "id": "chicken",
+   "ru": "Курица",
+   "en": "Chicken",
+   "de": "Hendl",
+   "ru_alt": [
+    "курятина",
+    "цыплёнок",
+    "куриное мясо",
+    "птица"
+   ],
+   "en_alt": [
+    "poultry",
+    "chicken meat"
+   ]
+  },
+  {
+   "id": "chicken_breast",
+   "ru": "Куриное филе (грудка)",
+   "en": "Chicken breast",
+   "de": "Hendlfilet",
+   "ru_alt": [
+    "куриная грудка",
+    "филе курицы",
+    "куриное филе",
+    "грудка куриная",
+    "внутреннее филе"
+   ],
+   "en_alt": [
+    "chicken fillet",
+    "chicken breast fillet",
+    "chicken tenders",
+    "chicken escalope"
+   ]
+  },
+  {
+   "id": "chicken_legs",
+   "ru": "Куриные ножки / бёдра",
+   "en": "Chicken legs / thighs",
+   "de": "Hühnerkeulen",
+   "ru_alt": [
+    "окорочка",
+    "куриные бёдра",
+    "голени",
+    "куриные голени",
+    "куриные окорочка",
+    "бедро куриное"
+   ],
+   "en_alt": [
+    "chicken thighs",
+    "drumsticks",
+    "chicken drumsticks",
+    "chicken leg quarters"
+   ]
+  },
+  {
+   "id": "chicken_wings",
+   "ru": "Куриные крылышки",
+   "en": "Chicken wings",
+   "de": "Flügerl",
+   "ru_alt": [
+    "крылья куриные",
+    "крылышки"
+   ],
+   "en_alt": [
+    "wings",
+    "buffalo wings"
+   ]
+  },
+  {
+   "id": "whole_chicken",
+   "ru": "Курица целая (тушка)",
+   "en": "Whole chicken",
+   "de": "Hendl Bratfertig",
+   "ru_alt": [
+    "тушка курицы",
+    "цыплёнок-бройлер",
+    "бройлер",
+    "курица для запекания",
+    "цыплёнок корнишон"
+   ],
+   "en_alt": [
+    "roasting chicken",
+    "whole roast chicken",
+    "poussin"
+   ]
+  },
+  {
+   "id": "soup_chicken",
+   "ru": "Курица для супа (спинки, суповой набор)",
+   "en": "Chicken for soup (backs, carcass)",
+   "de": "Hendl Suppenfleisch",
+   "ru_alt": [
+    "спинки куриные",
+    "куриный суповой набор",
+    "курица на бульон",
+    "курица-несушка"
+   ],
+   "en_alt": [
+    "chicken backs",
+    "boiling fowl",
+    "chicken carcass"
+   ]
+  },
+  {
+   "id": "chicken_strips",
+   "ru": "Куриное мясо нарезка (для вока)",
+   "en": "Chicken strips (stir-fry)",
+   "de": "Hühnergeschnetzeltes",
+   "ru_alt": [
+    "курица соломкой",
+    "куриные кусочки",
+    "поджарка из курицы"
+   ],
+   "en_alt": [
+    "chicken stir-fry",
+    "diced chicken"
+   ]
+  },
+  {
+   "id": "chicken_liver",
+   "ru": "Печень (куриная, индюшиная)",
+   "en": "Liver (chicken, turkey)",
+   "de": "Hendlleber",
+   "ru_alt": [
+    "куриная печень",
+    "печёнка",
+    "куриные сердечки",
+    "куриные желудки",
+    "говяжья печень",
+    "субпродукты птицы"
+   ],
+   "en_alt": [
+    "chicken livers",
+    "chicken hearts",
+    "gizzards",
+    "beef liver"
+   ]
+  },
+  {
+   "id": "chicken_nuggets",
+   "ru": "Куриные наггетсы",
+   "en": "Chicken nuggets",
+   "de": "Nuggets",
+   "ru_alt": [
+    "наггетсы",
+    "куриные стрипсы",
+    "куриные кусочки в панировке"
+   ],
+   "en_alt": [
+    "nuggets",
+    "chicken dippers",
+    "chicken goujons",
+    "popcorn chicken"
+   ]
+  },
+  {
+   "id": "breaded_schnitzel",
+   "ru": "Шницель в панировке (готовый)",
+   "en": "Breaded schnitzel / cutlet",
+   "de": "Backhendl",
+   "ru_alt": [
+    "шницель по-венски",
+    "кордон блю",
+    "отбивная в панировке",
+    "курица в кляре"
+   ],
+   "en_alt": [
+    "wiener schnitzel",
+    "cordon bleu",
+    "breaded chicken",
+    "fried chicken"
+   ]
+  },
+  {
+   "id": "turkey",
+   "ru": "Индейка",
+   "en": "Turkey",
+   "de": "Pute",
+   "ru_alt": [
+    "индюшатина",
+    "мясо индейки",
+    "индюк"
+   ],
+   "en_alt": [
+    "turkey meat"
+   ]
+  },
+  {
+   "id": "turkey_breast",
+   "ru": "Филе индейки (грудка)",
+   "en": "Turkey breast",
+   "de": "Putenbrust",
+   "ru_alt": [
+    "грудка индейки",
+    "индюшиное филе",
+    "шницель из индейки"
+   ],
+   "en_alt": [
+    "turkey fillet",
+    "turkey escalope",
+    "turkey steaks"
+   ]
+  },
+  {
+   "id": "turkey_legs",
+   "ru": "Индейка (бедро, голень, крылья)",
+   "en": "Turkey legs / thighs / wings",
+   "de": "Putenkeule",
+   "ru_alt": [
+    "бедро индейки",
+    "голень индейки",
+    "крылья индейки"
+   ],
+   "en_alt": [
+    "turkey drumsticks",
+    "turkey thigh",
+    "turkey wings"
+   ]
+  },
+  {
+   "id": "turkey_strips",
+   "ru": "Индейка нарезка (гуляш, поджарка)",
+   "en": "Turkey strips / diced turkey",
+   "de": "Putengeschnetzeltes",
+   "ru_alt": [
+    "индейка кусочками",
+    "гуляш из индейки"
+   ],
+   "en_alt": [
+    "turkey stir-fry",
+    "diced turkey"
+   ]
+  },
+  {
+   "id": "duck",
+   "ru": "Утка",
+   "en": "Duck",
+   "de": "Entenfilet",
+   "ru_alt": [
+    "утиная грудка",
+    "утиные ножки",
+    "утятина",
+    "утка по-пекински"
+   ],
+   "en_alt": [
+    "duck breast",
+    "duck legs",
+    "whole duck"
+   ]
+  },
+  {
+   "id": "goose",
+   "ru": "Гусь",
+   "en": "Goose",
+   "de": "Gans",
+   "ru_alt": [
+    "гусятина",
+    "гусиная ножка",
+    "гусиная грудка"
+   ],
+   "en_alt": [
+    "goose legs",
+    "goose breast",
+    "roast goose"
+   ]
+  },
+  {
+   "id": "frankfurter",
+   "ru": "Сосиски",
+   "en": "Frankfurters (hot dog sausages)",
+   "de": "Frankfurter",
+   "ru_alt": [
+    "сосиски венские",
+    "сосиска",
+    "сардельки"
+   ],
+   "en_alt": [
+    "hot dogs",
+    "wieners",
+    "vienna sausages"
+   ]
+  },
+  {
+   "id": "cheese_sausage",
+   "ru": "Колбаски с сыром (кэзекрайнер)",
+   "en": "Cheese-filled sausages (Käsekrainer)",
+   "de": "Käsekrainer",
+   "ru_alt": [
+    "кэзекрайнер",
+    "колбаски с сыром",
+    "колбаски для гриля с сыром"
+   ],
+   "en_alt": [
+    "kasekrainer",
+    "cheese sausages"
+   ]
+  },
+  {
+   "id": "krainer",
+   "ru": "Крайнерская копчёная колбаска",
+   "en": "Krainer (smoked pork sausage)",
+   "de": "Krainer",
+   "ru_alt": [
+    "копчёные колбаски",
+    "колбаски для жарки копчёные"
+   ],
+   "en_alt": [
+    "smoked sausage"
+   ]
+  },
+  {
+   "id": "bratwurst",
+   "ru": "Колбаски для жарки (братвурст)",
+   "en": "Bratwurst",
+   "de": "Bratwurst",
+   "ru_alt": [
+    "братвурст",
+    "колбаски гриль",
+    "нюрнбергские колбаски",
+    "колбаски свиные"
+   ],
+   "en_alt": [
+    "grill sausages",
+    "pork sausages",
+    "bangers"
+   ]
+  },
+  {
+   "id": "spicy_sausage",
+   "ru": "Острые колбаски (дебрецинер)",
+   "en": "Spicy sausages (Debreziner)",
+   "de": "Debreziner",
+   "ru_alt": [
+    "дебреценские колбаски",
+    "острые сосиски"
+   ],
+   "en_alt": [
+    "debreziner",
+    "spicy sausages"
+   ]
+  },
+  {
+   "id": "bacon_sausage",
+   "ru": "Колбаски в беконе (бернер)",
+   "en": "Bacon-wrapped cheese sausages (Berner)",
+   "de": "Berner Würstel",
+   "ru_alt": [
+    "бернские колбаски",
+    "сосиски в беконе"
+   ],
+   "en_alt": [
+    "pigs in blankets",
+    "berner sausages"
+   ]
+  },
+  {
+   "id": "knackwurst",
+   "ru": "Варёно-копчёные колбаски (кнакер, буренвурст)",
+   "en": "Knackwurst / smoked boiling sausages",
+   "de": "Burenwurst",
+   "ru_alt": [
+    "колбаски варёно-копчёные",
+    "охотничьи колбаски",
+    "сардельки копчёные"
+   ],
+   "en_alt": [
+    "knockwurst",
+    "smoked sausages",
+    "bockwurst"
+   ]
+  },
+  {
+   "id": "weisswurst",
+   "ru": "Белые баварские колбаски",
+   "en": "Weisswurst (white sausage)",
+   "de": "Weißwurst",
+   "ru_alt": [
+    "вайсвурст",
+    "мюнхенские колбаски"
+   ],
+   "en_alt": [
+    "white sausage",
+    "bavarian veal sausage"
+   ]
+  },
+  {
+   "id": "blood_sausage",
+   "ru": "Кровяная колбаса",
+   "en": "Black pudding (blood sausage)",
+   "de": "Blutwurst",
+   "ru_alt": [
+    "кровянка",
+    "кровяная колбаса"
+   ],
+   "en_alt": [
+    "blood sausage",
+    "black pudding"
+   ]
+  },
+  {
+   "id": "brawn",
+   "ru": "Зельц / холодец",
+   "en": "Brawn (head cheese) / meat aspic",
+   "de": "Presswurst",
+   "ru_alt": [
+    "зельц",
+    "холодец",
+    "студень",
+    "заливное"
+   ],
+   "en_alt": [
+    "head cheese",
+    "aspic",
+    "souse"
+   ]
+  },
+  {
+   "id": "bologna",
+   "ru": "Варёная колбаса (экстравурст, пиккант)",
+   "en": "Bologna-style sausage (Extrawurst)",
+   "de": "Extrawurst",
+   "ru_alt": [
+    "докторская колбаса",
+    "варёная колбаса",
+    "молочная колбаса",
+    "колбаса для бутербродов",
+    "мортаделла"
+   ],
+   "en_alt": [
+    "bologna",
+    "luncheon sausage",
+    "mortadella",
+    "lyoner"
+   ]
+  },
+  {
+   "id": "smoked_sausage",
+   "ru": "Полукопчёная колбаса (краковская и др.)",
+   "en": "Smoked sausage (Krakauer etc.)",
+   "de": "Krakauer",
+   "ru_alt": [
+    "краковская колбаса",
+    "полукопчёная колбаса",
+    "охотничья колбаса",
+    "сервелат",
+    "копчёная колбаса"
+   ],
+   "en_alt": [
+    "smoked sausage",
+    "krakauer",
+    "cervelat"
+   ]
+  },
+  {
+   "id": "leberkaese",
+   "ru": "Леберкезе (мясной хлеб)",
+   "en": "Leberkäse (Austrian meatloaf)",
+   "de": "Leberkäse",
+   "ru_alt": [
+    "леберкезе",
+    "мясной хлеб",
+    "колбасный хлеб",
+    "леберкэз"
+   ],
+   "en_alt": [
+    "liver cheese",
+    "meat loaf",
+    "leberkase"
+   ]
+  },
+  {
+   "id": "salami",
+   "ru": "Салями",
+   "en": "Salami",
+   "de": "Salami",
+   "ru_alt": [
+    "салями",
+    "сырокопчёная колбаса",
+    "чоризо",
+    "колбаса сырокопчёная"
+   ],
+   "en_alt": [
+    "salami",
+    "chorizo",
+    "pepperoni"
+   ]
+  },
+  {
+   "id": "snack_sausage",
+   "ru": "Колбаски-снеки (каминвурц, кабаносси)",
+   "en": "Snack sausages (Kaminwurz, cabanossi)",
+   "de": "Kaminwurz",
+   "ru_alt": [
+    "колбаски охотничьи сырокопчёные",
+    "кабанос",
+    "мясные снеки",
+    "джерки",
+    "мясные палочки"
+   ],
+   "en_alt": [
+    "meat sticks",
+    "snack salami",
+    "beef jerky",
+    "cabanossi"
+   ]
+  },
+  {
+   "id": "ham",
+   "ru": "Ветчина варёная",
+   "en": "Ham (cooked)",
+   "de": "Schinken",
+   "ru_alt": [
+    "ветчина",
+    "варёная ветчина",
+    "окорок варёный",
+    "ветчина для тостов",
+    "ветчина из индейки"
+   ],
+   "en_alt": [
+    "cooked ham",
+    "sliced ham",
+    "honey ham",
+    "turkey ham"
+   ]
+  },
+  {
+   "id": "cured_ham",
+   "ru": "Сыровяленая ветчина (прошутто, хамон)",
+   "en": "Cured ham (prosciutto, serrano)",
+   "de": "Prosciutto",
+   "ru_alt": [
+    "прошутто",
+    "хамон",
+    "пармская ветчина",
+    "сыровяленый окорок",
+    "брезаола"
+   ],
+   "en_alt": [
+    "prosciutto",
+    "parma ham",
+    "serrano ham",
+    "dry-cured ham"
+   ]
+  },
+  {
+   "id": "bacon",
+   "ru": "Бекон / шпек",
+   "en": "Bacon (Speck)",
+   "de": "Speck",
+   "ru_alt": [
+    "бекон",
+    "сало копчёное",
+    "шпик",
+    "грудинка копчёная",
+    "панчетта",
+    "тирольский шпек"
+   ],
+   "en_alt": [
+    "bacon",
+    "streaky bacon",
+    "back bacon",
+    "lardons",
+    "pancetta"
+   ]
+  },
+  {
+   "id": "cold_roast",
+   "ru": "Буженина / ростбиф (нарезка)",
+   "en": "Cold roast meat (roast pork, roast beef)",
+   "de": "Schweinsbraten",
+   "ru_alt": [
+    "буженина",
+    "ростбиф",
+    "холодное запечённое мясо",
+    "говяжий язык",
+    "пастрами",
+    "карпаччо"
+   ],
+   "en_alt": [
+    "roast pork slices",
+    "roast beef",
+    "tongue",
+    "pastrami",
+    "corned beef"
+   ]
+  },
+  {
+   "id": "pate",
+   "ru": "Паштет / ливерная колбаса",
+   "en": "Pâté / liver sausage",
+   "de": "Pastete",
+   "ru_alt": [
+    "паштет",
+    "ливерная колбаса",
+    "печёночный паштет",
+    "мажущаяся колбаса",
+    "паштет из печени"
+   ],
+   "en_alt": [
+    "pate",
+    "liver pate",
+    "liverwurst",
+    "meat spread"
+   ]
+  },
+  {
+   "id": "cold_cuts_mix",
+   "ru": "Мясная нарезка (ассорти)",
+   "en": "Assorted cold cuts",
+   "de": "Aufschnitt",
+   "ru_alt": [
+    "нарезка",
+    "мясное ассорти",
+    "колбасная нарезка",
+    "мясная тарелка"
+   ],
+   "en_alt": [
+    "cold cuts",
+    "charcuterie",
+    "sliced meats",
+    "deli platter"
+   ]
+  },
+  {
+   "id": "lard",
+   "ru": "Смалец / жир свиной",
+   "en": "Lard / dripping",
+   "de": "Schmalz",
+   "ru_alt": [
+    "смалец",
+    "свиной жир",
+    "шкварки",
+    "гусиный жир"
+   ],
+   "en_alt": [
+    "lard",
+    "pork fat",
+    "goose fat",
+    "pork crackling"
+   ]
+  },
+  {
+   "id": "milk",
+   "ru": "Молоко",
+   "en": "Milk",
+   "de": "Vollmilch",
+   "ru_alt": [
+    "молоко коровье",
+    "молоко 3,5%",
+    "молоко 1,5%",
+    "обезжиренное молоко",
+    "пастеризованное молоко"
+   ],
+   "en_alt": [
+    "whole milk",
+    "semi-skimmed milk",
+    "skimmed milk",
+    "fresh milk"
+   ]
+  },
+  {
+   "id": "uht_milk",
+   "ru": "Молоко ультрапастеризованное (долгого хранения)",
+   "en": "UHT milk (long-life)",
+   "de": "Haltbarmilch",
+   "ru_alt": [
+    "долгоиграющее молоко",
+    "молоко ультрапастеризованное",
+    "молоко в тетрапаке"
+   ],
+   "en_alt": [
+    "long-life milk",
+    "uht milk",
+    "shelf-stable milk"
+   ]
+  },
+  {
+   "id": "lactose_free_milk",
+   "ru": "Безлактозное молоко",
+   "en": "Lactose-free milk",
+   "de": "Laktosefreie Vollmilch",
+   "ru_alt": [
+    "молоко без лактозы"
+   ],
+   "en_alt": [
+    "lactose free milk"
+   ]
+  },
+  {
+   "id": "buttermilk",
+   "ru": "Пахта",
+   "en": "Buttermilk",
+   "de": "Buttermilch",
+   "ru_alt": [
+    "пахта",
+    "сыворотка молочная"
+   ],
+   "en_alt": [
+    "butter milk"
+   ]
+  },
+  {
+   "id": "kefir",
+   "ru": "Кефир",
+   "en": "Kefir",
+   "de": "Kefir",
+   "ru_alt": [
+    "кефирчик",
+    "биокефир"
+   ],
+   "en_alt": [
+    "milk kefir"
+   ]
+  },
+  {
+   "id": "sour_milk",
+   "ru": "Простокваша / ряженка",
+   "en": "Soured milk",
+   "de": "Sauermilch",
+   "ru_alt": [
+    "простокваша",
+    "ряженка",
+    "айран",
+    "мацони"
+   ],
+   "en_alt": [
+    "sour milk",
+    "clabbered milk",
+    "ayran"
+   ]
+  },
+  {
+   "id": "condensed_milk",
+   "ru": "Сгущённое молоко",
+   "en": "Condensed milk",
+   "de": "Kondensmilch",
+   "ru_alt": [
+    "сгущёнка",
+    "варёная сгущёнка",
+    "сухие сливки",
+    "дульсе де лече"
+   ],
+   "en_alt": [
+    "sweetened condensed milk",
+    "evaporated milk",
+    "coffee whitener",
+    "dulce de leche"
+   ]
+  },
+  {
+   "id": "coffee_cream",
+   "ru": "Сливки для кофе",
+   "en": "Coffee cream (creamer)",
+   "de": "Kaffeeobers",
+   "ru_alt": [
+    "сливки 10%",
+    "сливки в капсулах",
+    "кофейные сливки"
+   ],
+   "en_alt": [
+    "single cream",
+    "half and half",
+    "coffee creamer"
+   ]
+  },
+  {
+   "id": "cream",
+   "ru": "Сливки (жирные, для взбивания)",
+   "en": "Whipping cream (double cream)",
+   "de": "Schlagobers",
+   "ru_alt": [
+    "сливки для взбивания",
+    "сливки 33%",
+    "сливки 36%",
+    "взбитые сливки",
+    "жирные сливки"
+   ],
+   "en_alt": [
+    "double cream",
+    "heavy cream",
+    "whipping cream",
+    "squirty cream"
+   ]
+  },
+  {
+   "id": "cooking_cream",
+   "ru": "Сливки для готовки (растительные)",
+   "en": "Cooking cream",
+   "de": "Kochcreme",
+   "ru_alt": [
+    "кулинарные сливки",
+    "растительные сливки",
+    "сливки 15% для соусов"
+   ],
+   "en_alt": [
+    "cooking cream",
+    "single cream for cooking",
+    "plant-based cream"
+   ]
+  },
+  {
+   "id": "sour_cream",
+   "ru": "Сметана",
+   "en": "Sour cream",
+   "de": "Sauerrahm",
+   "ru_alt": [
+    "сметанка",
+    "сметана 15%",
+    "сметана 20%"
+   ],
+   "en_alt": [
+    "soured cream",
+    "smetana"
+   ]
+  },
+  {
+   "id": "creme_fraiche",
+   "ru": "Крем-фреш",
+   "en": "Crème fraîche",
+   "de": "Crème Fraîche",
+   "ru_alt": [
+    "крем фреш",
+    "крем-фреш"
+   ],
+   "en_alt": [
+    "creme fraiche",
+    "fraiche"
+   ]
+  },
+  {
+   "id": "mascarpone",
+   "ru": "Маскарпоне",
+   "en": "Mascarpone",
+   "de": "Mascarpone",
+   "ru_alt": [
+    "маскарпоне сыр"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "ricotta",
+   "ru": "Рикотта",
+   "en": "Ricotta",
+   "de": "Ricotta",
+   "ru_alt": [
+    "рикотта сыр"
+   ],
+   "en_alt": []
+  },
+  {
+   "id": "qimiq",
+   "ru": "Сливочная основа Qimiq",
+   "en": "Qimiq (cream base)",
+   "de": "Qimiq",
+   "ru_alt": [
+    "кимик"
+   ],
+   "en_alt": [
+    "cream base"
+   ]
+  },
+  {
+   "id": "yogurt",
+   "ru": "Йогурт",
+   "en": "Yoghurt",
+   "de": "Joghurt",
+   "ru_alt": [
+    "йогурт натуральный",
+    "йогурт фруктовый",
+    "йогурты"
+   ],
+   "en_alt": [
+    "yogurt",
+    "yoghurts"
+   ]
+  },
+  {
+   "id": "yogurt_plain",
+   "ru": "Йогурт натуральный (без добавок)",
+   "en": "Plain natural yoghurt",
+   "de": "Naturjoghurt",
+   "ru_alt": [
+    "натуральный йогурт",
+    "йогурт без сахара",
+    "белый йогурт"
+   ],
+   "en_alt": [
+    "natural yogurt",
+    "plain yogurt"
+   ]
+  },
+  {
+   "id": "greek_yogurt",
+   "ru": "Греческий йогурт",
+   "en": "Greek yoghurt",
+   "de": "Griechischer Joghurt",
+   "ru_alt": [
+    "йогурт греческий",
+    "густой йогурт"
+   ],
+   "en_alt": [
+    "greek-style yoghurt",
+    "strained yogurt"
+   ]
+  },
+  {
+   "id": "fruit_yogurt",
+   "ru": "Фруктовый йогурт",
+   "en": "Fruit yoghurt",
+   "de": "Fruchtjoghurt",
+   "ru_alt": [
+    "йогурт с фруктами",
+    "йогурт клубничный",
+    "сладкий йогурт"
+   ],
+   "en_alt": [
+    "flavoured yoghurt",
+    "fruit yogurt",
+    "strawberry yogurt"
+   ]
+  },
+  {
+   "id": "drinking_yogurt",
+   "ru": "Питьевой йогурт",
+   "en": "Drinking yoghurt",
+   "de": "Trinkjoghurt",
+   "ru_alt": [
+    "питьевой йогурт",
+    "актимель",
+    "ласси",
+    "сыворотка"
+   ],
+   "en_alt": [
+    "yoghurt drink",
+    "probiotic drink",
+    "lassi"
+   ]
+  },
+  {
+   "id": "plant_yogurt",
+   "ru": "Растительный йогурт",
+   "en": "Plant-based yoghurt",
+   "de": "Joygurt",
+   "ru_alt": [
+    "веганский йогурт",
+    "соевый йогурт",
+    "кокосовый йогурт",
+    "овсяный йогурт"
+   ],
+   "en_alt": [
+    "vegan yogurt",
+    "soy yogurt",
+    "coconut yogurt",
+    "oat yogurt"
+   ]
+  },
+  {
+   "id": "skyr",
+   "ru": "Скир",
+   "en": "Skyr",
+   "de": "Skyr",
+   "ru_alt": [
+    "скир исландский",
+    "исландский йогурт"
+   ],
+   "en_alt": [
+    "icelandic yoghurt"
+   ]
+  },
+  {
+   "id": "topfen",
+   "ru": "Творог",
+   "en": "Quark (Topfen)",
+   "de": "Topfen",
+   "ru_alt": [
+    "творожок",
+    "творог обезжиренный",
+    "творог 9%",
+    "творог 5%",
+    "кварк",
+    "творог мягкий"
+   ],
+   "en_alt": [
+    "quark",
+    "curd cheese",
+    "farmer's cheese",
+    "tvorog"
+   ]
+  },
+  {
+   "id": "cottage_cheese",
+   "ru": "Зернёный творог",
+   "en": "Cottage cheese",
+   "de": "Cottage Cheese",
+   "ru_alt": [
+    "творог зернистый",
+    "домашний сыр",
+    "коттедж"
+   ],
+   "en_alt": [
+    "cottage cheese",
+    "curd cheese (granular)"
+   ]
+  },
+  {
+   "id": "butter",
+   "ru": "Сливочное масло",
+   "en": "Butter",
+   "de": "Butter",
+   "ru_alt": [
+    "масло сливочное",
+    "масло 82%",
+    "сладкосливочное масло"
+   ],
+   "en_alt": [
+    "salted butter",
+    "unsalted butter",
+    "dairy butter"
+   ]
+  },
+  {
+   "id": "spreadable_butter",
+   "ru": "Масло-спред (сливочное с растительным)",
+   "en": "Spreadable butter (butter blend)",
+   "de": "Streichgenuss",
+   "ru_alt": [
+    "спред",
+    "масло мягкое",
+    "лёгкое масло"
+   ],
+   "en_alt": [
+    "spreadable butter",
+    "butter spread",
+    "light butter"
+   ]
+  },
+  {
+   "id": "herb_butter",
+   "ru": "Масло с травами / чесночное",
+   "en": "Herb butter / garlic butter",
+   "de": "Kräuterbutter",
+   "ru_alt": [
+    "чесночное масло",
+    "травяное масло",
+    "масло с зеленью"
+   ],
+   "en_alt": [
+    "garlic butter",
+    "herb butter"
+   ]
+  },
+  {
+   "id": "ghee",
+   "ru": "Топлёное масло (гхи)",
+   "en": "Ghee / clarified butter",
+   "de": "Butterschmalz",
+   "ru_alt": [
+    "гхи",
+    "масло топлёное"
+   ],
+   "en_alt": [
+    "clarified butter",
+    "ghee"
+   ]
+  },
+  {
+   "id": "margarine",
+   "ru": "Маргарин",
+   "en": "Margarine",
+   "de": "Margarine",
+   "ru_alt": [
+    "маргарин сливочный",
+    "растительное масло-спред",
+    "веганское масло"
+   ],
+   "en_alt": [
+    "margarine",
+    "vegetable spread",
+    "plant butter"
+   ]
+  },
+  {
+   "id": "cooking_fat",
+   "ru": "Кулинарный жир (кокосовый, фритюрный)",
+   "en": "Cooking fat (coconut fat, frying fat)",
+   "de": "Pflanzenfett",
+   "ru_alt": [
+    "кокосовый жир",
+    "жир для фритюра",
+    "растительный жир"
+   ],
+   "en_alt": [
+    "vegetable shortening",
+    "frying fat",
+    "solid coconut oil"
+   ]
+  },
+  {
+   "id": "custard_pudding",
+   "ru": "Пудинг (готовый)",
+   "en": "Pudding (ready-to-eat dessert)",
+   "de": "Pudding",
+   "ru_alt": [
+    "пудинг шоколадный",
+    "пудинг ванильный",
+    "десерт молочный",
+    "манный пудинг"
+   ],
+   "en_alt": [
+    "chocolate pudding",
+    "vanilla pudding",
+    "custard pot",
+    "creme caramel"
+   ]
+  },
+  {
+   "id": "rice_pudding",
+   "ru": "Молочный рис / рис для рисовой каши",
+   "en": "Rice pudding / pudding rice",
+   "de": "Milchreis",
+   "ru_alt": [
+    "рисовая каша",
+    "рис молочный",
+    "рисовый пудинг"
+   ],
+   "en_alt": [
+    "pudding rice",
+    "rice pudding pot"
+   ]
+  },
+  {
+   "id": "mousse_dessert",
+   "ru": "Десерты (мусс, тирамису, панна котта)",
+   "en": "Desserts (mousse, tiramisu, panna cotta)",
+   "de": "Mousse",
+   "ru_alt": [
+    "мусс",
+    "тирамису",
+    "панна-котта",
+    "крем-брюле",
+    "эклеры",
+    "профитроли",
+    "пахлава"
+   ],
+   "en_alt": [
+    "chocolate mousse",
+    "tiramisu",
+    "panna cotta",
+    "profiteroles",
+    "eclairs"
+   ]
+  },
+  {
+   "id": "cheese",
+   "ru": "Сыр",
+   "en": "Cheese",
+   "de": "Käse",
+   "ru_alt": [
+    "сыр твёрдый",
+    "сыр полутвёрдый",
+    "сыры",
+    "сырная нарезка"
+   ],
+   "en_alt": [
+    "cheeses",
+    "sliced cheese"
+   ]
+  },
+  {
+   "id": "gouda",
+   "ru": "Гауда",
+   "en": "Gouda",
+   "de": "Gouda",
+   "ru_alt": [
+    "сыр гауда"
+   ],
+   "en_alt": [
+    "gouda cheese"
+   ]
+  },
+  {
+   "id": "emmental",
+   "ru": "Эмменталь",
+   "en": "Emmental",
+   "de": "Emmentaler",
+   "ru_alt": [
+    "эмменталь",
+    "швейцарский сыр",
+    "сыр с дырками",
+    "маасдам",
+    "леердаммер"
+   ],
+   "en_alt": [
+    "emmentaler",
+    "swiss cheese",
+    "maasdam"
+   ]
+  },
+  {
+   "id": "mountain_cheese",
+   "ru": "Горный сыр (бергкезе, грюйер)",
+   "en": "Mountain cheese (Bergkäse, Gruyère)",
+   "de": "Bergkäse",
+   "ru_alt": [
+    "горный сыр",
+    "грюйер",
+    "конте",
+    "аппенцеллер",
+    "твёрдый сыр"
+   ],
+   "en_alt": [
+    "alpine cheese",
+    "gruyere",
+    "comte",
+    "appenzeller"
+   ]
+  },
+  {
+   "id": "edam",
+   "ru": "Эдам",
+   "en": "Edam",
+   "de": "Edamer",
+   "ru_alt": [
+    "сыр эдам",
+    "эдамер"
+   ],
+   "en_alt": [
+    "edam cheese"
+   ]
+  },
+  {
+   "id": "tilsit",
+   "ru": "Тильзитер",
+   "en": "Tilsit cheese",
+   "de": "Tilsiter",
+   "ru_alt": [
+    "тильзитский сыр"
+   ],
+   "en_alt": [
+    "tilsiter"
+   ]
+  },
+  {
+   "id": "butter_cheese",
+   "ru": "Мягкий сливочный сыр (буттеркезе)",
+   "en": "Butterkäse (mild creamy cheese)",
+   "de": "Butterkäse",
+   "ru_alt": [
+    "полутвёрдый сыр",
+    "сыр сливочный",
+    "мягкий сыр",
+    "копчёный сыр",
+    "пекорино",
+    "раклет",
+    "манчего",
+    "проволоне"
+   ],
+   "en_alt": [
+    "semi-hard cheese",
+    "mild cheese",
+    "smoked cheese",
+    "pecorino",
+    "raclette",
+    "manchego",
+    "provolone"
+   ]
+  },
+  {
+   "id": "processed_cheese",
+   "ru": "Плавленый сыр / сыр для тостов",
+   "en": "Processed cheese / cheese slices for toast",
+   "de": "Toastkäse",
+   "ru_alt": [
+    "плавленый сыр",
+    "сыр в треугольниках",
+    "сыр для бутербродов ломтиками",
+    "тостовый сыр",
+    "сыр для бургеров"
+   ],
+   "en_alt": [
+    "cheese slices",
+    "processed cheese",
+    "cheese spread triangles",
+    "american cheese",
+    "toast cheese"
+   ]
+  },
+  {
+   "id": "grated_cheese",
+   "ru": "Тёртый сыр",
+   "en": "Grated cheese",
+   "de": "gerieben",
+   "ru_alt": [
+    "сыр тёртый",
+    "сыр для пиццы",
+    "сыр для запекания"
+   ],
+   "en_alt": [
+    "shredded cheese",
+    "pizza cheese",
+    "grated parmesan"
+   ]
+  },
+  {
+   "id": "mozzarella",
+   "ru": "Моцарелла",
+   "en": "Mozzarella",
+   "de": "Mozzarella",
+   "ru_alt": [
+    "моцарелла мини",
+    "моцарелла буффало",
+    "моцарелла для пиццы"
+   ],
+   "en_alt": [
+    "buffalo mozzarella",
+    "mozzarella balls"
+   ]
+  },
+  {
+   "id": "burrata",
+   "ru": "Буррата / страчателла",
+   "en": "Burrata",
+   "de": "Burrata",
+   "ru_alt": [
+    "буррата сыр",
+    "страчателла сыр"
+   ],
+   "en_alt": [
+    "burratina"
+   ]
+  },
+  {
+   "id": "parmesan",
+   "ru": "Пармезан",
+   "en": "Parmesan",
+   "de": "Parmigiano",
+   "ru_alt": [
+    "пармиджано",
+    "грана падано",
+    "твёрдый итальянский сыр"
+   ],
+   "en_alt": [
+    "parmigiano reggiano",
+    "grana padano",
+    "hard italian cheese"
+   ]
+  },
+  {
+   "id": "feta",
+   "ru": "Фета / брынза",
+   "en": "Feta",
+   "de": "Feta",
+   "ru_alt": [
+    "брынза",
+    "фета",
+    "овечий сыр",
+    "сыр в рассоле",
+    "сирене"
+   ],
+   "en_alt": [
+    "feta cheese",
+    "sheep cheese",
+    "white cheese in brine"
+   ]
+  },
+  {
+   "id": "halloumi",
+   "ru": "Халлуми / сыр для гриля",
+   "en": "Halloumi / grilling cheese",
+   "de": "Halloumi",
+   "ru_alt": [
+    "халлуми",
+    "сыр для жарки",
+    "сыр гриль"
+   ],
+   "en_alt": [
+    "grilling cheese",
+    "frying cheese"
+   ]
+  },
+  {
+   "id": "camembert",
+   "ru": "Камамбер",
+   "en": "Camembert",
+   "de": "Camembert",
+   "ru_alt": [
+    "камамбер жареный",
+    "камамбер сыр"
+   ],
+   "en_alt": [
+    "camembert cheese",
+    "breaded camembert"
+   ]
+  },
+  {
+   "id": "brie",
+   "ru": "Бри",
+   "en": "Brie",
+   "de": "Brie",
+   "ru_alt": [
+    "сыр бри",
+    "мягкий сыр с белой плесенью",
+    "сыр с плесенью белой"
+   ],
+   "en_alt": [
+    "brie cheese",
+    "soft cheese",
+    "soft ripened cheese"
+   ]
+  },
+  {
+   "id": "blue_cheese",
+   "ru": "Сыр с голубой плесенью",
+   "en": "Blue cheese",
+   "de": "Gorgonzola",
+   "ru_alt": [
+    "горгонзола",
+    "рокфор",
+    "дор блю",
+    "голубой сыр"
+   ],
+   "en_alt": [
+    "gorgonzola",
+    "roquefort",
+    "stilton"
+   ]
+  },
+  {
+   "id": "goat_cheese",
+   "ru": "Козий сыр",
+   "en": "Goat's cheese",
+   "de": "Ziegenkäse",
+   "ru_alt": [
+    "козий сыр",
+    "сыр из козьего молока",
+    "шевр"
+   ],
+   "en_alt": [
+    "goats cheese",
+    "chevre",
+    "goat cheese"
+   ]
+  },
+  {
+   "id": "sheep_cheese_other",
+   "ru": "Овечий сыр (рулеты, шарики)",
+   "en": "Sheep's milk cheese (rolls, balls)",
+   "de": "Schafmischkäserolle",
+   "ru_alt": [
+    "овечий сыр",
+    "овечий рулет"
+   ],
+   "en_alt": [
+    "sheep cheese",
+    "ewe's milk cheese"
+   ]
+  },
+  {
+   "id": "cheddar",
+   "ru": "Чеддер",
+   "en": "Cheddar",
+   "de": "Cheddar",
+   "ru_alt": [
+    "сыр чеддер"
+   ],
+   "en_alt": [
+    "mature cheddar",
+    "cheddar cheese"
+   ]
+  },
+  {
+   "id": "sour_milk_cheese",
+   "ru": "Сыр из кислого молока (кваргель)",
+   "en": "Sour milk cheese (Quargel)",
+   "de": "Quargel",
+   "ru_alt": [
+    "кваргель",
+    "сыр с тмином",
+    "серый сыр",
+    "гарцский сыр"
+   ],
+   "en_alt": [
+    "harzer cheese",
+    "sour curd cheese"
+   ]
+  },
+  {
+   "id": "cream_cheese",
+   "ru": "Сливочный сыр (творожный)",
+   "en": "Cream cheese",
+   "de": "Frischkäse",
+   "ru_alt": [
+    "творожный сыр",
+    "сливочный сыр",
+    "филадельфия",
+    "крем-чиз",
+    "мягкий сыр с травами"
+   ],
+   "en_alt": [
+    "cream cheese",
+    "soft cheese",
+    "philadelphia",
+    "cheese spread"
+   ]
+  },
+  {
+   "id": "liptauer",
+   "ru": "Липтауэр (острая сырная паста)",
+   "en": "Liptauer (spicy cheese spread)",
+   "de": "Liptauer",
+   "ru_alt": [
+    "сырная паста с паприкой",
+    "творожная паста",
+    "намазка из творога",
+    "обацда"
+   ],
+   "en_alt": [
+    "cheese spread",
+    "paprika cheese spread",
+    "obatzda"
+   ]
+  },
+  {
+   "id": "plant_cheese",
+   "ru": "Растительный (веганский) сыр",
+   "en": "Plant-based cheese",
+   "de": "Violife",
+   "ru_alt": [
+    "веганский сыр",
+    "растительный сыр"
+   ],
+   "en_alt": [
+    "vegan cheese",
+    "dairy-free cheese"
+   ]
+  },
+  {
+   "id": "cheese_snack",
+   "ru": "Сырные снеки (мини-сыры, палочки)",
+   "en": "Cheese snacks (mini cheeses, sticks)",
+   "de": "Babybel",
+   "ru_alt": [
+    "бэбибел",
+    "мини-сыры",
+    "сырные палочки",
+    "сырные кубики",
+    "сыр-косичка"
+   ],
+   "en_alt": [
+    "babybel",
+    "cheese strings",
+    "cheese cubes",
+    "mini cheeses"
+   ]
+  },
+  {
+   "id": "eggs",
+   "ru": "Яйца",
+   "en": "Eggs",
+   "de": "Eier",
+   "ru_alt": [
+    "яйцо",
+    "куриные яйца",
+    "яйца С0",
+    "яйца С1",
+    "перепелиные яйца"
+   ],
+   "en_alt": [
+    "egg",
+    "free-range eggs",
+    "organic eggs",
+    "quail eggs"
+   ]
+  },
+  {
+   "id": "egg_white",
+   "ru": "Яичный белок (жидкий)",
+   "en": "Liquid egg white",
+   "de": "Eiklar",
+   "ru_alt": [
+    "жидкий белок",
+    "яичный белок",
+    "меланж"
+   ],
+   "en_alt": [
+    "liquid egg whites",
+    "liquid egg",
+    "egg whites"
+   ]
+  },
+  {
+   "id": "egg_salad",
+   "ru": "Яичный салат / паста",
+   "en": "Egg salad / egg spread",
+   "de": "Eiersalat",
+   "ru_alt": [
+    "яичный салат",
+    "омлет готовый",
+    "яичница"
+   ],
+   "en_alt": [
+    "egg mayo",
+    "omelette",
+    "scrambled eggs"
+   ]
+  },
+  {
+   "id": "bread",
+   "ru": "Хлеб",
+   "en": "Bread (loaf)",
+   "de": "Brot",
+   "ru_alt": [
+    "хлеб белый",
+    "хлеб пшеничный",
+    "буханка",
+    "батон",
+    "хлеб на закваске"
+   ],
+   "en_alt": [
+    "loaf",
+    "white bread",
+    "sourdough",
+    "farmhouse bread"
+   ]
+  },
+  {
+   "id": "rye_bread",
+   "ru": "Ржаной хлеб",
+   "en": "Rye bread",
+   "de": "Roggenbrot",
+   "ru_alt": [
+    "бородинский хлеб",
+    "чёрный хлеб",
+    "ржаной",
+    "пумперникель"
+   ],
+   "en_alt": [
+    "dark rye bread",
+    "pumpernickel",
+    "black bread"
+   ]
+  },
+  {
+   "id": "wholegrain_bread",
+   "ru": "Цельнозерновой хлеб",
+   "en": "Wholegrain bread",
+   "de": "Vollkornbrot",
+   "ru_alt": [
+    "цельнозерновой",
+    "зерновой хлеб",
+    "хлеб с семечками",
+    "протеиновый хлеб"
+   ],
+   "en_alt": [
+    "wholemeal bread",
+    "multigrain bread",
+    "seeded bread",
+    "protein bread",
+    "whole wheat bread"
+   ]
+  },
+  {
+   "id": "spelt_bread",
+   "ru": "Хлеб из полбы (динкель)",
+   "en": "Spelt bread",
+   "de": "Dinkelbrot",
+   "ru_alt": [
+    "хлеб из полбы",
+    "спельтовый хлеб"
+   ],
+   "en_alt": [
+    "spelt loaf",
+    "spelt rolls"
+   ]
+  },
+  {
+   "id": "kaiser_roll",
+   "ru": "Булочка-кайзерка (земмель)",
+   "en": "Kaiser roll (Semmel)",
+   "de": "Semmel",
+   "ru_alt": [
+    "земмель",
+    "кайзерка",
+    "булочка",
+    "булочки для бутербродов",
+    "венская булочка"
+   ],
+   "en_alt": [
+    "bread roll",
+    "white roll",
+    "kaiser roll",
+    "bap"
+   ]
+  },
+  {
+   "id": "bread_roll",
+   "ru": "Булочки (векерль, бретхен)",
+   "en": "Bread rolls (Weckerl, Brötchen)",
+   "de": "Weckerl",
+   "ru_alt": [
+    "булочки",
+    "булочка с маком",
+    "булочки для гамбургеров",
+    "булочки для хот-догов",
+    "бейглы",
+    "солёные палочки (хлеб)",
+    "крендель",
+    "брецель",
+    "претцель"
+   ],
+   "en_alt": [
+    "rolls",
+    "bread rolls",
+    "burger buns",
+    "hot dog buns",
+    "bagels",
+    "pretzel rolls",
+    "pretzels (bakery)"
+   ]
+  },
+  {
+   "id": "kornspitz",
+   "ru": "Корншпиц (булочка с зёрнами)",
+   "en": "Kornspitz (seeded roll)",
+   "de": "Kornspitz",
+   "ru_alt": [
+    "корншпиц",
+    "зерновая булочка",
+    "булочка с семечками"
+   ],
+   "en_alt": [
+    "seeded roll",
+    "multigrain roll"
+   ]
+  },
+  {
+   "id": "pretzel",
+   "ru": "Крендель (брецель)",
+   "en": "Pretzel (bakery)",
+   "de": "Breze",
+   "ru_alt": [
+    "брецель",
+    "претцель",
+    "солёный крендель"
+   ],
+   "en_alt": [
+    "soft pretzel",
+    "pretzel"
+   ]
+  },
+  {
+   "id": "toast_bread",
+   "ru": "Тостовый хлеб",
+   "en": "Sliced bread (toast)",
+   "de": "Toastbrot",
+   "ru_alt": [
+    "тостовый хлеб",
+    "хлеб для тостов",
+    "сэндвичный хлеб",
+    "нарезной хлеб"
+   ],
+   "en_alt": [
+    "toast bread",
+    "sandwich bread",
+    "sliced white bread"
+   ]
+  },
+  {
+   "id": "baguette",
+   "ru": "Багет",
+   "en": "Baguette",
+   "de": "Baguette",
+   "ru_alt": [
+    "французский батон",
+    "багет"
+   ],
+   "en_alt": [
+    "french stick",
+    "french bread"
+   ]
+  },
+  {
+   "id": "garlic_bread",
+   "ru": "Чесночный хлеб / багет с маслом",
+   "en": "Garlic bread",
+   "de": "Knoblauchbrot",
+   "ru_alt": [
+    "чесночный багет",
+    "брускетта"
+   ],
+   "en_alt": [
+    "garlic baguette",
+    "herb bread",
+    "bruschetta"
+   ]
+  },
+  {
+   "id": "ciabatta",
+   "ru": "Чиабатта / фокачча",
+   "en": "Ciabatta / focaccia",
+   "de": "Ciabatta",
+   "ru_alt": [
+    "чиабатта",
+    "фокачча"
+   ],
+   "en_alt": [
+    "focaccia"
+   ]
+  },
+  {
+   "id": "croissant",
+   "ru": "Круассан / кипферль",
+   "en": "Croissant",
+   "de": "Croissant",
+   "ru_alt": [
+    "круассан",
+    "кипферль",
+    "рогалик"
+   ],
+   "en_alt": [
+    "croissants",
+    "pain au chocolat"
+   ]
+  },
+  {
+   "id": "sweet_pastry",
+   "ru": "Сладкая выпечка (слойки, плюшки)",
+   "en": "Sweet pastries (Danish, buns)",
+   "de": "Golatsche",
+   "ru_alt": [
+    "слойки",
+    "плюшки",
+    "сдоба",
+    "булочка с корицей",
+    "булочки с маком",
+    "ватрушка",
+    "синнабон"
+   ],
+   "en_alt": [
+    "danish pastry",
+    "cinnamon roll",
+    "pastries",
+    "sweet buns"
+   ]
+  },
+  {
+   "id": "sweet_bread",
+   "ru": "Сдобная плетёнка / бриошь",
+   "en": "Sweet braided bread (Striezel, brioche)",
+   "de": "Striezel",
+   "ru_alt": [
+    "сдобная булка",
+    "бриошь",
+    "плетёнка",
+    "кулич",
+    "панеттоне",
+    "штоллен"
+   ],
+   "en_alt": [
+    "brioche",
+    "braided sweet bread",
+    "panettone",
+    "stollen",
+    "fruit loaf"
+   ]
+  },
+  {
+   "id": "tortilla",
+   "ru": "Тортильи / лепёшки для врапа",
+   "en": "Tortilla wraps",
+   "de": "Tortilla",
+   "ru_alt": [
+    "тортилья",
+    "лепёшки",
+    "врапы",
+    "пшеничные лепёшки",
+    "тако"
+   ],
+   "en_alt": [
+    "wraps",
+    "flour tortillas",
+    "taco shells",
+    "fajita wraps"
+   ]
+  },
+  {
+   "id": "flatbread",
+   "ru": "Лаваш / пита / лепёшка",
+   "en": "Flatbread (pita, naan, lavash)",
+   "de": "Fladenbrot",
+   "ru_alt": [
+    "лаваш",
+    "пита",
+    "лепёшка",
+    "наан",
+    "питы для шаурмы"
+   ],
+   "en_alt": [
+    "pitta bread",
+    "naan bread",
+    "flat bread",
+    "lavash"
+   ]
+  },
+  {
+   "id": "crispbread",
+   "ru": "Хлебцы",
+   "en": "Crispbread",
+   "de": "Knäckebrot",
+   "ru_alt": [
+    "хлебцы ржаные",
+    "хрустящие хлебцы",
+    "сухие хлебцы"
+   ],
+   "en_alt": [
+    "crispbreads",
+    "rye crispbread",
+    "crackerbread"
+   ]
+  },
+  {
+   "id": "rice_cakes",
+   "ru": "Рисовые / кукурузные хлебцы",
+   "en": "Rice cakes / corn cakes",
+   "de": "Reiswaffeln",
+   "ru_alt": [
+    "рисовые хлебцы",
+    "кукурузные хлебцы",
+    "воздушный рис"
+   ],
+   "en_alt": [
+    "rice crackers",
+    "corn cakes",
+    "puffed rice cakes"
+   ]
+  },
+  {
+   "id": "rusks",
+   "ru": "Сухари / цвибак",
+   "en": "Rusks (Zwieback)",
+   "de": "Zwieback",
+   "ru_alt": [
+    "сухари",
+    "сушки",
+    "бублики",
+    "кростини"
+   ],
+   "en_alt": [
+    "rusks",
+    "melba toast",
+    "crostini"
+   ]
+  },
+  {
+   "id": "breadcrumbs",
+   "ru": "Панировочные сухари",
+   "en": "Breadcrumbs",
+   "de": "Semmelbrösel",
+   "ru_alt": [
+    "панировка",
+    "сухари для панировки",
+    "панко"
+   ],
+   "en_alt": [
+    "bread crumbs",
+    "panko",
+    "breading"
+   ]
+  },
+  {
+   "id": "bread_cubes",
+   "ru": "Кубики хлеба (для кнедликов) / гренки",
+   "en": "Bread cubes (for dumplings) / croutons",
+   "de": "Semmelwürfel",
+   "ru_alt": [
+    "гренки",
+    "сухарики",
+    "кубики хлеба",
+    "крутоны"
+   ],
+   "en_alt": [
+    "croutons",
+    "bread cubes",
+    "dumpling bread"
+   ]
+  },
+  {
+   "id": "cake",
+   "ru": "Торт / пирожное",
+   "en": "Cake / gateau",
+   "de": "Torte",
+   "ru_alt": [
+    "торт",
+    "пирожное",
+    "пирог",
+    "штрудель",
+    "пончик",
+    "маффин",
+    "кекс",
+    "рулет бисквитный",
+    "брауни",
+    "захер",
+    "блинчики",
+    "кайзершмаррн",
+    "шоколадный торт"
+   ],
+   "en_alt": [
+    "cake",
+    "gateau",
+    "pastries",
+    "doughnut",
+    "muffin",
+    "strudel",
+    "brownie",
+    "swiss roll",
+    "pound cake",
+    "crepes"
+   ]
+  },
+  {
+   "id": "cheesecake",
+   "ru": "Чизкейк / творожный торт",
+   "en": "Cheesecake",
+   "de": "Käsekuchen",
+   "ru_alt": [
+    "творожный торт",
+    "сырник (торт)",
+    "чизкейк",
+    "запеканка творожная"
+   ],
+   "en_alt": [
+    "baked cheesecake",
+    "quark cake"
+   ]
+  },
+  {
+   "id": "gingerbread",
+   "ru": "Пряники",
+   "en": "Gingerbread (Lebkuchen)",
+   "de": "Lebkuchen",
+   "ru_alt": [
+    "пряники",
+    "имбирные пряники",
+    "медовые пряники",
+    "спекулос"
+   ],
+   "en_alt": [
+    "gingerbread",
+    "lebkuchen",
+    "spiced biscuits",
+    "speculoos"
+   ]
+  },
+  {
+   "id": "ladyfingers",
+   "ru": "Печенье савоярди (бисквитные палочки)",
+   "en": "Ladyfingers (sponge fingers)",
+   "de": "Biskotten",
+   "ru_alt": [
+    "савоярди",
+    "бисквитные палочки",
+    "дамские пальчики"
+   ],
+   "en_alt": [
+    "sponge fingers",
+    "savoiardi",
+    "lady fingers"
+   ]
+  },
+  {
+   "id": "wafers",
+   "ru": "Вафли",
+   "en": "Wafers / waffles",
+   "de": "Waffeln",
+   "ru_alt": [
+    "вафли",
+    "вафельки",
+    "вафельные трубочки",
+    "вафельные рожки",
+    "манер"
+   ],
+   "en_alt": [
+    "wafers",
+    "waffles",
+    "wafer biscuits",
+    "ice cream cones"
+   ]
+  },
+  {
+   "id": "biscuits",
+   "ru": "Печенье",
+   "en": "Biscuits / cookies",
+   "de": "Kekse",
+   "ru_alt": [
+    "печенье",
+    "песочное печенье",
+    "печенье овсяное",
+    "крекеры сладкие",
+    "орео",
+    "печенька",
+    "галеты",
+    "бискотти"
+   ],
+   "en_alt": [
+    "cookies",
+    "biscuits",
+    "shortbread",
+    "digestives",
+    "oreos",
+    "biscotti"
+   ]
+  },
+  {
+   "id": "crackers",
+   "ru": "Крекеры / солёные палочки",
+   "en": "Crackers / savoury sticks",
+   "de": "Cracker",
+   "ru_alt": [
+    "крекер",
+    "солёные палочки",
+    "крендельки",
+    "гриссини",
+    "кукурузные палочки",
+    "сырные палочки",
+    "снеки"
+   ],
+   "en_alt": [
+    "crackers",
+    "pretzel sticks",
+    "breadsticks",
+    "savoury biscuits",
+    "cheese straws",
+    "puffs"
+   ]
+  },
+  {
+   "id": "puff_pastry",
+   "ru": "Слоёное тесто",
+   "en": "Puff pastry",
+   "de": "Blätterteig",
+   "ru_alt": [
+    "тесто слоёное",
+    "слоеное тесто"
+   ],
+   "en_alt": [
+    "ready-rolled puff pastry"
+   ]
+  },
+  {
+   "id": "pizza_dough",
+   "ru": "Тесто для пиццы",
+   "en": "Pizza dough",
+   "de": "Pizzateig",
+   "ru_alt": [
+    "основа для пиццы",
+    "тесто для фламмкухена"
+   ],
+   "en_alt": [
+    "pizza base",
+    "pizza crust"
+   ]
+  },
+  {
+   "id": "strudel_dough",
+   "ru": "Тесто фило / для штруделя",
+   "en": "Filo / strudel pastry",
+   "de": "Strudelteig",
+   "ru_alt": [
+    "тесто фило",
+    "юфка",
+    "тесто для штруделя",
+    "рисовая бумага"
+   ],
+   "en_alt": [
+    "filo pastry",
+    "phyllo",
+    "yufka",
+    "rice paper"
+   ]
+  },
+  {
+   "id": "shortcrust",
+   "ru": "Песочное тесто / тесто для киша",
+   "en": "Shortcrust pastry",
+   "de": "Mürbteig",
+   "ru_alt": [
+    "песочное тесто",
+    "тесто для тарта",
+    "тесто для печенья"
+   ],
+   "en_alt": [
+    "shortcrust",
+    "pie crust",
+    "cookie dough"
+   ]
+  },
+  {
+   "id": "yeast_dough",
+   "ru": "Дрожжевое тесто (готовое)",
+   "en": "Yeast dough (ready)",
+   "de": "Germteig",
+   "ru_alt": [
+    "дрожжевое тесто",
+    "тесто для булочек",
+    "тесто для круассанов"
+   ],
+   "en_alt": [
+    "yeast dough",
+    "bread dough",
+    "croissant dough"
+   ]
+  },
+  {
+   "id": "pancakes",
+   "ru": "Блины / блинчики",
+   "en": "Crêpes / pancakes",
+   "de": "Palatschinken",
+   "ru_alt": [
+    "блины",
+    "блинчики",
+    "оладьи",
+    "панкейки",
+    "налистники"
+   ],
+   "en_alt": [
+    "crepes",
+    "pancakes",
+    "american pancakes",
+    "pancake mix"
+   ]
+  },
+  {
+   "id": "doughnut",
+   "ru": "Пончик (крапфен)",
+   "en": "Doughnut (Krapfen)",
+   "de": "Krapfen",
+   "ru_alt": [
+    "пончики",
+    "берлинер",
+    "пышки"
+   ],
+   "en_alt": [
+    "donut",
+    "jam doughnut"
+   ]
+  },
+  {
+   "id": "muffin",
+   "ru": "Маффин / кекс",
+   "en": "Muffin / cupcake",
+   "de": "Muffin",
+   "ru_alt": [
+    "маффины",
+    "капкейк",
+    "кексики"
+   ],
+   "en_alt": [
+    "muffins",
+    "cupcakes"
+   ]
+  },
+  {
+   "id": "strudel",
+   "ru": "Штрудель",
+   "en": "Strudel",
+   "de": "Strudel",
+   "ru_alt": [
+    "штрудель яблочный",
+    "штрудель с творогом",
+    "рулет из теста"
+   ],
+   "en_alt": [
+    "apple strudel"
+   ]
+  },
+  {
+   "id": "sweet_dumplings",
+   "ru": "Сладкие кнедлики (с фруктами, дрожжевые)",
+   "en": "Sweet dumplings (Germknödel, fruit dumplings)",
+   "de": "Germknödel",
+   "ru_alt": [
+    "кнедлики с абрикосом",
+    "дрожжевые кнедлики",
+    "сладкие клёцки",
+    "ленивые вареники"
+   ],
+   "en_alt": [
+    "sweet dumplings",
+    "yeast dumplings",
+    "apricot dumplings"
+   ]
+  },
+  {
+   "id": "kaiserschmarrn",
+   "ru": "Кайзершмаррн (рваный омлет-блин)",
+   "en": "Kaiserschmarrn (shredded pancake)",
+   "de": "Kaiserschmarrn",
+   "ru_alt": [
+    "кайзершмаррн",
+    "рваный блин"
+   ],
+   "en_alt": [
+    "shredded pancake",
+    "emperor's pancake"
+   ]
+  },
+  {
+   "id": "pasta",
+   "ru": "Макароны / паста",
+   "en": "Pasta",
+   "de": "Nudeln",
+   "ru_alt": [
+    "макароны",
+    "паста",
+    "макаронные изделия",
+    "лапша яичная"
+   ],
+   "en_alt": [
+    "pasta",
+    "noodles",
+    "macaroni"
+   ]
+  },
+  {
+   "id": "spaghetti",
+   "ru": "Спагетти",
+   "en": "Spaghetti",
+   "de": "Spaghetti",
+   "ru_alt": [
+    "спагетти",
+    "вермишель длинная"
+   ],
+   "en_alt": [
+    "spaghetti",
+    "angel hair"
+   ]
+  },
+  {
+   "id": "penne",
+   "ru": "Пенне (перья)",
+   "en": "Penne",
+   "de": "Penne",
+   "ru_alt": [
+    "перья",
+    "пенне ригате"
+   ],
+   "en_alt": [
+    "penne rigate",
+    "quills"
+   ]
+  },
+  {
+   "id": "fusilli",
+   "ru": "Фузилли / спиральки / рожки",
+   "en": "Fusilli / spirals / elbows",
+   "de": "Fusilli",
+   "ru_alt": [
+    "спиральки",
+    "рожки",
+    "фузилли",
+    "витушки"
+   ],
+   "en_alt": [
+    "spirals",
+    "elbow macaroni",
+    "rotini"
+   ]
+  },
+  {
+   "id": "tagliatelle",
+   "ru": "Тальятелле / лапша широкая",
+   "en": "Tagliatelle / ribbon noodles",
+   "de": "Tagliatelle",
+   "ru_alt": [
+    "лапша широкая",
+    "тальятелле",
+    "феттучине"
+   ],
+   "en_alt": [
+    "ribbon pasta",
+    "fettuccine",
+    "pappardelle",
+    "egg noodles"
+   ]
+  },
+  {
+   "id": "lasagne_sheets",
+   "ru": "Листы для лазаньи",
+   "en": "Lasagne sheets",
+   "de": "Lasagneblätter",
+   "ru_alt": [
+    "лазанья листы",
+    "тесто для лазаньи",
+    "каннеллони"
+   ],
+   "en_alt": [
+    "lasagna sheets",
+    "cannelloni tubes"
+   ]
+  },
+  {
+   "id": "fleckerl",
+   "ru": "Квадратные макароны (флекерль)",
+   "en": "Fleckerl (square pasta)",
+   "de": "Fleckerl",
+   "ru_alt": [
+    "квадратики (макароны)",
+    "флекерль"
+   ],
+   "en_alt": [
+    "square pasta"
+   ]
+  },
+  {
+   "id": "soup_noodles",
+   "ru": "Суповая вермишель / мелкая паста",
+   "en": "Soup noodles / small pasta",
+   "de": "Suppennudeln",
+   "ru_alt": [
+    "вермишель",
+    "звёздочки",
+    "мелкие макароны",
+    "орзо",
+    "фрикадельки для супа",
+    "клёцки для супа"
+   ],
+   "en_alt": [
+    "vermicelli",
+    "orzo",
+    "alphabet pasta",
+    "soup pasta",
+    "soup garnish"
+   ]
+  },
+  {
+   "id": "spaetzle",
+   "ru": "Шпецле / клёцки",
+   "en": "Spätzle / nockerl",
+   "de": "Spätzle",
+   "ru_alt": [
+    "шпецле",
+    "клёцки",
+    "галушки",
+    "ньокки по-австрийски",
+    "шупфнудели"
+   ],
+   "en_alt": [
+    "spaetzle",
+    "egg dumplings",
+    "cheese spaetzle"
+   ]
+  },
+  {
+   "id": "gnocchi",
+   "ru": "Ньокки",
+   "en": "Gnocchi",
+   "de": "Gnocchi",
+   "ru_alt": [
+    "картофельные клёцки"
+   ],
+   "en_alt": [
+    "potato gnocchi"
+   ]
+  },
+  {
+   "id": "filled_pasta",
+   "ru": "Равиоли / тортеллини",
+   "en": "Filled pasta (ravioli, tortellini)",
+   "de": "Tortellini",
+   "ru_alt": [
+    "равиоли",
+    "тортеллини",
+    "пельмени итальянские"
+   ],
+   "en_alt": [
+    "ravioli",
+    "tortellini",
+    "stuffed pasta"
+   ]
+  },
+  {
+   "id": "pelmeni",
+   "ru": "Пельмени / вареники",
+   "en": "Dumplings (pelmeni, pierogi)",
+   "de": "Pelmeni",
+   "ru_alt": [
+    "пельмени",
+    "вареники",
+    "хинкали",
+    "манты",
+    "гёдза",
+    "дим-самы",
+    "пирожки"
+   ],
+   "en_alt": [
+    "dumplings",
+    "pierogi",
+    "gyoza",
+    "potstickers",
+    "wontons"
+   ]
+  },
+  {
+   "id": "asian_noodles",
+   "ru": "Лапша азиатская (рисовая, яичная, удон)",
+   "en": "Asian noodles (rice, egg, udon)",
+   "de": "Reisnudeln",
+   "ru_alt": [
+    "рисовая лапша",
+    "стеклянная лапша",
+    "фунчоза",
+    "удон",
+    "соба",
+    "лапша для вока",
+    "яичная лапша"
+   ],
+   "en_alt": [
+    "rice noodles",
+    "glass noodles",
+    "egg noodles",
+    "udon",
+    "soba",
+    "stir-fry noodles"
+   ]
+  },
+  {
+   "id": "instant_noodles",
+   "ru": "Лапша быстрого приготовления",
+   "en": "Instant noodles",
+   "de": "Instant Nudeln",
+   "ru_alt": [
+    "доширак",
+    "роллтон",
+    "лапша в стаканчике",
+    "бичпакет",
+    "рамен"
+   ],
+   "en_alt": [
+    "pot noodle",
+    "cup noodles",
+    "ramen",
+    "instant ramen"
+   ]
+  },
+  {
+   "id": "rice",
+   "ru": "Рис",
+   "en": "Rice",
+   "de": "Reis",
+   "ru_alt": [
+    "рис длиннозёрный",
+    "рис басмати",
+    "рис жасмин",
+    "рис пропаренный",
+    "рис круглый"
+   ],
+   "en_alt": [
+    "long grain rice",
+    "basmati rice",
+    "jasmine rice",
+    "white rice"
+   ]
+  },
+  {
+   "id": "brown_rice",
+   "ru": "Бурый / нешлифованный рис",
+   "en": "Brown rice",
+   "de": "Naturreis",
+   "ru_alt": [
+    "бурый рис",
+    "дикий рис",
+    "чёрный рис",
+    "красный рис",
+    "коричневый рис"
+   ],
+   "en_alt": [
+    "wholegrain rice",
+    "wild rice",
+    "red rice",
+    "black rice"
+   ]
+  },
+  {
+   "id": "risotto_rice",
+   "ru": "Рис для ризотто / паэльи",
+   "en": "Risotto / paella rice",
+   "de": "Risottoreis",
+   "ru_alt": [
+    "рис арборио",
+    "рис для паэльи",
+    "рис круглозёрный"
+   ],
+   "en_alt": [
+    "arborio rice",
+    "carnaroli",
+    "paella rice"
+   ]
+  },
+  {
+   "id": "sushi_rice",
+   "ru": "Рис для суши",
+   "en": "Sushi rice",
+   "de": "Sushireis",
+   "ru_alt": [
+    "рис японский",
+    "клейкий рис"
+   ],
+   "en_alt": [
+    "japanese rice",
+    "glutinous rice",
+    "sticky rice"
+   ]
+  },
+  {
+   "id": "risotto_dish",
+   "ru": "Ризотто / готовые блюда из риса",
+   "en": "Risotto / rice dishes (ready)",
+   "de": "Risotto",
+   "ru_alt": [
+    "ризотто",
+    "паэлья",
+    "плов",
+    "жареный рис",
+    "наси горенг",
+    "бирьяни"
+   ],
+   "en_alt": [
+    "risotto",
+    "paella",
+    "fried rice",
+    "pilaf",
+    "biryani"
+   ]
+  },
+  {
+   "id": "couscous",
+   "ru": "Кускус",
+   "en": "Couscous",
+   "de": "Couscous",
+   "ru_alt": [
+    "кус-кус",
+    "птитим",
+    "мароккан. кускус"
+   ],
+   "en_alt": [
+    "giant couscous",
+    "pearl couscous"
+   ]
+  },
+  {
+   "id": "bulgur",
+   "ru": "Булгур",
+   "en": "Bulgur wheat",
+   "de": "Bulgur",
+   "ru_alt": [
+    "булгур",
+    "пшеничная крупа"
+   ],
+   "en_alt": [
+    "bulgur",
+    "cracked wheat",
+    "freekeh"
+   ]
+  },
+  {
+   "id": "quinoa",
+   "ru": "Киноа",
+   "en": "Quinoa",
+   "de": "Quinoa",
+   "ru_alt": [
+    "кинва",
+    "амарант"
+   ],
+   "en_alt": [
+    "red quinoa",
+    "amaranth"
+   ]
+  },
+  {
+   "id": "polenta",
+   "ru": "Полента / кукурузная крупа",
+   "en": "Polenta (cornmeal)",
+   "de": "Polenta",
+   "ru_alt": [
+    "кукурузная крупа",
+    "мамалыга",
+    "полента",
+    "кукурузная мука"
+   ],
+   "en_alt": [
+    "cornmeal",
+    "corn grits",
+    "maize meal"
+   ]
+  },
+  {
+   "id": "millet",
+   "ru": "Пшено",
+   "en": "Millet",
+   "de": "Hirse",
+   "ru_alt": [
+    "пшено",
+    "пшённая крупа"
+   ],
+   "en_alt": [
+    "millet grain"
+   ]
+  },
+  {
+   "id": "buckwheat",
+   "ru": "Гречка",
+   "en": "Buckwheat",
+   "de": "Buchweizen",
+   "ru_alt": [
+    "гречка",
+    "гречневая крупа",
+    "ядрица"
+   ],
+   "en_alt": [
+    "buckwheat groats",
+    "kasha"
+   ]
+  },
+  {
+   "id": "semolina",
+   "ru": "Манная крупа",
+   "en": "Semolina",
+   "de": "Grieß",
+   "ru_alt": [
+    "манка",
+    "манная каша (крупа)",
+    "семолина"
+   ],
+   "en_alt": [
+    "semolina",
+    "cream of wheat",
+    "farina"
+   ]
+  },
+  {
+   "id": "barley",
+   "ru": "Перловка / ячневая крупа",
+   "en": "Pearl barley",
+   "de": "Rollgerste",
+   "ru_alt": [
+    "перловая крупа",
+    "ячневая крупа",
+    "ячмень",
+    "полба (зерно)",
+    "цельные зёрна пшеницы"
+   ],
+   "en_alt": [
+    "barley",
+    "pearl barley",
+    "spelt grain",
+    "wheat berries"
+   ]
+  },
+  {
+   "id": "oats",
+   "ru": "Овсяные хлопья",
+   "en": "Rolled oats",
+   "de": "Haferflocken",
+   "ru_alt": [
+    "овсянка",
+    "геркулес",
+    "овсяная каша",
+    "хлопья овсяные",
+    "овсяные отруби",
+    "порридж"
+   ],
+   "en_alt": [
+    "porridge oats",
+    "oatmeal",
+    "rolled oats",
+    "oat bran",
+    "instant porridge"
+   ]
+  },
+  {
+   "id": "lentils",
+   "ru": "Чечевица",
+   "en": "Lentils",
+   "de": "Linsen",
+   "ru_alt": [
+    "чечевица красная",
+    "чечевица зелёная",
+    "маш",
+    "дал"
+   ],
+   "en_alt": [
+    "red lentils",
+    "green lentils",
+    "puy lentils",
+    "mung beans"
+   ]
+  },
+  {
+   "id": "chickpeas",
+   "ru": "Нут",
+   "en": "Chickpeas",
+   "de": "Kichererbsen",
+   "ru_alt": [
+    "нут",
+    "турецкий горох",
+    "бараний горох"
+   ],
+   "en_alt": [
+    "garbanzo beans",
+    "chick peas"
+   ]
+  },
+  {
+   "id": "beans",
+   "ru": "Фасоль",
+   "en": "Beans",
+   "de": "Bohnen",
+   "ru_alt": [
+    "фасоль красная",
+    "фасоль белая",
+    "фасоль консервированная",
+    "фасоль чёрная",
+    "фасоль кидни"
+   ],
+   "en_alt": [
+    "kidney beans",
+    "white beans",
+    "black beans",
+    "cannellini beans",
+    "borlotti beans"
+   ]
+  },
+  {
+   "id": "baked_beans",
+   "ru": "Фасоль в томатном соусе",
+   "en": "Baked beans",
+   "de": "Baked Beans",
+   "ru_alt": [
+    "печёная фасоль",
+    "фасоль в соусе"
+   ],
+   "en_alt": [
+    "beans in tomato sauce",
+    "refried beans"
+   ]
+  },
+  {
+   "id": "split_peas",
+   "ru": "Горох колотый (сушёный)",
+   "en": "Split peas (dried)",
+   "de": "Schälerbsen",
+   "ru_alt": [
+    "горох",
+    "горох колотый",
+    "горох шлифованный"
+   ],
+   "en_alt": [
+    "dried peas",
+    "yellow split peas",
+    "green split peas"
+   ]
+  },
+  {
+   "id": "soybeans",
+   "ru": "Соевые бобы / эдамаме",
+   "en": "Soybeans / edamame",
+   "de": "Sojabohnen",
+   "ru_alt": [
+    "соя",
+    "соевые бобы",
+    "эдамаме"
+   ],
+   "en_alt": [
+    "soya beans",
+    "edamame beans"
+   ]
+  },
+  {
+   "id": "hummus",
+   "ru": "Хумус",
+   "en": "Hummus",
+   "de": "Hummus",
+   "ru_alt": [
+    "хумус",
+    "паста из нута"
+   ],
+   "en_alt": [
+    "houmous",
+    "hummus dip"
+   ]
+  },
+  {
+   "id": "falafel",
+   "ru": "Фалафель",
+   "en": "Falafel",
+   "de": "Falafel",
+   "ru_alt": [
+    "фалафель",
+    "нутовые шарики"
+   ],
+   "en_alt": [
+    "falafel balls"
+   ]
+  },
+  {
+   "id": "tofu",
+   "ru": "Тофу",
+   "en": "Tofu",
+   "de": "Tofu",
+   "ru_alt": [
+    "соевый творог",
+    "тофу копчёный",
+    "тофу шёлковый",
+    "панир"
+   ],
+   "en_alt": [
+    "smoked tofu",
+    "silken tofu",
+    "paneer"
+   ]
+  },
+  {
+   "id": "tempeh_seitan",
+   "ru": "Темпе / сейтан",
+   "en": "Tempeh / seitan",
+   "de": "Tempeh",
+   "ru_alt": [
+    "темпе",
+    "сейтан",
+    "клейковина",
+    "люпин"
+   ],
+   "en_alt": [
+    "seitan",
+    "tempeh",
+    "vital wheat gluten"
+   ]
+  },
+  {
+   "id": "soy_chunks",
+   "ru": "Соевое мясо (текстурат)",
+   "en": "Soy chunks (TVP)",
+   "de": "Sojaschnetzel",
+   "ru_alt": [
+    "соевое мясо",
+    "соевый фарш",
+    "текстурированный соевый белок",
+    "соевые кусочки"
+   ],
+   "en_alt": [
+    "textured vegetable protein",
+    "soya mince",
+    "soy mince",
+    "soya chunks"
+   ]
+  },
+  {
+   "id": "plant_meat",
+   "ru": "Растительное мясо (веганские заменители)",
+   "en": "Plant-based meat alternatives",
+   "de": "Planted",
+   "ru_alt": [
+    "веганское мясо",
+    "растительное мясо",
+    "заменитель мяса",
+    "веганские котлеты",
+    "веганские сосиски",
+    "овощные котлеты"
+   ],
+   "en_alt": [
+    "vegan meat",
+    "meat substitute",
+    "veggie burger",
+    "vegan sausages",
+    "plant-based chicken",
+    "veggie patties"
+   ]
+  },
+  {
+   "id": "canned_tomatoes",
+   "ru": "Томаты консервированные (кусочками, очищенные)",
+   "en": "Canned tomatoes (chopped, peeled)",
+   "de": "Tomaten stückig",
+   "ru_alt": [
+    "помидоры в собственном соку",
+    "томаты в банке",
+    "консервированные томаты",
+    "помидоры резаные"
+   ],
+   "en_alt": [
+    "chopped tomatoes",
+    "tinned tomatoes",
+    "peeled plum tomatoes",
+    "pizza sauce"
+   ]
+  },
+  {
+   "id": "passata",
+   "ru": "Томатное пюре (пассата)",
+   "en": "Passata (sieved tomatoes)",
+   "de": "Passata",
+   "ru_alt": [
+    "пассата",
+    "протёртые томаты",
+    "томатное пюре"
+   ],
+   "en_alt": [
+    "tomato passata",
+    "strained tomatoes",
+    "tomato puree (US)"
+   ]
+  },
+  {
+   "id": "tomato_paste",
+   "ru": "Томатная паста",
+   "en": "Tomato purée (paste)",
+   "de": "Tomatenmark",
+   "ru_alt": [
+    "томатная паста",
+    "паприковая паста"
+   ],
+   "en_alt": [
+    "tomato paste",
+    "tomato puree",
+    "double concentrate"
+   ]
+  },
+  {
+   "id": "pasta_sauce",
+   "ru": "Соус для пасты (готовый)",
+   "en": "Pasta sauce (ready)",
+   "de": "Sugo",
+   "ru_alt": [
+    "соус для макарон",
+    "томатный соус",
+    "болоньезе",
+    "соус песто не",
+    "соус карбонара",
+    "соус арраббьята"
+   ],
+   "en_alt": [
+    "pasta sauce",
+    "tomato sauce",
+    "bolognese sauce",
+    "marinara",
+    "arrabbiata"
+   ]
+  },
+  {
+   "id": "pesto",
+   "ru": "Песто",
+   "en": "Pesto",
+   "de": "Pesto",
+   "ru_alt": [
+    "соус песто",
+    "песто"
+   ],
+   "en_alt": [
+    "basil pesto",
+    "red pesto",
+    "green pesto"
+   ]
+  },
+  {
+   "id": "canned_meal",
+   "ru": "Консервы готовых блюд (гуляш, рагу)",
+   "en": "Canned ready meals (goulash, stew)",
+   "de": "Inzersdorfer",
+   "ru_alt": [
+    "гуляш",
+    "рагу",
+    "тушёнка с овощами",
+    "консервы мясные с гарниром",
+    "фасоль с мясом",
+    "чили кон карне",
+    "голубцы",
+    "мусака",
+    "бигос"
+   ],
+   "en_alt": [
+    "goulash",
+    "stew",
+    "chili con carne",
+    "canned stew",
+    "ready meal (tinned)",
+    "stuffed cabbage rolls"
+   ]
+  },
+  {
+   "id": "canned_meat",
+   "ru": "Мясные консервы (тушёнка)",
+   "en": "Canned meat (corned beef, luncheon meat)",
+   "de": "Frühstücksfleisch",
+   "ru_alt": [
+    "тушёнка",
+    "мясные консервы",
+    "консервированная говядина",
+    "ветчина консервированная"
+   ],
+   "en_alt": [
+    "canned meat",
+    "corned beef",
+    "spam",
+    "luncheon meat"
+   ]
+  },
+  {
+   "id": "soup",
+   "ru": "Суп (готовый / сухой)",
+   "en": "Soup (ready / instant)",
+   "de": "Suppe",
+   "ru_alt": [
+    "суп",
+    "супы",
+    "суп-пюре",
+    "крем-суп",
+    "борщ",
+    "солянка",
+    "куриный суп",
+    "суп быстрого приготовления"
+   ],
+   "en_alt": [
+    "soups",
+    "cream soup",
+    "instant soup",
+    "cup soup",
+    "broth soup"
+   ]
+  },
+  {
+   "id": "stock",
+   "ru": "Бульон (кубики, концентрат)",
+   "en": "Stock / bouillon",
+   "de": "Suppenwürfel",
+   "ru_alt": [
+    "бульон",
+    "бульонные кубики",
+    "кубики",
+    "овощной бульон",
+    "куриный бульон",
+    "говяжий бульон",
+    "фонд"
+   ],
+   "en_alt": [
+    "stock cubes",
+    "bouillon",
+    "broth",
+    "stock pot",
+    "vegetable stock"
+   ]
+  },
+  {
+   "id": "liquid_seasoning",
+   "ru": "Жидкая приправа (Магги)",
+   "en": "Liquid seasoning (Maggi)",
+   "de": "Maggi Würze",
+   "ru_alt": [
+    "магги",
+    "приправа универсальная",
+    "вегета",
+    "соль с травами",
+    "соль-приправа"
+   ],
+   "en_alt": [
+    "maggi seasoning",
+    "all-purpose seasoning",
+    "vegeta",
+    "herb salt",
+    "seasoned salt"
+   ]
+  },
+  {
+   "id": "ketchup",
+   "ru": "Кетчуп",
+   "en": "Ketchup",
+   "de": "Ketchup",
+   "ru_alt": [
+    "кетчуп томатный",
+    "кетчуп карри"
+   ],
+   "en_alt": [
+    "tomato ketchup",
+    "tomato sauce (UK)",
+    "catsup"
+   ]
+  },
+  {
+   "id": "mustard",
+   "ru": "Горчица",
+   "en": "Mustard",
+   "de": "Senf",
+   "ru_alt": [
+    "горчица",
+    "дижонская горчица",
+    "горчица сладкая",
+    "горчица зернистая"
+   ],
+   "en_alt": [
+    "dijon mustard",
+    "wholegrain mustard",
+    "sweet mustard",
+    "english mustard"
+   ]
+  },
+  {
+   "id": "mayonnaise",
+   "ru": "Майонез",
+   "en": "Mayonnaise",
+   "de": "Mayonnaise",
+   "ru_alt": [
+    "майонез",
+    "майонезный соус",
+    "айоли",
+    "соус тартар",
+    "ремулад"
+   ],
+   "en_alt": [
+    "mayo",
+    "aioli",
+    "tartare sauce",
+    "remoulade",
+    "salad cream"
+   ]
+  },
+  {
+   "id": "horseradish",
+   "ru": "Хрен",
+   "en": "Horseradish",
+   "de": "Kren",
+   "ru_alt": [
+    "хрен тёртый",
+    "хреновина",
+    "васаби",
+    "хрен со сливками"
+   ],
+   "en_alt": [
+    "horseradish sauce",
+    "creamed horseradish",
+    "wasabi"
+   ]
+  },
+  {
+   "id": "soy_sauce",
+   "ru": "Соевый соус",
+   "en": "Soy sauce",
+   "de": "Sojasauce",
+   "ru_alt": [
+    "соевый соус",
+    "соус тамари",
+    "сладкий соевый соус"
+   ],
+   "en_alt": [
+    "soya sauce",
+    "tamari",
+    "kecap manis",
+    "light soy sauce"
+   ]
+  },
+  {
+   "id": "teriyaki",
+   "ru": "Соус терияки",
+   "en": "Teriyaki sauce",
+   "de": "Teriyaki",
+   "ru_alt": [
+    "терияки",
+    "соус якитори"
+   ],
+   "en_alt": [
+    "teriyaki marinade"
+   ]
+  },
+  {
+   "id": "sweet_chili",
+   "ru": "Сладкий соус чили",
+   "en": "Sweet chilli sauce",
+   "de": "Sweet Chili Sauce",
+   "ru_alt": [
+    "сладкий чили",
+    "соус свит чили"
+   ],
+   "en_alt": [
+    "sweet chili sauce",
+    "thai sweet chilli"
+   ]
+  },
+  {
+   "id": "sweet_sour",
+   "ru": "Кисло-сладкий соус",
+   "en": "Sweet and sour sauce",
+   "de": "Süß-Sauer",
+   "ru_alt": [
+    "кисло-сладкий соус"
+   ],
+   "en_alt": [
+    "sweet & sour sauce"
+   ]
+  },
+  {
+   "id": "bbq_sauce",
+   "ru": "Соус барбекю",
+   "en": "BBQ sauce",
+   "de": "BBQ Sauce",
+   "ru_alt": [
+    "соус барбекю",
+    "соус для бургеров",
+    "чесночный соус",
+    "соус карри",
+    "острый соус",
+    "соус к шашлыку",
+    "сырный соус",
+    "соус для гриля"
+   ],
+   "en_alt": [
+    "barbecue sauce",
+    "burger sauce",
+    "garlic sauce",
+    "curry sauce",
+    "cocktail sauce",
+    "steak sauce"
+   ]
+  },
+  {
+   "id": "hot_sauce",
+   "ru": "Острый соус (чили, табаско, шрирача)",
+   "en": "Hot sauce (chilli, Tabasco, sriracha)",
+   "de": "Tabasco",
+   "ru_alt": [
+    "острый соус",
+    "табаско",
+    "шрирача",
+    "аджика",
+    "харисса",
+    "самбал",
+    "чили-паста",
+    "кочхуджан"
+   ],
+   "en_alt": [
+    "chili sauce",
+    "tabasco",
+    "sriracha",
+    "harissa",
+    "chilli paste",
+    "gochujang"
+   ]
+  },
+  {
+   "id": "curry_paste",
+   "ru": "Паста карри",
+   "en": "Curry paste",
+   "de": "Currypaste",
+   "ru_alt": [
+    "паста карри",
+    "красная паста карри",
+    "зелёная паста карри"
+   ],
+   "en_alt": [
+    "thai curry paste",
+    "red curry paste",
+    "green curry paste"
+   ]
+  },
+  {
+   "id": "cooking_sauce",
+   "ru": "Соус для мяса (сливочный, грибной, к жаркому)",
+   "en": "Cooking sauce / gravy",
+   "de": "Bratensauce",
+   "ru_alt": [
+    "соус к мясу",
+    "грибной соус",
+    "сливочный соус",
+    "подлива",
+    "голландский соус",
+    "бешамель",
+    "хойсин",
+    "арахисовый соус",
+    "мисо"
+   ],
+   "en_alt": [
+    "gravy",
+    "mushroom sauce",
+    "cream sauce",
+    "hollandaise",
+    "bechamel",
+    "hoisin sauce",
+    "satay sauce",
+    "miso paste"
+   ]
+  },
+  {
+   "id": "salad_dressing",
+   "ru": "Заправка для салата",
+   "en": "Salad dressing",
+   "de": "Dressing",
+   "ru_alt": [
+    "заправка для салата",
+    "соус для салата",
+    "дрессинг",
+    "соус цезарь",
+    "винегрет (заправка)"
+   ],
+   "en_alt": [
+    "salad dressing",
+    "vinaigrette",
+    "caesar dressing",
+    "ranch dressing"
+   ]
+  },
+  {
+   "id": "vinegar",
+   "ru": "Уксус",
+   "en": "Vinegar",
+   "de": "Essig",
+   "ru_alt": [
+    "уксус яблочный",
+    "уксус винный",
+    "уксусная эссенция",
+    "рисовый уксус",
+    "столовый уксус"
+   ],
+   "en_alt": [
+    "apple cider vinegar",
+    "white wine vinegar",
+    "spirit vinegar",
+    "malt vinegar"
+   ]
+  },
+  {
+   "id": "balsamic",
+   "ru": "Бальзамический уксус / крем",
+   "en": "Balsamic vinegar / glaze",
+   "de": "Balsamico",
+   "ru_alt": [
+    "бальзамик",
+    "бальзамический соус",
+    "бальзамический крем"
+   ],
+   "en_alt": [
+    "balsamic",
+    "balsamic glaze",
+    "balsamic reduction"
+   ]
+  },
+  {
+   "id": "olive_oil",
+   "ru": "Оливковое масло",
+   "en": "Olive oil",
+   "de": "Olivenöl",
+   "ru_alt": [
+    "оливковое",
+    "масло оливковое extra virgin",
+    "масло оливковое рафинированное"
+   ],
+   "en_alt": [
+    "extra virgin olive oil",
+    "evoo",
+    "light olive oil"
+   ]
+  },
+  {
+   "id": "sunflower_oil",
+   "ru": "Подсолнечное масло",
+   "en": "Sunflower oil",
+   "de": "Sonnenblumenöl",
+   "ru_alt": [
+    "подсолнечное",
+    "масло растительное подсолнечное",
+    "постное масло"
+   ],
+   "en_alt": [
+    "sunflower seed oil"
+   ]
+  },
+  {
+   "id": "rapeseed_oil",
+   "ru": "Рапсовое масло",
+   "en": "Rapeseed oil (canola)",
+   "de": "Rapsöl",
+   "ru_alt": [
+    "рапсовое",
+    "масло канола"
+   ],
+   "en_alt": [
+    "canola oil",
+    "vegetable oil (rapeseed)"
+   ]
+  },
+  {
+   "id": "veg_oil",
+   "ru": "Растительное масло (для жарки)",
+   "en": "Vegetable oil (for frying)",
+   "de": "Pflanzenöl",
+   "ru_alt": [
+    "растительное масло",
+    "масло для жарки",
+    "масло для фритюра",
+    "кукурузное масло",
+    "арахисовое масло (жидкое)"
+   ],
+   "en_alt": [
+    "vegetable oil",
+    "cooking oil",
+    "frying oil",
+    "corn oil",
+    "groundnut oil"
+   ]
+  },
+  {
+   "id": "pumpkin_seed_oil",
+   "ru": "Тыквенное масло (штирийское)",
+   "en": "Pumpkin seed oil (Styrian)",
+   "de": "Kürbiskernöl",
+   "ru_alt": [
+    "тыквенное масло",
+    "масло из тыквенных семечек"
+   ],
+   "en_alt": [
+    "styrian pumpkin seed oil"
+   ]
+  },
+  {
+   "id": "specialty_oil",
+   "ru": "Масло кунжутное / кокосовое / льняное",
+   "en": "Specialty oils (sesame, coconut, linseed, walnut)",
+   "de": "Sesamöl",
+   "ru_alt": [
+    "кунжутное масло",
+    "кокосовое масло",
+    "льняное масло",
+    "масло грецкого ореха",
+    "трюфельное масло",
+    "масло МСТ"
+   ],
+   "en_alt": [
+    "sesame oil",
+    "coconut oil",
+    "linseed oil",
+    "flaxseed oil",
+    "walnut oil",
+    "truffle oil",
+    "mct oil"
+   ]
+  },
+  {
+   "id": "salt",
+   "ru": "Соль",
+   "en": "Salt",
+   "de": "Salz",
+   "ru_alt": [
+    "соль поваренная",
+    "морская соль",
+    "йодированная соль",
+    "гималайская соль",
+    "соль крупная"
+   ],
+   "en_alt": [
+    "table salt",
+    "sea salt",
+    "rock salt",
+    "himalayan salt",
+    "iodised salt"
+   ]
+  },
+  {
+   "id": "black_pepper",
+   "ru": "Перец чёрный",
+   "en": "Black pepper",
+   "de": "Pfeffer",
+   "ru_alt": [
+    "чёрный перец",
+    "перец молотый",
+    "перец горошком",
+    "белый перец",
+    "розовый перец",
+    "перец душистый не"
+   ],
+   "en_alt": [
+    "pepper",
+    "ground black pepper",
+    "peppercorns",
+    "white pepper"
+   ]
+  },
+  {
+   "id": "chili_powder",
+   "ru": "Перец чили молотый / кайенский",
+   "en": "Chilli powder / cayenne",
+   "de": "Cayennepfeffer",
+   "ru_alt": [
+    "кайенский перец",
+    "перец чили молотый",
+    "хлопья чили",
+    "пул бибер",
+    "острый перец сушёный"
+   ],
+   "en_alt": [
+    "cayenne pepper",
+    "chili flakes",
+    "red pepper flakes",
+    "chipotle"
+   ]
+  },
+  {
+   "id": "paprika_powder",
+   "ru": "Паприка молотая",
+   "en": "Paprika (ground spice)",
+   "de": "Paprikapulver",
+   "ru_alt": [
+    "паприка",
+    "паприка копчёная",
+    "паприка сладкая",
+    "паприка острая"
+   ],
+   "en_alt": [
+    "paprika",
+    "smoked paprika",
+    "sweet paprika",
+    "hot paprika"
+   ]
+  },
+  {
+   "id": "cumin",
+   "ru": "Зира (кумин)",
+   "en": "Cumin",
+   "de": "Kreuzkümmel",
+   "ru_alt": [
+    "зира",
+    "кумин",
+    "римский тмин"
+   ],
+   "en_alt": [
+    "ground cumin",
+    "cumin seeds",
+    "jeera"
+   ]
+  },
+  {
+   "id": "caraway",
+   "ru": "Тмин",
+   "en": "Caraway",
+   "de": "Kümmel",
+   "ru_alt": [
+    "тмин",
+    "калинджи",
+    "чёрный тмин",
+    "нигелла"
+   ],
+   "en_alt": [
+    "caraway seeds",
+    "nigella seeds",
+    "black cumin"
+   ]
+  },
+  {
+   "id": "cinnamon",
+   "ru": "Корица",
+   "en": "Cinnamon",
+   "de": "Zimt",
+   "ru_alt": [
+    "корица молотая",
+    "палочки корицы",
+    "цейлонская корица",
+    "сахар с корицей"
+   ],
+   "en_alt": [
+    "ground cinnamon",
+    "cinnamon sticks",
+    "cinnamon sugar"
+   ]
+  },
+  {
+   "id": "nutmeg",
+   "ru": "Мускатный орех",
+   "en": "Nutmeg",
+   "de": "Muskat",
+   "ru_alt": [
+    "мускат",
+    "мускатный цвет",
+    "мацис"
+   ],
+   "en_alt": [
+    "ground nutmeg",
+    "whole nutmeg",
+    "mace"
+   ]
+  },
+  {
+   "id": "cloves",
+   "ru": "Гвоздика (пряность)",
+   "en": "Cloves",
+   "de": "Gewürznelken",
+   "ru_alt": [
+    "гвоздика",
+    "гвоздика молотая"
+   ],
+   "en_alt": [
+    "whole cloves",
+    "ground cloves"
+   ]
+  },
+  {
+   "id": "allspice",
+   "ru": "Душистый перец",
+   "en": "Allspice",
+   "de": "Piment",
+   "ru_alt": [
+    "перец душистый",
+    "ямайский перец",
+    "пимент"
+   ],
+   "en_alt": [
+    "pimento",
+    "jamaica pepper"
+   ]
+  },
+  {
+   "id": "cardamom",
+   "ru": "Кардамон",
+   "en": "Cardamom",
+   "de": "Kardamom",
+   "ru_alt": [
+    "кардамон молотый",
+    "кардамон в коробочках"
+   ],
+   "en_alt": [
+    "cardamom pods",
+    "ground cardamom"
+   ]
+  },
+  {
+   "id": "turmeric",
+   "ru": "Куркума",
+   "en": "Turmeric",
+   "de": "Kurkuma",
+   "ru_alt": [
+    "куркума молотая",
+    "корень куркумы"
+   ],
+   "en_alt": [
+    "ground turmeric",
+    "turmeric root"
+   ]
+  },
+  {
+   "id": "curry_powder",
+   "ru": "Карри (приправа)",
+   "en": "Curry powder",
+   "de": "Currypulver",
+   "ru_alt": [
+    "карри порошок",
+    "приправа карри",
+    "гарам масала",
+    "рас эль ханут",
+    "масала"
+   ],
+   "en_alt": [
+    "curry powder",
+    "garam masala",
+    "ras el hanout",
+    "madras curry powder"
+   ]
+  },
+  {
+   "id": "garlic_powder",
+   "ru": "Чеснок сушёный (гранулы, порошок)",
+   "en": "Garlic powder / granules",
+   "de": "Knoblauchpulver",
+   "ru_alt": [
+    "чеснок сушёный",
+    "чесночный порошок",
+    "чеснок гранулированный"
+   ],
+   "en_alt": [
+    "garlic granules",
+    "dried garlic"
+   ]
+  },
+  {
+   "id": "onion_powder",
+   "ru": "Лук сушёный (порошок, хлопья)",
+   "en": "Onion powder / dried onion",
+   "de": "Zwiebelpulver",
+   "ru_alt": [
+    "лук сушёный",
+    "луковый порошок"
+   ],
+   "en_alt": [
+    "dried onion",
+    "onion granules"
+   ]
+  },
+  {
+   "id": "vanilla",
+   "ru": "Ваниль (стручки, экстракт)",
+   "en": "Vanilla (pods, extract)",
+   "de": "Vanilleschote",
+   "ru_alt": [
+    "ваниль",
+    "ванильный стручок",
+    "ванильный экстракт",
+    "ванилин"
+   ],
+   "en_alt": [
+    "vanilla pod",
+    "vanilla bean",
+    "vanilla extract",
+    "vanilla essence"
+   ]
+  },
+  {
+   "id": "vanilla_sugar",
+   "ru": "Ванильный сахар",
+   "en": "Vanilla sugar",
+   "de": "Vanillezucker",
+   "ru_alt": [
+    "ванильный сахар",
+    "ванилин с сахаром"
+   ],
+   "en_alt": [
+    "vanilla sugar"
+   ]
+  },
+  {
+   "id": "star_anise",
+   "ru": "Бадьян / анис",
+   "en": "Star anise / anise",
+   "de": "Sternanis",
+   "ru_alt": [
+    "бадьян",
+    "анис",
+    "семена фенхеля",
+    "горчичное семя",
+    "можжевельник",
+    "шафран",
+    "пажитник",
+    "шамбала",
+    "сумах",
+    "смесь пяти специй",
+    "пряности для глинтвейна"
+   ],
+   "en_alt": [
+    "star anise",
+    "aniseed",
+    "fennel seeds",
+    "mustard seeds",
+    "juniper berries",
+    "saffron",
+    "fenugreek",
+    "sumac",
+    "five spice"
+   ]
+  },
+  {
+   "id": "seasoning_mix",
+   "ru": "Приправа (смесь специй)",
+   "en": "Seasoning mix / spice blend",
+   "de": "Gewürzmischung",
+   "ru_alt": [
+    "приправа",
+    "специи",
+    "смесь специй",
+    "приправа для курицы",
+    "приправа для мяса",
+    "приправа для гриля",
+    "приправа для картофеля",
+    "приправа для гуляша"
+   ],
+   "en_alt": [
+    "spice mix",
+    "seasoning",
+    "rub",
+    "spice blend",
+    "chicken seasoning",
+    "steak seasoning",
+    "taco seasoning",
+    "cajun"
+   ]
+  },
+  {
+   "id": "recipe_mix",
+   "ru": "Смесь для блюда (Knorr Fix / Maggi Fix)",
+   "en": "Recipe mix (Knorr/Maggi Fix)",
+   "de": "Fix für",
+   "ru_alt": [
+    "смесь для приготовления",
+    "приправа-фикс",
+    "кнорр фикс",
+    "магги фикс",
+    "маринад",
+    "загуститель соуса",
+    "мучная заправка"
+   ],
+   "en_alt": [
+    "recipe base",
+    "seasoning packet",
+    "meal kit",
+    "marinade",
+    "gravy granules",
+    "sauce thickener"
+   ]
+  },
+  {
+   "id": "flour",
+   "ru": "Мука",
+   "en": "Flour",
+   "de": "Mehl",
+   "ru_alt": [
+    "мука пшеничная",
+    "мука высшего сорта",
+    "мука ржаная",
+    "мука цельнозерновая",
+    "мука полбяная",
+    "мука для пиццы"
+   ],
+   "en_alt": [
+    "plain flour",
+    "all-purpose flour",
+    "wheat flour",
+    "bread flour",
+    "rye flour",
+    "spelt flour"
+   ]
+  },
+  {
+   "id": "flour_plain",
+   "ru": "Мука тонкого помола (glatt — для теста, выпечки)",
+   "en": "Smooth flour (glatt — for baking)",
+   "de": "Mehl glatt",
+   "ru_alt": [
+    "мука для выпечки",
+    "мука мелкого помола"
+   ],
+   "en_alt": [
+    "fine flour",
+    "cake flour",
+    "plain flour (fine)"
+   ]
+  },
+  {
+   "id": "flour_coarse",
+   "ru": "Мука крупного помола (griffig — для клёцек, панировки)",
+   "en": "Coarse flour (griffig — for dumplings, coating)",
+   "de": "Mehl griffig",
+   "ru_alt": [
+    "мука крупчатка",
+    "мука крупного помола"
+   ],
+   "en_alt": [
+    "semolina-style flour",
+    "coarse wheat flour",
+    "instant flour (wondra)"
+   ]
+  },
+  {
+   "id": "flour_universal",
+   "ru": "Мука универсальная (universal)",
+   "en": "All-purpose flour (universal)",
+   "de": "Mehl universal",
+   "ru_alt": [
+    "мука универсальная"
+   ],
+   "en_alt": [
+    "all-purpose flour",
+    "universal flour"
+   ]
+  },
+  {
+   "id": "special_flour",
+   "ru": "Мука безглютеновая / миндальная / кукурузная",
+   "en": "Specialty flour (gluten-free, almond, corn, rice)",
+   "de": "Mandelmehl",
+   "ru_alt": [
+    "безглютеновая мука",
+    "миндальная мука",
+    "рисовая мука",
+    "нутовая мука",
+    "гречневая мука",
+    "овсяная мука",
+    "псиллиум",
+    "кокосовая мука"
+   ],
+   "en_alt": [
+    "gluten-free flour",
+    "almond flour",
+    "rice flour",
+    "gram flour",
+    "oat flour",
+    "psyllium husk"
+   ]
+  },
+  {
+   "id": "starch",
+   "ru": "Крахмал",
+   "en": "Starch (cornflour)",
+   "de": "Stärke",
+   "ru_alt": [
+    "крахмал кукурузный",
+    "крахмал картофельный",
+    "маизена"
+   ],
+   "en_alt": [
+    "cornflour",
+    "cornstarch",
+    "potato starch"
+   ]
+  },
+  {
+   "id": "yeast",
+   "ru": "Дрожжи",
+   "en": "Yeast",
+   "de": "Germ",
+   "ru_alt": [
+    "дрожжи сухие",
+    "дрожжи свежие",
+    "пекарские дрожжи",
+    "закваска",
+    "пищевые дрожжи"
+   ],
+   "en_alt": [
+    "dried yeast",
+    "fresh yeast",
+    "instant yeast",
+    "sourdough starter",
+    "nutritional yeast"
+   ]
+  },
+  {
+   "id": "baking_powder",
+   "ru": "Разрыхлитель",
+   "en": "Baking powder",
+   "de": "Backpulver",
+   "ru_alt": [
+    "разрыхлитель теста",
+    "пекарский порошок"
+   ],
+   "en_alt": [
+    "baking powder",
+    "raising agent"
+   ]
+  },
+  {
+   "id": "baking_soda",
+   "ru": "Пищевая сода",
+   "en": "Baking soda (bicarbonate)",
+   "de": "Natron",
+   "ru_alt": [
+    "сода",
+    "сода пищевая",
+    "бикарбонат натрия"
+   ],
+   "en_alt": [
+    "bicarbonate of soda",
+    "bicarb",
+    "sodium bicarbonate"
+   ]
+  },
+  {
+   "id": "sugar",
+   "ru": "Сахар",
+   "en": "Sugar",
+   "de": "Zucker",
+   "ru_alt": [
+    "сахар-песок",
+    "сахар белый",
+    "тростниковый сахар",
+    "коричневый сахар",
+    "сахар рафинад",
+    "кокосовый сахар"
+   ],
+   "en_alt": [
+    "granulated sugar",
+    "caster sugar",
+    "brown sugar",
+    "cane sugar",
+    "sugar cubes",
+    "demerara"
+   ]
+  },
+  {
+   "id": "icing_sugar",
+   "ru": "Сахарная пудра",
+   "en": "Icing sugar (powdered sugar)",
+   "de": "Staubzucker",
+   "ru_alt": [
+    "сахарная пудра",
+    "глазурь сахарная",
+    "мастика"
+   ],
+   "en_alt": [
+    "powdered sugar",
+    "confectioners' sugar",
+    "icing",
+    "fondant"
+   ]
+  },
+  {
+   "id": "jam_sugar",
+   "ru": "Сахар для варенья (желирующий)",
+   "en": "Jam sugar (gelling sugar)",
+   "de": "Gelierzucker",
+   "ru_alt": [
+    "желфикс",
+    "пектин",
+    "сахар желирующий"
+   ],
+   "en_alt": [
+    "preserving sugar",
+    "pectin",
+    "gelling sugar"
+   ]
+  },
+  {
+   "id": "dextrose",
+   "ru": "Глюкоза (декстроза)",
+   "en": "Dextrose (glucose)",
+   "de": "Traubenzucker",
+   "ru_alt": [
+    "глюкоза",
+    "декстроза",
+    "мальтодекстрин"
+   ],
+   "en_alt": [
+    "glucose",
+    "dextrose tablets",
+    "maltodextrin"
+   ]
+  },
+  {
+   "id": "sweetener",
+   "ru": "Сахарозаменитель",
+   "en": "Sweetener",
+   "de": "Süßstoff",
+   "ru_alt": [
+    "сахарозаменитель",
+    "стевия",
+    "эритрит",
+    "ксилит",
+    "подсластитель"
+   ],
+   "en_alt": [
+    "sweetener",
+    "stevia",
+    "erythritol",
+    "xylitol",
+    "sugar substitute"
+   ]
+  },
+  {
+   "id": "honey",
+   "ru": "Мёд",
+   "en": "Honey",
+   "de": "Honig",
+   "ru_alt": [
+    "мёд цветочный",
+    "мёд лесной",
+    "мёд акациевый",
+    "мёд липовый",
+    "мёд манука",
+    "мёд кремовый"
+   ],
+   "en_alt": [
+    "runny honey",
+    "set honey",
+    "manuka honey",
+    "acacia honey",
+    "raw honey"
+   ]
+  },
+  {
+   "id": "syrup_sweet",
+   "ru": "Сироп кленовый / агавы",
+   "en": "Maple / agave syrup",
+   "de": "Ahornsirup",
+   "ru_alt": [
+    "кленовый сироп",
+    "сироп агавы",
+    "финиковый сироп",
+    "патока",
+    "мелласса"
+   ],
+   "en_alt": [
+    "maple syrup",
+    "agave nectar",
+    "golden syrup",
+    "date syrup",
+    "molasses",
+    "treacle"
+   ]
+  },
+  {
+   "id": "baking_chocolate",
+   "ru": "Шоколад для выпечки / глазурь",
+   "en": "Baking chocolate / chocolate coating",
+   "de": "Kochschokolade",
+   "ru_alt": [
+    "шоколад для выпечки",
+    "кувертюр",
+    "шоколадная глазурь",
+    "шоколадные капли",
+    "шоколадная стружка"
+   ],
+   "en_alt": [
+    "cooking chocolate",
+    "couverture",
+    "chocolate chips",
+    "chocolate coating",
+    "chocolate shavings"
+   ]
+  },
+  {
+   "id": "cocoa_powder",
+   "ru": "Какао-порошок",
+   "en": "Cocoa powder",
+   "de": "Backkakao",
+   "ru_alt": [
+    "какао-порошок",
+    "какао для выпечки",
+    "какао тёртое",
+    "какао-бобы дроблёные",
+    "кэроб"
+   ],
+   "en_alt": [
+    "cocoa",
+    "cacao powder",
+    "unsweetened cocoa",
+    "cacao nibs",
+    "carob powder"
+   ]
+  },
+  {
+   "id": "pudding_powder",
+   "ru": "Пудинг сухой / желатин / агар",
+   "en": "Pudding mix / gelatine",
+   "de": "Puddingpulver",
+   "ru_alt": [
+    "пудинг-порошок",
+    "желатин",
+    "агар-агар",
+    "желе сухое",
+    "закрепитель сливок",
+    "загуститель для сливок"
+   ],
+   "en_alt": [
+    "custard powder",
+    "gelatine",
+    "agar",
+    "jelly crystals",
+    "cream stabiliser",
+    "instant pudding"
+   ]
+  },
+  {
+   "id": "baking_aroma",
+   "ru": "Ароматизаторы для выпечки / пищевые красители",
+   "en": "Baking flavourings / food colouring",
+   "de": "Backaroma",
+   "ru_alt": [
+    "ароматизатор",
+    "ромовый ароматизатор",
+    "лимонная цедра",
+    "пищевой краситель",
+    "лимонная кислота",
+    "розовая вода"
+   ],
+   "en_alt": [
+    "flavouring",
+    "rum flavouring",
+    "almond extract",
+    "food colouring",
+    "citric acid",
+    "lemon zest",
+    "rose water"
+   ]
+  },
+  {
+   "id": "sprinkles",
+   "ru": "Посыпка кондитерская",
+   "en": "Sprinkles / cake decorations",
+   "de": "Streusel",
+   "ru_alt": [
+    "посыпка",
+    "кондитерская посыпка",
+    "сахарные бусины",
+    "декор для торта",
+    "грильяж",
+    "кракелюр"
+   ],
+   "en_alt": [
+    "sprinkles",
+    "hundreds and thousands",
+    "cake decorations",
+    "nonpareils",
+    "brittle"
+   ]
+  },
+  {
+   "id": "marzipan",
+   "ru": "Марципан",
+   "en": "Marzipan",
+   "de": "Marzipan",
+   "ru_alt": [
+    "марципан",
+    "марципановая масса",
+    "нуга для выпечки"
+   ],
+   "en_alt": [
+    "almond paste",
+    "marzipan",
+    "nougat"
+   ]
+  },
+  {
+   "id": "candied_fruit",
+   "ru": "Цукаты",
+   "en": "Candied peel / candied fruit",
+   "de": "Zitronat",
+   "ru_alt": [
+    "цукаты",
+    "засахаренные фрукты",
+    "коктейльная вишня"
+   ],
+   "en_alt": [
+    "candied peel",
+    "glacé cherries",
+    "mixed peel",
+    "candied ginger"
+   ]
+  },
+  {
+   "id": "poppy_seeds",
+   "ru": "Мак",
+   "en": "Poppy seeds",
+   "de": "Mohn",
+   "ru_alt": [
+    "мак пищевой",
+    "мак молотый",
+    "маковая начинка"
+   ],
+   "en_alt": [
+    "poppy seed",
+    "blue poppy seeds",
+    "poppy seed filling"
+   ]
+  },
+  {
+   "id": "baking_mix",
+   "ru": "Смесь для выпечки (торт, хлеб)",
+   "en": "Baking mix (cake, bread)",
+   "de": "Backmischung",
+   "ru_alt": [
+    "смесь для выпечки",
+    "смесь для торта",
+    "смесь для хлеба",
+    "смесь для брауни",
+    "готовая смесь для кекса"
+   ],
+   "en_alt": [
+    "cake mix",
+    "bread mix",
+    "brownie mix",
+    "muffin mix"
+   ]
+  },
+  {
+   "id": "powidl",
+   "ru": "Повидло сливовое (повидл)",
+   "en": "Plum butter (Powidl)",
+   "de": "Powidl",
+   "ru_alt": [
+    "повидло",
+    "сливовое повидло",
+    "сливовый джем густой"
+   ],
+   "en_alt": [
+    "plum jam",
+    "plum butter",
+    "prune butter"
+   ]
+  },
+  {
+   "id": "muesli",
+   "ru": "Мюсли / гранола",
+   "en": "Muesli / granola",
+   "de": "Müsli",
+   "ru_alt": [
+    "мюсли",
+    "гранола",
+    "хрустящие мюсли",
+    "овсяные хлопья с фруктами",
+    "мюсли бирхер"
+   ],
+   "en_alt": [
+    "granola",
+    "crunchy muesli",
+    "bircher muesli",
+    "cereal clusters"
+   ]
+  },
+  {
+   "id": "cereal",
+   "ru": "Сухие завтраки (хлопья, подушечки)",
+   "en": "Breakfast cereal",
+   "de": "Cornflakes",
+   "ru_alt": [
+    "кукурузные хлопья",
+    "сухой завтрак",
+    "хлопья к молоку",
+    "подушечки",
+    "шоколадные шарики",
+    "колечки"
+   ],
+   "en_alt": [
+    "cornflakes",
+    "breakfast cereal",
+    "cereal",
+    "choco pops",
+    "frosties"
+   ]
+  },
+  {
+   "id": "jam",
+   "ru": "Джем / варенье / конфитюр",
+   "en": "Jam / preserves",
+   "de": "Marmelade",
+   "ru_alt": [
+    "джем",
+    "варенье",
+    "конфитюр",
+    "мармелад апельсиновый",
+    "фруктовая паста",
+    "желе"
+   ],
+   "en_alt": [
+    "jam",
+    "jelly (US)",
+    "preserves",
+    "marmalade",
+    "fruit spread"
+   ]
+  },
+  {
+   "id": "chocolate_spread",
+   "ru": "Шоколадная паста (Нутелла)",
+   "en": "Chocolate spread (Nutella)",
+   "de": "Nutella",
+   "ru_alt": [
+    "нутелла",
+    "шоколадно-ореховая паста",
+    "ореховая паста с какао",
+    "фисташковая паста",
+    "паста спекулос"
+   ],
+   "en_alt": [
+    "nutella",
+    "hazelnut spread",
+    "chocolate hazelnut spread",
+    "pistachio cream",
+    "biscoff spread"
+   ]
+  },
+  {
+   "id": "sweet_spread_other",
+   "ru": "Сладкие пасты (молочные, карамельные)",
+   "en": "Other sweet spreads",
+   "de": "Honigaufstrich",
+   "ru_alt": [
+    "халва",
+    "карамельная паста",
+    "каймак"
+   ],
+   "en_alt": [
+    "halva",
+    "caramel spread"
+   ]
+  },
+  {
+   "id": "protein_powder",
+   "ru": "Протеин (порошок)",
+   "en": "Protein powder",
+   "de": "Proteinpulver",
+   "ru_alt": [
+    "протеин",
+    "сывороточный протеин",
+    "казеин",
+    "протеиновый порошок",
+    "креатин",
+    "коллаген",
+    "гейнер",
+    "аминокислоты"
+   ],
+   "en_alt": [
+    "whey protein",
+    "protein shake powder",
+    "casein",
+    "creatine",
+    "collagen",
+    "mass gainer",
+    "bcaa"
+   ]
+  },
+  {
+   "id": "protein_drink",
+   "ru": "Протеиновый напиток (готовый)",
+   "en": "Protein shake (ready-to-drink)",
+   "de": "Proteindrink",
+   "ru_alt": [
+    "протеиновый коктейль",
+    "протеиновый напиток",
+    "протеиновое молоко",
+    "заменитель пищи"
+   ],
+   "en_alt": [
+    "protein shake",
+    "protein drink",
+    "meal replacement drink",
+    "protein milk"
+   ]
+  },
+  {
+   "id": "protein_dessert",
+   "ru": "Протеиновый пудинг / йогурт",
+   "en": "High-protein pudding / yoghurt",
+   "de": "Protein Pudding",
+   "ru_alt": [
+    "протеиновый пудинг",
+    "протеиновый йогурт",
+    "высокобелковый десерт",
+    "протеиновый творог"
+   ],
+   "en_alt": [
+    "protein pudding",
+    "high protein yogurt",
+    "protein dessert"
+   ]
+  },
+  {
+   "id": "cereal_bar",
+   "ru": "Злаковые / ореховые батончики",
+   "en": "Cereal / nut / fruit bars",
+   "de": "Müsliriegel",
+   "ru_alt": [
+    "батончики мюсли",
+    "злаковый батончик",
+    "ореховый батончик",
+    "фруктовый батончик",
+    "энергетический батончик"
+   ],
+   "en_alt": [
+    "granola bar",
+    "cereal bar",
+    "nut bar",
+    "fruit bar",
+    "energy bar",
+    "flapjack"
+   ]
+  },
+  {
+   "id": "protein_bar",
+   "ru": "Протеиновый батончик",
+   "en": "Protein bar",
+   "de": "Proteinriegel",
+   "ru_alt": [
+    "протеиновый батончик",
+    "батончик с белком",
+    "протеиновое печенье",
+    "протеиновые чипсы"
+   ],
+   "en_alt": [
+    "protein bar",
+    "protein cookie",
+    "protein crisps",
+    "high protein snack"
+   ]
+  },
+  {
+   "id": "chocolate_bar",
+   "ru": "Шоколадные батончики (Сникерс, Марс, Твикс)",
+   "en": "Chocolate bars (Snickers, Mars, Twix)",
+   "de": "Snickers",
+   "ru_alt": [
+    "шоколадный батончик",
+    "сникерс",
+    "марс",
+    "твикс",
+    "баунти",
+    "киткат",
+    "киндер",
+    "киндер сюрприз",
+    "м&мс",
+    "тоблерон"
+   ],
+   "en_alt": [
+    "candy bar",
+    "chocolate bar",
+    "snickers",
+    "mars bar",
+    "twix",
+    "kinder bueno",
+    "kitkat",
+    "m&ms"
+   ]
+  },
+  {
+   "id": "chocolate",
+   "ru": "Шоколад (плитка)",
+   "en": "Chocolate (bar)",
+   "de": "Schokolade",
+   "ru_alt": [
+    "шоколад",
+    "плитка шоколада",
+    "молочный шоколад",
+    "горький шоколад",
+    "тёмный шоколад",
+    "белый шоколад",
+    "шоколадный дед мороз",
+    "шоколадный заяц",
+    "адвент-календарь"
+   ],
+   "en_alt": [
+    "chocolate bar",
+    "milk chocolate",
+    "dark chocolate",
+    "white chocolate",
+    "chocolate santa",
+    "easter bunny",
+    "advent calendar"
+   ]
+  },
+  {
+   "id": "pralines",
+   "ru": "Шоколадные конфеты (пралине)",
+   "en": "Chocolates / pralines",
+   "de": "Pralinen",
+   "ru_alt": [
+    "конфеты шоколадные",
+    "пралине",
+    "трюфели",
+    "моцарткугельн",
+    "рафаэлло",
+    "ферреро роше",
+    "драже",
+    "шоколадные яйца",
+    "зефир в шоколаде"
+   ],
+   "en_alt": [
+    "chocolates",
+    "pralines",
+    "truffles",
+    "box of chocolates",
+    "chocolate eggs",
+    "chocolate-covered nuts"
+   ]
+  },
+  {
+   "id": "gummy_sweets",
+   "ru": "Мармелад жевательный / зефир",
+   "en": "Gummy sweets / marshmallows",
+   "de": "Fruchtgummi",
+   "ru_alt": [
+    "мармелад",
+    "жевательный мармелад",
+    "мармеладные мишки",
+    "зефир маршмеллоу",
+    "лакрица",
+    "леденцы",
+    "конфеты-леденцы",
+    "ириски",
+    "чупа-чупс",
+    "жевательные конфеты",
+    "драже тик-так"
+   ],
+   "en_alt": [
+    "gummies",
+    "gummy bears",
+    "jelly sweets",
+    "wine gums",
+    "marshmallows",
+    "liquorice",
+    "hard candy",
+    "lollipops",
+    "toffee",
+    "boiled sweets",
+    "mints"
+   ]
+  },
+  {
+   "id": "chewing_gum",
+   "ru": "Жевательная резинка",
+   "en": "Chewing gum",
+   "de": "Kaugummi",
+   "ru_alt": [
+    "жвачка",
+    "жевательная резинка",
+    "орбит"
+   ],
+   "en_alt": [
+    "gum",
+    "bubble gum",
+    "chewing gum"
+   ]
+  },
+  {
+   "id": "chips",
+   "ru": "Чипсы",
+   "en": "Crisps (chips)",
+   "de": "Chips",
+   "ru_alt": [
+    "чипсы картофельные",
+    "чипсы",
+    "принглс",
+    "овощные чипсы",
+    "чипсы с паприкой",
+    "чипсы со сметаной и луком"
+   ],
+   "en_alt": [
+    "potato crisps",
+    "potato chips",
+    "crisps",
+    "pringles",
+    "vegetable crisps"
+   ]
+  },
+  {
+   "id": "tortilla_chips",
+   "ru": "Начос / кукурузные чипсы",
+   "en": "Tortilla chips (nachos)",
+   "de": "Tortilla Chips",
+   "ru_alt": [
+    "начос",
+    "тортилья-чипсы",
+    "кукурузные чипсы",
+    "доритос"
+   ],
+   "en_alt": [
+    "nachos",
+    "tortilla chips",
+    "corn chips",
+    "doritos"
+   ]
+  },
+  {
+   "id": "popcorn",
+   "ru": "Попкорн",
+   "en": "Popcorn",
+   "de": "Popcorn",
+   "ru_alt": [
+    "попкорн",
+    "кукуруза для попкорна"
+   ],
+   "en_alt": [
+    "popcorn",
+    "popping corn",
+    "toffee popcorn"
+   ]
+  },
+  {
+   "id": "ice_cream",
+   "ru": "Мороженое",
+   "en": "Ice cream",
+   "de": "Eiscreme",
+   "ru_alt": [
+    "мороженое",
+    "пломбир",
+    "эскимо",
+    "рожок",
+    "фруктовый лёд",
+    "сорбет",
+    "джелато",
+    "мороженое в стаканчике"
+   ],
+   "en_alt": [
+    "ice cream",
+    "ice lolly",
+    "popsicle",
+    "sorbet",
+    "gelato",
+    "frozen yoghurt",
+    "cornetto",
+    "magnum"
+   ]
+  },
+  {
+   "id": "pizza",
+   "ru": "Пицца",
+   "en": "Pizza",
+   "de": "Pizza",
+   "ru_alt": [
+    "пицца",
+    "замороженная пицца",
+    "пицца маргарита",
+    "фламмкухен",
+    "кальцоне"
+   ],
+   "en_alt": [
+    "pizza",
+    "frozen pizza",
+    "tarte flambee",
+    "calzone",
+    "french bread pizza"
+   ]
+  },
+  {
+   "id": "lasagne",
+   "ru": "Лазанья (готовая)",
+   "en": "Lasagne (ready meal)",
+   "de": "Lasagne",
+   "ru_alt": [
+    "лазанья",
+    "запеканка",
+    "мусака",
+    "картофельная запеканка",
+    "гратен"
+   ],
+   "en_alt": [
+    "lasagna",
+    "pasta bake",
+    "gratin",
+    "moussaka",
+    "potato bake",
+    "casserole"
+   ]
+  },
+  {
+   "id": "ready_meal",
+   "ru": "Готовое блюдо (охлаждённое / замороженное)",
+   "en": "Ready meal (chilled / frozen)",
+   "de": "Fertiggericht",
+   "ru_alt": [
+    "готовая еда",
+    "готовое блюдо",
+    "полуфабрикат",
+    "заморозка",
+    "обед готовый",
+    "салат готовый",
+    "сэндвич",
+    "бургер",
+    "хот-дог",
+    "карри",
+    "чили кон карне",
+    "сковородка (замороженная)",
+    "картофельный салат",
+    "капустный салат",
+    "оливье",
+    "спринг-роллы",
+    "киш"
+   ],
+   "en_alt": [
+    "ready meal",
+    "microwave meal",
+    "tv dinner",
+    "frozen meal",
+    "sandwich",
+    "burger",
+    "hot dog",
+    "curry",
+    "deli salad",
+    "potato salad",
+    "coleslaw",
+    "spring rolls",
+    "quiche",
+    "meal deal"
+   ]
+  },
+  {
+   "id": "fries",
+   "ru": "Картофель фри",
+   "en": "Chips (French fries)",
+   "de": "Pommes",
+   "ru_alt": [
+    "картофель фри",
+    "картошка фри",
+    "дольки картофельные",
+    "батат фри"
+   ],
+   "en_alt": [
+    "french fries",
+    "chips (UK)",
+    "oven chips",
+    "potato wedges",
+    "sweet potato fries"
+   ]
+  },
+  {
+   "id": "potato_products",
+   "ru": "Картофельные изделия (драники, крокеты, рёшти)",
+   "en": "Potato products (rösti, croquettes, hash browns)",
+   "de": "Rösti",
+   "ru_alt": [
+    "драники",
+    "крокеты",
+    "рёшти",
+    "хашбрауны",
+    "картофельные оладьи",
+    "жареная картошка",
+    "картофель отварной вакуум"
+   ],
+   "en_alt": [
+    "hash browns",
+    "potato croquettes",
+    "rosti",
+    "potato cakes",
+    "roast potatoes",
+    "pre-cooked potatoes"
+   ]
+  },
+  {
+   "id": "mashed_potato",
+   "ru": "Картофельное пюре (сухое / готовое)",
+   "en": "Mashed potato (instant / ready)",
+   "de": "Kartoffelpüree",
+   "ru_alt": [
+    "картофельное пюре",
+    "пюре быстрого приготовления",
+    "сухое пюре",
+    "тесто для кнедликов"
+   ],
+   "en_alt": [
+    "mashed potato",
+    "instant mash",
+    "potato puree",
+    "dumpling dough"
+   ]
+  },
+  {
+   "id": "dumplings",
+   "ru": "Кнедлики (картофельные, хлебные)",
+   "en": "Dumplings (Knödel)",
+   "de": "Knödel",
+   "ru_alt": [
+    "кнедлики",
+    "клёцки",
+    "картофельные кнедлики",
+    "хлебные кнедлики",
+    "кнедлики со шпеком"
+   ],
+   "en_alt": [
+    "dumplings",
+    "bread dumplings",
+    "potato dumplings",
+    "knodel"
+   ]
+  },
+  {
+   "id": "mineral_water",
+   "ru": "Вода минеральная / питьевая",
+   "en": "Mineral water",
+   "de": "Mineralwasser",
+   "ru_alt": [
+    "минералка",
+    "вода газированная",
+    "вода негазированная",
+    "питьевая вода",
+    "вода с газом",
+    "вода без газа",
+    "боржоми",
+    "ароматизированная вода"
+   ],
+   "en_alt": [
+    "sparkling water",
+    "still water",
+    "spring water",
+    "soda water",
+    "flavoured water",
+    "seltzer"
+   ]
+  },
+  {
+   "id": "coconut_water",
+   "ru": "Кокосовая вода",
+   "en": "Coconut water",
+   "de": "Kokoswasser",
+   "ru_alt": [
+    "вода кокосовая"
+   ],
+   "en_alt": [
+    "coconut water"
+   ]
+  },
+  {
+   "id": "juice",
+   "ru": "Сок / нектар",
+   "en": "Juice / nectar",
+   "de": "Saft",
+   "ru_alt": [
+    "сок",
+    "нектар",
+    "фруктовый сок",
+    "мультифрукт",
+    "томатный сок",
+    "морс",
+    "сок прямого отжима",
+    "сок в пакетиках"
+   ],
+   "en_alt": [
+    "fruit juice",
+    "nectar",
+    "juice drink",
+    "tomato juice",
+    "multivitamin juice",
+    "squash (ready-to-drink)"
+   ]
+  },
+  {
+   "id": "orange_juice",
+   "ru": "Апельсиновый сок",
+   "en": "Orange juice",
+   "de": "Orangensaft",
+   "ru_alt": [
+    "апельсиновый",
+    "апельсиновый фреш",
+    "сок апельсина"
+   ],
+   "en_alt": [
+    "oj",
+    "orange juice"
+   ]
+  },
+  {
+   "id": "apple_juice",
+   "ru": "Яблочный сок",
+   "en": "Apple juice",
+   "de": "Apfelsaft",
+   "ru_alt": [
+    "яблочный",
+    "сок яблоко"
+   ],
+   "en_alt": [
+    "cloudy apple juice",
+    "apple spritzer"
+   ]
+  },
+  {
+   "id": "lemon_juice",
+   "ru": "Лимонный / лаймовый сок",
+   "en": "Lemon / lime juice",
+   "de": "Zitronensaft",
+   "ru_alt": [
+    "лимонный сок",
+    "сок лайма"
+   ],
+   "en_alt": [
+    "lemon juice",
+    "lime juice"
+   ]
+  },
+  {
+   "id": "smoothie",
+   "ru": "Смузи / шот",
+   "en": "Smoothie / juice shot",
+   "de": "Smoothie",
+   "ru_alt": [
+    "смузи",
+    "шот имбирный",
+    "фруктовое пюре-напиток"
+   ],
+   "en_alt": [
+    "smoothie",
+    "juice shot",
+    "ginger shot"
+   ]
+  },
+  {
+   "id": "cola",
+   "ru": "Кола",
+   "en": "Cola",
+   "de": "Cola",
+   "ru_alt": [
+    "кока-кола",
+    "пепси",
+    "кола зеро",
+    "спецы"
+   ],
+   "en_alt": [
+    "coke",
+    "cola",
+    "pepsi",
+    "diet coke",
+    "coke zero"
+   ]
+  },
+  {
+   "id": "lemonade",
+   "ru": "Лимонад / газировка",
+   "en": "Soft drink / lemonade",
+   "de": "Limonade",
+   "ru_alt": [
+    "лимонад",
+    "газировка",
+    "фанта",
+    "спрайт",
+    "тоник",
+    "имбирный эль",
+    "квас",
+    "комбуча",
+    "безалкогольный коктейль",
+    "альмдудлер"
+   ],
+   "en_alt": [
+    "fizzy drink",
+    "soda",
+    "pop",
+    "lemonade",
+    "tonic water",
+    "ginger ale",
+    "kombucha",
+    "kvass",
+    "mocktail"
+   ]
+  },
+  {
+   "id": "iced_tea",
+   "ru": "Холодный чай",
+   "en": "Iced tea",
+   "de": "Eistee",
+   "ru_alt": [
+    "холодный чай",
+    "айс ти",
+    "липтон",
+    "чай в бутылке"
+   ],
+   "en_alt": [
+    "ice tea",
+    "iced tea",
+    "lipton ice tea",
+    "bottled tea"
+   ]
+  },
+  {
+   "id": "energy_drink",
+   "ru": "Энергетик",
+   "en": "Energy drink",
+   "de": "Energy",
+   "ru_alt": [
+    "энергетик",
+    "энергетический напиток",
+    "ред булл",
+    "монстр"
+   ],
+   "en_alt": [
+    "energy drink",
+    "red bull",
+    "monster energy"
+   ]
+  },
+  {
+   "id": "sports_drink",
+   "ru": "Изотоник (спортивный напиток)",
+   "en": "Sports drink (isotonic)",
+   "de": "Isostar",
+   "ru_alt": [
+    "изотоник",
+    "спортивный напиток",
+    "электролиты",
+    "витаминная вода"
+   ],
+   "en_alt": [
+    "isotonic drink",
+    "sports drink",
+    "electrolyte drink",
+    "vitamin water"
+   ]
+  },
+  {
+   "id": "syrup",
+   "ru": "Сироп для напитков",
+   "en": "Cordial / drink syrup",
+   "de": "Sirup",
+   "ru_alt": [
+    "сироп",
+    "сироп бузины",
+    "сироп малиновый",
+    "сироп для кофе",
+    "концентрат для напитков",
+    "растворимый напиток"
+   ],
+   "en_alt": [
+    "cordial",
+    "squash (UK)",
+    "drink syrup",
+    "elderflower cordial",
+    "coffee syrup",
+    "drink powder"
+   ]
+  },
+  {
+   "id": "coffee",
+   "ru": "Кофе",
+   "en": "Coffee",
+   "de": "Kaffee",
+   "ru_alt": [
+    "кофе",
+    "кофе в зёрнах",
+    "молотый кофе",
+    "растворимый кофе",
+    "кофе в капсулах",
+    "эспрессо",
+    "капучино",
+    "кофейный напиток",
+    "цикорий"
+   ],
+   "en_alt": [
+    "coffee beans",
+    "ground coffee",
+    "instant coffee",
+    "coffee pods",
+    "coffee capsules",
+    "espresso",
+    "decaf"
+   ]
+  },
+  {
+   "id": "coffee_beans",
+   "ru": "Кофе в зёрнах",
+   "en": "Coffee beans",
+   "de": "Ganze Bohne",
+   "ru_alt": [
+    "зерновой кофе",
+    "кофе зерно"
+   ],
+   "en_alt": [
+    "whole bean coffee",
+    "coffee beans"
+   ]
+  },
+  {
+   "id": "coffee_ground",
+   "ru": "Кофе молотый",
+   "en": "Ground coffee",
+   "de": "Kaffee gemahlen",
+   "ru_alt": [
+    "молотый кофе",
+    "кофе для турки",
+    "кофе для фильтра"
+   ],
+   "en_alt": [
+    "ground coffee",
+    "filter coffee",
+    "turkish coffee"
+   ]
+  },
+  {
+   "id": "instant_coffee",
+   "ru": "Кофе растворимый",
+   "en": "Instant coffee",
+   "de": "Instantkaffee",
+   "ru_alt": [
+    "растворимый кофе",
+    "нескафе",
+    "кофе 3 в 1",
+    "капучино растворимый"
+   ],
+   "en_alt": [
+    "instant coffee",
+    "coffee sachets",
+    "3 in 1 coffee"
+   ]
+  },
+  {
+   "id": "coffee_capsules",
+   "ru": "Кофе в капсулах / чалдах",
+   "en": "Coffee capsules / pods",
+   "de": "Kapseln",
+   "ru_alt": [
+    "капсулы для кофемашины",
+    "кофейные капсулы",
+    "чалды",
+    "дольче густо",
+    "неспрессо",
+    "тассимо"
+   ],
+   "en_alt": [
+    "coffee pods",
+    "nespresso capsules",
+    "dolce gusto pods",
+    "tassimo discs"
+   ]
+  },
+  {
+   "id": "iced_coffee",
+   "ru": "Холодный кофе (готовый)",
+   "en": "Iced coffee (ready-to-drink)",
+   "de": "Eiskaffee",
+   "ru_alt": [
+    "холодный кофе",
+    "кофе латте в бутылке",
+    "айс кофе",
+    "колд брю"
+   ],
+   "en_alt": [
+    "iced coffee",
+    "cold brew",
+    "bottled latte",
+    "frappuccino"
+   ]
+  },
+  {
+   "id": "tea",
+   "ru": "Чай",
+   "en": "Tea",
+   "de": "Tee",
+   "ru_alt": [
+    "чай чёрный",
+    "чай зелёный",
+    "чай травяной",
+    "чай фруктовый",
+    "чай в пакетиках",
+    "ромашковый чай",
+    "мятный чай",
+    "иван-чай",
+    "матча",
+    "ройбуш"
+   ],
+   "en_alt": [
+    "black tea",
+    "green tea",
+    "herbal tea",
+    "fruit tea",
+    "tea bags",
+    "chamomile tea",
+    "peppermint tea",
+    "matcha",
+    "rooibos"
+   ]
+  },
+  {
+   "id": "hot_chocolate",
+   "ru": "Какао (напиток) / горячий шоколад",
+   "en": "Hot chocolate / cocoa drink",
+   "de": "Nesquik",
+   "ru_alt": [
+    "какао напиток",
+    "горячий шоколад",
+    "несквик",
+    "овомальтин",
+    "шоколадное молоко",
+    "какао с молоком"
+   ],
+   "en_alt": [
+    "hot chocolate",
+    "cocoa drink",
+    "chocolate milk",
+    "drinking chocolate",
+    "malted drink"
+   ]
+  },
+  {
+   "id": "plant_milk",
+   "ru": "Растительное молоко (овсяное, миндальное, соевое)",
+   "en": "Plant-based milk (oat, almond, soy)",
+   "de": "Haferdrink",
+   "ru_alt": [
+    "овсяное молоко",
+    "миндальное молоко",
+    "соевое молоко",
+    "рисовое молоко",
+    "кокосовое молоко (напиток)",
+    "растительное молоко",
+    "альтернатива молоку",
+    "бариста"
+   ],
+   "en_alt": [
+    "oat milk",
+    "almond milk",
+    "soy milk",
+    "soya milk",
+    "rice milk",
+    "coconut milk drink",
+    "dairy-free milk",
+    "plant milk"
+   ]
+  },
+  {
+   "id": "coconut_milk",
+   "ru": "Кокосовое молоко / сливки (для готовки)",
+   "en": "Coconut milk / cream (for cooking)",
+   "de": "Kokosmilch",
+   "ru_alt": [
+    "кокосовое молоко",
+    "кокосовые сливки"
+   ],
+   "en_alt": [
+    "coconut milk",
+    "coconut cream",
+    "light coconut milk"
+   ]
+  },
+  {
+   "id": "baking_paper",
+   "ru": "Пергамент для выпечки",
+   "en": "Baking paper (parchment)",
+   "de": "Backpapier",
+   "ru_alt": [
+    "бумага для выпечки",
+    "бумага для запекания",
+    "пекарская бумага",
+    "пергамент",
+    "силиконовый коврик"
+   ],
+   "en_alt": [
+    "parchment paper",
+    "greaseproof paper",
+    "baking parchment",
+    "silicone baking mat"
+   ]
+  },
+  {
+   "id": "aluminium_foil",
+   "ru": "Фольга алюминиевая",
+   "en": "Aluminium foil",
+   "de": "Alufolie",
+   "ru_alt": [
+    "фольга",
+    "фольга для запекания",
+    "алюминиевые формы",
+    "формы для гриля"
+   ],
+   "en_alt": [
+    "tin foil",
+    "aluminum foil",
+    "foil trays",
+    "barbecue trays"
+   ]
+  },
+  {
+   "id": "cling_film",
+   "ru": "Пищевая плёнка",
+   "en": "Cling film",
+   "de": "Frischhaltefolie",
+   "ru_alt": [
+    "восковые салфетки",
+    "пищевая пленка",
+    "пищевая плёнка",
+    "плёнка пищевая",
+    "стрейч-плёнка"
+   ],
+   "en_alt": [
+    "plastic wrap",
+    "saran wrap",
+    "cling wrap",
+    "beeswax wraps"
+   ]
+  },
+  {
+   "id": "freezer_bags",
+   "ru": "Пакеты для заморозки / zip-пакеты",
+   "en": "Freezer bags / zip bags",
+   "de": "Gefrierbeutel",
+   "ru_alt": [
+    "пакеты для заморозки",
+    "зип-пакеты",
+    "пакеты с застёжкой",
+    "рукав для запекания",
+    "пакеты для льда",
+    "контейнеры для еды"
+   ],
+   "en_alt": [
+    "freezer bags",
+    "zip-lock bags",
+    "ziploc",
+    "roasting bags",
+    "food storage containers",
+    "ice cube bags"
+   ]
+  },
+  {
+   "id": "kitchen_roll",
+   "ru": "Бумажные полотенца",
+   "en": "Kitchen roll (paper towels)",
+   "de": "Küchenrolle",
+   "ru_alt": [
+    "бумажные полотенца",
+    "кухонные полотенца бумажные"
+   ],
+   "en_alt": [
+    "paper towels",
+    "kitchen paper",
+    "kitchen towel"
+   ]
+  },
+  {
+   "id": "toilet_paper",
+   "ru": "Туалетная бумага",
+   "en": "Toilet paper",
+   "de": "Toilettenpapier",
+   "ru_alt": [
+    "туалетная бумага",
+    "влажная туалетная бумага"
+   ],
+   "en_alt": [
+    "loo roll",
+    "bathroom tissue",
+    "toilet roll"
+   ]
+  },
+  {
+   "id": "dish_soap",
+   "ru": "Средство для мытья посуды",
+   "en": "Washing-up liquid (dish soap)",
+   "de": "Spülmittel",
+   "ru_alt": [
+    "средство для посуды",
+    "фейри",
+    "гель для мытья посуды",
+    "моющее средство"
+   ],
+   "en_alt": [
+    "dish soap",
+    "washing up liquid",
+    "dishwashing liquid",
+    "fairy liquid"
+   ]
+  },
+  {
+   "id": "dishwasher_tabs",
+   "ru": "Таблетки / средства для посудомойки",
+   "en": "Dishwasher tablets",
+   "de": "Geschirrspültabs",
+   "ru_alt": [
+    "таблетки для посудомоечной машины",
+    "соль для посудомойки",
+    "ополаскиватель",
+    "капсулы для посудомойки"
+   ],
+   "en_alt": [
+    "dishwasher tablets",
+    "dishwasher pods",
+    "rinse aid",
+    "dishwasher salt"
+   ]
+  },
+  {
+   "id": "sponges",
+   "ru": "Губки / тряпки для кухни",
+   "en": "Sponges / cleaning cloths",
+   "de": "Schwamm",
+   "ru_alt": [
+    "губки для посуды",
+    "микрофибра",
+    "тряпки",
+    "ершик для посуды",
+    "металлическая губка"
+   ],
+   "en_alt": [
+    "sponges",
+    "scourers",
+    "microfibre cloths",
+    "dish cloths",
+    "washing up brush"
+   ]
+  },
+  {
+   "id": "bin_bags",
+   "ru": "Мешки для мусора",
+   "en": "Bin bags (garbage bags)",
+   "de": "Müllbeutel",
+   "ru_alt": [
+    "мусорные пакеты",
+    "мешки для мусора",
+    "пакеты для биоотходов",
+    "пакеты-майки"
+   ],
+   "en_alt": [
+    "trash bags",
+    "garbage bags",
+    "bin liners",
+    "compost bags",
+    "carrier bags"
+   ]
+  },
+  {
+   "id": "napkins",
+   "ru": "Салфетки бумажные",
+   "en": "Paper napkins (serviettes)",
+   "de": "Servietten",
+   "ru_alt": [
+    "салфетки",
+    "бумажные салфетки",
+    "носовые платки бумажные",
+    "влажные салфетки"
+   ],
+   "en_alt": [
+    "napkins",
+    "serviettes",
+    "tissues",
+    "wet wipes"
+   ]
+  },
+  {
+   "id": "coffee_filters",
+   "ru": "Фильтры для кофе",
+   "en": "Coffee filters",
+   "de": "Kaffeefilter",
+   "ru_alt": [
+    "фильтры для кофеварки",
+    "бумажные фильтры",
+    "фильтры для чая"
+   ],
+   "en_alt": [
+    "coffee filter papers",
+    "filter papers",
+    "tea filters"
+   ]
+  },
+  {
+   "id": "kitchen_utensils",
+   "ru": "Кухонная утварь (одноразовая посуда, формы, ножи)",
+   "en": "Kitchen utensils (disposable tableware, tins, knives)",
+   "de": "Pappteller",
+   "ru_alt": [
+    "одноразовая посуда",
+    "бумажные тарелки",
+    "формочки для маффинов",
+    "формы для выпечки",
+    "нож кухонный",
+    "тёрка",
+    "разделочная доска",
+    "уголь для гриля",
+    "перчатки резиновые",
+    "контейнер",
+    "зубочистки",
+    "шпажки"
+   ],
+   "en_alt": [
+    "paper plates",
+    "disposable cups",
+    "muffin cases",
+    "baking tin",
+    "kitchen knife",
+    "grater",
+    "chopping board",
+    "charcoal",
+    "rubber gloves",
+    "containers",
+    "toothpicks",
+    "skewers (wooden)"
+   ]
+  },
+  {
+   "id": "cleaning",
+   "ru": "Чистящие средства",
+   "en": "Cleaning products",
+   "de": "Reiniger",
+   "ru_alt": [
+    "чистящее средство",
+    "средство для уборки",
+    "антижир",
+    "средство от накипи",
+    "стиральный порошок",
+    "кондиционер для белья",
+    "освежитель воздуха"
+   ],
+   "en_alt": [
+    "cleaner",
+    "all-purpose cleaner",
+    "degreaser",
+    "descaler",
+    "laundry detergent",
+    "fabric softener",
+    "air freshener"
+   ]
+  },
+  {
+   "id": "chard",
+   "ru": "Мангольд",
+   "en": "Swiss chard",
+   "de": "Mangold",
+   "ru_alt": [
+    "листовая свёкла"
+   ],
+   "en_alt": [
+    "chard",
+    "rainbow chard"
+   ]
+  },
+  {
+   "id": "flavoured_milk",
+   "ru": "Молочный коктейль / ароматизированное молоко",
+   "en": "Flavoured milk / milkshake",
+   "de": "Schoko-Milch",
+   "ru_alt": [
+    "молочный коктейль",
+    "шоколадное молоко",
+    "ванильное молоко",
+    "банановое молоко"
+   ],
+   "en_alt": [
+    "milkshake",
+    "chocolate milk",
+    "flavoured milk"
+   ]
+  },
+  {
+   "id": "dessert_sauce",
+   "ru": "Сладкий соус (топпинг)",
+   "en": "Dessert sauce / topping",
+   "de": "Dessertsauce",
+   "ru_alt": [
+    "топпинг",
+    "шоколадный соус",
+    "ванильный соус",
+    "карамельный соус"
+   ],
+   "en_alt": [
+    "topping",
+    "chocolate sauce",
+    "custard sauce",
+    "caramel sauce"
+   ]
+  },
+  {
+   "id": "aromatic_paste",
+   "ru": "Паста чесночная / имбирная",
+   "en": "Garlic / ginger paste",
+   "de": "Knoblauchpaste",
+   "ru_alt": [
+    "чесночная паста",
+    "имбирная паста"
+   ],
+   "en_alt": [
+    "garlic puree",
+    "ginger puree"
+   ]
+  },
+  {
+   "id": "truffle",
+   "ru": "Трюфель (продукты)",
+   "en": "Truffle products",
+   "de": "Trüffel Pulver",
+   "ru_alt": [
+    "трюфель",
+    "трюфельное масло",
+    "трюфельная паста"
+   ],
+   "en_alt": [
+    "truffle oil",
+    "truffle paste"
+   ]
+  },
+  {
+   "id": "spread",
+   "ru": "Паста-намазка для бутербродов",
+   "en": "Savoury spread (sandwich spread)",
+   "de": "Aufstrich",
+   "ru_alt": [
+    "намазка",
+    "паста для бутербродов",
+    "овощная паста",
+    "мясная паста",
+    "сырная намазка"
+   ],
+   "en_alt": [
+    "sandwich spread",
+    "savoury spread",
+    "vegetable spread",
+    "dip"
+   ]
+  },
+  {
+   "id": "fruit_puree",
+   "ru": "Фруктовое пюре (пауч)",
+   "en": "Fruit purée (pouch)",
+   "de": "Fruchtsnack",
+   "ru_alt": [
+    "фруктовое пюре",
+    "пюре в пакетике",
+    "смузи-пюре"
+   ],
+   "en_alt": [
+    "fruit pouch",
+    "fruit puree",
+    "squeeze pouch"
+   ]
+  },
+  {
+   "id": "ready_dough_other",
+   "ru": "Тесто готовое (прочее)",
+   "en": "Ready-made dough (other)",
+   "de": "Reibteig",
+   "ru_alt": [
+    "готовое тесто"
+   ],
+   "en_alt": [
+    "ready dough"
+   ]
+  },
+  {
+   "id": "ice_cubes",
+   "ru": "Лёд (кубики)",
+   "en": "Ice cubes",
+   "de": "Eiswürfel",
+   "ru_alt": [
+    "лёд пищевой",
+    "кубики льда"
+   ],
+   "en_alt": [
+    "ice",
+    "crushed ice"
+   ]
+  },
+  {
+   "id": "supplements",
+   "ru": "Витамины / БАДы",
+   "en": "Vitamins & supplements",
+   "de": "Vitamin C",
+   "ru_alt": [
+    "витамины",
+    "бады",
+    "магний",
+    "цинк",
+    "витамин д",
+    "витамин с",
+    "коллаген",
+    "омега-3",
+    "шипучие таблетки"
+   ],
+   "en_alt": [
+    "vitamins",
+    "supplements",
+    "magnesium",
+    "zinc",
+    "vitamin d",
+    "collagen",
+    "omega 3",
+    "effervescent tablets"
+   ]
+  }
+ ],
  "stores": [
   {
    "key": "billa",
    "name": "Billa",
-   "count": 9261,
+   "count": 9256,
    "fetched": "2026-10-16"
   },
   {
    "key": "spar",
    "name": "Spar",
-   "count": 12296,
+   "count": 12861,
    "fetched": "2026-10-16"
   },
   {

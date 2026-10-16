@@ -63,35 +63,65 @@ export function conceptLabel(data, it) {
 
 const norm = (s) => (s || '').toLowerCase().replace(/ё/g, 'е').replace(/[ß]/g, 'ss').replace(/[äöü]/g, (m) => ({ ä: 'a', ö: 'o', ü: 'u' })[m]);
 
-// Какие виды продуктов подходят под запрос на русском или английском
+// Виды продуктов под слово запроса: id → вес совпадения.
+// Основное название совпало целиком — 6, дополнительное целиком — 4, слово в названии начинается с запроса — 2.
+const words = (s) => norm(s).split(/[\s,()/-]+/).filter(Boolean);
 function conceptsFor(data, word) {
   const w = norm(word);
-  if (w.length < 2) return [];
-  const out = [];
+  const out = new Map();
+  if (w.length < 2) return out;
   for (const c of data?.aisles?.concepts || []) {
-    const names = [c.ru, c.en, ...(c.ru_alt || []), ...(c.en_alt || [])].map(norm);
-    if (names.some((n) => n === w || n.split(/[\s,()/-]+/).some((p) => p.startsWith(w)))) out.push(c.id);
+    const main = [c.ru, c.en].map(norm);
+    const alt = [...(c.ru_alt || []), ...(c.en_alt || [])].map(norm);
+    let score = 0;
+    if (main.some((n) => n === w || n.split(' (')[0] === w)) score = 6;
+    else if (alt.some((n) => n === w)) score = 4;
+    else if ([...main, ...alt].some((n) => words(n).some((p) => p.startsWith(w)))) score = 2;
+    if (score) out.set(c.id, score);
   }
   return out;
 }
 
-// Поиск: каждое слово должно найтись — в названии, бренде или в виде продукта (по-русски/по-английски)
+// Фраза из нескольких слов («пекарская бумага», «chicken breast») — вид продукта, в одном названии которого есть все слова
+function conceptsForPhrase(data, q) {
+  const ws = words(q);
+  const out = new Map();
+  if (ws.length < 2) return out;
+  for (const c of data?.aisles?.concepts || []) {
+    const names = [c.ru, c.en, ...(c.ru_alt || []), ...(c.en_alt || [])];
+    const hit = names.find((n) => { const nw = words(n); return ws.every((w) => nw.some((p) => p.startsWith(w))); });
+    if (hit) out.set(c.id, words(hit).length === ws.length ? 8 : 6);
+  }
+  return out;
+}
+
+// Поиск: каждое слово должно найтись — в названии, бренде или в виде продукта (по-русски/по-английски);
+// либо вся фраза — название вида продукта. Выше — точнее совпавшие, при равенстве — дешевле за кг.
 export function search(data, items, q, { limit = 80 } = {}) {
-  const words = norm(q).split(/\s+/).filter(Boolean);
-  if (!words.length) return [];
-  const byWord = words.map((w) => new Set(conceptsFor(data, w)));
+  const ws = norm(q).split(/\s+/).filter(Boolean);
+  if (!ws.length) return [];
+  const byWord = ws.map((w) => conceptsFor(data, w));
+  const phrase = conceptsForPhrase(data, q);
+  const cScore = (it, m) => {
+    let best = 0;
+    it.concepts.forEach((c, i) => { const v = m.get(c); if (v) best = Math.max(best, i === 0 ? v : v * 0.6); });
+    return best;
+  };
   const scored = [];
   for (const it of items) {
-    const hay = norm(`${it.name} ${it.brand || ''}`);
-    let score = 0;
-    let ok = true;
-    for (let i = 0; i < words.length; i++) {
-      const w = words[i];
-      const viaConcept = it.concepts.some((c) => byWord[i].has(c));
-      const inName = hay.includes(w);
-      if (!viaConcept && !inName) { ok = false; break; }
-      score += viaConcept ? (it.concepts[0] && byWord[i].has(it.concepts[0]) ? 3 : 2) : 0;
-      score += inName ? (hay.startsWith(w) || hay.includes(' ' + w) ? 2 : 1) : 0;
+    const hay = norm(` ${it.name} ${it.brand || ''} `);
+    const ph = cScore(it, phrase);
+    let score = ph * ws.length;
+    let ok = ph > 0;
+    if (!ok) {
+      ok = true;
+      score = 0;
+      for (let i = 0; i < ws.length; i++) {
+        const viaConcept = cScore(it, byWord[i]);
+        const inName = hay.includes(ws[i]) ? (hay.includes(' ' + ws[i]) ? 3 : 1) : 0;
+        if (!viaConcept && !inName) { ok = false; break; }
+        score += Math.max(viaConcept, inName) + (viaConcept && inName ? 1 : 0);
+      }
     }
     if (ok) scored.push({ it, score });
   }
