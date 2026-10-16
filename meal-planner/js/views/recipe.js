@@ -1,7 +1,7 @@
 import { h, eur, num, icon, factorText, humanDate, nb } from '../ui.js';
 import { state, save, toggleIn } from '../state.js';
 import { formatAmount } from '../core/shopping.js';
-import { photo, thumbPack, showVariants } from './products.js';
+import { photo, thumbPack, showVariants, substitutesOf } from './products.js';
 
 const storeHint = (p) => {
   const best = p?.packs?.find((x) => !x.stale) || p?.packs?.[0];
@@ -43,7 +43,7 @@ export function ingredientList(r, scale, { checkable = true, onToggle } = {}) {
       h('label', { class: 'ing-text', for: checkable ? `ing-${r.id}-${i.key}` : null },
         h('span', { class: 'ing-name' }, i.name_ru, i.optional ? h('span', { class: 'muted' }, ' · по желанию') : null),
         h('span', { class: 'de' }, [i.name_de, !i.basic ? storeHint(products[i.key]) : null].filter(Boolean).join(' · ')),
-        !i.basic && (products[i.key]?.packs || []).length > 1 ? h('button', { class: 'linkbtn small-link', type: 'button', onclick: (e) => { e.preventDefault(); showVariants(products[i.key]); } }, 'варианты в магазинах') : null,
+        (products[i.key]?.packs || []).length > 1 || substitutesOf(i.key).length ? h('button', { class: 'linkbtn small-link', type: 'button', onclick: (e) => { e.preventDefault(); showVariants(products[i.key]); } }, substitutesOf(i.key).length ? 'варианты и замены' : 'варианты в магазинах') : null,
         i.note ? h('span', { class: 'de' }, i.note) : null),
       h('span', { class: 'ing-amount' }, a.main, a.sub ? h('span', { class: 'de' }, a.sub) : null));
   };

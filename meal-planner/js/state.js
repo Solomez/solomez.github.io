@@ -126,12 +126,13 @@ export const targets = () => dailyTargets(state.profile);
 
 export async function loadData() {
   const base = document.querySelector('meta[name="data-base"]')?.content || '../data/';
-  const [r, p, st] = await Promise.all([
+  const [r, p, st, sub] = await Promise.all([
     fetch(base + 'recipes.json').then((x) => x.json()),
     fetch(base + 'products.json').then((x) => x.json()),
     fetch(base + 'storage.json').then((x) => x.json()).catch(() => ({})),
+    fetch(base + 'substitutes.json').then((x) => x.json()).catch(() => ({})),
   ]);
-  state.data = { recipes: r.recipes, products: p.products, meta: r.meta, storage: st };
+  state.data = { recipes: r.recipes, products: p.products, meta: r.meta, storage: st, substitutes: sub };
   state.recipeMap = new Map(r.recipes.map((x) => [x.id, x]));
   // план мог ссылаться на удалённый рецепт — убираем такие приготовления
   if (state.plan) state.plan.batches = state.plan.batches.filter((b) => state.recipeMap.has(b.recipeId));

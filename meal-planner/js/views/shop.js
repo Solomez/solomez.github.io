@@ -3,7 +3,7 @@ import { state, save, IS_ARTIFACT } from '../state.js';
 import { buildShoppingList, formatAmount, formatPack, chooseOffer } from '../core/shopping.js';
 import { planTrips, buyAheadDays } from '../core/trips.js';
 import { shoppingToText } from '../core/export.js';
-import { photo, thumbPack, showVariants, storageOf, storageChip, PLACES } from './products.js';
+import { photo, thumbPack, showVariants, showAlternatives, substitutesOf, storageOf, storageChip, PLACES } from './products.js';
 import { remainingPlan, todayIndex, dayDate, fmtDate, weekdayIndex } from '../core/calendar.js';
 import { MEALS } from '../core/planner.js';
 
@@ -174,17 +174,32 @@ function renderTrips(root, { list, listPlan, plan, now, products, checked, toggl
 
 function renderBasics(root, list, checked, toggle) {
   if (list.basics.length) {
+    const products = state.data.products;
     root.append(h('div', { class: 'group-head' }, h('h2', null, 'Базовые продукты'), h('span', { class: 'muted' }, 'один раз')));
     root.append(h('p', { class: 'muted', style: { marginTop: 0 } }, `Служат несколько недель. Отметьте, что уже есть дома. Всё с нуля — ${eur(list.basicsTotal)}.`));
     root.append(h('ul', { class: 'shop-list' }, list.basics.map((it) => {
       const k = 'basic:' + it.key;
-      return h('li', { class: 'shop-item' + (checked[k] ? ' done' : '') },
+      const pr = products[it.key];
+      const pack = it.offer?.pack;
+      return h('li', { class: 'shop-item with-thumb' + (checked[k] ? ' done' : '') },
         h('input', { type: 'checkbox', id: `sh-${k}`, checked: !!checked[k], onchange: (e) => toggle(k, e.target.checked) }),
+        photo(pr, pack?.image ? pack : thumbPack(pr), { label: it.name_ru }),
         h('label', { for: `sh-${k}` }, h('span', { class: 'name' }, it.name_ru),
-          h('span', { class: 'sub' }, [it.name_de_generic || it.name_de, it.offer ? `${it.offer.pack.store}: ${it.offer.pack.name_de}` : null].filter(Boolean).join(' · '))),
-        h('span', { class: 'price' }, it.offer ? eur(it.offer.pack.price_eur) : '—'));
+          h('span', { class: 'sub' }, [it.name_de_generic || it.name_de, pack ? `${pack.store}: ${pack.name_de}` : null].filter(Boolean).join(' · '))),
+        h('span', { class: 'price' }, pack ? eur(pack.price_eur) : '—'),
+        altLinks(pr, { pack }));
     })));
   }
+}
+
+// «N вариантов в магазинах» и «если нет» под товаром
+function altLinks(product, { pack, needGrams, before } = {}) {
+  const nPacks = (product?.packs || []).filter((p) => p.store !== 'любой').length;
+  const hasAlt = pack && pack.store !== 'любой' && (substitutesOf(product.key).length || (product.packs || []).some((p) => p !== pack && p.store === pack.store));
+  if (!before && nPacks < 2 && !hasAlt) return null;
+  return h('div', { class: 'item-links' }, before || null,
+    nPacks > 1 ? h('button', { class: 'uses-toggle linkbtn', onclick: () => showVariants(product, { needGrams }) }, `${nPacks} ${plural(nPacks, 'вариант', 'варианта', 'вариантов')} в магазинах`) : null,
+    hasAlt ? h('button', { class: 'uses-toggle linkbtn', onclick: () => showAlternatives(product, { store: pack.store, needGrams, chosen: pack }) }, 'если нет') : null);
 }
 
 const DAYS_ACC = ['понедельник', 'вторник', 'среду', 'четверг', 'пятницу', 'субботу', 'воскресенье'];
@@ -226,8 +241,6 @@ function itemRow(it, products, isChecked, onToggle, byStore, redraw, extra = {})
   if (o?.pack.stale) flags.push('цена устарела');
   const open = ui.openUses === it.key;
   const id = `sh-${it.key}`;
-  const variants = () => showVariants(products[it.key], { needGrams: it.needGrams });
-  const nPacks = (products[it.key]?.packs || []).filter((p) => p.store !== 'любой').length;
   return h('li', { class: 'shop-item with-thumb' + (isChecked ? ' done' : '') },
     h('input', { type: 'checkbox', id, checked: isChecked, onchange: (e) => onToggle(e.target.checked) }),
     photo(products[it.key], o?.pack?.image ? o.pack : thumbPack(products[it.key]), { label: it.name_ru }),
@@ -237,10 +250,9 @@ function itemRow(it, products, isChecked, onToggle, byStore, redraw, extra = {})
       extra.place ? h('span', null, storageChip(it.key, extra.place)) : null,
       extra.note ? h('span', { class: 'freeze-note' }, extra.note) : null),
     h('span', { class: 'price' }, o ? eur(o.cost) : '—'),
-    h('div', { class: 'item-links' },
-      h('button', { class: 'uses-toggle linkbtn', 'aria-expanded': String(open), onclick: () => { ui.openUses = open ? null : it.key; redraw(); } },
-        `нужно ${formatAmount(it.key, it.needGrams, products[it.key])} · ${it.uses.length === 1 ? '1 блюдо' : `${it.uses.length} блюд${it.uses.length < 5 ? 'а' : ''}`}`),
-      nPacks > 1 ? h('button', { class: 'uses-toggle linkbtn', onclick: variants }, `${nPacks} ${plural(nPacks, 'вариант', 'варианта', 'вариантов')} в магазинах`) : null),
+    altLinks(products[it.key], { pack: o?.pack, needGrams: it.needGrams,
+      before: h('button', { class: 'uses-toggle linkbtn', 'aria-expanded': String(open), onclick: () => { ui.openUses = open ? null : it.key; redraw(); } },
+        `нужно ${formatAmount(it.key, it.needGrams, products[it.key])} · ${it.uses.length === 1 ? '1 блюдо' : `${it.uses.length} блюд${it.uses.length < 5 ? 'а' : ''}`}`) }),
     open ? h('ul', { class: 'uses muted' }, it.uses.map((u) => h('li', null, `${u.title} — ${num(u.grams)} г`))) : null);
 }
 

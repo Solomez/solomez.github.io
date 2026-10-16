@@ -140,7 +140,65 @@ export function showVariants(product, { needGrams } = {}) {
           offer ? h('span', { class: 'muted' }, `на неделю: ${formatPack(offer)} — ${eur(offer.cost)}`) : null,
           p.url && /^https?:/.test(p.url) ? h('a', { href: p.url, target: '_blank', rel: 'noopener', class: 'variant-link' }, 'Открыть в магазине') : null));
     })),
+    substituteList(product, best?.store, needGrams, 3),
     !SHOW_PHOTOS ? h('p', { class: 'muted' }, 'Нажмите на значок камеры — фото товара откроется на весь экран в новой вкладке.') : null,
     h('p', { class: 'muted small-print' }, 'Фото — с сайтов магазинов; упаковка в конкретном магазине может отличаться.'));
   sheet(product.name_ru || 'Варианты', content);
+}
+
+// ---------- Если нет в наличии ----------
+const productOf = (key) => state.data?.products?.[key] || null;
+export const substitutesOf = (key) => (state.data?.substitutes?.[key] || []).filter(([k]) => productOf(k)?.packs?.length);
+
+// Лучшая упаковка продукта в магазине (с учётом нужного количества); null — там его нет
+function packIn(product, store, needGrams) {
+  const packs = sortedPacks(product).filter((p) => p.store === store);
+  if (!packs.length) return null;
+  return needGrams ? chooseOffer({ ...product, packs }, needGrams)?.pack : packs[0];
+}
+
+function altRow(product, p, { note, needGrams, best, otherStore } = {}) {
+  const offer = needGrams ? chooseOffer({ packs: [p] }, needGrams) : null;
+  return h('li', { class: 'variant' + (best ? ' best' : '') },
+    photo(product, p, { cls: 'thumb lg', label: product.name_ru }),
+    h('div', { class: 'variant-main' },
+      h('span', { class: 'variant-store' }, product.name_ru, otherStore ? h('span', { class: 'badge', style: { marginLeft: '6px' } }, p.store) : null),
+      note ? h('span', { class: 'alt-note' }, note) : null,
+      h('span', { class: 'variant-name' }, p.name_de),
+      h('span', { class: 'muted' }, `${unitText(p)} · ${eur(p.price_eur)} · ${eur(p.eur_per_kg)}/кг`),
+      offer ? h('span', { class: 'muted' }, `на неделю: ${formatPack(offer)} — ${eur(offer.cost)}`) : null));
+}
+
+// Замены другим продуктом: сначала те, что есть в этом же магазине, затем — где их найти
+function substituteList(product, store, needGrams, limit = 99) {
+  const subs = substitutesOf(product.key).slice(0, limit);
+  if (!subs.length) return null;
+  return h('section', { class: 'alt-section' },
+    h('div', { class: 'eyebrow' }, 'Если нет в наличии — чем заменить'),
+    h('ul', { class: 'variants' }, subs.map(([k, note]) => {
+      const sp = productOf(k);
+      const here = store ? packIn(sp, store, needGrams) : null;
+      const p = here || packIn(sp, sortedPacks(sp)[0]?.store, needGrams) || bestPack(sp);
+      return altRow(sp, p, { note, needGrams, otherStore: !here });
+    })));
+}
+
+// «Нет на полке»: другие упаковки того же продукта в этом магазине, затем замены с пояснением
+export function showAlternatives(product, { store, needGrams, chosen } = {}) {
+  if (!product) return;
+  store ||= (needGrams ? chooseOffer(product, needGrams)?.pack : bestPack(product))?.store;
+  const same = sortedPacks(product).filter((p) => p.store === store && p !== chosen && p.name_de !== chosen?.name_de);
+  const subs = substituteList(product, store, needGrams);
+  let close;
+  const content = h('div', null,
+    h('p', { class: 'muted', style: { marginTop: 0 } }, store ? `Нет на полке в ${store}? Вот что взять вместо — лучшие варианты сверху.` : 'Что взять вместо — лучшие варианты сверху.'),
+    same.length ? h('section', { class: 'alt-section' },
+      h('div', { class: 'eyebrow' }, `Тот же продукт в ${store}, другая упаковка`),
+      h('ul', { class: 'variants' }, same.map((p) => altRow(product, p, { needGrams })))) : null,
+    subs,
+    !same.length && !subs ? h('p', null, 'Замены нет: этот продукт лучше купить в другом магазине.') : null,
+    (product.packs || []).some((p) => p.store !== store && p.store !== 'любой')
+      ? h('button', { class: 'btn', style: { marginTop: '12px' }, onclick: () => { close?.(); showVariants(product, { needGrams }); } }, 'Этот же продукт в других магазинах') : null,
+    h('p', { class: 'muted small-print' }, 'Количество замены — как в рецепте, по весу. Пояснения — чем замена отличается при готовке.'));
+  close = sheet(`Если нет: ${product.name_ru}`, content);
 }
