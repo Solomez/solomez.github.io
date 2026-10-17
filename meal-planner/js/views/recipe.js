@@ -8,6 +8,7 @@ import { difficulty } from '../core/difficulty.js';
 import { missingFromHome } from '../core/planner.js';
 import { homeForPlanning } from './money.js';
 import { editCustomProduct } from './builder.js';
+import { putInPlan } from './library.js';
 
 const storeHint = (p) => {
   const best = p?.packs?.find((x) => !x.stale) || p?.packs?.[0];
@@ -115,6 +116,7 @@ export function renderRecipe(root, rerender, id, params) {
         onclick: () => { const on = toggleIn('favorites', r.id); rerender({ keepScroll: true }); toast(on ? 'В избранном — будет чаще в новых неделях' : 'Убрано из избранного'); } }, icon(fav ? 'starOn' : 'star'), fav ? 'В избранном' : 'В избранное'),
       h('button', { class: 'btn small', 'aria-pressed': String(hidden),
         onclick: () => hideToggle(r, rerender) }, icon(hidden ? 'eye' : 'eyeOff'), hidden ? 'Вернуть' : 'Не предлагать'),
+      state.plan?.batches?.length ? h('button', { class: 'btn small', onclick: () => putInPlan({ recipe: r }, rerender) }, icon('plan'), 'В план') : null,
       r.custom ? h('a', { class: 'btn small', href: `#/builder/${r.id}` }, 'Изменить') : null)));
   root.append(h('h1', null, r.title));
   if (r.title_de) root.append(h('p', { class: 'muted', style: { marginTop: '-4px' } }, r.title_de));

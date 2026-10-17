@@ -5,7 +5,7 @@ import { difficulty } from '../core/difficulty.js';
 import { rankByHome, cookableNow, almostCookable, buySuggestions, runningLow } from '../core/suggest.js';
 import { formatPack, chooseOffer } from '../core/shopping.js';
 import { MEALS, planDays, swapBatch, swapExtra } from '../core/planner.js';
-import { mealPast, dayName, dayDate } from '../core/calendar.js';
+import { mealPast, dayName, dayDate, todayIndex } from '../core/calendar.js';
 import { homeForPlanning } from './money.js';
 import { cartEntryOf } from './catalog.js';
 import { hideToggle } from './recipe.js';
@@ -259,10 +259,16 @@ export function putInPlan(x, rerender) {
   const type = x.recipe.meal_type || 'main';
   const days = planDays(plan, state.recipeMap);
   const slots = [];
+  const today = todayIndex(plan, now);
+  // свой завтрак или перекус можно поставить и на завтрак, и на перекус
+  const anyExtra = x.recipe.custom && type !== 'main';
   days.forEach((d, i) => {
-    const entries = type === 'main' ? [['dinner', d.dinner], ['lunch', d.lunch]] : type === 'breakfast' ? [['breakfast', d.breakfast]] : d.snacks.map((e) => ['snack', e]);
+    const entries = type === 'main' ? [['dinner', d.dinner], ['lunch', d.lunch]]
+      : anyExtra ? [['breakfast', d.breakfast], ...d.snacks.map((e) => ['snack', e])]
+        : type === 'breakfast' ? [['breakfast', d.breakfast]] : d.snacks.map((e) => ['snack', e]);
     for (const [meal, e] of entries) {
-      if (!e?.recipe || e.recipe.id === x.recipe.id || mealPast(plan, i, meal, now)) continue;
+      // прошедшее — только сегодняшнее («съел своё вместо предложенного»)
+      if (!e?.recipe || e.recipe.id === x.recipe.id || (mealPast(plan, i, meal, now) && i !== today) || i < today) continue;
       if (e.batch && e.leftover) continue; // обед из второй порции меняется вместе с ужином
       slots.push({ day: i, meal, e });
     }

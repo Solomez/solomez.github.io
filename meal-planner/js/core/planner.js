@@ -363,7 +363,8 @@ export function swapExtra(plan, extraId, recipe, oldRecipe) {
   return {
     ...plan,
     edited: [...new Set([...(plan.edited || []), extraId])], // ручная замена завтрака или перекуса — «досоставить» её не тронет
-    extras: plan.extras.map((e) => (e.id === extraId ? { ...e, recipeId: recipe.id, factor: swapFactor(oldRecipe, e.factor, recipe) } : e)),
+    // свой вариант — ровно в той порции, что собрал человек
+    extras: plan.extras.map((e) => (e.id === extraId ? { ...e, recipeId: recipe.id, factor: recipe.custom ? 1 : swapFactor(oldRecipe, e.factor, recipe) } : e)),
   };
 }
 
@@ -415,7 +416,7 @@ export function swapBatch(plan, batchId, recipe, targets) {
   return {
     ...plan,
     edited: [...new Set([...(plan.edited || []), batchId])], // ручная правка — «досоставить» её не тронет
-    batches: plan.batches.map((b) => (b.id === batchId ? { ...b, recipeId: recipe.id, factor: portionFactor(recipe, targets) } : b)),
+    batches: plan.batches.map((b) => (b.id === batchId ? { ...b, recipeId: recipe.id, factor: recipe.custom ? 1 : portionFactor(recipe, targets) } : b)),
   };
 }
 

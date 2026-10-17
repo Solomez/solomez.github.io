@@ -190,11 +190,14 @@ function swapMenu(e, rerender) {
       const factor = swapFactor(state.recipeMap.get(e.extra.recipeId), e.extra.factor, x);
       return { recipe: x, factor, deltaCost: weekDelta(state.plan, swapExtra(state.plan, e.extra.id, x, state.recipeMap.get(e.extra.recipeId))) };
     }));
-  if (!alts.length) return toast('Нет подходящих замен');
+  // свои варианты — всегда сверху, независимо от сходства по КБЖУ, типа (завтрак ↔ перекус) и «предлагать в плане»
+  const mineList = state.data.recipes.filter((x) => x.custom && x.id !== r.id && (e.batch ? x.meal_type === 'main' : x.meal_type !== 'main'))
+    .map((x) => ({ recipe: x, factor: 1, deltaCost: e.batch ? weekDelta(state.plan, swapBatch(state.plan, e.batch.id, x, targets())) : weekDelta(state.plan, swapExtra(state.plan, e.extra.id, x, state.recipeMap.get(e.extra.recipeId))) }));
+  const mineIds = new Set(mineList.map((a) => a.recipe.id));
+  const others = alts.filter((a) => !mineIds.has(a.recipe.id));
+  if (!others.length && !mineList.length) return toast('Нет подходящих замен');
   const curP = r.per_serving.protein * e.factor;
-  close = sheet(`Заменить: ${r.title}`, h('div', { class: 'stack' },
-    h('p', { class: 'muted', style: { margin: 0 } }, 'Справа — как изменится сумма к оплате за неделю. В скобках — белок за этот приём пищи.'),
-    alts.map((a) => h('button', { class: 'alt', onclick: () => {
+  const altBtn = (a) => h('button', { class: 'alt', onclick: () => {
       close();
       if (e.batch) doSwap(e.batch.id, a.recipe, rerender);
       else { const prev = state.plan; state.plan = swapExtra(state.plan, e.extra.id, a.recipe, state.recipeMap.get(e.extra.recipeId)); const d = weekDelta(prev, state.plan); save(); rerender({ keepScroll: true }); toast(`${a.recipe.title} · неделя ${signed(d)}`, { label: 'Отменить', onClick: () => { state.plan = prev; save(); rerender({ keepScroll: true }); } }); }
@@ -203,7 +206,12 @@ function swapMenu(e, rerender) {
         h('span', { class: 'alt-title' }, a.recipe.title),
         a.fromHome ? h('span', { class: 'have-line small' }, 'всё есть дома') : null,
         h('span', { class: 'muted' }, `${difficulty(a.recipe).short} · ${a.recipe.time.total} мин · ${num(a.recipe.per_serving.protein * a.factor)} г белка (${(() => { const d = Math.round(a.recipe.per_serving.protein * a.factor - curP); return d === 0 ? 'так же' : (d > 0 ? '+' : '−') + Math.abs(d) + ' г'; })()}) · ${num(a.recipe.per_serving.kcal * a.factor)} ккал`)),
-      h('span', { class: 'muted nowrap' }, signed(a.deltaCost))))));
+      h('span', { class: 'muted nowrap' }, signed(a.deltaCost)));
+  close = sheet(`Заменить: ${r.title}`, h('div', { class: 'stack' },
+    h('p', { class: 'muted', style: { margin: 0 } }, 'Справа — как изменится сумма к оплате за неделю. В скобках — белок за этот приём пищи.'),
+    h('div', { class: 'eyebrow' }, 'Мои варианты'),
+    mineList.length ? mineList.map(altBtn) : h('p', { class: 'muted', style: { margin: 0 } }, 'Своих пока нет. ', h('a', { href: `#/builder?type=${e.batch ? 'main' : e.meal === 'breakfast' ? 'breakfast' : 'snack'}`, onclick: () => close() }, 'Собрать свой')),
+    others.length ? [h('div', { class: 'eyebrow', style: { marginTop: '6px' } }, 'Похожие'), others.map(altBtn)] : null));
 }
 
 // «Ещё»: рецепт, готовка, этот приём пищи (вне дома, перенос), отношение к блюду (избранное, не предлагать)
@@ -482,7 +490,7 @@ function mealRow(e, rerender, past) {
         'aria-label': `${done ? 'Снять отметку' : cookLabel ? 'Приготовил' : 'Съел'}: ${r.title}`, onclick: () => markDone(e, rerender) },
         icon('check'), done ? (cookLabel ? 'Приготовлено' : 'Съедено') : (cookLabel ? 'Приготовил' : 'Съел')) : null,
       e.batch && !e.leftover && !past && !skip && !done ? h('a', { class: 'btn small', href: `#/cook/${r.id}?f=${e.factor}&p=${e.portions}` }, icon('pot'), 'Готовить') : null,
-      past || done ? null : h('button', { class: 'btn small', 'aria-label': `Заменить: ${r.title}`, // прошедшее не заменяют (UX-ревью Н11)
+      (past && e.day !== todayIndex(state.plan, new Date())) || done ? null : h('button', { class: 'btn small', 'aria-label': `Заменить: ${r.title}`, // прошедшее не заменяют (UX-ревью Н11)
         onclick: () => swapMenu(e, rerender) }, icon('swap'), 'Заменить'),
       h('button', { class: 'btn small', 'aria-label': `Ещё: ${r.title}`, onclick: () => mealMenu(e, rerender) }, icon('more'), 'Ещё')));
 }
