@@ -4,6 +4,11 @@ import { formatAmount, chooseOffer, buildShoppingList } from '../core/shopping.j
 import { scaleMeasure, scaleWords, packShare } from '../core/amounts.js';
 import { photo, thumbPack, showVariants, substitutesOf } from './products.js';
 import { missingTools, stepHints, has } from '../core/equipment.js';
+import { difficulty } from '../core/difficulty.js';
+import { missingFromHome } from '../core/planner.js';
+import { homeForPlanning } from './money.js';
+import { editCustomProduct } from './builder.js';
+import { putInPlan } from './library.js';
 
 const storeHint = (p) => {
   const best = p?.packs?.find((x) => !x.stale) || p?.packs?.[0];
@@ -110,7 +115,9 @@ export function renderRecipe(root, rerender, id, params) {
       h('button', { class: 'btn small', 'aria-pressed': String(fav), title: 'Избранное чаще попадает в новые недели',
         onclick: () => { const on = toggleIn('favorites', r.id); rerender({ keepScroll: true }); toast(on ? 'В избранном — будет чаще в новых неделях' : 'Убрано из избранного'); } }, icon(fav ? 'starOn' : 'star'), fav ? 'В избранном' : 'В избранное'),
       h('button', { class: 'btn small', 'aria-pressed': String(hidden),
-        onclick: () => hideToggle(r, rerender) }, icon(hidden ? 'eye' : 'eyeOff'), hidden ? 'Вернуть' : 'Не предлагать'))));
+        onclick: () => hideToggle(r, rerender) }, icon(hidden ? 'eye' : 'eyeOff'), hidden ? 'Вернуть' : 'Не предлагать'),
+      state.plan?.batches?.length ? h('button', { class: 'btn small', onclick: () => putInPlan({ recipe: r }, rerender) }, icon('plan'), 'В план') : null,
+      r.custom ? h('a', { class: 'btn small', href: `#/builder/${r.id}` }, 'Изменить') : null)));
   root.append(h('h1', null, r.title));
   if (r.title_de) root.append(h('p', { class: 'muted', style: { marginTop: '-4px' } }, r.title_de));
   root.append(h('p', null, r.description));
@@ -141,6 +148,24 @@ export function renderRecipe(root, rerender, id, params) {
         h('span', null, h('i', { class: 'c' }), `Углеводы ${num(ps.carbs * factor)} г`))),
     h('p', { class: 'muted small-print' }, `На одну порцию для одного человека${Math.abs(factor - 1) > 0.01 ? ` — на ${Math.round(Math.abs(factor - 1) * 100)} % ${factor < 1 ? 'меньше' : 'больше'} базовой, под вашу норму` : ''}. Цены от ${humanDate(state.data.meta.price_date)}, состав — по этикеткам Billa или справочным таблицам.`)));
 
+  // Свой вариант, у продукта которого нет КБЖУ: калории занижены — предлагаем указать
+  if (r.custom && r.unknownKeys?.length) {
+    root.append(h('p', { class: 'notice' }, 'Калории и белок без учёта: ',
+      r.unknownKeys.map((k, j) => [j ? ', ' : '', h('button', { class: 'linkbtn', onclick: () => editCustomProduct(k, () => rerender({ keepScroll: true })) }, `${state.data.products[k]?.name_ru} — указать КБЖУ`)]),
+      '. ', h('a', { href: `#/builder/${r.id}` }, 'Изменить вариант')));
+  }
+
+  // Сложность и что есть дома
+  const d = difficulty(r);
+  const { home } = homeForPlanning();
+  const lacking = missingFromHome(r, factor, portions, home);
+  root.append(h('section', { class: 'diff-box' },
+    h('div', null, h('b', null, `Сложность: ${d.label.toLowerCase()}`), d.reasons.length ? h('span', { class: 'muted' }, ` — ${d.reasons.join(', ')}`) : null),
+    d.tip ? h('div', { class: 'muted small' }, d.tip) : null,
+    lacking.length
+      ? h('div', { class: 'need-line small' }, `Дома не хватает: ${lacking.map((m) => state.data.products[m.key]?.name_ru?.toLowerCase() || m.key).join(', ')}`)
+      : h('div', { class: 'have-line small' }, 'Всё нужное есть дома')));
+
   root.append(h('div', { class: 'no-print', style: { margin: '16px 0 4px' } },
     h('a', { class: 'btn primary wide', href: `#/cook/${r.id}?f=${factor}&p=${portions}` }, icon('pot'), 'Готовить по шагам')));
 
@@ -166,7 +191,7 @@ export function renderRecipe(root, rerender, id, params) {
 
   const eq = state.prefs.equipment;
   const missing = missingTools(r, eq);
-  root.append(h('h2', null, 'Посуда'));
+  if (r.equipment?.length || missing.length) root.append(h('h2', null, 'Посуда'));
   if (missing.length) root.append(h('p', { class: 'notice' }, `Для этого блюда нужно то, чего у вас нет: ${missing.join(', ').toLowerCase()}. В план оно не попадает. `, h('a', { href: '#/profile' }, 'Изменить в профиле')));
   root.append(h('div', { class: 'chips' }, r.equipment.map((e) => h('span', { class: 'chip static' }, e))));
 
@@ -178,8 +203,10 @@ export function renderRecipe(root, rerender, id, params) {
       s.heat ? h('span', { class: 'badge' }, `огонь: ${s.heat}`) : null,
       s.timer_min ? h('span', { class: 'badge accent' }, `${num(s.timer_min, 1)} мин`) : null) : null))));
 
-  root.append(h('h2', null, 'Частые ошибки'));
-  root.append(h('ul', { class: 'clean' }, r.mistakes.map((m) => h('li', null, m))));
+  if (r.mistakes?.length) {
+    root.append(h('h2', null, 'Частые ошибки'));
+    root.append(h('ul', { class: 'clean' }, r.mistakes.map((m) => h('li', null, m))));
+  }
 
   const st = r.storage || {};
   root.append(h('h2', null, 'Хранение и разогрев'));

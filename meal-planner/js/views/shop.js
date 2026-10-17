@@ -45,7 +45,7 @@ export function renderShop(root, rerender) {
   const swaps = (state.swaps[state.plan.id] = state.swaps[state.plan.id] || {});
   // отметка в походе: заодно запоминаем порядок отделов в этом магазине
   const toggle = (k, v, store) => {
-    checked[k] = v;
+    checked[k] = v ? Date.now() : false; // время покупки — для учёта запасов дома
     if (v) ui.justChecked.add(k);
     if (v && store && !k.startsWith('basic:')) learnStep(state.routes, store, zoneOfKey(k, store));
     save();
@@ -238,7 +238,7 @@ function markUnavailable(key, store, ctx, pack) {
 // here — магазин, где стоите (замена могла быть товаром из другой сети, но куплена здесь); onUndo — что ещё отменить
 function recordSwap(key, store, choice, ctx, onUndo) {
   ctx.swaps[key] = { ...choice, store: choice.store || store, here: store, at: Date.now() };
-  ctx.checked[key] = true;
+  ctx.checked[key] = Date.now();
   save();
   ctx.redraw();
   toast(`Отмечено: вместо «${ctx.products[key]?.name_ru}» — ${choice.name}`, { label: 'Отменить', onClick: () => { delete ctx.swaps[key]; delete ctx.checked[key]; onUndo?.(); save(); ctx.redraw(); } });

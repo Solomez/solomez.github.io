@@ -617,6 +617,28 @@ input.grams { width: 84px; padding: 8px 8px; }
   .cat-item .thumb.lg { width: 60px; height: 60px; }
 }
 
+/* ---------- Запасы дома, подбор «из дома / с покупками», сложность ---------- */
+.small { font-size: var(--fs-sm); }
+.home-summary { display: grid; gap: 8px; padding: 12px 14px; margin: 4px 0 12px; border-radius: var(--radius-sm); background: var(--accent-soft); }
+.stock-amount { font-weight: 500; }
+.stock-row.open { background: var(--surface-2); border-radius: var(--radius-sm); padding-inline: 8px; }
+.level-picker { display: grid; gap: 8px; width: 100%; }
+.level-picker .chip { min-height: var(--tap); }
+.source-switch { margin: 0 0 12px; }
+.source-switch .seg button { padding: 8px 12px; min-height: var(--tap); }
+.source-note { margin: 0 0 12px; }
+.diff { font-size: var(--fs-xs); padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); display: inline-block; }
+.diff.d-none, .diff.d-easy { background: var(--accent-soft); color: var(--text); }
+.diff.d-hard { background: var(--warn-soft); color: var(--warn); }
+.diff-box { display: grid; gap: 4px; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--surface-2); margin: 10px 0; }
+.buy-list { list-style: none; padding: 0; margin: 0; }
+.buy-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: center; }
+.buy-item .buy-why { grid-column: 1 / -1; }
+.need-line { color: var(--warn); }
+.have-line { color: var(--c-accent-strong); }
+.builder-cta { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 10px 12px; margin: 0 0 12px; border-radius: var(--radius-sm); background: var(--accent-soft); }
+.builder-sum { display: grid; gap: 6px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface-2); position: sticky; top: 0; z-index: 2; }
+
 /* ===== UI, круг 1 (research/ui: audit.md, variants.md, comparison.html) — основа и выбранные варианты ===== */
 /* Основа: вторичный текст 15 px, основной 16; рамки элементов управления 3:1; касание ≥ 44; выбранное — не только цветом; состояния */
 body { font-size: var(--fs-md); line-height: var(--lh-body); }
