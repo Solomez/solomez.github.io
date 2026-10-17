@@ -443,8 +443,10 @@ function compactRow(it, products, isChecked, onToggle, redraw, extra = {}) {
   const store = extra.store;
   const swap = extra.ctx?.swaps?.[it.key];
   const id = `sh-${it.key}`;
+  // фото — отдельная кнопка (на весь экран); касание по остальной строке отмечает купленное
   return h('li', { class: 'shop-item compact' + (isChecked ? ' done' : '') },
     h('input', { type: 'checkbox', id, checked: isChecked, onchange: (e) => onToggle(e.target.checked) }),
+    photo(products[it.key], o?.pack?.image ? o.pack : thumbPack(products[it.key]), { cls: 'thumb sm', label: it.name_ru }),
     h('label', { for: id, class: 'compact-main' },
       h('span', { class: 'name' }, it.name_ru, o ? h('span', { class: 'qty' }, formatPack(o)) : null),
       h('span', { class: 'sub', lang: 'de' }, o ? o.pack.name_de : 'нет цены'),

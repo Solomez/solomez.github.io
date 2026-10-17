@@ -104,7 +104,12 @@ small, .muted { color: var(--muted); }
 .muted { font-size: var(--fs-sm); }
 [hidden] { display: none !important; }
 /* Режим магазина: компактная строка — вся строка отмечает купленное (зона касания ≥ 56 px) */
-.shop-item.compact { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto 44px; align-items: center; gap: 8px; min-height: 56px; padding: 8px 0; }
+.shop-item.compact { display: grid; grid-template-columns: 28px 44px minmax(0, 1fr) auto 44px; align-items: center; gap: 8px; min-height: 56px; padding: 8px 0; }
+.shop-item.compact > .thumb.empty { width: 40px; height: 40px; justify-self: center; }
+/* узкий телефон: отступы теснее — названию больше места; касаемые области фото и «⋯» остаются 44 px */
+@media (max-width: 380px) {
+  .shop-item.compact { grid-template-columns: 26px 44px minmax(0, 1fr) auto 44px; gap: 5px; }
+}
 .shop-item.compact input[type=checkbox] { width: 24px; height: 24px; margin: 0; }
 .shop-item.compact .compact-main { display: flex; flex-direction: column; min-width: 0; padding-block: 8px; cursor: pointer; }
 .shop-item.compact .item-more { width: 44px; min-height: 44px; }
