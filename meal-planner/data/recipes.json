@@ -1,7 +1,7 @@
 {
  "meta": {
   "generated": "2026-10-17",
-  "price_date": "2026-10-16",
+  "price_date": "2026-10-17",
   "departments": [
    {
     "id": "produce",
@@ -22660,7 +22660,7 @@
    "notes": "Пудинг продаётся в холодильнике рядом с йогуртами и десертами.",
    "tools": [],
    "per_serving": {
-    "cost": 1.19,
+    "cost": 1.68,
     "kcal": 257,
     "protein": 21.3,
     "fat": 3.4,
@@ -22671,8 +22671,8 @@
      "key": "protein_pudding",
      "name_ru": "Протеиновый пудинг",
      "grams_per_serving": 200.0,
-     "cost_per_serving": 1.0,
-     "store": "Penny",
+     "cost_per_serving": 1.49,
+     "store": "Billa",
      "is_estimate": false
     },
     {
@@ -23797,7 +23797,7 @@
    "notes": "",
    "tools": [],
    "per_serving": {
-    "cost": 0.36,
+    "cost": 0.38,
     "kcal": 211,
     "protein": 5.8,
     "fat": 10.9,
@@ -23808,8 +23808,8 @@
      "key": "apple",
      "name_ru": "Яблоко",
      "grams_per_serving": 150.0,
-     "cost_per_serving": 0.224,
-     "store": "Penny",
+     "cost_per_serving": 0.249,
+     "store": "Billa",
      "is_estimate": false
     },
     {
@@ -23929,7 +23929,7 @@
    "notes": "",
    "tools": [],
    "per_serving": {
-    "cost": 0.37,
+    "cost": 0.39,
     "kcal": 267,
     "protein": 8.2,
     "fat": 15.9,
@@ -23964,8 +23964,8 @@
      "key": "apple",
      "name_ru": "Яблоко",
      "grams_per_serving": 150.0,
-     "cost_per_serving": 0.224,
-     "store": "Penny",
+     "cost_per_serving": 0.249,
+     "store": "Billa",
      "is_estimate": false
     }
    ],
@@ -24838,7 +24838,7 @@
    "notes": "",
    "tools": [],
    "per_serving": {
-    "cost": 0.46,
+    "cost": 0.48,
     "kcal": 188,
     "protein": 8.0,
     "fat": 9.3,
@@ -24865,8 +24865,8 @@
      "key": "apple",
      "name_ru": "Яблоко",
      "grams_per_serving": 150.0,
-     "cost_per_serving": 0.224,
-     "store": "Penny",
+     "cost_per_serving": 0.249,
+     "store": "Billa",
      "is_estimate": false
     },
     {
@@ -25805,7 +25805,7 @@
    "notes": "",
    "tools": [],
    "per_serving": {
-    "cost": 1.41,
+    "cost": 1.43,
     "kcal": 322,
     "protein": 34.4,
     "fat": 3.3,
@@ -25840,8 +25840,8 @@
      "key": "apple",
      "name_ru": "Яблоко",
      "grams_per_serving": 150.0,
-     "cost_per_serving": 0.224,
-     "store": "Penny",
+     "cost_per_serving": 0.249,
+     "store": "Billa",
      "is_estimate": false
     },
     {
