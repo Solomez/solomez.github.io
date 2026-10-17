@@ -88,7 +88,7 @@ export function save() {
 }
 
 // ---------- Синхронизация: облако — claude.ai (в опубликованной версии) или Supabase (на своём сайте) ----------
-// backend: { name, pull(): Promise<данные | null>, push(данные): Promise<void> }
+// backend: { name, pull(ifChanged?): Promise<данные | null | undefined — «не менялось»>, push(данные): Promise<void> }
 let backend = null;
 let timer = null;
 let writing = false;
@@ -162,14 +162,15 @@ export async function attachBackend(b, onChange) {
 }
 export function detachBackend() { backend = null; state.sync = 'local'; }
 
-// Вернулись в приложение (или прошло полминуты) — проверить, не менялось ли что-то на другом устройстве
+// Вернулись в приложение (или прошло несколько минут) — проверить, не менялось ли что-то на другом устройстве
 let pulling = false;
 export async function pullNow(onChange) {
   if (!backend || pulling || writing) return;
   pulling = true;
   try {
-    const remote = await backend.pull();
+    const remote = await backend.pull(true);
     state.lastSync = Date.now();
+    if (remote === undefined) return; // на сервере то же, что мы уже видели
     if (mergeRemote(remote)) onChange(true);
     if (newerHere(remote)) { dirty = true; flushCloud(); } // здесь есть что-то новее, чем на сервере
   } catch { /* сеть — попробуем позже */ } finally { pulling = false; }

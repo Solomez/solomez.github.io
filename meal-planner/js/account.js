@@ -105,24 +105,34 @@ async function loadUser() {
   state.account = { email: u.email };
 }
 
+// Время последней известной версии строки на сервере (как его вернул сервер) — чтобы не скачивать данные без изменений
+let knownAt = null;
 const backend = {
   name: 'supabase',
-  async pull() {
+  // ifChanged: вернуть undefined, если строка не менялась с прошлого раза (ответ — пустой список, без данных)
+  async pull(ifChanged) {
     const t = await token();
-    const rows = await api(`/rest/v1/app_state?select=data&user_id=eq.${session.user.id}`, { token: t });
+    const since = ifChanged && knownAt ? `&updated_at=neq.${encodeURIComponent(knownAt)}` : '';
+    const rows = await api(`/rest/v1/app_state?select=data,updated_at&user_id=eq.${session.user.id}${since}`, { token: t });
+    if (since && !rows?.length) return undefined;
+    knownAt = rows?.[0]?.updated_at || null;
     return rows?.[0]?.data || null;
   },
   async push(data) {
     const t = await token();
-    await api('/rest/v1/app_state?on_conflict=user_id', {
-      method: 'POST', token: t, headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+    const rows = await api('/rest/v1/app_state?on_conflict=user_id&select=updated_at', {
+      method: 'POST', token: t, headers: { Prefer: 'resolution=merge-duplicates,return=representation' },
       body: { user_id: session.user.id, data, updated_at: new Date().toISOString() },
     });
+    // своя запись — скачивать её обратно не нужно
+    if (rows?.[0]?.updated_at) knownAt = rows[0].updated_at;
   },
 };
 
+const POLL_MS = 5 * 60000;
 let poll = null;
 let listening = false;
+let lastCheck = 0;
 // После входа (или при запуске, если вход уже был): подключить синхронизацию
 export async function startAccount(onChange) {
   if (!ACCOUNTS_ENABLED || !session) return false;
@@ -132,13 +142,23 @@ export async function startAccount(onChange) {
     if (e.fatal) { onChange(false); return false; }
   }
   state.account = { email: session.user?.email };
+  knownAt = null;
   await attachBackend(backend, onChange);
+  lastCheck = Date.now();
   clearInterval(poll);
-  // изменения с другого устройства: при возврате в приложение и раз в 30 секунд, пока оно открыто
-  poll = setInterval(() => { if (document.visibilityState === 'visible') pullNow(onChange); }, 30000);
+  // изменения с другого устройства: при возврате в приложение (не чаще раза в 5 секунд) и раз в 5 минут, пока оно открыто
+  const check = (minGap) => {
+    if (document.visibilityState !== 'visible' || Date.now() - lastCheck < minGap) return;
+    lastCheck = Date.now();
+    pullNow(onChange);
+  };
+  poll = setInterval(() => check(POLL_MS / 2), POLL_MS);
   if (!listening) {
     listening = true;
-    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') pullNow(onChange); });
+    const back = () => check(5000);
+    document.addEventListener('visibilitychange', back);
+    window.addEventListener('focus', back);
+    window.addEventListener('online', back);
   }
   return true;
 }
@@ -147,6 +167,7 @@ function signOutLocal() {
   session = null;
   writeSession(null);
   state.account = null;
+  knownAt = null;
   clearInterval(poll);
   detachBackend();
 }
