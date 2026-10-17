@@ -120,6 +120,76 @@
   ]
  },
  "products": {
+  "apple": {
+   "key": "apple",
+   "name_ru": "Яблоко",
+   "name_de": "Saftige Äpfel",
+   "department": "produce",
+   "basic": false,
+   "nutrition_per_100g": [
+    56.0,
+    0.5,
+    0.6,
+    11.0
+   ],
+   "packs": [
+    {
+     "store": "Penny",
+     "name_de": "Saftige Äpfel",
+     "brand": "Wunderlinge",
+     "budget_line": true,
+     "pack_size": 2000.0,
+     "pack_unit": "g",
+     "grams": 2000.0,
+     "price_eur": 2.99,
+     "eur_per_kg": 1.495,
+     "url": "https://www.penny.at/produkte/saftige-aepfel-78787718",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/787b77ab-692c-4e25-91f4-697690dc3c7c/78-787718-0196509245-A1jndJ5b.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Clever Apfel rot",
+     "brand": "Clever",
+     "budget_line": true,
+     "pack_size": 2000.0,
+     "pack_unit": "g",
+     "grams": 2000.0,
+     "price_eur": 3.32,
+     "eur_per_kg": 1.66,
+     "url": "https://shop.billa.at/produkte/clever-apfel-rot-0089280",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-89280-1720891767-ZNtLPmR8.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "S-BUDGET Apfel rot Sorte: siehe Etikett 2kg Sack",
+     "brand": "S-BUDGET",
+     "budget_line": true,
+     "pack_size": 2000.0,
+     "pack_unit": "g",
+     "grams": 2000.0,
+     "price_eur": 3.32,
+     "eur_per_kg": 1.66,
+     "url": "https://www.interspar.at/shop/lebensmittel/s-budget-apfel-rot-sorte-siehe-etikett-2kg-sack/p/6725440",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/6725440/dt_main.jpg"
+    }
+   ],
+   "name_de_generic": "Apfel",
+   "name_en": "Apples",
+   "shelf": "fruit",
+   "zone": "produce"
+  },
   "banana": {
    "key": "banana",
    "name_ru": "Банан",
@@ -591,6 +661,59 @@
    "shelf": "spices",
    "zone": "oils"
   },
+  "black_tea": {
+   "key": "black_tea",
+   "name_ru": "Чёрный чай в пакетиках",
+   "name_de": "Clever Schwarztee",
+   "department": "coffee",
+   "basic": false,
+   "nutrition_per_100g": [
+    1,
+    0,
+    0,
+    0.2
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Clever Schwarztee",
+     "brand": "Clever",
+     "budget_line": true,
+     "pack_size": 50.0,
+     "pack_unit": "g",
+     "grams": 50.0,
+     "price_eur": 0.65,
+     "eur_per_kg": 13.0,
+     "url": "https://shop.billa.at/produkte/clever-schwarztee-00288586",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-288586-0106421437-P09Z6c4k.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "Sir Winston Schwarzer Tee English Breakfast 20 Teebeutel",
+     "brand": "Sir Winston",
+     "budget_line": false,
+     "pack_size": 40.0,
+     "pack_unit": "g",
+     "grams": 40.0,
+     "price_eur": 2.49,
+     "eur_per_kg": 62.25,
+     "url": "https://www.interspar.at/shop/lebensmittel/sir-winston-schwarzer-tee-english-breakfast-20-teebeutel/p/2020001230044",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020001230044/dt_main.jpg"
+    }
+   ],
+   "name_de_generic": "Schwarztee (Teebeutel)",
+   "name_en": "Black tea (tea bags)",
+   "shelf": "tea",
+   "zone": "coffee"
+  },
   "bread": {
    "key": "bread",
    "name_ru": "Хлеб пшенично-ржаной",
@@ -938,6 +1061,76 @@
    "name_en": "Butter",
    "shelf": "butter",
    "zone": "dairy"
+  },
+  "cabanossi": {
+   "key": "cabanossi",
+   "name_ru": "Кабаносы (сыровяленые колбаски)",
+   "name_de": "Clever Cabanossi",
+   "department": "deli",
+   "basic": false,
+   "nutrition_per_100g": [
+    517.0,
+    27.0,
+    45.0,
+    1.1
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Clever Cabanossi",
+     "brand": "Clever",
+     "budget_line": true,
+     "pack_size": 300.0,
+     "pack_unit": "g",
+     "grams": 300.0,
+     "price_eur": 2.39,
+     "eur_per_kg": 7.967,
+     "url": "https://shop.billa.at/produkte/clever-cabanossi-00473701",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-473701-894038704-SPBR4Avs.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "S-BUDGET Cabanossi",
+     "brand": "S-BUDGET",
+     "budget_line": true,
+     "pack_size": 300.0,
+     "pack_unit": "g",
+     "grams": 300.0,
+     "price_eur": 2.39,
+     "eur_per_kg": 7.967,
+     "url": "https://www.interspar.at/shop/lebensmittel/s-budget-cabanossi/p/2020003466502",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020003466502/dt_main.jpg"
+    },
+    {
+     "store": "Penny",
+     "name_de": "Cabanossi",
+     "brand": "Ich bin Österreich",
+     "budget_line": false,
+     "pack_size": 300.0,
+     "pack_unit": "g",
+     "grams": 300.0,
+     "price_eur": 2.39,
+     "eur_per_kg": 7.967,
+     "url": "https://www.penny.at/produkte/cabanossi-78917860",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/787b77ab-692c-4e25-91f4-697690dc3c7c/78-917860-772991615-80UljpTd.jpg"
+    }
+   ],
+   "name_de_generic": "Cabanossi",
+   "name_en": "Cabanossi (dried snack sausages)",
+   "shelf": "sausages",
+   "zone": "deli"
   },
   "caraway": {
    "key": "caraway",
@@ -1826,6 +2019,59 @@
    "shelf": "spices",
    "zone": "oils"
   },
+  "cocoa_drink": {
+   "key": "cocoa_drink",
+   "name_ru": "Какао-напиток растворимый",
+   "name_de": "Clever Trink-Kakao",
+   "department": "coffee",
+   "basic": false,
+   "nutrition_per_100g": [
+    370.0,
+    6.3,
+    2.8,
+    76.0
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Clever Trink-Kakao",
+     "brand": "Clever",
+     "budget_line": true,
+     "pack_size": 800.0,
+     "pack_unit": "g",
+     "grams": 800.0,
+     "price_eur": 4.29,
+     "eur_per_kg": 5.362,
+     "url": "https://shop.billa.at/produkte/clever-trinkkakao-00425400",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-425400-1309378667-tymUdFNj.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "S-BUDGET Instant-Kakao fettarm",
+     "brand": "S-BUDGET",
+     "budget_line": true,
+     "pack_size": 800.0,
+     "pack_unit": "g",
+     "grams": 800.0,
+     "price_eur": 4.29,
+     "eur_per_kg": 5.362,
+     "url": "https://www.interspar.at/shop/lebensmittel/s-budget-instant-kakao-fettarm/p/2020001426058",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020001426058/dt_main.jpg"
+    }
+   ],
+   "name_de_generic": "Trinkkakao / Instant-Kakao",
+   "name_en": "Instant cocoa drink powder",
+   "shelf": "tea",
+   "zone": "coffee"
+  },
   "corn_can": {
    "key": "corn_can",
    "name_ru": "Кукуруза консервированная",
@@ -2176,6 +2422,59 @@
    "shelf": "cream",
    "zone": "dairy"
   },
+  "crispbread": {
+   "key": "crispbread",
+   "name_ru": "Ржаные хлебцы",
+   "name_de": "S-BUDGET Knäckebrot Roggenvollkorn Classic",
+   "department": "bakery",
+   "basic": false,
+   "nutrition_per_100g": [
+    311.0,
+    7.8,
+    1.3,
+    59.0
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "S-BUDGET Knäckebrot Roggenvollkorn Classic",
+     "brand": "S-BUDGET",
+     "budget_line": true,
+     "pack_size": 250.0,
+     "pack_unit": "g",
+     "grams": 250.0,
+     "price_eur": 1.49,
+     "eur_per_kg": 5.96,
+     "url": "https://www.interspar.at/shop/lebensmittel/s-budget-knaeckebrot-roggenvollkorn-classic/p/2020001332434",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020001332434/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "BILLA Bio Knäckebrot Roggenvollkorn",
+     "brand": "BILLA Bio",
+     "budget_line": false,
+     "pack_size": 250.0,
+     "pack_unit": "g",
+     "grams": 250.0,
+     "price_eur": 1.99,
+     "eur_per_kg": 7.96,
+     "url": "https://shop.billa.at/produkte/billa-bio-knaeckebrot-roggenvollkorn-00715180",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-715180-1805105657-EuIZT5zt.jpg"
+    }
+   ],
+   "name_de_generic": "Knäckebrot Roggen",
+   "name_en": "Rye crispbread",
+   "shelf": "crispbread",
+   "zone": "bakery"
+  },
   "cucumber": {
    "key": "cucumber",
    "name_ru": "Огурец",
@@ -2351,6 +2650,112 @@
    "name_en": "Curry powder",
    "shelf": "spices",
    "zone": "oils"
+  },
+  "dark_chocolate": {
+   "key": "dark_chocolate",
+   "name_ru": "Тёмный шоколад",
+   "name_de": "Ritter Sport Halbbitter",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    534.0,
+    6.0,
+    33.0,
+    50.0
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Ritter Sport Halbbitter",
+     "brand": "Ritter Sport",
+     "budget_line": false,
+     "pack_size": 100.0,
+     "pack_unit": "g",
+     "grams": 100.0,
+     "price_eur": 1.89,
+     "eur_per_kg": 18.9,
+     "url": "https://shop.billa.at/produkte/ritter-sport-halbbitter-00769011",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-769011-1330819694-wfZTvy7z.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "Schogetten Edel-Zartbitter",
+     "brand": "Schogetten",
+     "budget_line": false,
+     "pack_size": 100.0,
+     "pack_unit": "g",
+     "grams": 100.0,
+     "price_eur": 1.99,
+     "eur_per_kg": 19.9,
+     "url": "https://www.interspar.at/shop/lebensmittel/schogetten-edel-zartbitter/p/7071423",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/7071423/dt_main.jpg"
+    }
+   ],
+   "name_de_generic": "Bitterschokolade / Zartbitter",
+   "name_en": "Dark chocolate",
+   "shelf": "chocolate",
+   "zone": "sweets"
+  },
+  "dates": {
+   "key": "dates",
+   "name_ru": "Финики сушёные",
+   "name_de": "Clever Datteln",
+   "department": "produce",
+   "basic": false,
+   "nutrition_per_100g": [
+    263.0,
+    1.0,
+    0.0,
+    60.0
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Clever Datteln",
+     "brand": "Clever",
+     "budget_line": true,
+     "pack_size": 200.0,
+     "pack_unit": "g",
+     "grams": 200.0,
+     "price_eur": 1.89,
+     "eur_per_kg": 9.45,
+     "url": "https://shop.billa.at/produkte/clever-datteln-00497795",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-497795-370805003-5qGnMSMM.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "SPAR Datteln entsteint und verzehrfertig",
+     "brand": "SPAR",
+     "budget_line": false,
+     "pack_size": 200.0,
+     "pack_unit": "g",
+     "grams": 200.0,
+     "price_eur": 1.99,
+     "eur_per_kg": 9.95,
+     "url": "https://www.interspar.at/shop/lebensmittel/spar-datteln-entsteint-und-verzehrfertig/p/3813089",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/3813089/dt_main.jpg"
+    }
+   ],
+   "name_de_generic": "Datteln",
+   "name_en": "Dried dates",
+   "shelf": "nuts_dried",
+   "zone": "produce"
   },
   "egg_noodles": {
    "key": "egg_noodles",
@@ -2820,6 +3225,59 @@
    "name_en": "Frozen peas",
    "shelf": "frozen_veg",
    "zone": "frozen"
+  },
+  "fruit_tea": {
+   "key": "fruit_tea",
+   "name_ru": "Фруктовый чай в пакетиках",
+   "name_de": "Clever Früchtetee",
+   "department": "coffee",
+   "basic": false,
+   "nutrition_per_100g": [
+    1,
+    0,
+    0,
+    0.2
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Clever Früchtetee",
+     "brand": "Clever",
+     "budget_line": true,
+     "pack_size": 50.0,
+     "pack_unit": "g",
+     "grams": 50.0,
+     "price_eur": 0.89,
+     "eur_per_kg": 17.8,
+     "url": "https://shop.billa.at/produkte/clever-fruechtetee-00288588",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-288588-0897076830-CcmgDDJs.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "SPAR Apfel Früchtetee 20 Teebeutel",
+     "brand": "SPAR",
+     "budget_line": false,
+     "pack_size": 40.0,
+     "pack_unit": "g",
+     "grams": 40.0,
+     "price_eur": 1.69,
+     "eur_per_kg": 42.25,
+     "url": "https://www.interspar.at/shop/lebensmittel/spar-apfel-fruechtetee-20-teebeutel/p/2378336",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2378336/dt_main.jpg"
+    }
+   ],
+   "name_de_generic": "Früchtetee (Teebeutel)",
+   "name_en": "Fruit tea (tea bags)",
+   "shelf": "tea",
+   "zone": "coffee"
   },
   "garlic": {
    "key": "garlic",
@@ -3466,6 +3924,59 @@
    "shelf": "sweet_spreads",
    "zone": "breakfast"
   },
+  "hummus": {
+   "key": "hummus",
+   "name_ru": "Хумус",
+   "name_de": "S-BUDGET Hummus",
+   "department": "chilled",
+   "basic": false,
+   "nutrition_per_100g": [
+    280.0,
+    6.8,
+    24.0,
+    7.7
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "S-BUDGET Hummus",
+     "brand": "S-BUDGET",
+     "budget_line": true,
+     "pack_size": 400.0,
+     "pack_unit": "g",
+     "grams": 400.0,
+     "price_eur": 2.99,
+     "eur_per_kg": 7.475,
+     "url": "https://www.interspar.at/shop/lebensmittel/s-budget-hummus/p/2020006267922",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020006267922/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Clever Hummus",
+     "brand": "Clever",
+     "budget_line": true,
+     "pack_size": 200.0,
+     "pack_unit": "g",
+     "grams": 200.0,
+     "price_eur": 1.69,
+     "eur_per_kg": 8.45,
+     "url": "https://shop.billa.at/produkte/clever-hummus-00719717",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-719717-0732919736-aSrnVIpk.jpg"
+    }
+   ],
+   "name_de_generic": "Hummus",
+   "name_en": "Hummus",
+   "shelf": "spreads",
+   "zone": "chilled"
+  },
   "italian_herbs": {
    "key": "italian_herbs",
    "name_ru": "Итальянские травы",
@@ -3518,6 +4029,59 @@
    "name_en": "Italian herbs",
    "shelf": "spices",
    "zone": "oils"
+  },
+  "kefir": {
+   "key": "kefir",
+   "name_ru": "Кефир",
+   "name_de": "Clever Kefir",
+   "department": "dairy",
+   "basic": false,
+   "nutrition_per_100g": [
+    45.0,
+    3.5,
+    1.5,
+    4.4
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Clever Kefir",
+     "brand": "Clever",
+     "budget_line": true,
+     "pack_size": 500.0,
+     "pack_unit": "ml",
+     "grams": 500.0,
+     "price_eur": 0.85,
+     "eur_per_kg": 1.7,
+     "url": "https://shop.billa.at/produkte/clever-kefir-00734778",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-734778-0211079020-DlXK45Nr.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "SPAR Kefir Natur",
+     "brand": "SPAR",
+     "budget_line": false,
+     "pack_size": 500.0,
+     "pack_unit": "ml",
+     "grams": 500.0,
+     "price_eur": 0.85,
+     "eur_per_kg": 1.7,
+     "url": "https://www.interspar.at/shop/lebensmittel/spar-kefir-natur/p/2020001850600",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020001850600/dt_main.jpg"
+    }
+   ],
+   "name_de_generic": "Kefir",
+   "name_en": "Kefir",
+   "shelf": "milk",
+   "zone": "dairy"
   },
   "kidney_beans_can": {
    "key": "kidney_beans_can",
@@ -5297,6 +5861,76 @@
    "shelf": "sweet_spreads",
    "zone": "breakfast"
   },
+  "peanuts": {
+   "key": "peanuts",
+   "name_ru": "Арахис жареный солёный",
+   "name_de": "SPAR Erdnüsse geröstet & gesalzen",
+   "department": "produce",
+   "basic": false,
+   "nutrition_per_100g": [
+    611.0,
+    25.0,
+    50.0,
+    11.0
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "SPAR Erdnüsse geröstet & gesalzen",
+     "brand": "SPAR",
+     "budget_line": false,
+     "pack_size": 1000.0,
+     "pack_unit": "g",
+     "grams": 1000.0,
+     "price_eur": 3.99,
+     "eur_per_kg": 3.99,
+     "url": "https://www.interspar.at/shop/lebensmittel/spar-erdnuesse-geroestet-gesalzen/p/2020003524851",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020003524851/dt_main.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "S-BUDGET Erdnüsse geröstet & gesalzen",
+     "brand": "S-BUDGET",
+     "budget_line": true,
+     "pack_size": 500.0,
+     "pack_unit": "g",
+     "grams": 500.0,
+     "price_eur": 2.79,
+     "eur_per_kg": 5.58,
+     "url": "https://www.interspar.at/shop/lebensmittel/s-budget-erdnuesse-geroestet-gesalzen/p/2020005604575",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020005604575/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Clever Erdnüsse geröstet & gesalzen",
+     "brand": "Clever",
+     "budget_line": true,
+     "pack_size": 500.0,
+     "pack_unit": "g",
+     "grams": 500.0,
+     "price_eur": 2.79,
+     "eur_per_kg": 5.58,
+     "url": "https://shop.billa.at/produkte/clever-erdnuesse-geroestet-und-gesalzen-00777676",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-777676-0124099752-FBmGIGCB.jpg"
+    }
+   ],
+   "name_de_generic": "Erdnüsse geröstet & gesalzen",
+   "name_en": "Roasted salted peanuts",
+   "shelf": "nuts_dried",
+   "zone": "produce"
+  },
   "pesto": {
    "key": "pesto",
    "name_ru": "Песто «Дженовезе»",
@@ -5781,6 +6415,59 @@
    "shelf": "potato_onion",
    "zone": "produce"
   },
+  "protein_bar": {
+   "key": "protein_bar",
+   "name_ru": "Протеиновый батончик",
+   "name_de": "SPAR High Protein Proteinriegel Milchschokolade 3x45g",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    392.0,
+    35.0,
+    12.0,
+    39.0
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "SPAR High Protein Proteinriegel Milchschokolade 3x45g",
+     "brand": "SPAR",
+     "budget_line": false,
+     "pack_size": 135.0,
+     "pack_unit": "g",
+     "grams": 135.0,
+     "price_eur": 2.99,
+     "eur_per_kg": 22.148,
+     "url": "https://www.interspar.at/shop/lebensmittel/spar-high-protein-proteinriegel-milchschokolade-3x45g/p/2020005755390",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020005755390/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Power System Protein Bar Dark Chocolate",
+     "brand": "Power System",
+     "budget_line": false,
+     "pack_size": 45.0,
+     "pack_unit": "g",
+     "grams": 45.0,
+     "price_eur": 1.39,
+     "eur_per_kg": 30.889,
+     "url": "https://shop.billa.at/produkte/power-system-protein-bar-dark-chocolate-00800536",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-800536-0481864786-1RxIfJiL.jpg"
+    }
+   ],
+   "name_de_generic": "Proteinriegel",
+   "name_en": "Protein bar",
+   "shelf": "bars",
+   "zone": "sweets"
+  },
   "protein_pudding": {
    "key": "protein_pudding",
    "name_ru": "Протеиновый пудинг",
@@ -6007,6 +6694,59 @@
    "name_en": "Long-grain rice",
    "shelf": "rice",
    "zone": "grains"
+  },
+  "rice_cakes": {
+   "key": "rice_cakes",
+   "name_ru": "Рисовые хлебцы",
+   "name_de": "SPAR Reiswaffeln Meersalz 13 Stück",
+   "department": "bakery",
+   "basic": false,
+   "nutrition_per_100g": [
+    379.0,
+    8.7,
+    3.2,
+    77.0
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "SPAR Reiswaffeln Meersalz 13 Stück",
+     "brand": "SPAR",
+     "budget_line": false,
+     "pack_size": 100.0,
+     "pack_unit": "g",
+     "grams": 100.0,
+     "price_eur": 0.88,
+     "eur_per_kg": 8.8,
+     "url": "https://www.interspar.at/shop/lebensmittel/spar-reiswaffeln-meersalz-13-stueck/p/3230190",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/3230190/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Alnatura Reiswaffeln mit Salz",
+     "brand": "Alnatura",
+     "budget_line": false,
+     "pack_size": 100.0,
+     "pack_unit": "g",
+     "grams": 100.0,
+     "price_eur": 0.99,
+     "eur_per_kg": 9.9,
+     "url": "https://shop.billa.at/produkte/alnatura-reiswaffeln-mit-salz-00876267",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-876267-381709905-2uzzfKVZ.jpg"
+    }
+   ],
+   "name_de_generic": "Reiswaffeln",
+   "name_en": "Rice cakes (lightly salted)",
+   "shelf": "crispbread",
+   "zone": "bakery"
   },
   "salt": {
    "key": "salt",

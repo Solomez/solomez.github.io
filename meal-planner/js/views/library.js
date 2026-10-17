@@ -36,6 +36,8 @@ export function matchRecipe(r, f) {
   if (f.ingredient && !r.ingredients.some((i) => i.key === f.ingredient)) return false;
   if (f.type && r.protein_type !== f.type) return false;
   if (f.fav && !(state.prefs.favorites || []).includes(r.id)) return false;
+  if (f.tea && !(r.tags || []).includes('с чаем')) return false;
+  if (f.nocook && difficulty(r)?.id !== 'none') return false;
   if (!f.showNoTools && missingTools(r, state.prefs.equipment).length) return false;
   const hidden = (state.prefs.hidden || []).includes(r.id);
   if (hidden && !f.showHidden) return false;
@@ -64,8 +66,10 @@ export function renderLibrary(root, rerender, params) {
   root.append(h('div', { style: { marginBottom: '12px' } }, seg([['main', 'Обеды и ужины'], ['breakfast', 'Завтраки'], ['snack', 'Перекусы']], f.kind || 'main', (v) => set('kind', v))));
   // Быстрые фильтры — одним касанием; полный набор ниже, в «Фильтрах»
   const quick = [
-    ['time', 30, 'до 30 мин'], ['price', 2.4, 'до €2,40'], ['protein', 45, '45+ г белка'], ['fav', true, 'Избранное'],
+    ['time', 30, 'до 30 мин'], ['price', 2.4, 'до €2,40'], ['protein', 45, '45+ г белка'], ['nocook', true, 'Без готовки'], ['fav', true, 'Избранное'],
   ];
+  // «с горячим чаем» — только если такие блюда есть среди выбранного типа
+  if (recipes.some((r) => (r.meal_type || 'main') === (f.kind || 'main') && (r.tags || []).includes('с чаем'))) quick.splice(3, 0, ['tea', true, 'С горячим чаем']);
   root.append(h('div', { class: 'chips', style: { marginBottom: '12px' } }, quick.map(([k, v, l]) => {
     const on = f[k] === v;
     return h('button', { class: 'chip' + (on ? ' on' : ''), 'aria-pressed': String(on), onclick: () => set(k, on ? null : v) }, l);

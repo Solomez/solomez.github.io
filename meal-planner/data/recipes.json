@@ -23712,6 +23712,2795 @@
     }
    ],
    "main_ingredient_count": 6
+  },
+  {
+   "id": "snack-apfel-erdnussmus",
+   "meal_type": "snack",
+   "title": "Яблоко с арахисовой пастой",
+   "title_de": "Apfel mit Erdnussmus",
+   "description": "Хрустящие дольки яблока, обмакнутые в арахисовую пасту, — сладко, сытно и за 3 минуты",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "перед тренировкой"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 3,
+    "cook": 0,
+    "total": 3,
+    "active": 3
+   },
+   "equipment": [
+    "Доска и нож",
+    "Тарелка"
+   ],
+   "ingredients": [
+    {
+     "key": "apple",
+     "name_ru": "Яблоко",
+     "name_de": "Apfel",
+     "amount": "1 среднее",
+     "grams": 150,
+     "basic": false
+    },
+    {
+     "key": "peanut_butter",
+     "name_ru": "Арахисовая паста",
+     "name_de": "Erdnussmus / Erdnusscreme",
+     "amount": "1 ст. л. с горкой",
+     "grams": 20,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вымой яблоко под холодной водой и вытри полотенцем.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Разрежь яблоко на 4 части, вырежь сердцевину и нарежь каждую четвертинку на 2 дольки.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Выложи на край тарелки 1 ст. л. арахисовой пасты и обмакивай в неё дольки.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Нарезать яблоко заранее — через 15–20 минут дольки темнеют; если готовишь с собой, сбрызни их лимонным соком.",
+    "Брать пасту прямо из банки ножом, которым резал яблоко, — сок попадает в банку, и паста быстрее портится."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Арахисовая паста",
+     "to": "Горсть жареного арахиса (~20 г)",
+     "note": "почти те же калории и белок"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.36,
+    "kcal": 211,
+    "protein": 5.8,
+    "fat": 10.9,
+    "carbs": 20.1
+   },
+   "cost_breakdown": [
+    {
+     "key": "apple",
+     "name_ru": "Яблоко",
+     "grams_per_serving": 150.0,
+     "cost_per_serving": 0.224,
+     "store": "Penny",
+     "is_estimate": false
+    },
+    {
+     "key": "peanut_butter",
+     "name_ru": "Арахисовая паста",
+     "grams_per_serving": 20.0,
+     "cost_per_serving": 0.135,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-erdnuesse-apfel-tee",
+   "meal_type": "snack",
+   "title": "Горсть арахиса, яблоко и чёрный чай",
+   "title_de": "Erdnüsse, Apfel und Schwarztee",
+   "description": "Классический перекус к чаю: солёный арахис и сладкое яблоко — ничего готовить не нужно",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "с чаем"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 2,
+    "cook": 4,
+    "total": 6,
+    "active": 2
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка",
+    "Доска и нож"
+   ],
+   "ingredients": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "peanuts",
+     "name_ru": "Арахис жареный солёный",
+     "name_de": "Erdnüsse geröstet & gesalzen",
+     "amount": "1 горсть (~30 г)",
+     "grams": 30,
+     "basic": false
+    },
+    {
+     "key": "apple",
+     "name_ru": "Яблоко",
+     "name_de": "Apfel",
+     "amount": "1 среднее",
+     "grams": 150,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты — пока чай не станет тёмно-янтарным, затем вынь пакетик.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Пока чай настаивается, вымой яблоко и разрежь на 8 долек, вырезав сердцевину.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Отсыпь в мисочку одну горсть арахиса, пакет сразу закрой клипсой.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Есть арахис прямо из пакета — незаметно уходит полпачки (это 1500 ккал); отсыпь одну горсть.",
+    "Пить чай сразу из-под кипятка — обожжёшь рот; пока ешь, он остынет до приятной температуры за 3–4 минуты."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Арахис",
+     "to": "1 ст. л. арахисовой пасты к долькам яблока",
+     "note": "если орехов нет дома"
+    },
+    {
+     "from": "Чёрный чай",
+     "to": "Фруктовый чай (Früchtetee)",
+     "note": "без кофеина — лучше вечером; настаивай 5–6 минут"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.37,
+    "kcal": 267,
+    "protein": 8.2,
+    "fat": 15.9,
+    "carbs": 19.8
+   },
+   "cost_breakdown": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "peanuts",
+     "name_ru": "Арахис жареный солёный",
+     "grams_per_serving": 30.0,
+     "cost_per_serving": 0.12,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "apple",
+     "name_ru": "Яблоко",
+     "grams_per_serving": 150.0,
+     "cost_per_serving": 0.224,
+     "store": "Penny",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 3
+  },
+  {
+   "id": "snack-reiswaffeln-topfen-gurke",
+   "meal_type": "snack",
+   "title": "Рисовые хлебцы с творожной намазкой и огурцом",
+   "title_de": "Reiswaffeln mit Topfenaufstrich und Gurke",
+   "description": "Лёгкий белковый перекус: хрустящие хлебцы, солёный творог с перцем и свежий огурец",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "творог"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 5,
+    "cook": 0,
+    "total": 5,
+    "active": 5
+   },
+   "equipment": [
+    "Миска",
+    "Ложка",
+    "Доска и нож"
+   ],
+   "ingredients": [
+    {
+     "key": "magertopfen",
+     "name_ru": "Обезжиренный творог",
+     "name_de": "Magertopfen",
+     "amount": "половина пачки 250 г",
+     "grams": 125,
+     "basic": false
+    },
+    {
+     "key": "rice_cakes",
+     "name_ru": "Рисовые хлебцы",
+     "name_de": "Reiswaffeln",
+     "amount": "3 шт.",
+     "grams": 23,
+     "basic": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "name_de": "Gurke",
+     "amount": "кусок ~6 см",
+     "grams": 60,
+     "basic": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "name_de": "Vollmilch",
+     "amount": "1 ст. л.",
+     "grams": 15,
+     "basic": false
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "name_de": "Salz",
+     "amount": "щепотка",
+     "grams": 1,
+     "basic": true
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "name_de": "Pfeffer schwarz gemahlen",
+     "amount": "щепотка",
+     "grams": 0.5,
+     "basic": true
+    }
+   ],
+   "steps": [
+    {
+     "text": "Выложи творог в миску, добавь молоко, соль и перец.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Разотри ложкой ~1 минуту, пока масса не станет гладкой и мажущейся.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Нарежь огурец кружками толщиной ~3 мм.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Намажь творог на хлебцы толстым слоем и разложи сверху огурец.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Мазать хлебцы заранее — через 10 минут они размокают и ломаются; собирай прямо перед едой.",
+    "Не солить творог — Magertopfen пресный, без щепотки соли намазка безвкусная."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Рисовые хлебцы",
+     "to": "1–2 ржаных хлебца (Knäckebrot)",
+     "note": "плотнее и сытнее"
+    },
+    {
+     "from": "Обезжиренный творог",
+     "to": "Скир (Skyr)",
+     "note": "молоко не нужно, сразу гладкий"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.83,
+    "kcal": 191,
+    "protein": 19.2,
+    "fat": 2.0,
+    "carbs": 25.0
+   },
+   "cost_breakdown": [
+    {
+     "key": "magertopfen",
+     "name_ru": "Обезжиренный творог",
+     "grams_per_serving": 125.0,
+     "cost_per_serving": 0.495,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "rice_cakes",
+     "name_ru": "Рисовые хлебцы",
+     "grams_per_serving": 23.0,
+     "cost_per_serving": 0.202,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "grams_per_serving": 60.0,
+     "cost_per_serving": 0.113,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "grams_per_serving": 15.0,
+     "cost_per_serving": 0.014,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "grams_per_serving": 1.0,
+     "cost_per_serving": 0.001,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "grams_per_serving": 0.5,
+     "cost_per_serving": 0.008,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 4
+  },
+  {
+   "id": "snack-knaecke-schinken-kaese-tee",
+   "meal_type": "snack",
+   "title": "Ржаные хлебцы с ветчиной и сыром к чаю",
+   "title_de": "Knäckebrot mit Schinken und Käse",
+   "description": "Два хрустящих хлебца с маслом, ветчиной и гаудой и кружка горячего чая",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "с чаем",
+    "ветчина"
+   ],
+   "protein_type": "ham",
+   "servings": 1,
+   "time": {
+    "prep": 3,
+    "cook": 4,
+    "total": 7,
+    "active": 3
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка",
+    "Нож для масла"
+   ],
+   "ingredients": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "crispbread",
+     "name_ru": "Ржаные хлебцы",
+     "name_de": "Knäckebrot Roggen",
+     "amount": "2 шт.",
+     "grams": 22,
+     "basic": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "name_de": "Butter",
+     "amount": "1 ч. л.",
+     "grams": 5,
+     "basic": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "name_de": "Toastschinken",
+     "amount": "2 ломтика",
+     "grams": 40,
+     "basic": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "name_de": "Gouda in Scheiben",
+     "amount": "1 ломтик",
+     "grams": 20,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты — пока чай не станет тёмно-янтарным, затем вынь пакетик.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Пока чай настаивается, намажь хлебцы тонким слоем масла.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Положи на каждый хлебец по ломтику ветчины и половинку ломтика сыра.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Давить на хлебец ножом с холодным маслом — он ломается; достань масло из холодильника, пока греется чайник.",
+    "Пить чай сразу из-под кипятка — обожжёшь рот; пока ешь, он остынет до приятной температуры за 3–4 минуты."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Ржаные хлебцы",
+     "to": "1 ломтик хлеба (Mischbrot)",
+     "note": "мягче, если хлебцы закончились"
+    },
+    {
+     "from": "Чёрный чай",
+     "to": "Фруктовый чай (Früchtetee)",
+     "note": "без кофеина — лучше вечером; настаивай 5–6 минут"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.66,
+    "kcal": 218,
+    "protein": 14.2,
+    "fat": 11.2,
+    "carbs": 13.3
+   },
+   "cost_breakdown": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "crispbread",
+     "name_ru": "Ржаные хлебцы",
+     "grams_per_serving": 22.0,
+     "cost_per_serving": 0.131,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "grams_per_serving": 5.0,
+     "cost_per_serving": 0.03,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.332,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "grams_per_serving": 20.0,
+     "cost_per_serving": 0.139,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 5
+  },
+  {
+   "id": "snack-cabanossi-kaese-gurke",
+   "meal_type": "snack",
+   "title": "Кабаносы с сыром и огурцом",
+   "title_de": "Cabanossi mit Käse und Gurke",
+   "description": "Сытный солёный перекус с собой: кусок кабаноса, сыр и хрустящий огурец — около 20 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "с собой"
+   ],
+   "protein_type": "sausage",
+   "servings": 1,
+   "time": {
+    "prep": 3,
+    "cook": 0,
+    "total": 3,
+    "active": 3
+   },
+   "equipment": [
+    "Доска и нож"
+   ],
+   "ingredients": [
+    {
+     "key": "cabanossi",
+     "name_ru": "Кабаносы (сыровяленые колбаски)",
+     "name_de": "Cabanossi",
+     "amount": "кусок длиной ~12 см",
+     "grams": 40,
+     "basic": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "name_de": "Gouda in Scheiben",
+     "amount": "1 ломтик",
+     "grams": 20,
+     "basic": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "name_de": "Gurke",
+     "amount": "кусок ~10 см",
+     "grams": 80,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Нарежь кабанос кружками толщиной ~1 см.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Сверни ломтик сыра трубочкой и разрежь на 4 части.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Нарежь огурец брусками ~1 см толщиной и разложи всё на тарелке или в контейнере.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Есть кабаносы целой пачкой — в них почти половина веса жир; одного куска ~12 см хватает.",
+    "Класть огурец в контейнер к сыру мокрым — сыр размокнет; промокни огурец полотенцем."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Кабаносы",
+     "to": "60 г ветчины (Toastschinken)",
+     "note": "меньше жира, белка столько же"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.61,
+    "kcal": 286,
+    "protein": 16.1,
+    "fat": 23.8,
+    "carbs": 1.9
+   },
+   "cost_breakdown": [
+    {
+     "key": "cabanossi",
+     "name_ru": "Кабаносы (сыровяленые колбаски)",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.319,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "grams_per_serving": 20.0,
+     "cost_per_serving": 0.139,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "grams_per_serving": 80.0,
+     "cost_per_serving": 0.151,
+     "store": "Spar",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 3
+  },
+  {
+   "id": "snack-proteinriegel-tee",
+   "meal_type": "snack",
+   "title": "Протеиновый батончик и чай",
+   "title_de": "Proteinriegel und Schwarztee",
+   "description": "Самый быстрый белковый перекус: батончик (~15 г белка) и кружка горячего чая",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "с чаем",
+    "с собой"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 4,
+    "total": 5,
+    "active": 1
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка"
+   ],
+   "ingredients": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "protein_bar",
+     "name_ru": "Протеиновый батончик",
+     "name_de": "Proteinriegel",
+     "amount": "1 шт. (45 г)",
+     "grams": 45,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты — пока чай не станет тёмно-янтарным, затем вынь пакетик.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Разверни батончик и ешь его, запивая чаем.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Покупать батончик подороже ради «протеина» — сравни на этикетке белок на 100 г: хорошие — от 30 г; у дешёвых «злаковых» — 5–8 г.",
+    "Пить чай сразу из-под кипятка — обожжёшь рот; пока ешь, он остынет до приятной температуры за 3–4 минуты."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Протеиновый батончик",
+     "to": "150 г скира с 1 ч. л. мёда",
+     "note": "белка столько же, дешевле"
+    },
+    {
+     "from": "Чёрный чай",
+     "to": "Фруктовый чай (Früchtetee)",
+     "note": "без кофеина — лучше вечером; настаивай 5–6 минут"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 1.02,
+    "kcal": 176,
+    "protein": 15.8,
+    "fat": 5.4,
+    "carbs": 17.6
+   },
+   "cost_breakdown": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "protein_bar",
+     "name_ru": "Протеиновый батончик",
+     "grams_per_serving": 45.0,
+     "cost_per_serving": 0.997,
+     "store": "Spar",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-bitterschoko-erdnuss-tee",
+   "meal_type": "snack",
+   "title": "Тёмный шоколад с арахисом и фруктовым чаем",
+   "title_de": "Bitterschokolade, Erdnüsse und Früchtetee",
+   "description": "Сладкий перекус к чаю: три дольки тёмного шоколада и немного арахиса",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "с чаем",
+    "сладкое"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 6,
+    "total": 7,
+    "active": 1
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка"
+   ],
+   "ingredients": [
+    {
+     "key": "fruit_tea",
+     "name_ru": "Фруктовый чай в пакетиках",
+     "name_de": "Früchtetee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "dark_chocolate",
+     "name_ru": "Тёмный шоколад",
+     "name_de": "Bitterschokolade / Zartbitter",
+     "amount": "3 дольки",
+     "grams": 20,
+     "basic": false
+    },
+    {
+     "key": "peanuts",
+     "name_ru": "Арахис жареный солёный",
+     "name_de": "Erdnüsse geröstet & gesalzen",
+     "amount": "полгорсти (~20 г)",
+     "grams": 20,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик фруктового чая кипятком, настаивай 5–6 минут — пока настой не станет ярко-красным, затем вынь пакетик.",
+     "timer_min": 6,
+     "heat": null
+    },
+    {
+     "text": "Отломи 3 дольки шоколада, отсыпь полгорсти арахиса и ешь, запивая чаем.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Хранить шоколад в холодильнике — он покрывается белым налётом и теряет вкус; держи в шкафу.",
+    "Ставить всю плитку рядом с собой — съешь половину; отломи 3 дольки и убери плитку."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Арахис",
+     "to": "2 финика",
+     "note": "слаще, без соли"
+    },
+    {
+     "from": "Фруктовый чай",
+     "to": "Чёрный чай (Schwarztee)",
+     "note": "крепче, с кофеином; настаивай 3–4 минуты"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.49,
+    "kcal": 229,
+    "protein": 6.2,
+    "fat": 16.6,
+    "carbs": 12.2
+   },
+   "cost_breakdown": [
+    {
+     "key": "fruit_tea",
+     "name_ru": "Фруктовый чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.036,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "dark_chocolate",
+     "name_ru": "Тёмный шоколад",
+     "grams_per_serving": 20.0,
+     "cost_per_serving": 0.378,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "peanuts",
+     "name_ru": "Арахис жареный солёный",
+     "grams_per_serving": 20.0,
+     "cost_per_serving": 0.08,
+     "store": "Spar",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 3
+  },
+  {
+   "id": "snack-apfel-kaese-tee",
+   "meal_type": "snack",
+   "title": "Яблоко с сыром и чаем",
+   "title_de": "Apfel mit Käse und Schwarztee",
+   "description": "Сладкое яблоко и солёный сыр — простое сочетание к кружке чая",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "с чаем"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 2,
+    "cook": 4,
+    "total": 6,
+    "active": 2
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка",
+    "Доска и нож"
+   ],
+   "ingredients": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "apple",
+     "name_ru": "Яблоко",
+     "name_de": "Apfel",
+     "amount": "1 среднее",
+     "grams": 150,
+     "basic": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "name_de": "Gouda in Scheiben",
+     "amount": "1,5 ломтика",
+     "grams": 30,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты — пока чай не станет тёмно-янтарным, затем вынь пакетик.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Пока чай настаивается, вымой яблоко и нарежь на 8 долек, вырезав сердцевину.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Разрежь каждый ломтик сыра на 4 квадрата и клади на дольки яблока.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Резать яблоко задолго до еды — оно темнеет; режь, пока настаивается чай.",
+    "Пить чай сразу из-под кипятка — обожжёшь рот; пока ешь, он остынет до приятной температуры за 3–4 минуты."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Гауда",
+     "to": "Эмменталь",
+     "note": "так же хорошо к яблоку"
+    },
+    {
+     "from": "Чёрный чай",
+     "to": "Фруктовый чай (Früchtetee)",
+     "note": "без кофеина — лучше вечером; настаивай 5–6 минут"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.46,
+    "kcal": 188,
+    "protein": 8.0,
+    "fat": 9.3,
+    "carbs": 16.5
+   },
+   "cost_breakdown": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "apple",
+     "name_ru": "Яблоко",
+     "grams_per_serving": 150.0,
+     "cost_per_serving": 0.224,
+     "store": "Penny",
+     "is_estimate": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "grams_per_serving": 30.0,
+     "cost_per_serving": 0.208,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 3
+  },
+  {
+   "id": "snack-kefir-datteln",
+   "meal_type": "snack",
+   "title": "Стакан кефира и финики",
+   "title_de": "Kefir mit Datteln",
+   "description": "Кефир и три финика — быстрая энергия перед тренировкой без готовки",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "перед тренировкой"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 0,
+    "total": 1,
+    "active": 1
+   },
+   "equipment": [
+    "Стакан"
+   ],
+   "ingredients": [
+    {
+     "key": "kefir",
+     "name_ru": "Кефир",
+     "name_de": "Kefir",
+     "amount": "1 стакан (250 мл)",
+     "grams": 250,
+     "basic": false
+    },
+    {
+     "key": "dates",
+     "name_ru": "Финики сушёные",
+     "name_de": "Datteln",
+     "amount": "3 шт.",
+     "grams": 30,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Встряхни бутылку кефира, налей стакан и ешь финики, запивая кефиром.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Не встряхнуть бутылку — сверху жидко, на дне густо; кефир расслаивается, это нормально.",
+    "Финики с косточкой — разрежь вдоль и вынь её, чтобы не сломать зуб."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Финики",
+     "to": "1 банан",
+     "note": "дешевле"
+    },
+    {
+     "from": "Кефир",
+     "to": "Стакан молока",
+     "note": "если кефира нет"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.71,
+    "kcal": 191,
+    "protein": 9.1,
+    "fat": 3.8,
+    "carbs": 29.0
+   },
+   "cost_breakdown": [
+    {
+     "key": "kefir",
+     "name_ru": "Кефир",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.425,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "dates",
+     "name_ru": "Финики сушёные",
+     "grams_per_serving": 30.0,
+     "cost_per_serving": 0.283,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-heisser-kakao",
+   "meal_type": "snack",
+   "title": "Горячее какао на молоке",
+   "title_de": "Heißer Kakao mit Milch",
+   "description": "Кружка горячего какао на цельном молоке — около 10 г белка, готово за 4 минуты",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "сладкое",
+    "горячее"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 4,
+    "total": 5,
+    "active": 3
+   },
+   "equipment": [
+    "Маленькая кастрюля",
+    "Ложка",
+    "Кружка"
+   ],
+   "ingredients": [
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "name_de": "Vollmilch",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": false
+    },
+    {
+     "key": "cocoa_drink",
+     "name_ru": "Какао-напиток растворимый",
+     "name_de": "Trinkkakao / Instant-Kakao",
+     "amount": "3 ч. л. с горкой",
+     "grams": 20,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Налей молоко в маленькую кастрюлю и поставь на средний огонь.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Грей ~3–4 минуты, пока от молока не пойдёт пар и по краю не появятся мелкие пузырьки; не доводи до кипения.",
+     "timer_min": 4,
+     "heat": "средний"
+    },
+    {
+     "text": "Сними кастрюлю с огня, всыпь какао и размешивай ложкой ~30 секунд, пока не исчезнут комочки.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Перелей какао в кружку.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Довести молоко до кипения и отойти — оно поднимается пеной и убегает за секунды; стой рядом и снимай при первых пузырьках.",
+    "Всыпать какао в холодное молоко — порошок плавает комками; сыпь в горячее и сразу мешай."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Цельное молоко",
+     "to": "Молоко 1,5 % (Leichtmilch)",
+     "note": "меньше жира, белка столько же"
+    },
+    {
+     "from": "Растворимое какао",
+     "to": "1 ч. л. мёда",
+     "note": "просто тёплое молоко с мёдом"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "Растворимое какао уже сладкое — сахар не добавляй.",
+   "tools": [
+    [
+     "pot"
+    ]
+   ],
+   "per_serving": {
+    "cost": 0.34,
+    "kcal": 234,
+    "protein": 9.8,
+    "fat": 9.3,
+    "carbs": 26.9
+   },
+   "cost_breakdown": [
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.228,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "cocoa_drink",
+     "name_ru": "Какао-напиток растворимый",
+     "grams_per_serving": 20.0,
+     "cost_per_serving": 0.107,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-butterbrot-kaese-tee",
+   "meal_type": "snack",
+   "title": "Хлеб с маслом и сыром к чаю",
+   "title_de": "Butterbrot mit Käse und Schwarztee",
+   "description": "Ломоть хлеба с маслом и гаудой и кружка крепкого чая — перекус за 2 минуты",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "с чаем"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 2,
+    "cook": 4,
+    "total": 6,
+    "active": 2
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка",
+    "Нож для масла"
+   ],
+   "ingredients": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "name_de": "Mischbrot",
+     "amount": "1 ломтик",
+     "grams": 50,
+     "basic": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "name_de": "Butter",
+     "amount": "1 ч. л.",
+     "grams": 5,
+     "basic": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "name_de": "Gouda in Scheiben",
+     "amount": "1 ломтик",
+     "grams": 25,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты — пока чай не станет тёмно-янтарным, затем вынь пакетик.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Пока чай настаивается, намажь хлеб тонким слоем масла и положи сверху сыр.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Мазать холодное масло — хлеб рвётся; достань масло, когда ставишь чайник.",
+    "Пить чай сразу из-под кипятка — обожжёшь рот; пока ешь, он остынет до приятной температуры за 3–4 минуты."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Гауда",
+     "to": "2 ломтика ветчины",
+     "note": "больше белка, меньше жира"
+    },
+    {
+     "from": "Чёрный чай",
+     "to": "Фруктовый чай (Früchtetee)",
+     "note": "без кофеина — лучше вечером; настаивай 5–6 минут"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.31,
+    "kcal": 244,
+    "protein": 9.7,
+    "fat": 11.5,
+    "carbs": 24.0
+   },
+   "cost_breakdown": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "grams_per_serving": 50.0,
+     "cost_per_serving": 0.081,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "grams_per_serving": 5.0,
+     "cost_per_serving": 0.03,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "grams_per_serving": 25.0,
+     "cost_per_serving": 0.173,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 4
+  },
+  {
+   "id": "snack-hummus-knaecke-karotte-tee",
+   "meal_type": "snack",
+   "title": "Хумус с ржаными хлебцами и морковью к чаю",
+   "title_de": "Hummus mit Knäckebrot und Karotten",
+   "description": "Хрустящие хлебцы и морковные палочки, которые макают в хумус, плюс кружка фруктового чая",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "с чаем",
+    "вегетарианское"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 4,
+    "cook": 6,
+    "total": 8,
+    "active": 4
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка",
+    "Доска и нож",
+    "Овощечистка"
+   ],
+   "ingredients": [
+    {
+     "key": "fruit_tea",
+     "name_ru": "Фруктовый чай в пакетиках",
+     "name_de": "Früchtetee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "hummus",
+     "name_ru": "Хумус",
+     "name_de": "Hummus",
+     "amount": "3 ст. л.",
+     "grams": 60,
+     "basic": false
+    },
+    {
+     "key": "crispbread",
+     "name_ru": "Ржаные хлебцы",
+     "name_de": "Knäckebrot Roggen",
+     "amount": "2 шт.",
+     "grams": 22,
+     "basic": false
+    },
+    {
+     "key": "carrot",
+     "name_ru": "Морковь",
+     "name_de": "Karotten",
+     "amount": "1 шт.",
+     "grams": 80,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик фруктового чая кипятком, настаивай 5–6 минут — пока настой не станет ярко-красным, затем вынь пакетик.",
+     "timer_min": 6,
+     "heat": null
+    },
+    {
+     "text": "Пока чай настаивается, очисти морковь овощечисткой.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Разрежь морковь пополам поперёк, затем каждую половину — вдоль на 4 палочки.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Выложи хумус в мисочку и макай в него морковь и кусочки хлебцев.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Есть хумус ложкой из банки — в нём много масла (около 280 ккал на 100 г); отложи 3 ст. л.",
+    "Брать хумус ложкой, побывавшей во рту, — банка испортится за 1–2 дня вместо 4–5."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Морковь",
+     "to": "Огурец или сладкий перец палочками",
+     "note": "так же хрустят"
+    },
+    {
+     "from": "Фруктовый чай",
+     "to": "Чёрный чай (Schwarztee)",
+     "note": "крепче, с кофеином; настаивай 3–4 минуты"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.71,
+    "kcal": 265,
+    "protein": 6.5,
+    "fat": 14.8,
+    "carbs": 23.2
+   },
+   "cost_breakdown": [
+    {
+     "key": "fruit_tea",
+     "name_ru": "Фруктовый чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.036,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "hummus",
+     "name_ru": "Хумус",
+     "grams_per_serving": 60.0,
+     "cost_per_serving": 0.449,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "crispbread",
+     "name_ru": "Ржаные хлебцы",
+     "grams_per_serving": 22.0,
+     "cost_per_serving": 0.131,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "carrot",
+     "name_ru": "Морковь",
+     "grams_per_serving": 80.0,
+     "cost_per_serving": 0.09,
+     "store": "Spar",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 4
+  },
+  {
+   "id": "fruehstueck-tee-schinkenbrot-eier",
+   "meal_type": "breakfast",
+   "title": "Чай, бутерброды с ветчиной и два яйца вкрутую",
+   "title_de": "Schwarztee, Schinkenbrote und harte Eier",
+   "description": "Сытный завтрак с горячим чаем: 2 яйца, 2 бутерброда с ветчиной — около 34 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "завтрак",
+    "просто",
+    "с чаем",
+    "яйца",
+    "ветчина"
+   ],
+   "protein_type": "eggs",
+   "servings": 1,
+   "time": {
+    "prep": 3,
+    "cook": 15,
+    "total": 18,
+    "active": 6
+   },
+   "equipment": [
+    "Маленькая кастрюля",
+    "Чайник",
+    "Кружка",
+    "Нож для масла"
+   ],
+   "ingredients": [
+    {
+     "key": "eggs",
+     "name_ru": "Яйцо",
+     "name_de": "Eier (Größe M)",
+     "amount": "2 шт.",
+     "grams": 120,
+     "basic": false
+    },
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "name_de": "Mischbrot",
+     "amount": "2 ломтика",
+     "grams": 100,
+     "basic": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "name_de": "Butter",
+     "amount": "1 ч. л.",
+     "grams": 5,
+     "basic": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "name_de": "Toastschinken",
+     "amount": "3 ломтика",
+     "grams": 60,
+     "basic": false
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "name_de": "Salz",
+     "amount": "щепотка",
+     "grams": 1,
+     "basic": true
+    }
+   ],
+   "steps": [
+    {
+     "text": "Положи яйца в маленькую кастрюлю, залей холодной водой на 2 см выше и поставь на сильный огонь, ~4 минуты до кипения.",
+     "timer_min": 4,
+     "heat": "сильный"
+    },
+    {
+     "text": "Убавь огонь до среднего и вари 9 минут — желток станет полностью твёрдым.",
+     "timer_min": 9,
+     "heat": "средний"
+    },
+    {
+     "text": "Пока яйца варятся, намажь хлеб маслом и разложи сверху ветчину.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты, пока чай не станет тёмно-янтарным.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Слей с яиц горячую воду и залей холодной на 2 минуты — так скорлупа легче отходит.",
+     "timer_min": 2,
+     "heat": null
+    },
+    {
+     "text": "Очисти яйца, посоли и ешь с бутербродами и чаем.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Класть яйца в кипяток — скорлупа лопается; клади в холодную воду и грей вместе.",
+    "Варить яйца каждое утро: свари 4–6 штук с вечера, в скорлупе в холодильнике они хранятся 3 дня — утром останется 3 минуты.",
+    "Пить чай сразу из-под кипятка — обожжёшь рот; пока ешь, он остынет до приятной температуры за 3–4 минуты."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Яйца вкрутую",
+     "to": "150 г скира",
+     "note": "без варки, белка почти столько же"
+    },
+    {
+     "from": "Хлеб",
+     "to": "2–3 ржаных хлебца (Knäckebrot)",
+     "note": "хрустят и долго хранятся"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [
+    [
+     "pot"
+    ]
+   ],
+   "per_serving": {
+    "cost": 1.22,
+    "kcal": 528,
+    "protein": 34.4,
+    "fat": 19.9,
+    "carbs": 49.5
+   },
+   "cost_breakdown": [
+    {
+     "key": "eggs",
+     "name_ru": "Яйцо",
+     "grams_per_serving": 120.0,
+     "cost_per_serving": 0.507,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "grams_per_serving": 100.0,
+     "cost_per_serving": 0.161,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "grams_per_serving": 5.0,
+     "cost_per_serving": 0.03,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "grams_per_serving": 60.0,
+     "cost_per_serving": 0.498,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "grams_per_serving": 1.0,
+     "cost_per_serving": 0.001,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 5
+  },
+  {
+   "id": "fruehstueck-tee-topfen-apfel-zimt",
+   "meal_type": "breakfast",
+   "title": "Чай и творог с яблоком, корицей и мёдом",
+   "title_de": "Topfen mit Apfel und Zimt, dazu Früchtetee",
+   "description": "Целая пачка творога с кусочками яблока, корицей и мёдом и кружка фруктового чая — около 34 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "завтрак",
+    "просто",
+    "без готовки",
+    "с чаем",
+    "творог"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 5,
+    "cook": 6,
+    "total": 11,
+    "active": 5
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка",
+    "Миска",
+    "Ложка",
+    "Доска и нож"
+   ],
+   "ingredients": [
+    {
+     "key": "fruit_tea",
+     "name_ru": "Фруктовый чай в пакетиках",
+     "name_de": "Früchtetee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "magertopfen",
+     "name_ru": "Обезжиренный творог",
+     "name_de": "Magertopfen",
+     "amount": "1 пачка 250 г",
+     "grams": 250,
+     "basic": false
+    },
+    {
+     "key": "apple",
+     "name_ru": "Яблоко",
+     "name_de": "Apfel",
+     "amount": "1 среднее",
+     "grams": 150,
+     "basic": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "name_de": "Vollmilch",
+     "amount": "2 ст. л.",
+     "grams": 30,
+     "basic": false
+    },
+    {
+     "key": "honey",
+     "name_ru": "Мёд",
+     "name_de": "Honig",
+     "amount": "1 ст. л.",
+     "grams": 15,
+     "basic": true
+    },
+    {
+     "key": "cinnamon",
+     "name_ru": "Корица молотая",
+     "name_de": "Zimt gemahlen",
+     "amount": "½ ч. л.",
+     "grams": 1,
+     "basic": true
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик фруктового чая кипятком, настаивай 5–6 минут — пока настой не станет ярко-красным, затем вынь пакетик.",
+     "timer_min": 6,
+     "heat": null
+    },
+    {
+     "text": "Пока чай настаивается, выложи творог в миску, добавь молоко и мёд.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Разотри ложкой ~1 минуту, пока творог не станет гладким и кремовым.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Вымой яблоко, вырежь сердцевину и нарежь мякоть кубиками ~1 см.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Высыпь яблоко на творог и посыпь корицей.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Не добавить молоко — обезжиренный творог сухой и комковатый; 2 ст. л. молока делают его кремом.",
+    "Резать яблоко с вечера — к утру оно потемнеет; режь, пока настаивается чай."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Обезжиренный творог",
+     "to": "Скир (Skyr) 250 г",
+     "note": "сразу гладкий, молоко не нужно"
+    },
+    {
+     "from": "Яблоко",
+     "to": "1 банан",
+     "note": "слаще, режь кружками"
+    },
+    {
+     "from": "Фруктовый чай",
+     "to": "Чёрный чай (Schwarztee)",
+     "note": "крепче, с кофеином; настаивай 3–4 минуты"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 1.41,
+    "kcal": 322,
+    "protein": 34.4,
+    "fat": 3.3,
+    "carbs": 40.8
+   },
+   "cost_breakdown": [
+    {
+     "key": "fruit_tea",
+     "name_ru": "Фруктовый чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.036,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "magertopfen",
+     "name_ru": "Обезжиренный творог",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.99,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "apple",
+     "name_ru": "Яблоко",
+     "grams_per_serving": 150.0,
+     "cost_per_serving": 0.224,
+     "store": "Penny",
+     "is_estimate": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "grams_per_serving": 30.0,
+     "cost_per_serving": 0.027,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "honey",
+     "name_ru": "Мёд",
+     "grams_per_serving": 15.0,
+     "cost_per_serving": 0.108,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "cinnamon",
+     "name_ru": "Корица молотая",
+     "grams_per_serving": 1.0,
+     "cost_per_serving": 0.025,
+     "store": "Spar",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 4
+  },
+  {
+   "id": "fruehstueck-tee-knaecke-skyr-schinken",
+   "meal_type": "breakfast",
+   "title": "Чай и хлебцы со скир-намазкой, ветчиной и огурцом",
+   "title_de": "Knäckebrot mit Skyr, Schinken und Gurke",
+   "description": "Хрустящие ржаные хлебцы, солёный скир, ветчина и огурец к кружке чая — около 29 г белка без готовки",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "завтрак",
+    "просто",
+    "без готовки",
+    "с чаем",
+    "ветчина"
+   ],
+   "protein_type": "ham",
+   "servings": 1,
+   "time": {
+    "prep": 5,
+    "cook": 4,
+    "total": 9,
+    "active": 5
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка",
+    "Миска",
+    "Ложка",
+    "Доска и нож"
+   ],
+   "ingredients": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "skyr",
+     "name_ru": "Скир",
+     "name_de": "Skyr natur",
+     "amount": "1 стаканчик 150 г",
+     "grams": 150,
+     "basic": false
+    },
+    {
+     "key": "crispbread",
+     "name_ru": "Ржаные хлебцы",
+     "name_de": "Knäckebrot Roggen",
+     "amount": "3 шт.",
+     "grams": 33,
+     "basic": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "name_de": "Toastschinken",
+     "amount": "3 ломтика",
+     "grams": 60,
+     "basic": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "name_de": "Gurke",
+     "amount": "кусок ~6 см",
+     "grams": 60,
+     "basic": false
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "name_de": "Salz",
+     "amount": "щепотка",
+     "grams": 1,
+     "basic": true
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "name_de": "Pfeffer schwarz gemahlen",
+     "amount": "щепотка",
+     "grams": 0.5,
+     "basic": true
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты — пока чай не станет тёмно-янтарным, затем вынь пакетик.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Пока чай настаивается, переложи скир в миску, посоли, поперчи и размешай ~20 секунд.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Нарежь огурец кружками толщиной ~3 мм.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Намажь скир на хлебцы толстым слоем, сверху положи ветчину и огурец.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Намазать хлебцы заранее — через 10 минут они размокают; собирай прямо перед едой.",
+    "Положить весь скир на 3 хлебца сразу — он стекает; что не поместилось, ешь ложкой.",
+    "Пить чай сразу из-под кипятка — обожжёшь рот; пока ешь, он остынет до приятной температуры за 3–4 минуты."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Скир",
+     "to": "Обезжиренный творог (Magertopfen) + 2 ст. л. молока",
+     "note": "разотри до гладкости"
+    },
+    {
+     "from": "Ржаные хлебцы",
+     "to": "2 ломтика хлеба (Mischbrot)",
+     "note": "мягче и сытнее"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 1.29,
+    "kcal": 256,
+    "protein": 29.4,
+    "fat": 3.1,
+    "carbs": 26.1
+   },
+   "cost_breakdown": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "skyr",
+     "name_ru": "Скир",
+     "grams_per_serving": 150.0,
+     "cost_per_serving": 0.449,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "crispbread",
+     "name_ru": "Ржаные хлебцы",
+     "grams_per_serving": 33.0,
+     "cost_per_serving": 0.197,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "grams_per_serving": 60.0,
+     "cost_per_serving": 0.498,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "grams_per_serving": 60.0,
+     "cost_per_serving": 0.113,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "grams_per_serving": 1.0,
+     "cost_per_serving": 0.001,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "grams_per_serving": 0.5,
+     "cost_per_serving": 0.008,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 5
+  },
+  {
+   "id": "fruehstueck-tee-kaesebrote-kefir",
+   "meal_type": "breakfast",
+   "title": "Чай, бутерброды с сыром и стакан кефира",
+   "title_de": "Käsebrote, Kefir und Schwarztee",
+   "description": "Два бутерброда с маслом и гаудой, стакан кефира и горячий чай — около 28 г белка без готовки",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "завтрак",
+    "просто",
+    "без готовки",
+    "с чаем"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 3,
+    "cook": 4,
+    "total": 7,
+    "active": 3
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка",
+    "Стакан",
+    "Нож для масла"
+   ],
+   "ingredients": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "name_de": "Mischbrot",
+     "amount": "2 ломтика",
+     "grams": 100,
+     "basic": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "name_de": "Butter",
+     "amount": "1 ч. л.",
+     "grams": 5,
+     "basic": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "name_de": "Gouda in Scheiben",
+     "amount": "2,5 ломтика",
+     "grams": 50,
+     "basic": false
+    },
+    {
+     "key": "kefir",
+     "name_ru": "Кефир",
+     "name_de": "Kefir",
+     "amount": "1 стакан (250 мл)",
+     "grams": 250,
+     "basic": false
+    },
+    {
+     "key": "tomato",
+     "name_ru": "Помидор",
+     "name_de": "Paradeiser / Tomaten",
+     "amount": "1 шт.",
+     "grams": 100,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты — пока чай не станет тёмно-янтарным, затем вынь пакетик.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Пока чай настаивается, намажь хлеб тонким слоем масла и разложи сыр.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Нарежь помидор кружками ~5 мм и положи на сыр.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Встряхни бутылку кефира и налей стакан.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Пить кефир и горячий чай одновременно непривычно — начни с кефира и бутербродов, чай допей после.",
+    "Класть помидор с вечера — хлеб пропитается соком; режь утром."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Кефир",
+     "to": "Стакан молока",
+     "note": "белка столько же"
+    },
+    {
+     "from": "Гауда",
+     "to": "Эмменталь",
+     "note": "так же нарезан ломтиками"
+    },
+    {
+     "from": "Чёрный чай",
+     "to": "Фруктовый чай (Früchtetee)",
+     "note": "без кофеина — лучше вечером; настаивай 5–6 минут"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 1.13,
+    "kcal": 580,
+    "protein": 29.1,
+    "fat": 22.9,
+    "carbs": 61.6
+   },
+   "cost_breakdown": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "grams_per_serving": 100.0,
+     "cost_per_serving": 0.161,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "grams_per_serving": 5.0,
+     "cost_per_serving": 0.03,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "grams_per_serving": 50.0,
+     "cost_per_serving": 0.346,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "kefir",
+     "name_ru": "Кефир",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.425,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "tomato",
+     "name_ru": "Помидор",
+     "grams_per_serving": 100.0,
+     "cost_per_serving": 0.142,
+     "store": "Spar",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 6
+  },
+  {
+   "id": "fruehstueck-tee-reiswaffeln-cottage-cabanossi",
+   "meal_type": "breakfast",
+   "title": "Чай, рисовые хлебцы с зернистым творогом и кабаносы",
+   "title_de": "Reiswaffeln mit Hüttenkäse und Cabanossi",
+   "description": "Хрустящие рисовые хлебцы с зернистым творогом и помидором, немного кабаноса и чай — около 30 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "завтрак",
+    "просто",
+    "без готовки",
+    "с чаем",
+    "cottage cheese"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 5,
+    "cook": 4,
+    "total": 9,
+    "active": 5
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка",
+    "Доска и нож"
+   ],
+   "ingredients": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "cottage_cheese",
+     "name_ru": "Зернистый творог (cottage cheese)",
+     "name_de": "Hüttenkäse / Cottage Cheese",
+     "amount": "¾ стаканчика 200 г",
+     "grams": 150,
+     "basic": false
+    },
+    {
+     "key": "rice_cakes",
+     "name_ru": "Рисовые хлебцы",
+     "name_de": "Reiswaffeln",
+     "amount": "3 шт.",
+     "grams": 23,
+     "basic": false
+    },
+    {
+     "key": "cabanossi",
+     "name_ru": "Кабаносы (сыровяленые колбаски)",
+     "name_de": "Cabanossi",
+     "amount": "кусок длиной ~12 см",
+     "grams": 40,
+     "basic": false
+    },
+    {
+     "key": "tomato",
+     "name_ru": "Помидор",
+     "name_de": "Paradeiser / Tomaten",
+     "amount": "1 шт.",
+     "grams": 100,
+     "basic": false
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "name_de": "Pfeffer schwarz gemahlen",
+     "amount": "щепотка",
+     "grams": 0.5,
+     "basic": true
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты — пока чай не станет тёмно-янтарным, затем вынь пакетик.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Пока чай настаивается, нарежь помидор мелкими кубиками ~1 см.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Нарежь кабанос кружками толщиной ~5 мм.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Разложи зернистый творог по хлебцам, сверху помидор и поперчи; кабанос ешь рядом.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Выкладывать творог с жидкостью из стаканчика — хлебцы размокнут; бери ложкой, оставляя сыворотку.",
+    "Солить — творог и кабаносы уже солёные, хватит перца.",
+    "Пить чай сразу из-под кипятка — обожжёшь рот; пока ешь, он остынет до приятной температуры за 3–4 минуты."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Кабаносы",
+     "to": "2 ломтика ветчины",
+     "note": "меньше жира"
+    },
+    {
+     "from": "Рисовые хлебцы",
+     "to": "2 ржаных хлебца (Knäckebrot)",
+     "note": "крепче держат творог"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 1.59,
+    "kcal": 433,
+    "protein": 31.8,
+    "fat": 22.3,
+    "carbs": 25.6
+   },
+   "cost_breakdown": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "cottage_cheese",
+     "name_ru": "Зернистый творог (cottage cheese)",
+     "grams_per_serving": 150.0,
+     "cost_per_serving": 0.894,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "rice_cakes",
+     "name_ru": "Рисовые хлебцы",
+     "grams_per_serving": 23.0,
+     "cost_per_serving": 0.202,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "cabanossi",
+     "name_ru": "Кабаносы (сыровяленые колбаски)",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.319,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "tomato",
+     "name_ru": "Помидор",
+     "grams_per_serving": 100.0,
+     "cost_per_serving": 0.142,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "grams_per_serving": 0.5,
+     "cost_per_serving": 0.008,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 5
   }
  ]
 }

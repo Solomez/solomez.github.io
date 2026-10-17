@@ -474,7 +474,22 @@ export function effectivePlan(plan, kinds = ['out', 'skipped']) {
 export function toggleSkip(plan, key, kind = 'out') {
   const skips = { ...(plan.skips || {}) };
   if (skips[key]) delete skips[key]; else skips[key] = kind;
-  return { ...plan, skips };
+  const done = { ...(plan.done || {}) };
+  if (skips[key]) delete done[key]; // «не ел» снимает отметку «съел»
+  return { ...plan, skips, done };
+}
+
+// ---------- Отметка «приготовил / съел» ----------
+// plan.done: { ключ: время отметки } — ключи те же, что у пропусков. Отмеченное готовится «сейчас»: продукты списываются
+// из запасов в момент отметки (а не в плановое время), и в список покупок «на оставшееся» блюдо больше не входит.
+// Неотмеченное прошедшее по-прежнему считается съеденным по плану, «не ел» — не списывается.
+export const doneOf = (plan, key) => plan?.done?.[key] || null;
+export function toggleDone(plan, key, t = Date.now()) {
+  const done = { ...(plan.done || {}) };
+  if (done[key]) delete done[key]; else done[key] = t;
+  const skips = { ...(plan.skips || {}) };
+  if (done[key]) delete skips[key]; // «съел» снимает «вне дома / не ел»
+  return { ...plan, done, skips };
 }
 
 // Перенести ужин на другой день: блюда двух ужинов меняются местами (вместе с обедом-остатком)

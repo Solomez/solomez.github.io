@@ -18,7 +18,8 @@ export const PIECES = {
   eggs: [60, 'шт.'], bell_pepper: [150, 'шт.'], lemon: [100, 'шт.'], cucumber: [400, 'шт.'], lettuce: [300, 'кочан'],
   leek: [250, 'шт.'], cauliflower: [800, 'кочан'], white_cabbage: [1200, 'кочан'], onion: [100, 'шт.'], carrot: [80, 'шт.'],
   tomato: [100, 'шт.'], banana: [120, 'шт.'], potatoes: [150, 'шт.'], garlic: [50, 'головка'], sweet_potato: [300, 'шт.'],
-  spring_onion: [100, 'пучок'], parsley: [30, 'пучок'], tortilla: [40, 'шт.'], sausage_frankfurter: [50, 'шт.'],
+  spring_onion: [100, 'пучок'], parsley: [30, 'пучок'], tortilla: [40, 'шт.'], sausage_frankfurter: [50, 'шт.'], apple: [150, 'шт.'],
+  protein_bar: [45, 'шт.'], protein_pudding: [200, 'стаканчик'],
 };
 
 // Уровни для продуктов в упаковках: доля обычной упаковки
@@ -108,14 +109,17 @@ const cookTime = (plan, day, meal) => { const d = dayDate(plan, day); d.setHours
 export function cookEvents(plan, recipeMap) {
   if (!plan) return [];
   const out = [];
-  const add = (recipeId, factor, portions, day, meal) => {
+  // отмечено «приготовил / съел» — списываем в момент отметки (если раньше планового времени)
+  const add = (recipeId, factor, portions, day, meal, key) => {
     const r = recipeMap.get(recipeId);
     if (!r) return;
     const items = scaledIngredients(r, factor, portions).filter((i) => i.key !== 'water' && i.grams > 0 && !i.optional).map((i) => ({ key: i.key, grams: i.grams }));
-    out.push({ t: cookTime(plan, day, meal), recipeId, items });
+    const planned = cookTime(plan, day, meal);
+    const marked = plan.done?.[key];
+    out.push({ t: marked ? Math.min(marked, planned) : planned, recipeId, items, key, marked: !!marked });
   };
-  for (const b of plan.batches || []) if (b.slots.length) add(b.recipeId, b.factor, b.slots.length, b.slots[0].day, b.slots[0].meal);
-  for (const x of plan.extras || []) add(x.recipeId, x.factor, 1, x.day, x.meal);
+  for (const b of plan.batches || []) if (b.slots.length) add(b.recipeId, b.factor, b.slots.length, b.slots[0].day, b.slots[0].meal, `${b.slots[0].day}|${b.slots[0].meal}`);
+  for (const x of plan.extras || []) add(x.recipeId, x.factor, 1, x.day, x.meal, x.id);
   return out.sort((a, b) => a.t - b.t);
 }
 

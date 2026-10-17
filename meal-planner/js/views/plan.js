@@ -1,7 +1,7 @@
 import { h, eur, num, icon, toast, sheet, copyText, download, meter, selectForCopy, seg, plural } from '../ui.js';
 import { state, save, targets, IS_ARTIFACT, toggleIn } from '../state.js';
 import { missingTools } from '../core/equipment.js';
-import { slotTemplate, generatePlan, alternatives, swapBatch, planDays, daySums, MEALS, extraAlternatives, swapExtra, swapFactor, effectivePlan, skipOf, skipKeyOf, toggleSkip, moveBatch, refillPlan, canStore, dropRecipe } from '../core/planner.js';
+import { doneOf, toggleDone, slotTemplate, generatePlan, alternatives, swapBatch, planDays, daySums, MEALS, extraAlternatives, swapExtra, swapFactor, effectivePlan, skipOf, skipKeyOf, toggleSkip, moveBatch, refillPlan, canStore, dropRecipe } from '../core/planner.js';
 import { dayName, dayShort, dayDate, todayIndex, mealPast, cookPast, startOptions, defaultStart, fmtDate, isoDate, planFinished } from '../core/calendar.js';
 import { consumedPlanCost } from '../core/shopping.js';
 import { checkoutNow, weekBudget, homeForPlanning, stockNow, planEvents } from './money.js';
@@ -97,7 +97,7 @@ function fillWithShopping(rerender) {
   const now = new Date();
   const { home, expiring } = homeForRefill(now);
   state.plan = refillPlan(prev, { recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs,
-    budget: state.profile.budget, reserve: state.profile.reserve, isLocked: () => true, isDone: (d, m) => cookPast(prev, d, m, now),
+    budget: state.profile.budget, reserve: state.profile.reserve, isLocked: () => true, isDone: doneAt(prev, now),
     seed: (Date.now() % 1e9) | 0, home, source: 'shop', prefer: expiring.map((e) => e.key) });
   state.plan.source = 'mixed';
   state.plan.settingsKey = settingsKey();
@@ -113,14 +113,16 @@ const signed = (d) => (Math.abs(d) < 0.005 ? '±€0' : (d > 0 ? '+' : '−') + 
 
 // «Досоставить оставшиеся дни»: прошедшее и правки вручную остаются (F21)
 // Закреплено: уже приготовленное, сегодня и завтра (продукты под них могли быть уже куплены) — их «досоставить» не трогает
-const lockedFor = (plan, now) => (d, m) => cookPast(plan, d, m, now) || d <= todayIndex(plan, now) + 1;
+const lockedFor = (plan, now) => (d, m) => doneAt(plan, now)(d, m) || d <= todayIndex(plan, now) + 1;
+// Уже приготовлено: прошло время готовки или отмечено «приготовил / съел»
+const doneAt = (plan, now) => (d, m) => cookPast(plan, d, m, now) || !!plan.done?.[`${d}|${m}`] || (plan.extras || []).some((x) => x.day === d && x.meal === m && plan.done?.[x.id]);
 
 export function refill(rerender, { cheap = false } = {}) {
   const prev = state.plan;
   const now = new Date();
   const { home, expiring } = homeForRefill(now);
   const opts = { recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs,
-    budget: state.profile.budget, reserve: state.profile.reserve, isLocked: lockedFor(prev, now), isDone: (d, m) => cookPast(prev, d, m, now), cheap,
+    budget: state.profile.budget, reserve: state.profile.reserve, isLocked: lockedFor(prev, now), isDone: doneAt(prev, now), cheap,
     home, source: prev.source === 'home' ? 'home' : 'shop', prefer: expiring.map((e) => e.key) };
   const before = checkoutNow(prev, 'week').toPay;
   // несколько вариантов. «Дешевле» — самый дешёвый, и только если он правда дешевле текущего;
@@ -237,7 +239,7 @@ function dropFromPlan(r, rerender) {
   // добавить, а не переключить: блюдо могло быть уже скрыто на странице рецепта
   state.prefs.hidden = [...new Set([...prevHidden, r.id])];
   const now = new Date();
-  const res = dropRecipe(prev, r.id, { recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs, isDone: (d, m) => cookPast(prev, d, m, now) });
+  const res = dropRecipe(prev, r.id, { recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs, isDone: doneAt(prev, now) });
   state.plan = res.plan;
   state.plan.settingsKey = settingsKey(); // план уже учитывает скрытое блюдо — без плашки «настройки изменились»
   const d = weekDelta(prev, state.plan);
@@ -433,16 +435,35 @@ function overBudget(plan, over, rerender) {
       h('button', { class: 'btn small ghost', onclick: () => { plan.acceptOver = true; save(); rerender({ keepScroll: true }); } }, 'Оставить так')));
 }
 
+// «Приготовил / Съел»: продукты списываются из запасов сразу, блюдо уходит из списка покупок «на оставшееся»
+export function markDone(e, rerender) {
+  const prev = state.plan;
+  const key = skipKeyOf(e);
+  state.plan = toggleDone(prev, key);
+  save();
+  rerender({ keepScroll: true });
+  const on = !!doneOf(state.plan, key);
+  const cooks = !e.leftover; // остаток вчерашнего ужина: продукты списались, когда его готовили
+  const names = e.recipe.ingredients.filter((i) => !i.basic && !i.optional && i.key !== 'water').map((i) => (state.data.products[i.key]?.name_ru || i.name_ru).toLowerCase());
+  const list = names.length > 4 ? `${names.slice(0, 4).join(', ')} и ещё ${names.length - 4}` : names.join(', ');
+  const msg = !on ? 'Отметка снята — продукты вернулись в запасы'
+    : cooks ? `${e.batch ? 'Приготовлено' : 'Съедено'}. Списано из запасов: ${list}` : 'Съедено. Продукты списались, когда готовили ужин';
+  toast(msg, { label: 'Отменить', onClick: () => { state.plan = prev; save(); rerender({ keepScroll: true }); } });
+}
+
 function mealRow(e, rerender, past) {
   const r = e.recipe;
   const ps = r.per_serving;
   const href = `#/recipe/${r.id}?f=${e.factor}&p=${e.portions}`;
   const skip = skipOf(state.plan, skipKeyOf(e));
-  const noTools = !past && !skip && !e.leftover ? missingTools(r, state.prefs.equipment) : [];
-  const note = skip === 'out' ? 'ем вне дома' : skip === 'skipped' ? 'не съедено' : past ? 'прошло' : e.leftover ? 'остаток вчерашнего ужина' : e.portions > 1 ? 'готовим 2 порции' : e.batch && e.meal === 'lunch' && e.portions === 1 && e.batch.slots.length > 1 ? 'готовим 1 порцию' : null;
+  const done = doneOf(state.plan, skipKeyOf(e));
+  const cookLabel = !!e.batch && !e.leftover; // готовка (ужин на 2 порции, обед) — «приготовил»; остальное — «съел»
+  const canMark = !skip && e.day <= todayIndex(state.plan, new Date());
+  const noTools = !past && !skip && !done && !e.leftover ? missingTools(r, state.prefs.equipment) : [];
+  const note = done ? (cookLabel ? 'приготовлено ✓' : 'съедено ✓') : skip === 'out' ? 'ем вне дома' : skip === 'skipped' ? 'не съедено' : past ? 'прошло' : e.leftover ? 'остаток вчерашнего ужина' : e.portions > 1 ? 'готовим 2 порции' : e.batch && e.meal === 'lunch' && e.portions === 1 && e.batch.slots.length > 1 ? 'готовим 1 порцию' : null;
   // после следующей правки плана (другая версия) строка устаревает — UX-ревью: «Заменено: +€1,83» после отмены через «Не предлагать»
   const change = ui.note && ui.note.plan === state.plan && ui.note.id === (e.batch?.id || e.extra?.id) ? ui.note.text : null;
-  return h('div', { class: 'meal' + (e.leftover ? ' leftover' : '') + (past || skip ? ' past' : '') },
+  return h('div', { class: 'meal' + (e.leftover ? ' leftover' : '') + (past || skip || done ? ' past' : '') + (done ? ' done' : '') },
     h('div', { class: 'when' }, MEALS[e.meal]),
     h('a', { class: 'meal-main', href },
       h('span', { class: 'title' }, r.title),
@@ -450,15 +471,18 @@ function mealRow(e, rerender, past) {
         `${num(ps.protein * e.factor)}\u00a0г белка · ${num(ps.kcal * e.factor)}\u00a0ккал · ${eur(ps.cost * e.factor)}`,
         e.leftover ? '' : ` · ${r.time.total}\u00a0мин`),
       h('span', { class: 'meal-tags' },
-        note ? h('span', { class: 'badge' + (e.leftover || past ? '' : ' accent') }, note) : null,
-        !e.leftover && !past ? diffBadge(r) : null,
+        note ? h('span', { class: 'badge' + (done ? ' accent' : e.leftover || past ? '' : ' accent') }, note) : null,
+        !e.leftover && !past && !done ? diffBadge(r) : null,
         noTools.length ? h('span', { class: 'badge warn' }, `нет: ${noTools.join(', ').toLowerCase()} — замените`) : null,
         (r.tags || []).includes('спорное') ? h('span', { class: 'badge', title: 'Блюдо с необычным сочетанием — на любителя' }, 'необычное') : null)),
     change ? h('div', { class: 'freeze-note' }, change) : null,
     // действия с подписью: «Готовить» (у будущей готовки), «Заменить» и «Ещё»
     h('div', { class: 'meal-actions no-print' },
-      e.batch && !e.leftover && !past && !skip ? h('a', { class: 'btn small', href: `#/cook/${r.id}?f=${e.factor}&p=${e.portions}` }, icon('pot'), 'Готовить') : null,
-      past ? null : h('button', { class: 'btn small', 'aria-label': `Заменить: ${r.title}`, // прошедшее не заменяют (UX-ревью Н11)
+      canMark ? h('button', { class: 'btn small' + (done ? ' on' : ''), 'aria-pressed': String(!!done), title: 'Продукты спишутся из запасов дома',
+        'aria-label': `${done ? 'Снять отметку' : cookLabel ? 'Приготовил' : 'Съел'}: ${r.title}`, onclick: () => markDone(e, rerender) },
+        icon('check'), done ? (cookLabel ? 'Приготовлено' : 'Съедено') : (cookLabel ? 'Приготовил' : 'Съел')) : null,
+      e.batch && !e.leftover && !past && !skip && !done ? h('a', { class: 'btn small', href: `#/cook/${r.id}?f=${e.factor}&p=${e.portions}` }, icon('pot'), 'Готовить') : null,
+      past || done ? null : h('button', { class: 'btn small', 'aria-label': `Заменить: ${r.title}`, // прошедшее не заменяют (UX-ревью Н11)
         onclick: () => swapMenu(e, rerender) }, icon('swap'), 'Заменить'),
       h('button', { class: 'btn small', 'aria-label': `Ещё: ${r.title}`, onclick: () => mealMenu(e, rerender) }, icon('more'), 'Ещё')));
 }
