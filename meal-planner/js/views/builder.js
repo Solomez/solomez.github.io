@@ -6,6 +6,7 @@ import { buildCustomRecipe, unitOf, gramsOf, autoTitle, productFromCatalog, meal
 import { aisles } from '../core/catalog.js';
 import { photo, thumbPack } from './products.js';
 import { pickFromCatalog } from './catalog.js';
+import { manualItemSheet } from './manual.js';
 import { putInPlan } from './library.js';
 
 // Категории для быстрого выбора — сначала то, из чего обычно собирают перекус и завтрак
@@ -91,7 +92,8 @@ export function renderBuilder(root, rerender, id, params) {
     oninput: (e) => { ui.q = e.target.value; redraw({ keepFocus: true }); } }));
   root.append(h('ul', { class: 'home-list' }, candidates(products).slice(0, 40).map((k) => pickRow(k, products, d, redraw))));
   root.append(h('p', { class: 'muted', style: { marginTop: '8px' } }, 'Нет нужного? ',
-    h('button', { class: 'linkbtn', onclick: () => addFromCatalog(d, redraw) }, 'Найти в каталоге магазинов'), ' — любой из 22 000 товаров Billa, Spar и Penny, КБЖУ — с этикетки.'));
+    h('button', { class: 'linkbtn', onclick: () => addFromCatalog(d, redraw) }, 'Найти в каталоге магазинов'), ' — любой из 22 000 товаров Billa, Spar и Penny, КБЖУ — с этикетки. Купили в Hofer, Lidl или азиатском магазине? ',
+    h('button', { class: 'linkbtn', onclick: () => manualItemSheet({ name: ui.q.trim(), onSave: (it) => addManual(it, d, redraw) }) }, 'Добавить вручную'), '.'));
 
   // Название и как собрать
   root.append(h('h2', null, 'Название и как собрать'));
@@ -178,7 +180,7 @@ function productForm({ title, intro, product, fields = [], submit, onSave }) {
     sim ? h('button', { class: 'btn small', style: { justifySelf: 'start' }, onclick: () => ids.forEach((id, j) => { document.getElementById(id).value = sim.values[j]; }) },
       `Этикетки нет под рукой — как у похожих: ${num(sim.values[0])} ккал, ${num(sim.values[1], 1)} г белка`) : null,
     sim ? h('div', { class: 'muted small' }, `Среднее по: ${sim.names.join(', ')}. Это приблизительно — с этикетки точнее.`) : null,
-    ...fields.map(([id, label]) => f(id, label)),
+    ...fields.map(([id, label, val]) => f(id, label, val)),
     h('button', { class: 'btn primary wide', onclick: () => {
       const v = (id) => +(document.getElementById(id)?.value || 0);
       onSave({ name: name.value.trim(), nutrition: ids.map(v), v });
@@ -193,11 +195,17 @@ export function editCustomProduct(key, after) {
   const pack = p.packs?.[0];
   const noWeight = pack && !pack.loose && !(pack.grams > 0);
   productForm({ title: p.name_ru, intro: `${pack?.name_de || p.name_de} · ${pack?.store || ''}. Перепишите с этикетки, сколько в 100 г — калории и белок пересчитаются во всех ваших вариантах с этим продуктом.`,
-    product: p, submit: 'Сохранить', fields: noWeight ? [['cf-size', `Вес всей упаковки, г${pack.pack_unit === 'pcs' ? ` (${pack.pack_size} шт.)` : ''} — чтобы посчитать цену`]] : [],
+    product: p, submit: 'Сохранить', fields: [
+      ...(p.manual ? [['cf-price', 'Цена упаковки, €', pack?.price_eur]] : []),
+      ...(noWeight ? [['cf-size', `Вес всей упаковки, г${pack.pack_unit === 'pcs' ? ` (${pack.pack_size} шт.)` : ''} — чтобы посчитать цену`]] : []),
+    ],
     onSave: ({ name, nutrition, v }) => {
       const has = nutrition.some((x) => x > 0);
       const size = noWeight ? v('cf-size') : 0;
-      const packs = size > 0 ? [{ ...pack, grams: size, eur_per_kg: Math.round((pack.price_eur / size) * 1000 * 100) / 100 }, ...p.packs.slice(1)] : p.packs;
+      const price = p.manual && v('cf-price') > 0 ? Math.round(v('cf-price') * 100) / 100 : pack?.price_eur;
+      const grams = size > 0 ? size : pack?.grams;
+      const packs = size > 0 || price !== pack?.price_eur
+        ? [{ ...pack, grams: grams || null, price_eur: price, eur_per_kg: grams > 0 && price > 0 ? Math.round((price / grams) * 1000 * 100) / 100 : 0 }, ...p.packs.slice(1)] : p.packs;
       state.custom.products = { ...state.custom.products, [key]: { ...p, packs, name_ru: name || p.name_ru, nutrition_per_100g: has ? nutrition : null } };
       applyCustom();
       save();
@@ -206,9 +214,20 @@ export function editCustomProduct(key, after) {
     } });
 }
 
+// Свой товар, введённый вручную: продукт уже сохранён (с КБЖУ, если указали) — просто кладём в приём пищи
+function addManual(it, d, redraw) {
+  const p = state.data.products[it.pkey];
+  if (!p) return;
+  if (!d.items.some((i) => i.key === p.key)) d.items.push({ key: p.key, qty: unitOf(p.key, p).def });
+  ui.q = '';
+  redraw();
+  toast(`Добавлено: ${p.name_ru}`);
+}
+
 // Товар из каталога: КБЖУ с этикетки (на 100 г), вес упаковки — если в каталоге нет
 function addFromCatalog(d, redraw) {
   pickFromCatalog({ title: 'Добавить из каталога', pickLabel: 'Выбрать', onPick: (it) => {
+    if (it.manual) return addManual(it, d, redraw);
     const zone = aisles(state.data).shelf[it.shelf]?.zone || null;
     const draftP = { ...productFromCatalog(it, { zone }), name_ru: it.name };
     const fields = [...(!it.size && !it.byWeight ? [['cf-size', 'Вес упаковки, г']] : []), ...(it.unit === 'pcs' ? [['cf-piece', 'Вес одной штуки, г']] : [])];

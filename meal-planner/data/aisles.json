@@ -517,7 +517,7 @@
    "ru": "Готовые блюда и супы (не в холодильнике)",
    "en": "Shelf-stable meals & soups",
    "de": "Fertiggerichte & Suppen",
-   "count": 446
+   "count": 411
   },
   {
    "id": "canned_spreads",
@@ -597,7 +597,7 @@
    "ru": "Азиатское",
    "en": "Asian food",
    "de": "Asien",
-   "count": 145
+   "count": 180
   },
   {
    "id": "balkan",
@@ -5797,7 +5797,8 @@
     "удон",
     "соба",
     "лапша для вока",
-    "яичная лапша"
+    "яичная лапша",
+    "лапша для рамена"
    ],
    "en_alt": [
     "rice noodles",
@@ -5805,7 +5806,8 @@
     "egg noodles",
     "udon",
     "soba",
-    "stir-fry noodles"
+    "stir-fry noodles",
+    "ramen noodles"
    ]
   },
   {
@@ -5818,13 +5820,31 @@
     "роллтон",
     "лапша в стаканчике",
     "бичпакет",
-    "рамен"
+    "рамен",
+    "рамён",
+    "лапша в пакете",
+    "рамен быстрого приготовления",
+    "нонгшим",
+    "шин рамен",
+    "шин рамён",
+    "самьянг",
+    "бульдак",
+    "индоми",
+    "ролтон",
+    "мивина",
+    "корейская лапша"
    ],
    "en_alt": [
     "pot noodle",
     "cup noodles",
     "ramen",
-    "instant ramen"
+    "instant ramen",
+    "ramyun",
+    "nongshim",
+    "shin ramyun",
+    "buldak",
+    "indomie",
+    "noodle cup"
    ]
   },
   {

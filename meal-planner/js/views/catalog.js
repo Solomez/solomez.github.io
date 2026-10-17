@@ -10,6 +10,8 @@ import { describeStock, stockKind, levelGrams, nearestLevel, PACK_LEVELS, BASIC_
 import { rankByHome, cookableNow } from '../core/suggest.js';
 import { homeForPlanning } from './money.js';
 import { photo, thumbPack } from './products.js';
+import { manualItems } from '../core/custom.js';
+import { manualItemSheet } from './manual.js';
 
 const STORE_KEYS = [['billa', 'Billa'], ['spar', 'Spar'], ['penny', 'Penny']];
 const ui = { tab: 'catalog', q: '', zone: null, shelf: null, stores: null, limit: 60 };
@@ -51,26 +53,34 @@ export function homeMap() {
   return out;
 }
 
+// «Есть дома» для товара каталога; свой товар, введённый вручную, — запасом своего продукта (уровни, учёт готовки)
+function markHome(it) {
+  const p = it.pkey && state.data.products[it.pkey];
+  if (p) setStock(it.pkey, levelGrams(it.pkey, p, stockKind(it.pkey, p) === 'pcs' ? 1 : 'full'));
+  else setHome(it.ref, { have: true, name: it.name, store: it.store, shelf: it.shelf, image: it.image });
+  return p ? it.pkey : null;
+}
+
 // ---------- Карточка товара каталога ----------
 function itemCard(it, { onPick, pickLabel = 'Взял это' } = {}) {
   const label = conceptLabel(state.data, it);
   const shelf = aisles(state.data).shelf[it.shelf];
   const inCart = state.cart.filter((c) => c.ref === it.ref && !c.done).reduce((a, c) => a + c.qty, 0);
-  const home = state.pantry[it.ref]?.have;
+  const home = state.pantry[it.pkey || it.ref]?.have;
   const product = { name_ru: label?.ru || it.name, packs: [asPack(it)] };
   return h('li', { class: 'cat-item' },
     photo(product, asPack(it), { cls: 'thumb lg', label: it.name }),
     h('div', { class: 'cat-main' },
-      h('span', { class: 'cat-name', lang: 'de' }, it.name),
+      h('span', { class: 'cat-name', lang: it.manual ? null : 'de' }, it.name, it.manual ? h('span', { class: 'badge', style: { marginLeft: '6px' } }, 'свой') : null),
       h('span', { class: 'muted' }, [it.brand, label ? `${label.ru} · ${label.en}` : shelf ? `${shelf.ru} · ${shelf.en}` : null].filter(Boolean).join(' · ')),
-      h('span', null, h('b', null, eur(it.price)), h('span', { class: 'muted' }, ` · ${[packText(it), perText(it), it.store].filter(Boolean).join(' · ')}`)),
+      h('span', null, it.price ? h('b', null, eur(it.price)) : h('span', { class: 'muted' }, 'цена не указана'), h('span', { class: 'muted' }, ` · ${[packText(it), perText(it), it.store].filter(Boolean).join(' · ')}`)),
       h('div', { class: 'cat-actions' },
         onPick
           ? h('button', { class: 'btn small primary', onclick: () => onPick(it) }, pickLabel)
           : [
             h('button', { class: 'btn small' + (inCart ? ' on' : ''), onclick: () => { addToCart(it); window.dispatchEvent(new Event('hashchange')); } }, icon('plus'), inCart ? `В списке: ${inCart}` : 'В список'),
             h('button', { class: 'btn small ghost' + (home ? ' on' : ''), 'aria-pressed': String(!!home),
-              onclick: () => { setHome(it.ref, home ? null : { have: true, name: it.name, store: it.store, shelf: it.shelf, image: it.image }); window.dispatchEvent(new Event('hashchange')); } },
+              onclick: () => { if (home) setHome(it.pkey || it.ref, null); else markHome(it); window.dispatchEvent(new Event('hashchange')); } },
             icon('home'), home ? 'Есть дома' : 'Дома есть?'),
           ],
         it.url && /^https?:/.test(it.url) ? h('a', { class: 'small-link', href: it.url, target: '_blank', rel: 'noopener' }, 'в магазине') : null)));
@@ -85,22 +95,40 @@ function itemList(items, opts) {
 }
 
 // ---------- Выбор товара из каталога (для «взял другое» и «добавить в список») ----------
+// Внизу всегда «Нет в каталоге — добавить вручную»: введённый товар становится своим и приходит в onPick как товар каталога
+// (it.manual, it.pkey — ключ своего продукта); такие товары потом находятся здесь же поиском
 export function pickFromCatalog({ title, store, query = '', onPick, pickLabel }) {
   const key = store ? storeKeyOf(store) : null;
   const keys = key ? [key] : selectedStores();
   const input = h('input', { type: 'search', placeholder: 'Что ищете? По-русски, по-немецки или по-английски', value: query, 'aria-label': 'Поиск в каталоге' });
   const out = h('div', { class: 'stack' }, h('p', { class: 'muted' }, 'Загружаю каталог…'));
-  let items = [];
+  const mine = manualItems(state.custom?.products, store);
+  let items = mine;
   let close;
+  const pick = (x) => { close(); onPick(x); };
+  const manual = h('p', { class: 'muted', style: { margin: '4px 0 0' } }, 'Нет в каталоге? ',
+    h('button', { class: 'linkbtn', onclick: () => { close(); manualItemSheet({ name: input.value.trim(), store, submit: pickLabel || 'Добавить', onSave: (it) => onPick(it) }); } }, 'Добавить вручную'),
+    ' — любой товар из Hofer, Lidl, азиатского магазина, с ценой и КБЖУ.');
   const draw = () => {
     const found = search(state.data, items, input.value, { limit: 40 });
     out.replaceChildren(input.value.trim()
-      ? (found.length ? h('ul', { class: 'cat-list' }, found.map((it) => itemCard(it, { onPick: (x) => { close(); onPick(x); }, pickLabel }))) : h('p', { class: 'muted' }, navigator.onLine ? 'Ничего не нашлось. Попробуйте другое слово — например, по-немецки.' : 'Нет сети — каталог магазина откроется, когда сеть вернётся.'))
-      : h('p', { class: 'muted' }, `Каталог ${key ? store : 'магазинов'}: ${items.length} товаров. Начните вводить название.`));
+      ? (found.length ? h('ul', { class: 'cat-list' }, found.map((it) => itemCard(it, { onPick: pick, pickLabel }))) : h('p', { class: 'muted' }, navigator.onLine ? 'Ничего не нашлось. Попробуйте другое слово — например, по-немецки — или добавьте вручную.' : 'Нет сети — каталог магазина откроется, когда сеть вернётся. Можно добавить товар вручную.'))
+      : h('div', { class: 'stack' },
+        h('p', { class: 'muted' }, items.length > mine.length ? `Каталог ${key ? store : 'магазинов'}: ${items.length - mine.length} товаров. Начните вводить название.` : 'Загружаю каталог…'),
+        mine.length ? h('div', { class: 'eyebrow' }, 'Ваши товары, добавленные вручную') : null,
+        mine.length ? h('ul', { class: 'cat-list' }, mine.slice(0, 10).map((it) => itemCard(it, { onPick: pick, pickLabel }))) : null));
   };
   input.addEventListener('input', draw);
-  close = sheet(title, h('div', { class: 'stack' }, input, out));
-  ensureLoaded(keys).then((all) => { items = all; draw(); input.focus(); }).catch(() => out.replaceChildren(h('p', { class: 'notice' }, 'Не удалось загрузить каталог. Проверьте интернет.')));
+  close = sheet(title, h('div', { class: 'stack' }, input, out, manual));
+  draw();
+  ensureLoaded(keys).then((all) => { items = [...mine, ...all]; draw(); input.focus(); }).catch(() => out.replaceChildren(h('p', { class: 'notice' }, 'Не удалось загрузить каталог. Проверьте интернет — или добавьте товар вручную.')));
+}
+
+// «Нет в каталоге — добавить вручную» под поиском: сохранённый товар сразу находится этим поиском
+function manualLink(redraw) {
+  return h('p', { class: 'muted', style: { marginTop: '10px' } }, 'Нет нужного? Онлайн-магазины продают не всё — ',
+    h('button', { class: 'linkbtn', onclick: () => manualItemSheet({ name: ui.q.trim(), submit: 'Сохранить', onSave: (it) => { ui.q = it.name; redraw(); toast(`Сохранено: ${it.name}. Теперь его можно добавить в список или отметить дома.`); } }) }, 'добавьте товар вручную'),
+    ' (Hofer, Lidl, азиатский магазин), с ценой и КБЖУ.');
 }
 
 // ---------- Экран ----------
@@ -145,9 +173,10 @@ export function renderProducts(root, rerender, params) {
   body.replaceChildren();
 
   if (ui.q.trim()) {
-    const found = search(state.data, items, ui.q, { limit: 400 });
+    const found = search(state.data, [...manualItems(state.custom?.products), ...items], ui.q, { limit: 400 });
     body.append(h('p', { class: 'muted', style: { marginTop: 0 } }, found.length ? `Найдено: ${found.length}${found.length === 400 ? '+' : ''}. Сначала — самые похожие, при равенстве — дешевле за кг.` : 'Ничего не нашлось. Попробуйте по-немецки или другое слово.'));
     body.append(itemList(found));
+    body.append(manualLink(redraw));
     return;
   }
   // Полка
@@ -256,7 +285,10 @@ function renderHome(root, redraw, rerender) {
         h('button', { class: 'btn small', onclick: () => { setHome(ref, null); const c = state.cart.find((x) => x.ref === ref && !x.done); if (!c) state.cart.push({ ...cartEntryOf({ ref, name: v.name, store: v.store, shelf: v.shelf, image: v.image, price: null, concepts: [] }) }); save(); redraw(); toast('Закончилось — добавил в список'); } }, 'Закончилось'),
         h('button', { class: 'btn small ghost', 'aria-label': 'Убрать', onclick: () => { setHome(ref, null); redraw(); } }, icon('close')))))));
   }
-  root.append(h('button', { class: 'btn', style: { marginTop: '10px' }, onclick: () => pickFromCatalog({ title: 'Что есть дома?', pickLabel: 'Есть дома', onPick: (it) => { setHome(it.ref, { have: true, name: it.name, store: it.store, shelf: it.shelf, image: it.image }); redraw(); } }) }, icon('plus'), 'Добавить из каталога'));
+  const homePicked = (it) => { const k = markHome(it); if (k) { ui.editKey = k; ui.homeQ = ''; } redraw(); toast(`Есть дома: ${it.name}`); };
+  root.append(h('div', { class: 'row', style: { marginTop: '10px' } },
+    h('button', { class: 'btn', onclick: () => pickFromCatalog({ title: 'Что есть дома?', pickLabel: 'Есть дома', onPick: homePicked }) }, icon('plus'), 'Добавить из каталога'),
+    h('button', { class: 'btn ghost', onclick: () => manualItemSheet({ title: 'Есть дома: добавить вручную', submit: 'Есть дома', onSave: homePicked }) }, 'Добавить вручную')));
 }
 
 // Строка запаса: сколько есть (по-человечески), откуда это число, хватит ли плану; «Изменить» — уровни
@@ -337,7 +369,10 @@ function addProductSheet(redraw) {
   };
   input.addEventListener('input', draw);
   draw();
-  close = sheet('Что есть дома?', h('div', { class: 'stack' }, input, list));
+  const manual = h('p', { class: 'muted', style: { margin: 0 } }, 'Нет в списке? ',
+    h('button', { class: 'linkbtn', onclick: () => { close(); manualItemSheet({ title: 'Есть дома: добавить вручную', name: input.value.trim(), submit: 'Есть дома', onSave: (it) => { const k = markHome(it); ui.editKey = k; ui.homeQ = ''; redraw(); toast(`Есть дома: ${it.name}`); } }); } }, 'Добавить вручную'),
+    ' — например, рамен из азиатского магазина.');
+  close = sheet('Что есть дома?', h('div', { class: 'stack' }, input, manual, list));
   setTimeout(() => input.focus(), 50);
 }
 
@@ -356,7 +391,9 @@ function renderCart(root, redraw) {
       h('button', { class: 'linkbtn', onclick: () => { state.cart = state.cart.filter((c) => !c.done); save(); redraw(); } }, 'Очистить')));
     root.append(h('ul', { class: 'home-list' }, done.map((c) => cartRow(c, redraw))));
   }
-  root.append(h('button', { class: 'btn', style: { marginTop: '10px' }, onclick: () => pickFromCatalog({ title: 'Добавить в список', pickLabel: 'В список', onPick: (it) => { addToCart(it); redraw(); } }) }, icon('plus'), 'Добавить из каталога'));
+  root.append(h('div', { class: 'row', style: { marginTop: '10px' } },
+    h('button', { class: 'btn', onclick: () => pickFromCatalog({ title: 'Добавить в список', pickLabel: 'В список', onPick: (it) => { addToCart(it); redraw(); } }) }, icon('plus'), 'Добавить из каталога'),
+    h('button', { class: 'btn ghost', onclick: () => manualItemSheet({ title: 'В список: добавить вручную', submit: 'В список', onSave: (it) => { addToCart(it); redraw(); } }) }, 'Добавить вручную')));
 }
 
 export function cartRow(c, redraw, { compact = false } = {}) {

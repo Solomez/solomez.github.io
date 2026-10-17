@@ -16,6 +16,9 @@ export function unitOf(key, product) {
   if (BAGS[key]) return { unit: 'пакетик', per: BAGS[key], step: 1, def: 1 };
   if (SPOONS[key]) return { unit: 'ст. л.', per: SPOONS[key], step: 1, def: 1 };
   if (PIECES[key]) return { unit: PIECES[key][1], per: PIECES[key][0], step: key === 'eggs' || PIECES[key][0] <= 60 ? 1 : 0.5, def: 1 };
+  // свой товар, введённый вручную, в небольшой упаковке (пачка лапши, стаканчик) — считаем упаковками
+  const own = product?.manual && (product.packs || [])[0];
+  if (own && own.pack_unit !== 'pcs' && own.grams > 0 && own.grams <= 250) return { unit: 'уп.', per: own.grams, step: 0.5, def: 1 };
   const ml = (product?.packs || []).some((p) => p.pack_unit === 'ml');
   if (ml) return { unit: 'мл', per: 1, step: 50, def: DEFAULT_G[key] || 200 };
   const pcsPack = (product?.packs || []).find((p) => p.pack_unit === 'pcs' && p.grams > 0 && p.pack_size > 0);
@@ -124,7 +127,8 @@ export function autoTitle(ingredients) {
 export function productFromCatalog(it, { name, nutrition, sizeGrams, pieceGrams, zone } = {}) {
   const unit = it.unit || (sizeGrams ? 'g' : null);
   const size = it.size || sizeGrams || null;
-  const grams = unit === 'pcs' ? (size && pieceGrams ? size * pieceGrams : null) : size;
+  const piece = pieceGrams || it.pieceGrams; // у товара, введённого вручную, вес штуки уже в нём
+  const grams = unit === 'pcs' ? (size && piece ? size * piece : null) : size;
   const key = `my_${String(it.ref || `${it.store}_${it.id}`).replace(/[^a-z0-9]+/gi, '_').toLowerCase()}`;
   const pack = {
     store: it.store, name_de: [it.brand, it.name].filter(Boolean).join(' · ').replace(/^(.+) · \1/, '$1'), brand: it.brand || null, budget_line: false,
@@ -133,12 +137,41 @@ export function productFromCatalog(it, { name, nutrition, sizeGrams, pieceGrams,
     url: it.url || null, date: null, stale: false, is_estimate: false, loose: !!it.byWeight, image: it.image || null,
   };
   return {
-    key, custom: true, ref: it.ref || null,
+    key, custom: true, ref: it.ref || null, ...(it.manual ? { manual: true } : {}),
     name_ru: name?.trim() || it.name, name_de: pack.name_de, name_de_generic: it.name, name_en: null,
     department: zone || 'pantry', zone: zone || null, shelf: it.shelf || null, basic: false,
     nutrition_per_100g: Array.isArray(nutrition) && nutrition.some((x) => +x > 0) ? nutrition.map((x) => +x || 0) : null,
     packs: [pack],
   };
+}
+
+// Товар, которого нет в каталоге (Hofer, Lidl, азиатский магазин или просто нет в онлайн-магазине): человек вводит
+// название, магазин, цену и упаковку сам. Возвращает товар в формате каталога — его принимают те же «В список»,
+// «Есть дома» и productFromCatalog. unit: 'g' | 'ml' | 'pcs'; pieceGrams — вес одной штуки для «шт.»
+export const MANUAL_STORES = ['Billa', 'Spar', 'Penny', 'Hofer', 'Lidl', 'Азиатский магазин'];
+export function manualItem({ id, name, store, price, size, unit, pieceGrams, shelf } = {}) {
+  const u = ['g', 'ml', 'pcs'].includes(unit) ? unit : 'g';
+  const s = +size > 0 ? +size : null;
+  const pr = +price > 0 ? round2(+price) : null;
+  const uid = id || `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+  const per = pr && s ? round2(u === 'pcs' ? pr / s : (pr / s) * 1000) : null;
+  return {
+    ref: `own:${uid}`, key: 'own', id: uid, store: (store || '').trim() || 'Другой магазин', name: (name || '').trim(), brand: '', shelf: shelf || null,
+    price: pr, size: s, unit: s ? u : null, per, image: null, url: null, concepts: [], byWeight: false, manual: true,
+    pieceGrams: u === 'pcs' && +pieceGrams > 0 ? +pieceGrams : null,
+  };
+}
+
+// Свои товары, введённые вручную, — обратно в формат каталога: чтобы находились в поиске «Добавить из каталога»
+export function manualItems(customProducts, store) {
+  return Object.values(customProducts || {}).filter((p) => p.manual && p.packs?.[0] && (!store || p.packs[0].store === store)).map((p) => {
+    const pk = p.packs[0];
+    return {
+      ref: p.ref, key: 'own', id: String(p.ref || p.key).replace(/^own:/, ''), store: pk.store, name: p.name_ru, brand: p.name_ru !== p.name_de_generic ? p.name_de_generic : '',
+      shelf: p.shelf, price: pk.price_eur, size: pk.pack_size > 0 && (pk.grams > 0 || pk.pack_unit === 'pcs') ? pk.pack_size : null, unit: pk.pack_unit,
+      per: pk.eur_per_kg || null, image: null, url: null, concepts: [], byWeight: false, manual: true, pkey: p.key,
+    };
+  });
 }
 
 // «Как у похожих»: средние КБЖУ продуктов базы с той же полки (хлопья — как у хлопьев, батончик — как у батончиков),
