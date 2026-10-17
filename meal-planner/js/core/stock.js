@@ -19,7 +19,9 @@ export const PIECES = {
   leek: [250, 'шт.'], cauliflower: [800, 'кочан'], white_cabbage: [1200, 'кочан'], onion: [100, 'шт.'], carrot: [80, 'шт.'],
   tomato: [100, 'шт.'], banana: [120, 'шт.'], potatoes: [150, 'шт.'], garlic: [50, 'головка'], sweet_potato: [300, 'шт.'],
   spring_onion: [100, 'пучок'], parsley: [30, 'пучок'], tortilla: [40, 'шт.'], sausage_frankfurter: [50, 'шт.'], apple: [150, 'шт.'],
-  protein_bar: [45, 'шт.'], protein_pudding: [200, 'стаканчик'],
+  protein_bar: [45, 'шт.'], protein_pudding: [200, 'стаканчик'], fruit_yogurt: [180, 'стаканчик'], croissant: [25, 'шт.'],
+  // батончики — штуками (вес одного батончика или упаковки из двух палочек)
+  snickers: [50, 'шт.'], twix: [50, 'шт.'], mars: [51, 'шт.'], kitkat: [41.5, 'шт.'], bounty: [57, 'шт.'], kinder_bueno: [43, 'шт.'], manner_wafers: [75, 'пачка'],
 };
 
 // Уровни для продуктов в упаковках: доля обычной упаковки

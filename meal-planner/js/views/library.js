@@ -37,6 +37,7 @@ export function matchRecipe(r, f) {
   if (f.type && r.protein_type !== f.type) return false;
   if (f.fav && !(state.prefs.favorites || []).includes(r.id)) return false;
   if (f.tea && !(r.tags || []).includes('с чаем')) return false;
+  if (f.mine && !r.custom) return false;
   if (f.nocook && difficulty(r)?.id !== 'none') return false;
   if (!f.showNoTools && missingTools(r, state.prefs.equipment).length) return false;
   const hidden = (state.prefs.hidden || []).includes(r.id);
@@ -70,6 +71,11 @@ export function renderLibrary(root, rerender, params) {
   ];
   // «с горячим чаем» — только если такие блюда есть среди выбранного типа
   if (recipes.some((r) => (r.meal_type || 'main') === (f.kind || 'main') && (r.tags || []).includes('с чаем'))) quick.splice(3, 0, ['tea', true, 'С горячим чаем']);
+  if (recipes.some((r) => r.custom)) quick.unshift(['mine', true, 'Мои']);
+  // свой вариант — особенно для перекусов и завтраков (хлопья, снеки)
+  root.append(h('div', { class: 'builder-cta' },
+    h('span', null, h('b', null, 'Свой вариант'), h('span', { class: 'muted' }, ' — хлопья, снеки, бутерброды из любых продуктов, с КБЖУ и ценой')),
+    h('a', { class: 'btn small primary', href: `#/builder?type=${f.kind === 'main' ? 'main' : f.kind || 'snack'}` }, icon('plus'), 'Собрать')));
   root.append(h('div', { class: 'chips', style: { marginBottom: '12px' } }, quick.map(([k, v, l]) => {
     const on = f[k] === v;
     return h('button', { class: 'chip' + (on ? ' on' : ''), 'aria-pressed': String(on), onclick: () => set(k, on ? null : v) }, l);
@@ -128,6 +134,7 @@ export function recipeCard(r, rerender) {
     h('div', { class: 'desc' }, r.description),
     h('div', { class: 'meta' }, `${r.time.total}\u00a0мин (активно ${r.time.active}) · ${eur(ps.cost)} · ${num(ps.protein)}\u00a0г белка · ${num(ps.kcal)}\u00a0ккал`),
     h('div', { class: 'row' },
+      r.custom ? h('span', { class: 'badge accent' }, 'мой') : null,
       diffBadge(r),
       (r.tags || []).includes('спорное') ? h('span', { class: 'badge', title: 'Сочетание продуктов на любителя' }, 'необычное') : null,
       missing.length ? h('span', { class: 'badge warn' }, `нужно: ${missing.join(', ').toLowerCase()}`) : null));
@@ -246,7 +253,7 @@ function homeCard(x, rerender) {
 }
 
 // «В план»: поставить блюдо вместо одного из ещё не наступивших приёмов пищи того же типа
-function putInPlan(x, rerender) {
+export function putInPlan(x, rerender) {
   const plan = state.plan;
   const now = new Date();
   const type = x.recipe.meal_type || 'main';

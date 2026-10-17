@@ -714,6 +714,76 @@
    "shelf": "tea",
    "zone": "coffee"
   },
+  "bounty": {
+   "key": "bounty",
+   "name_ru": "Батончик Bounty",
+   "name_de": "Bounty 4x2",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    487,
+    3.7,
+    26,
+    58
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Bounty 4x2",
+     "brand": "Bounty",
+     "budget_line": false,
+     "pack_size": 228.0,
+     "pack_unit": "g",
+     "grams": 228.0,
+     "price_eur": 3.1,
+     "eur_per_kg": 13.596,
+     "url": "https://shop.billa.at/produkte/bounty-4x2-00738115",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-738115-1353572404-7vdbGSiu.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "Bounty Riegel 4x 2er",
+     "brand": "Bounty",
+     "budget_line": false,
+     "pack_size": 228.0,
+     "pack_unit": "g",
+     "grams": 228.0,
+     "price_eur": 3.49,
+     "eur_per_kg": 15.307,
+     "url": "https://www.interspar.at/shop/lebensmittel/bounty-riegel-4x-2er/p/2020004974426",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020004974426/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Bounty",
+     "brand": "Bounty",
+     "budget_line": false,
+     "pack_size": 57.0,
+     "pack_unit": "g",
+     "grams": 57.0,
+     "price_eur": 1.49,
+     "eur_per_kg": 26.14,
+     "url": "https://shop.billa.at/produkte/bounty-001604",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-1604-1123250682-W_r18vnP.jpg"
+    }
+   ],
+   "name_de_generic": "Bounty 4x2",
+   "name_en": "Bounty bar",
+   "shelf": "bars",
+   "zone": "sweets"
+  },
   "bread": {
    "key": "bread",
    "name_ru": "Хлеб пшенично-ржаной",
@@ -1061,6 +1131,76 @@
    "name_en": "Butter",
    "shelf": "butter",
    "zone": "dairy"
+  },
+  "butter_biscuits": {
+   "key": "butter_biscuits",
+   "name_ru": "Печенье Butterkeks",
+   "name_de": "Clever Butterkekse",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    435,
+    7.6,
+    12,
+    73
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Clever Butterkekse",
+     "brand": "CLEVER",
+     "budget_line": true,
+     "pack_size": 400.0,
+     "pack_unit": "g",
+     "grams": 400.0,
+     "price_eur": 1.99,
+     "eur_per_kg": 4.975,
+     "url": "https://shop.billa.at/produkte/clever-butterkekse-00309406",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-309406-1842612868-wVSq7QbQ.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "S-BUDGET Butterkeks 2 x 200g",
+     "brand": "S-BUDGET",
+     "budget_line": true,
+     "pack_size": 400.0,
+     "pack_unit": "g",
+     "grams": 400.0,
+     "price_eur": 1.99,
+     "eur_per_kg": 4.975,
+     "url": "https://www.interspar.at/shop/lebensmittel/s-budget-butterkeks-2-x-200g/p/2020001358908",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020001358908/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Leibniz Butterkeks",
+     "brand": "Leibniz",
+     "budget_line": false,
+     "pack_size": 200.0,
+     "pack_unit": "g",
+     "grams": 200.0,
+     "price_eur": 2.49,
+     "eur_per_kg": 12.45,
+     "url": "https://shop.billa.at/produkte/leibniz-butterkeks-0017586",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-17586-1230950681-h10U7xPp.jpg"
+    }
+   ],
+   "name_de_generic": "Butterkekse",
+   "name_en": "Butter biscuits",
+   "shelf": "biscuits",
+   "zone": "sweets"
   },
   "cabanossi": {
    "key": "cabanossi",
@@ -2475,6 +2615,59 @@
    "shelf": "crispbread",
    "zone": "bakery"
   },
+  "croissant": {
+   "key": "croissant",
+   "name_ru": "Мини-круассаны",
+   "name_de": "S-BUDGET Butter Croissants 15 Stück",
+   "department": "bakery",
+   "basic": false,
+   "nutrition_per_100g": [
+    406,
+    8,
+    21,
+    45
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "S-BUDGET Butter Croissants 15 Stück",
+     "brand": "S-BUDGET",
+     "budget_line": true,
+     "pack_size": 375.0,
+     "pack_unit": "g",
+     "grams": 375.0,
+     "price_eur": 2.39,
+     "eur_per_kg": 6.373,
+     "url": "https://www.interspar.at/shop/lebensmittel/s-budget-butter-croissants-15-stueck/p/2020003791215",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020003791215/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "BILLA Mini Croissants mit Butter",
+     "brand": "Billa immer gut",
+     "budget_line": false,
+     "pack_size": 375.0,
+     "pack_unit": "g",
+     "grams": 375.0,
+     "price_eur": 3.49,
+     "eur_per_kg": 9.307,
+     "url": "https://shop.billa.at/produkte/billa-mini-croissants-mit-butter-00734069",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-734069-739691730-gllyWS-z.jpg"
+    }
+   ],
+   "name_de_generic": "Mini Butter Croissants",
+   "name_en": "Mini butter croissants",
+   "shelf": "cakes",
+   "zone": "bakery"
+  },
   "cucumber": {
    "key": "cucumber",
    "name_ru": "Огурец",
@@ -3279,6 +3472,76 @@
    "shelf": "tea",
    "zone": "coffee"
   },
+  "fruit_yogurt": {
+   "key": "fruit_yogurt",
+   "name_ru": "Фруктовый йогурт",
+   "name_de": "Tirol Milch Joghurt Erdbeere",
+   "department": "dairy",
+   "basic": false,
+   "nutrition_per_100g": [
+    98,
+    3.4,
+    3.0,
+    14
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Tirol Milch Joghurt Erdbeere",
+     "brand": "Tirol Milch",
+     "budget_line": false,
+     "pack_size": 180.0,
+     "pack_unit": "g",
+     "grams": 180.0,
+     "price_eur": 0.75,
+     "eur_per_kg": 4.167,
+     "url": "https://shop.billa.at/produkte/tirol-milch-joghurt-erdbeere-0028736",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-28736-0484440470-VlvqAOsx.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "Erlebnissennerei Zillertal Joghurt Erdbeer",
+     "brand": "Erlebnissennerei Zillertal",
+     "budget_line": false,
+     "pack_size": 180.0,
+     "pack_unit": "g",
+     "grams": 180.0,
+     "price_eur": 0.75,
+     "eur_per_kg": 4.167,
+     "url": "https://www.interspar.at/shop/lebensmittel/erlebnissennerei-zillertal-joghurt-erdbeer/p/2322674",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2322674/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "nöm mix Erdbeere Fruchtjoghurt",
+     "brand": "Nöm",
+     "budget_line": false,
+     "pack_size": 180.0,
+     "pack_unit": "g",
+     "grams": 180.0,
+     "price_eur": 0.81,
+     "eur_per_kg": 4.5,
+     "url": "https://shop.billa.at/produkte/noem-mix-erdbeere-fruchtjoghurt-0023422",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-23422-01786705497-iWwYipem.jpg"
+    }
+   ],
+   "name_de_generic": "Fruchtjoghurt Erdbeere",
+   "name_en": "Fruit yogurt (cup)",
+   "shelf": "yogurt",
+   "zone": "dairy"
+  },
   "garlic": {
    "key": "garlic",
    "name_ru": "Чеснок",
@@ -3645,6 +3908,59 @@
    "name_en": "Greek yogurt",
    "shelf": "yogurt",
    "zone": "dairy"
+  },
+  "gummy_bears": {
+   "key": "gummy_bears",
+   "name_ru": "Мармелад Haribo",
+   "name_de": "Haribo Goldbären",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    343,
+    6.9,
+    0.5,
+    77
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Haribo Goldbären",
+     "brand": "Haribo",
+     "budget_line": false,
+     "pack_size": 175.0,
+     "pack_unit": "g",
+     "grams": 175.0,
+     "price_eur": 1.02,
+     "eur_per_kg": 5.829,
+     "url": "https://shop.billa.at/produkte/haribo-goldbaeren-00706866",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-706866-1211241166-IREU28hA.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "Haribo Fruchtgummi Goldbären",
+     "brand": "Haribo",
+     "budget_line": false,
+     "pack_size": 175.0,
+     "pack_unit": "g",
+     "grams": 175.0,
+     "price_eur": 1.29,
+     "eur_per_kg": 7.371,
+     "url": "https://www.interspar.at/shop/lebensmittel/haribo-fruchtgummi-goldbaeren/p/2020005595149",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020005595149/dt_main.jpg"
+    }
+   ],
+   "name_de_generic": "Haribo Goldbären",
+   "name_en": "Gummy bears (Haribo)",
+   "shelf": "candy",
+   "zone": "sweets"
   },
   "gyros_spice": {
    "key": "gyros_spice",
@@ -4153,6 +4469,129 @@
    "shelf": "canned_veg",
    "zone": "cans"
   },
+  "kinder_bueno": {
+   "key": "kinder_bueno",
+   "name_ru": "Батончик Kinder Bueno",
+   "name_de": "Kinder Bueno Classic 5 x 2 Riegel",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    572,
+    8.6,
+    37,
+    49.5
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "Kinder Bueno Classic 5 x 2 Riegel",
+     "brand": "Ferrero",
+     "budget_line": false,
+     "pack_size": 215.0,
+     "pack_unit": "g",
+     "grams": 215.0,
+     "price_eur": 3.99,
+     "eur_per_kg": 18.558,
+     "url": "https://www.interspar.at/shop/lebensmittel/ferrero-kinder-bueno-classic-5-x-2-riegel/p/7657368",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/7657368/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Kinder Bueno 3 x 43 g",
+     "brand": "Kinder",
+     "budget_line": false,
+     "pack_size": 129.0,
+     "pack_unit": "g",
+     "grams": 129.0,
+     "price_eur": 2.99,
+     "eur_per_kg": 23.178,
+     "url": "https://shop.billa.at/produkte/kinder-bueno-00408224",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-408224-884406543-0Jz-epSw.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Kinder Bueno 43 g",
+     "brand": "Kinder",
+     "budget_line": false,
+     "pack_size": 43.0,
+     "pack_unit": "g",
+     "grams": 43.0,
+     "price_eur": 1.29,
+     "eur_per_kg": 30.0,
+     "url": "https://shop.billa.at/produkte/kinder-bueno-0030830",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-30830-0223824040-AO1hGFs7.jpg"
+    }
+   ],
+   "name_de_generic": "Kinder Bueno Classic 5 x 2 Riegel",
+   "name_en": "Kinder Bueno bar",
+   "shelf": "bars",
+   "zone": "sweets"
+  },
+  "kitkat": {
+   "key": "kitkat",
+   "name_ru": "Батончик KitKat",
+   "name_de": "KitKat 4er",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    518,
+    6.5,
+    26,
+    63
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "KitKat 4er",
+     "brand": "KitKat",
+     "budget_line": false,
+     "pack_size": 166.0,
+     "pack_unit": "g",
+     "grams": 166.0,
+     "price_eur": 2.66,
+     "eur_per_kg": 16.024,
+     "url": "https://shop.billa.at/produkte/kitkat-4er-00867718",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-867718-312305357-hTj5D7Q7.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "Nestlé Kit Kat Classic 4er",
+     "brand": "Nestlé",
+     "budget_line": false,
+     "pack_size": 166.0,
+     "pack_unit": "g",
+     "grams": 166.0,
+     "price_eur": 2.99,
+     "eur_per_kg": 18.012,
+     "url": "https://www.interspar.at/shop/lebensmittel/nestl-kit-kat-classic-4er/p/2020003738487",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020003738487/dt_main.jpg"
+    }
+   ],
+   "name_de_generic": "KitKat Classic",
+   "name_en": "KitKat bar",
+   "shelf": "bars",
+   "zone": "sweets"
+  },
   "leek": {
    "key": "leek",
    "name_ru": "Лук-порей",
@@ -4433,6 +4872,76 @@
    "shelf": "cream",
    "zone": "dairy"
   },
+  "manner_wafers": {
+   "key": "manner_wafers",
+   "name_ru": "Вафли Manner",
+   "name_de": "Manner Neapolitaner 4 x 75 g",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    502,
+    6.5,
+    26,
+    60
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Manner Neapolitaner 4 x 75 g",
+     "brand": "Manner",
+     "budget_line": false,
+     "pack_size": 300.0,
+     "pack_unit": "g",
+     "grams": 300.0,
+     "price_eur": 3.69,
+     "eur_per_kg": 12.3,
+     "url": "https://shop.billa.at/produkte/manner-neapolitaner-00790860",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-790860-0728303564-6RlkpIg_.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "Manner Neapolitaner Schnitten 4er",
+     "brand": "Manner",
+     "budget_line": false,
+     "pack_size": 300.0,
+     "pack_unit": "g",
+     "grams": 300.0,
+     "price_eur": 3.69,
+     "eur_per_kg": 12.3,
+     "url": "https://www.interspar.at/shop/lebensmittel/manner-neapolitaner-schnitten-4er/p/7658068",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/7658068/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Manner Neapolitaner 75 g",
+     "brand": "Manner",
+     "budget_line": false,
+     "pack_size": 75.0,
+     "pack_unit": "g",
+     "grams": 75.0,
+     "price_eur": 1.69,
+     "eur_per_kg": 22.533,
+     "url": "https://shop.billa.at/produkte/manner-neapolitaner-00783531",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-783531-295046728-VqzAepaN.jpg"
+    }
+   ],
+   "name_de_generic": "Manner Neapolitaner Schnitten",
+   "name_en": "Manner hazelnut wafers",
+   "shelf": "biscuits",
+   "zone": "sweets"
+  },
   "marjoram": {
    "key": "marjoram",
    "name_ru": "Майоран сушёный",
@@ -4485,6 +4994,59 @@
    "name_en": "Dried marjoram",
    "shelf": "spices",
    "zone": "oils"
+  },
+  "mars": {
+   "key": "mars",
+   "name_ru": "Батончик Mars",
+   "name_de": "Mars Riegel 3er",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    449,
+    4.0,
+    17,
+    69
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "Mars Riegel 3er",
+     "brand": "Mars",
+     "budget_line": false,
+     "pack_size": 135.0,
+     "pack_unit": "g",
+     "grams": 135.0,
+     "price_eur": 2.59,
+     "eur_per_kg": 19.185,
+     "url": "https://www.interspar.at/shop/lebensmittel/mars-riegel-3er/p/2020004847126",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020004847126/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Mars Classic Riegel",
+     "brand": "Mars",
+     "budget_line": false,
+     "pack_size": 51.0,
+     "pack_unit": "g",
+     "grams": 51.0,
+     "price_eur": 1.49,
+     "eur_per_kg": 29.216,
+     "url": "https://shop.billa.at/produkte/mars-classic-riegel-001605",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-1605-543055811-b_WJJiYj.jpg"
+    }
+   ],
+   "name_de_generic": "Mars Riegel 3er",
+   "name_en": "Mars bar",
+   "shelf": "bars",
+   "zone": "sweets"
   },
   "milk": {
    "key": "milk",
@@ -4657,6 +5219,59 @@
    "name_en": "Milk",
    "shelf": "milk",
    "zone": "dairy"
+  },
+  "milk_chocolate": {
+   "key": "milk_chocolate",
+   "name_ru": "Шоколад Milka молочный",
+   "name_de": "Milka Alpenmilch",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    539,
+    6.6,
+    31,
+    58.5
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Milka Alpenmilch",
+     "brand": "Milka",
+     "budget_line": false,
+     "pack_size": 250.0,
+     "pack_unit": "g",
+     "grams": 250.0,
+     "price_eur": 4.99,
+     "eur_per_kg": 19.96,
+     "url": "https://shop.billa.at/produkte/milka-alpenmilch-00772803",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-772803-1515996771-5xOY0_Hg.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "Milka Alpenmilch Schokolade",
+     "brand": "Milka",
+     "budget_line": false,
+     "pack_size": 90.0,
+     "pack_unit": "g",
+     "grams": 90.0,
+     "price_eur": 1.99,
+     "eur_per_kg": 22.111,
+     "url": "https://www.interspar.at/shop/lebensmittel/milka-alpenmilch-schokolade/p/6265564",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/6265564/dt_main.jpg"
+    }
+   ],
+   "name_de_generic": "Milka Alpenmilch Schokolade",
+   "name_en": "Milk chocolate (Milka)",
+   "shelf": "chocolate",
+   "zone": "sweets"
   },
   "mixed_mince": {
    "key": "mixed_mince",
@@ -5984,6 +6599,59 @@
    "shelf": "tomato_products",
    "zone": "cans"
   },
+  "popcorn": {
+   "key": "popcorn",
+   "name_ru": "Попкорн солёный",
+   "name_de": "SPAR Popcorn original gesalzen",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    480,
+    9,
+    23,
+    57
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "SPAR Popcorn original gesalzen",
+     "brand": "SPAR",
+     "budget_line": false,
+     "pack_size": 100.0,
+     "pack_unit": "g",
+     "grams": 100.0,
+     "price_eur": 0.99,
+     "eur_per_kg": 9.9,
+     "url": "https://www.interspar.at/shop/lebensmittel/spar-popcorn-original-gesalzen/p/2020005021549",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020005021549/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Kelly's Popcorn gesalzen",
+     "brand": "Kelly's",
+     "budget_line": false,
+     "pack_size": 90.0,
+     "pack_unit": "g",
+     "grams": 90.0,
+     "price_eur": 2.19,
+     "eur_per_kg": 24.333,
+     "url": "https://shop.billa.at/produkte/kellys-popcorn-gesalzen-00417647",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-417647-0174785074-SYdUNhrc.jpg"
+    }
+   ],
+   "name_de_generic": "SPAR Popcorn original gesalzen",
+   "name_en": "Salted popcorn (ready to eat)",
+   "shelf": "chips",
+   "zone": "sweets"
+  },
   "pork_schnitzel": {
    "key": "pork_schnitzel",
    "name_ru": "Свиной шницель (постная свинина)",
@@ -6191,6 +6859,59 @@
    "name_en": "Diced pork shoulder",
    "shelf": "pork",
    "zone": "meat"
+  },
+  "potato_chips": {
+   "key": "potato_chips",
+   "name_ru": "Чипсы картофельные",
+   "name_de": "Clever Chips gesalzen",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    536,
+    6.0,
+    34,
+    50
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Clever Chips gesalzen",
+     "brand": "CLEVER",
+     "budget_line": true,
+     "pack_size": 250.0,
+     "pack_unit": "g",
+     "grams": 250.0,
+     "price_eur": 1.49,
+     "eur_per_kg": 5.96,
+     "url": "https://shop.billa.at/produkte/clever-chips-gesalzen-00273019",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-273019-0178019779-L_GloGNs.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "Kelly's Chips Classic salted",
+     "brand": "Kelly's",
+     "budget_line": false,
+     "pack_size": 150.0,
+     "pack_unit": "g",
+     "grams": 150.0,
+     "price_eur": 2.99,
+     "eur_per_kg": 19.933,
+     "url": "https://www.interspar.at/shop/lebensmittel/kellys-chips-classic-salted/p/7525841",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/7525841/dt_main.jpg"
+    }
+   ],
+   "name_de_generic": "Kartoffelchips gesalzen",
+   "name_en": "Potato chips (crisps), salted",
+   "shelf": "chips",
+   "zone": "sweets"
   },
   "potatoes": {
    "key": "potatoes",
@@ -6801,6 +7522,76 @@
    "shelf": "spices",
    "zone": "oils"
   },
+  "salt_sticks": {
+   "key": "salt_sticks",
+   "name_ru": "Солёные палочки",
+   "name_de": "Clever Salzstangerl",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    380,
+    10,
+    3.5,
+    75
+   ],
+   "packs": [
+    {
+     "store": "Billa",
+     "name_de": "Clever Salzstangerl",
+     "brand": "CLEVER",
+     "budget_line": true,
+     "pack_size": 250.0,
+     "pack_unit": "g",
+     "grams": 250.0,
+     "price_eur": 0.65,
+     "eur_per_kg": 2.6,
+     "url": "https://shop.billa.at/produkte/clever-salzstangerl-00565867",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-565867-0881305650-JummcUOi.jpg"
+    },
+    {
+     "store": "Spar",
+     "name_de": "S-BUDGET Salzstangerl gesalzen",
+     "brand": "S-BUDGET",
+     "budget_line": true,
+     "pack_size": 250.0,
+     "pack_unit": "g",
+     "grams": 250.0,
+     "price_eur": 0.65,
+     "eur_per_kg": 2.6,
+     "url": "https://www.interspar.at/shop/lebensmittel/s-budget-salzstangerl-gesalzen/p/2020005458444",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020005458444/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Soletti Salzstangerl",
+     "brand": "Soletti",
+     "budget_line": false,
+     "pack_size": 230.0,
+     "pack_unit": "g",
+     "grams": 230.0,
+     "price_eur": 2.79,
+     "eur_per_kg": 12.13,
+     "url": "https://shop.billa.at/produkte/soletti-salzstangerl-00701766",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-701766-1361277837-Uk-fiH6K.jpg"
+    }
+   ],
+   "name_de_generic": "Salzstangerl",
+   "name_en": "Salted pretzel sticks",
+   "shelf": "chips",
+   "zone": "sweets"
+  },
   "sausage_frankfurter": {
    "key": "sausage_frankfurter",
    "name_ru": "Сосиски",
@@ -6974,6 +7765,59 @@
    "name_en": "Skyr",
    "shelf": "yogurt",
    "zone": "dairy"
+  },
+  "snickers": {
+   "key": "snickers",
+   "name_ru": "Батончик Snickers",
+   "name_de": "Snickers 7er",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    488,
+    8.6,
+    24,
+    58
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "Snickers 7er",
+     "brand": "Mars",
+     "budget_line": false,
+     "pack_size": 350.0,
+     "pack_unit": "g",
+     "grams": 350.0,
+     "price_eur": 4.29,
+     "eur_per_kg": 12.257,
+     "url": "https://www.interspar.at/shop/lebensmittel/mars-snickers-7er/p/2020004893772",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020004893772/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Snickers",
+     "brand": "Snickers",
+     "budget_line": false,
+     "pack_size": 50.0,
+     "pack_unit": "g",
+     "grams": 50.0,
+     "price_eur": 1.49,
+     "eur_per_kg": 29.8,
+     "url": "https://shop.billa.at/produkte/snickers-00766646",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-766646-710563465-dZ1ts-8w.jpg"
+    }
+   ],
+   "name_de_generic": "Snickers Riegel",
+   "name_en": "Snickers bar",
+   "shelf": "bars",
+   "zone": "sweets"
   },
   "sour_cream": {
    "key": "sour_cream",
@@ -8007,6 +8851,59 @@
    "name_en": "Turmeric",
    "shelf": "spices",
    "zone": "oils"
+  },
+  "twix": {
+   "key": "twix",
+   "name_ru": "Батончик Twix",
+   "name_de": "Twix Knusperkeks 3er",
+   "department": "sweets",
+   "basic": false,
+   "nutrition_per_100g": [
+    495,
+    4.5,
+    24,
+    64
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "Twix Knusperkeks 3er",
+     "brand": "Twix",
+     "budget_line": false,
+     "pack_size": 150.0,
+     "pack_unit": "g",
+     "grams": 150.0,
+     "price_eur": 2.59,
+     "eur_per_kg": 17.267,
+     "url": "https://www.interspar.at/shop/lebensmittel/twix-knusperkeks-3er/p/2020004847102",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2020004847102/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Twix",
+     "brand": "Twix",
+     "budget_line": false,
+     "pack_size": 50.0,
+     "pack_unit": "g",
+     "grams": 50.0,
+     "price_eur": 1.49,
+     "eur_per_kg": 29.8,
+     "url": "https://shop.billa.at/produkte/twix-00766761",
+     "date": "2026-10-17",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-766761-1123313373--GJxvSVw.jpg"
+    }
+   ],
+   "name_de_generic": "Twix",
+   "name_en": "Twix bar",
+   "shelf": "bars",
+   "zone": "sweets"
   },
   "vinegar": {
    "key": "vinegar",

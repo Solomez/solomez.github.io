@@ -587,3 +587,5 @@ input.grams { width: 84px; padding: 6px 10px; }
 .buy-item .buy-why { grid-column: 1 / -1; }
 .need-line { color: var(--warn); }
 .have-line { color: var(--accent); }
+.builder-cta { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 10px 12px; margin: 0 0 12px; border-radius: var(--radius-sm); background: var(--accent-soft); }
+.builder-sum { display: grid; gap: 6px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface-2); position: sticky; top: 0; z-index: 2; }

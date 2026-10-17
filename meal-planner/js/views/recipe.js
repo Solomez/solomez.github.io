@@ -113,7 +113,8 @@ export function renderRecipe(root, rerender, id, params) {
       h('button', { class: 'btn small', 'aria-pressed': String(fav), title: 'Избранное чаще попадает в новые недели',
         onclick: () => { const on = toggleIn('favorites', r.id); rerender({ keepScroll: true }); toast(on ? 'В избранном — будет чаще в новых неделях' : 'Убрано из избранного'); } }, icon(fav ? 'starOn' : 'star'), fav ? 'В избранном' : 'В избранное'),
       h('button', { class: 'btn small', 'aria-pressed': String(hidden),
-        onclick: () => hideToggle(r, rerender) }, icon(hidden ? 'eye' : 'eyeOff'), hidden ? 'Вернуть' : 'Не предлагать'))));
+        onclick: () => hideToggle(r, rerender) }, icon(hidden ? 'eye' : 'eyeOff'), hidden ? 'Вернуть' : 'Не предлагать'),
+      r.custom ? h('a', { class: 'btn small', href: `#/builder/${r.id}` }, 'Изменить') : null)));
   root.append(h('h1', null, r.title));
   if (r.title_de) root.append(h('p', { class: 'muted', style: { marginTop: '-4px' } }, r.title_de));
   root.append(h('p', null, r.description));
@@ -180,7 +181,7 @@ export function renderRecipe(root, rerender, id, params) {
 
   const eq = state.prefs.equipment;
   const missing = missingTools(r, eq);
-  root.append(h('h2', null, 'Посуда'));
+  if (r.equipment?.length || missing.length) root.append(h('h2', null, 'Посуда'));
   if (missing.length) root.append(h('p', { class: 'notice' }, `Для этого блюда нужно то, чего у вас нет: ${missing.join(', ').toLowerCase()}. В план оно не попадает. `, h('a', { href: '#/profile' }, 'Изменить в профиле')));
   root.append(h('div', { class: 'chips' }, r.equipment.map((e) => h('span', { class: 'chip static' }, e))));
 
@@ -192,8 +193,10 @@ export function renderRecipe(root, rerender, id, params) {
       s.heat ? h('span', { class: 'badge' }, `огонь: ${s.heat}`) : null,
       s.timer_min ? h('span', { class: 'badge accent' }, `${num(s.timer_min, 1)} мин`) : null) : null))));
 
-  root.append(h('h2', null, 'Частые ошибки'));
-  root.append(h('ul', { class: 'clean' }, r.mistakes.map((m) => h('li', null, m))));
+  if (r.mistakes?.length) {
+    root.append(h('h2', null, 'Частые ошибки'));
+    root.append(h('ul', { class: 'clean' }, r.mistakes.map((m) => h('li', null, m))));
+  }
 
   const st = r.storage || {};
   root.append(h('h2', null, 'Хранение и разогрев'));

@@ -8,6 +8,7 @@ import { renderCook, leaveCook } from './views/cook.js';
 import { renderStats } from './views/stats.js';
 import { renderProfile, refreshSyncText } from './views/profile.js';
 import { renderProducts } from './views/catalog.js';
+import { renderBuilder } from './views/builder.js';
 import { takeSessionFromUrl, startAccount, ACCOUNTS_ENABLED } from './account.js';
 
 const TABS = [
@@ -17,7 +18,7 @@ const TABS = [
   ['products', 'Продукты', 'box'],
   ['profile', 'Профиль', 'user'],
 ];
-const TITLES = { plan: 'План', recipes: 'Рецепты', recipe: 'Рецепт', shop: 'Покупки', products: 'Продукты', stats: 'Итоги', profile: 'Профиль', cook: 'Готовка' };
+const TITLES = { plan: 'План', recipes: 'Рецепты', recipe: 'Рецепт', builder: 'Свой вариант', shop: 'Покупки', products: 'Продукты', stats: 'Итоги', profile: 'Профиль', cook: 'Готовка' };
 
 const main = document.getElementById('main');
 const nav = document.getElementById('nav');
@@ -32,7 +33,7 @@ function parseHash() {
 }
 
 function renderNav(view) {
-  const active = view === 'recipe' ? 'recipes' : view === 'stats' ? 'plan' : view;
+  const active = view === 'recipe' || view === 'builder' ? 'recipes' : view === 'stats' ? 'plan' : view;
   // крупный системный шрифт: подписи разделов не помещаются — оставляем значки (с названием для экранного диктора)
   // и подпись только текущего раздела (F35)
   document.documentElement.classList.toggle('big-text', parseFloat(getComputedStyle(document.documentElement).fontSize) >= 22);
@@ -54,6 +55,7 @@ function render(opts = {}) {
     switch (view) {
       case 'recipes': renderLibrary(root, rerender, params); break;
       case 'recipe': renderRecipe(root, rerender, id, params); break;
+      case 'builder': renderBuilder(root, rerender, id, params); break;
       case 'cook': renderCook(root, rerender, id, params); break;
       case 'shop': renderShop(root, rerender); break;
       case 'stats': renderStats(root); break;

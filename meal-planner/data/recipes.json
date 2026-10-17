@@ -26501,6 +26501,1387 @@
     }
    ],
    "main_ingredient_count": 5
+  },
+  {
+   "id": "snack-snickers-milch",
+   "meal_type": "snack",
+   "title": "Snickers и стакан молока",
+   "title_de": "Snickers und ein Glas Milch",
+   "description": "Любимый батончик плюс стакан холодного молока — вкуснее, сытнее и +9 г белка к перекусу",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "сладкое",
+    "с собой"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 0,
+    "total": 1,
+    "active": 1
+   },
+   "equipment": [
+    "Стакан"
+   ],
+   "ingredients": [
+    {
+     "key": "snickers",
+     "name_ru": "Батончик Snickers",
+     "name_de": "Snickers Riegel",
+     "amount": "1 батончик (50 г)",
+     "grams": 50,
+     "basic": false,
+     "note": "выгоднее брать упаковку 7er или 3er, чем по одному"
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "name_de": "Vollmilch",
+     "amount": "1 стакан (250 мл)",
+     "grams": 250,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Налей стакан холодного молока.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Разверни батончик и ешь его, запивая молоком.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Есть батончик «вместо обеда» — в нём ~245 ккал и почти нет белка; это перекус, а не еда. Обед не пропускай.",
+    "Брать по одному батончику на кассе — штучный стоит ~€1,49, а в упаковке 7er выходит ~€0,61 за штуку."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Snickers",
+     "to": "Mars или Twix (50 г)",
+     "note": "калории те же, белка чуть меньше"
+    },
+    {
+     "from": "Молоко",
+     "to": "Кефир (Kefir), 250 мл",
+     "note": "белка столько же, приятная кислинка"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.84,
+    "kcal": 404,
+    "protein": 12.8,
+    "fat": 20.8,
+    "carbs": 40.8
+   },
+   "cost_breakdown": [
+    {
+     "key": "snickers",
+     "name_ru": "Батончик Snickers",
+     "grams_per_serving": 50.0,
+     "cost_per_serving": 0.613,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.228,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-twix-tee",
+   "meal_type": "snack",
+   "title": "Twix с чёрным чаем",
+   "title_de": "Twix mit Schwarztee",
+   "description": "Две палочки Twix к кружке горячего чая — классический сладкий перерыв на 5 минут",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "сладкое",
+    "с чаем",
+    "с собой"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 4,
+    "total": 5,
+    "active": 1
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка"
+   ],
+   "ingredients": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "twix",
+     "name_ru": "Батончик Twix",
+     "name_de": "Twix",
+     "amount": "1 упаковка (2 палочки, 50 г)",
+     "grams": 50,
+     "basic": false,
+     "note": "в упаковке 3er выгоднее, чем по одной"
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты — пока чай не станет тёмно-янтарным, затем вынь пакетик.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Разверни Twix и ешь по одной палочке, запивая чаем.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Пить чай сразу из-под кипятка — обожжёшь рот; пока настаивается, он остынет до приятной температуры.",
+    "Оставлять открытую вторую палочку на потом без обёртки — печенье за день отсыреет; заверни её в фольгу."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Twix",
+     "to": "Батончик KitKat (41,5 г)",
+     "note": "тоже хрустит, чуть меньше калорий"
+    },
+    {
+     "from": "Чёрный чай",
+     "to": "Фруктовый чай (Früchtetee)",
+     "note": "без кофеина — лучше вечером; настаивай 5–6 минут"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.89,
+    "kcal": 248,
+    "protein": 2.2,
+    "fat": 12.0,
+    "carbs": 32.0
+   },
+   "cost_breakdown": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "twix",
+     "name_ru": "Батончик Twix",
+     "grams_per_serving": 50.0,
+     "cost_per_serving": 0.863,
+     "store": "Spar",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-manner-tee",
+   "meal_type": "snack",
+   "title": "Вафли Manner к чаю",
+   "title_de": "Manner Schnitten zum Tee",
+   "description": "Венская классика: ореховые вафли Manner Neapolitaner с кружкой горячего чая",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "сладкое",
+    "с чаем",
+    "с собой"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 4,
+    "total": 5,
+    "active": 1
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка"
+   ],
+   "ingredients": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "manner_wafers",
+     "name_ru": "Вафли Manner",
+     "name_de": "Manner Neapolitaner Schnitten",
+     "amount": "½ пачки 75 г (~37 г)",
+     "grams": 37,
+     "basic": false,
+     "note": "упаковка 4 × 75 г выгоднее одиночной пачки"
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты — пока чай не станет тёмно-янтарным, затем вынь пакетик.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Отломи половину пачки вафель, остальное плотно закрой.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Ешь вафли, запивая чаем.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Съедать всю пачку за раз — это ~375 ккал почти без белка; половины к чаю хватает.",
+    "Оставлять открытую пачку — за 2–3 дня вафли теряют хруст; перегни край и закрепи клипсой."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Вафли Manner",
+     "to": "Печенье Butterkeks (4–5 шт.)",
+     "note": "дешевле и не такое сладкое"
+    },
+    {
+     "from": "Чёрный чай",
+     "to": "Фруктовый чай (Früchtetee)",
+     "note": "без кофеина; настаивай 5–6 минут"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.48,
+    "kcal": 186,
+    "protein": 2.4,
+    "fat": 9.6,
+    "carbs": 22.2
+   },
+   "cost_breakdown": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "manner_wafers",
+     "name_ru": "Вафли Manner",
+     "grams_per_serving": 37.0,
+     "cost_per_serving": 0.455,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-butterkeks-milch",
+   "meal_type": "snack",
+   "title": "Печенье Butterkeks со стаканом молока",
+   "title_de": "Butterkekse mit Milch",
+   "description": "Самый дешёвый сладкий перекус: 6 печений Butterkeks и стакан молока — ~12 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "сладкое",
+    "с собой"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 0,
+    "total": 1,
+    "active": 1
+   },
+   "equipment": [
+    "Стакан",
+    "Тарелка"
+   ],
+   "ingredients": [
+    {
+     "key": "butter_biscuits",
+     "name_ru": "Печенье Butterkeks",
+     "name_de": "Butterkekse",
+     "amount": "6 шт. (~50 г)",
+     "grams": 50,
+     "basic": false,
+     "note": "Clever или S-BUDGET почти вдвое дешевле Leibniz"
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "name_de": "Vollmilch",
+     "amount": "1 стакан (250 мл)",
+     "grams": 250,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Выложи 6 печений на тарелку, пачку сразу закрой клипсой.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Налей стакан молока и ешь печенье, макая его в молоко на 1–2 секунды.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Держать печенье в молоке дольше пары секунд — размокнет и упадёт в стакан.",
+    "Есть прямо из пачки — легко съесть половину (~800 ккал); отсчитай 6 штук на тарелку."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Молоко",
+     "to": "Кефир (Kefir), 250 мл",
+     "note": "белка столько же"
+    },
+    {
+     "from": "Печенье Butterkeks",
+     "to": "Солёные палочки (40 г)",
+     "note": "если хочется не сладкого"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.48,
+    "kcal": 378,
+    "protein": 12.3,
+    "fat": 14.8,
+    "carbs": 48.2
+   },
+   "cost_breakdown": [
+    {
+     "key": "butter_biscuits",
+     "name_ru": "Печенье Butterkeks",
+     "grams_per_serving": 50.0,
+     "cost_per_serving": 0.249,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.228,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-skyr-banane-milka",
+   "meal_type": "snack",
+   "title": "Скир с бананом и кусочками Milka",
+   "title_de": "Skyr mit Banane und Milka-Schokolade",
+   "description": "Сладкий десерт без готовки: скир, кружочки банана и рубленый молочный шоколад — ~18 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "сладкое",
+    "вегетарианское"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 4,
+    "cook": 0,
+    "total": 4,
+    "active": 4
+   },
+   "equipment": [
+    "Доска и нож",
+    "Миска",
+    "Ложка"
+   ],
+   "ingredients": [
+    {
+     "key": "skyr",
+     "name_ru": "Скир",
+     "name_de": "Skyr natur",
+     "amount": "1 стаканчик 150 г",
+     "grams": 150,
+     "basic": false
+    },
+    {
+     "key": "banana",
+     "name_ru": "Банан",
+     "name_de": "Bananen",
+     "amount": "1 шт.",
+     "grams": 120,
+     "basic": false
+    },
+    {
+     "key": "milk_chocolate",
+     "name_ru": "Шоколад Milka молочный",
+     "name_de": "Milka Alpenmilch Schokolade",
+     "amount": "4–5 долек (~20 г)",
+     "grams": 20,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Выложи скир в миску и размешай ложкой до гладкости.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Очисти банан и нарежь кружочками толщиной ~1 см прямо на скир.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Мелко наруби ножом 4–5 долек шоколада и посыпь сверху.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Резать банан заранее — через 15–20 минут кружочки темнеют; режь прямо перед едой.",
+    "Брать сладкий «фруктовый» скир — в нём много сахара; бери натуральный (natur), сладость дадут банан и шоколад."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Скир",
+     "to": "Магертопфен (Magertopfen) + 2 ст. л. молока",
+     "note": "белка столько же, дешевле"
+    },
+    {
+     "from": "Шоколад Milka",
+     "to": "Тёмный шоколад (20 г)",
+     "note": "меньше сахара, вкус горче"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 1.04,
+    "kcal": 296,
+    "protein": 17.6,
+    "fat": 7.3,
+    "carbs": 40.5
+   },
+   "cost_breakdown": [
+    {
+     "key": "skyr",
+     "name_ru": "Скир",
+     "grams_per_serving": 150.0,
+     "cost_per_serving": 0.449,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "banana",
+     "name_ru": "Банан",
+     "grams_per_serving": 120.0,
+     "cost_per_serving": 0.191,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "milk_chocolate",
+     "name_ru": "Шоколад Milka молочный",
+     "grams_per_serving": 20.0,
+     "cost_per_serving": 0.399,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 3
+  },
+  {
+   "id": "snack-chips-cabanossi-paprika",
+   "meal_type": "snack",
+   "title": "Чипсы с кабаносами и сладким перцем",
+   "title_de": "Chips mit Cabanossi und Paprika",
+   "description": "Солёный перекус «к фильму»: горсть чипсов, кружочки кабаноса и хрустящий перец — ~13 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "солёное"
+   ],
+   "protein_type": "sausage",
+   "servings": 1,
+   "time": {
+    "prep": 3,
+    "cook": 0,
+    "total": 3,
+    "active": 3
+   },
+   "equipment": [
+    "Доска и нож",
+    "Тарелка"
+   ],
+   "ingredients": [
+    {
+     "key": "potato_chips",
+     "name_ru": "Чипсы картофельные",
+     "name_de": "Kartoffelchips gesalzen",
+     "amount": "большая горсть (~30 г)",
+     "grams": 30,
+     "basic": false
+    },
+    {
+     "key": "cabanossi",
+     "name_ru": "Кабаносы (сыровяленые колбаски)",
+     "name_de": "Cabanossi",
+     "amount": "кусок длиной ~12 см",
+     "grams": 40,
+     "basic": false
+    },
+    {
+     "key": "bell_pepper",
+     "name_ru": "Сладкий перец",
+     "name_de": "Paprika",
+     "amount": "½ шт.",
+     "grams": 75,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Нарежь кабанос кружками толщиной ~1 см.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Вымой перец, удали семена и нарежь его полосками ~1 см.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Насыпь горсть чипсов на тарелку рядом с кабаносом и перцем, пакет сразу закрой клипсой.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Есть чипсы из пакета — незаметно уходит весь пакет 250 г (~1300 ккал); отсыпь горсть на тарелку.",
+    "Брать чипсы с сильным вкусом и кабаносы вместе — будет очень солоно; к кабаносу лучше классические с солью."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Чипсы",
+     "to": "Солёные палочки (Salzstangerl), 35 г",
+     "note": "меньше жира"
+    },
+    {
+     "from": "Кабаносы",
+     "to": "Ветчина (Toastschinken), 2 ломтика",
+     "note": "меньше жира, белка столько же"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.92,
+    "kcal": 390,
+    "protein": 13.5,
+    "fat": 28.4,
+    "carbs": 19.4
+   },
+   "cost_breakdown": [
+    {
+     "key": "potato_chips",
+     "name_ru": "Чипсы картофельные",
+     "grams_per_serving": 30.0,
+     "cost_per_serving": 0.179,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "cabanossi",
+     "name_ru": "Кабаносы (сыровяленые колбаски)",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.319,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "bell_pepper",
+     "name_ru": "Сладкий перец",
+     "grams_per_serving": 75.0,
+     "cost_per_serving": 0.427,
+     "store": "Penny",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 3
+  },
+  {
+   "id": "snack-salzstangerl-kaese",
+   "meal_type": "snack",
+   "title": "Солёные палочки с сыром",
+   "title_de": "Salzstangerl mit Käse",
+   "description": "Хрустящие солёные палочки и кубики гауды — простой солёный перекус с ~14 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "солёное",
+    "вегетарианское",
+    "с собой"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 2,
+    "cook": 0,
+    "total": 2,
+    "active": 2
+   },
+   "equipment": [
+    "Доска и нож",
+    "Тарелка"
+   ],
+   "ingredients": [
+    {
+     "key": "salt_sticks",
+     "name_ru": "Солёные палочки",
+     "name_de": "Salzstangerl",
+     "amount": "2 горсти (~40 г)",
+     "grams": 40,
+     "basic": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "name_de": "Gouda in Scheiben",
+     "amount": "2 ломтика",
+     "grams": 40,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Сложи ломтики сыра стопкой и нарежь квадратиками ~2 см.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Выложи сыр и палочки на тарелку; ешь, заедая палочку кусочком сыра.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Держать палочки в открытом пакете — за пару дней отсыреют; закрывай пакет клипсой.",
+    "Нарезать сыр задолго до еды без контейнера — края подсохнут и затвердеют."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Гауда",
+     "to": "Эмменталь или любой твёрдый сыр, 40 г",
+     "note": "почти то же по белку"
+    },
+    {
+     "from": "Солёные палочки",
+     "to": "Ржаные хлебцы (Knäckebrot), 2 шт.",
+     "note": "больше клетчатки"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.38,
+    "kcal": 291,
+    "protein": 13.6,
+    "fat": 12.6,
+    "carbs": 30.0
+   },
+   "cost_breakdown": [
+    {
+     "key": "salt_sticks",
+     "name_ru": "Солёные палочки",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.104,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.277,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-skyr-goldbaeren",
+   "meal_type": "snack",
+   "title": "Скир и мармелад после тренировки",
+   "title_de": "Skyr und Gummibärchen nach dem Training",
+   "description": "Быстрые углеводы из мармеладных мишек и ~15 г белка из скира — чтобы восстановиться после зала",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "сладкое",
+    "после тренировки",
+    "с собой"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 0,
+    "total": 1,
+    "active": 1
+   },
+   "equipment": [
+    "Ложка"
+   ],
+   "ingredients": [
+    {
+     "key": "skyr",
+     "name_ru": "Скир",
+     "name_de": "Skyr natur",
+     "amount": "1 стаканчик 150 г",
+     "grams": 150,
+     "basic": false
+    },
+    {
+     "key": "gummy_bears",
+     "name_ru": "Мармелад Haribo",
+     "name_de": "Haribo Goldbären",
+     "amount": "горсть (~40 г)",
+     "grams": 40,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Открой стаканчик скира и съешь его ложкой.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Заешь горстью мармеладных мишек, пакет закрой клипсой.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Есть мармелад без белка — после тренировки мышцам нужен белок; скир здесь главный.",
+    "Брать на тренировку целый пакет — 175 г это ~600 ккал сахара; отсыпь горсть в контейнер."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Мармелад Haribo",
+     "to": "Банан",
+     "note": "те же быстрые углеводы, плюс калий"
+    },
+    {
+     "from": "Скир",
+     "to": "Протеиновый пудинг",
+     "note": "белка столько же, вкус десерта"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "Ешь в течение часа после тренировки.",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.68,
+    "kcal": 218,
+    "protein": 17.8,
+    "fat": 0.9,
+    "carbs": 35.6
+   },
+   "cost_breakdown": [
+    {
+     "key": "skyr",
+     "name_ru": "Скир",
+     "grams_per_serving": 150.0,
+     "cost_per_serving": 0.449,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "gummy_bears",
+     "name_ru": "Мармелад Haribo",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.233,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-kitkat-fruechtetee",
+   "meal_type": "snack",
+   "title": "KitKat с фруктовым чаем",
+   "title_de": "KitKat mit Früchtetee",
+   "description": "Хрустящий KitKat и кружка ароматного фруктового чая без кофеина — можно и вечером",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "сладкое",
+    "с чаем",
+    "с собой"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 6,
+    "total": 7,
+    "active": 1
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка"
+   ],
+   "ingredients": [
+    {
+     "key": "fruit_tea",
+     "name_ru": "Фруктовый чай в пакетиках",
+     "name_de": "Früchtetee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "kitkat",
+     "name_ru": "Батончик KitKat",
+     "name_de": "KitKat Classic",
+     "amount": "1 батончик (4 палочки, 41,5 г)",
+     "grams": 41.5,
+     "basic": false,
+     "note": "в упаковке 4er выгоднее"
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик фруктового чая кипятком, настаивай 5–6 минут — до насыщенного красного цвета, затем вынь пакетик.",
+     "timer_min": 6,
+     "heat": null
+    },
+    {
+     "text": "Разверни KitKat, разломи на палочки и ешь, запивая чаем.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Вынимать пакетик через минуту — фруктовый чай раскрывается дольше чёрного, иначе будет водянистым.",
+    "Класть KitKat рядом с горячей кружкой — шоколад подтает и испачкает руки."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "KitKat",
+     "to": "Kinder Bueno (1 упаковка, 43 г)",
+     "note": "тоже вафля, с ореховой начинкой"
+    },
+    {
+     "from": "Фруктовый чай",
+     "to": "Чёрный чай",
+     "note": "с кофеином — бодрит; настаивай 3–4 минуты"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.7,
+    "kcal": 215,
+    "protein": 2.7,
+    "fat": 10.8,
+    "carbs": 26.1
+   },
+   "cost_breakdown": [
+    {
+     "key": "fruit_tea",
+     "name_ru": "Фруктовый чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.036,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "kitkat",
+     "name_ru": "Батончик KitKat",
+     "grams_per_serving": 41.5,
+     "cost_per_serving": 0.665,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-croissants-schinken-tee",
+   "meal_type": "snack",
+   "title": "Мини-круассаны с ветчиной к чаю",
+   "title_de": "Mini-Croissants mit Schinken zum Tee",
+   "description": "Три мини-круассана с ветчиной внутри и кружка чая — как в венском кафе, но за 5 минут",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "солёное",
+    "с чаем",
+    "ветчина"
+   ],
+   "protein_type": "pork",
+   "servings": 1,
+   "time": {
+    "prep": 3,
+    "cook": 4,
+    "total": 7,
+    "active": 3
+   },
+   "equipment": [
+    "Чайник",
+    "Кружка",
+    "Нож",
+    "Тарелка"
+   ],
+   "ingredients": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "name_de": "Schwarztee (Teebeutel)",
+     "amount": "1 пакетик",
+     "grams": 2,
+     "basic": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "name_de": "Wasser",
+     "amount": "1 кружка (250 мл)",
+     "grams": 250,
+     "basic": true
+    },
+    {
+     "key": "croissant",
+     "name_ru": "Мини-круассаны",
+     "name_de": "Mini Butter Croissants",
+     "amount": "3 шт. (~75 г)",
+     "grams": 75,
+     "basic": false,
+     "note": "готовые, из отдела выпечки, а не тесто"
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "name_de": "Toastschinken",
+     "amount": "2 ломтика",
+     "grams": 40,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Вскипяти чайник и залей пакетик чая кипятком, настаивай 3–4 минуты — пока чай не станет тёмно-янтарным, затем вынь пакетик.",
+     "timer_min": 4,
+     "heat": null
+    },
+    {
+     "text": "Надрежь каждый круассан сбоку вдоль, не прорезая до конца.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Разрежь ломтики ветчины пополам, сложи и вложи по кусочку в каждый круассан.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Брать круассаны из холодильного отдела в тубе — это тесто, его нужно печь; нужны готовые (Croissants, 15 Stück).",
+    "Оставлять пакет открытым — круассаны за день черствеют; закрой его клипсой."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Мини-круассаны",
+     "to": "Тостовый хлеб, 2 ломтика",
+     "note": "дешевле и не такой жирный"
+    },
+    {
+     "from": "Ветчина",
+     "to": "Сыр гауда, 1 ломтик",
+     "note": "без мяса"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.84,
+    "kcal": 347,
+    "protein": 13.6,
+    "fat": 16.9,
+    "carbs": 34.0
+   },
+   "cost_breakdown": [
+    {
+     "key": "black_tea",
+     "name_ru": "Чёрный чай в пакетиках",
+     "grams_per_serving": 2.0,
+     "cost_per_serving": 0.026,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода (кипяток)",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    },
+    {
+     "key": "croissant",
+     "name_ru": "Мини-круассаны",
+     "grams_per_serving": 75.0,
+     "cost_per_serving": 0.478,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.332,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 3
+  },
+  {
+   "id": "snack-fruchtjoghurt-skyr-butterkeks",
+   "meal_type": "snack",
+   "title": "Фруктовый йогурт со скиром и крошкой Butterkeks",
+   "title_de": "Fruchtjoghurt mit Skyr und Butterkeks",
+   "description": "Клубничный йогурт, смешанный со скиром, и хрустящая крошка из печенья — как чизкейк в стаканчике, ~18 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "сладкое",
+    "вегетарианское"
+   ],
+   "protein_type": "other",
+   "servings": 1,
+   "time": {
+    "prep": 3,
+    "cook": 0,
+    "total": 3,
+    "active": 3
+   },
+   "equipment": [
+    "Миска",
+    "Ложка"
+   ],
+   "ingredients": [
+    {
+     "key": "fruit_yogurt",
+     "name_ru": "Фруктовый йогурт",
+     "name_de": "Fruchtjoghurt Erdbeere",
+     "amount": "1 стаканчик 180 г",
+     "grams": 180,
+     "basic": false
+    },
+    {
+     "key": "skyr",
+     "name_ru": "Скир",
+     "name_de": "Skyr natur",
+     "amount": "⅔ стаканчика 150 г (~100 г)",
+     "grams": 100,
+     "basic": false
+    },
+    {
+     "key": "butter_biscuits",
+     "name_ru": "Печенье Butterkeks",
+     "name_de": "Butterkekse",
+     "amount": "3 шт. (~25 г)",
+     "grams": 25,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Выложи в миску фруктовый йогурт и скир и размешай ложкой до однородного розового цвета.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Раскроши печенье руками над миской крупной крошкой и сразу ешь.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Посыпать печеньем заранее — через 10 минут крошка размокнет; кроши прямо перед едой.",
+    "Брать большое ведёрко йогурта 500 г «на один раз» — это уже ~500 ккал; одного стаканчика 180 г хватает."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Фруктовый йогурт",
+     "to": "Натуральный йогурт + 1 ч. л. мёда",
+     "note": "меньше сахара"
+    },
+    {
+     "from": "Печенье Butterkeks",
+     "to": "Вафли Manner (2 шт.)",
+     "note": "слаще, с ореховой начинкой"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 1.17,
+    "kcal": 339,
+    "protein": 18.0,
+    "fat": 8.9,
+    "carbs": 46.6
+   },
+   "cost_breakdown": [
+    {
+     "key": "fruit_yogurt",
+     "name_ru": "Фруктовый йогурт",
+     "grams_per_serving": 180.0,
+     "cost_per_serving": 0.75,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "skyr",
+     "name_ru": "Скир",
+     "grams_per_serving": 100.0,
+     "cost_per_serving": 0.299,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "butter_biscuits",
+     "name_ru": "Печенье Butterkeks",
+     "grams_per_serving": 25.0,
+     "cost_per_serving": 0.124,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 3
   }
  ]
 }
