@@ -1,6 +1,6 @@
 import { h, icon, num, sheet, nb, toast, hasLayer } from '../ui.js';
 import { state, save } from '../state.js';
-import { ingredientAmount, ingredientList, portionParams, weekPacks } from './recipe.js';
+import { ingredientAmount, ingredientList, portionParams, weekPacks, swapNotice } from './recipe.js';
 import { stepHints } from '../core/equipment.js';
 import { stepIngredients, stepTerms } from '../core/amounts.js';
 import { fmtDate, todayIndex, MEALS_ORDER } from '../core/calendar.js';
@@ -246,10 +246,11 @@ export function renderCook(root, rerender, id, params) {
     h('div', { class: 'cook-progress', 'aria-hidden': 'true' }, r.steps.map((_, i) => h('i', { class: prog.done.includes(i) ? 'done' : i === prog.step ? 'cur' : '' }))),
     timersBar,
     h('div', { class: 'cook-body' },
+      prog.step === 0 && !prog.finished ? swapNotice(r) : null,
       h('div', { class: 'cook-step-n' }, `Шаг ${prog.step + 1} из ${n}`, isDone ? ' · выполнен ✓' : '', leftMin > 0 ? ` · осталось ≈ ${leftMin} мин` : ''),
       h('div', { class: 'cook-text' }, nb(step.text)),
       stepHints(step, state.prefs.equipment).map((t) => h('div', { class: 'tool-hint' }, t)),
-      ingAmounts.length ? h('ul', { class: 'step-ings' }, ingAmounts.map(({ i, a, k }) => h('li', null, h('span', null, i.name_ru),
+      ingAmounts.length ? h('ul', { class: 'step-ings' }, ingAmounts.map(({ i, a, k }) => h('li', null, h('span', null, i.name_ru, i.replaced ? h('span', { class: 'muted' }, ` — вместо «${i.replaced.name_ru.toLowerCase()}»`) : null),
         h('b', null, a, k > 1 ? h('span', { class: 'muted', style: { fontWeight: 400 } }, ` — на всё блюдо, в ${k} шагах`) : null)))) : null,
       terms.length ? h('details', { class: 'step-terms' }, h('summary', null, 'Что значит?'), h('ul', null, terms.map((t) => h('li', null, t)))) : null,
       step.heat ? h('div', { class: 'cook-heat' }, h('span', { class: 'badge accent' }, `Огонь: ${step.heat}`)) : null,

@@ -1,5 +1,5 @@
 import { h, eur, num, icon, factorText, humanDate, nb, plural, toast } from '../ui.js';
-import { state, save, toggleIn } from '../state.js';
+import { state, save, toggleIn, setSub } from '../state.js';
 import { formatAmount, chooseOffer, buildShoppingList } from '../core/shopping.js';
 import { scaleMeasure, scaleWords, packShare } from '../core/amounts.js';
 import { photo, thumbPack, showVariants, substitutesOf } from './products.js';
@@ -20,7 +20,7 @@ const storeHint = (p) => {
 // без множителей; у продуктов с весом — граммы и доля упаковки, которую покупают (а не мера базового рецепта)
 export function ingredientAmount(ing, scale, products, servings = 2, packOf = null) {
   const same = Math.abs(scale - 1) < 0.01;
-  if (same) return { main: ing.amount, sub: ing.grams ? `${Math.round(ing.grams)} г` : '' };
+  if (same) return { main: ing.amount, sub: ing.grams && ing.amount !== `${Math.round(ing.grams)} г` ? `${Math.round(ing.grams)} г` : '' };
   if (ing.basic || !ing.grams) return { main: scaleMeasure(ing.amount, scale) ?? scaleWords(ing.amount, scale), sub: '' };
   const g = ing.grams * scale;
   const p = products[ing.key];
@@ -56,7 +56,8 @@ export function weekPacks() {
   return new Map(list.items.filter((i) => i.offer).map((i) => [i.key, i.offer.pack]));
 }
 
-export function ingredientList(r, scale, { checkable = true, onToggle } = {}) {
+// onSwap — после замены ингредиента в блюде (кнопка «варианты и замены» → «Заменить в блюде»)
+export function ingredientList(r, scale, { checkable = true, onToggle, onSwap } = {}) {
   const products = state.data.products;
   const packs = weekPacks();
   const prep = prepState(r.id);
@@ -76,7 +77,8 @@ export function ingredientList(r, scale, { checkable = true, onToggle } = {}) {
       h('label', { class: 'ing-text', for: checkable ? `ing-${r.id}-${i.key}` : null },
         h('span', { class: 'ing-name' }, i.name_ru, i.optional ? h('span', { class: 'muted' }, ' · по желанию') : null),
         h('span', { class: 'de' }, [i.name_de, !i.basic ? storeHint(products[i.key]) : null].filter(Boolean).join(' · ')),
-        (products[i.key]?.packs || []).length > 1 || substitutesOf(i.key).length ? h('button', { class: 'linkbtn small-link', type: 'button', onclick: (e) => { e.preventDefault(); showVariants(products[i.key]); } }, substitutesOf(i.key).length ? 'варианты и замены' : 'варианты в магазинах') : null,
+        i.replaced ? h('span', { class: 'swap-note' }, `Замена: вместо «${i.replaced.name_ru}» (${i.replaced.amount})`) : null,
+        variantsButton(r, i, products, onSwap),
         i.note ? h('span', { class: 'de' }, i.note) : null,
         swapOf(i.key) ? h('span', { class: 'swap-note' }, `На этой неделе куплено вместо: ${swapOf(i.key).name}`) : null),
       h('span', { class: 'ing-amount' }, a.main, a.sub ? h('span', { class: 'de' }, a.sub) : null));
@@ -86,6 +88,28 @@ export function ingredientList(r, scale, { checkable = true, onToggle } = {}) {
   return h('div', null,
     h('ul', { class: 'ing-list' }, main.map(row)),
     basic.length ? [h('div', { class: 'eyebrow', style: { marginTop: '14px' } }, 'Базовое: масло, соль, специи'), h('ul', { class: 'ing-list' }, basic.map(row))] : null);
+}
+
+// Шаги написаны под исходный продукт — напоминание, что в этом блюде он заменён
+export function swapNotice(r) {
+  if (!r.swapped?.length) return null;
+  return h('p', { class: 'notice' }, 'В шагах — продукты из рецепта, у вас замена: ',
+    r.swapped.map((x, j) => [j ? '; ' : '', h('b', null, x.to_ru.toLowerCase()), ` вместо «${x.from_ru.toLowerCase()}»`, x.note ? ` (${x.note})` : '']), '.');
+}
+
+// «варианты и замены»: упаковки в магазинах и замены; со страницы блюда замену можно выбрать — блюдо пересчитается
+function variantsButton(r, i, products, onSwap) {
+  const orig = i.replaced?.key || i.key; // у заменённого — варианты исходного продукта: другая замена или вернуть
+  const subs = substitutesOf(orig).length;
+  if (!(subs || (products[i.key]?.packs || []).length > 1)) return null;
+  const swap = onSwap && subs && !i.basic ? { current: i.replaced ? i.key : null, onPick: (k) => {
+    setSub(r.id, orig, k);
+    onSwap();
+    const name = (key) => products[key]?.name_ru || key;
+    toast(k ? `В этом блюде: ${name(k)} вместо «${name(orig)}»` : `Вернул: ${name(orig)}`, { label: 'Отменить', onClick: () => { setSub(r.id, orig, i.replaced ? i.key : null); onSwap(); } });
+  } } : null;
+  return h('button', { class: 'linkbtn small-link', type: 'button', onclick: (e) => { e.preventDefault(); showVariants(products[orig], { swap }); } },
+    i.replaced ? 'другая замена или вернуть' : subs ? 'варианты и замены' : 'варианты в магазинах');
 }
 
 // «Взял другое вместо» в магазине — показываем у ингредиента в рецептах текущей недели
@@ -179,7 +203,7 @@ export function renderRecipe(root, rerender, id, params) {
       h('button', { 'aria-label': 'Больше порций', onclick: () => setPortions(Math.min(8, portions + 1)) }, '+'))));
   root.append(h('p', { class: 'muted', style: { margin: '6px 0 0' } }, 'Отмечайте, что уже достали и отмерили.',
     prep.ings.length ? h('button', { class: 'linkbtn', onclick: () => { prep.ings = []; save(); rerender({ keepScroll: true }); } }, ' Снять отметки') : null));
-  root.append(ingredientList(r, scale, { onToggle: () => rerender({ keepScroll: true }) }));
+  root.append(ingredientList(r, scale, { onToggle: () => rerender({ keepScroll: true }), onSwap: () => rerender({ keepScroll: true }) }));
 
   root.append(h('details', { class: 'plain', style: { marginTop: '12px' } },
     h('summary', null, `Из чего складывается ${eur(ps.cost * factor)} за порцию`),
@@ -197,6 +221,8 @@ export function renderRecipe(root, rerender, id, params) {
 
   root.append(h('div', { class: 'row between no-print', style: { marginTop: '1.75rem' } }, h('h2', { style: { margin: 0 } }, 'Как готовить'),
     h('a', { class: 'btn primary', href: `#/cook/${r.id}?f=${factor}&p=${portions}` }, icon('pot'), 'Готовить по шагам')));
+  const sw = swapNotice(r);
+  if (sw) root.append(sw);
   root.append(h('ol', { class: 'steps' }, r.steps.map((s) => h('li', null, nb(s.text),
     stepHints(s, eq).map((t) => h('div', { class: 'tool-hint' }, t)),
     s.heat || s.timer_min ? h('div', { class: 'row', style: { marginTop: '4px' } },

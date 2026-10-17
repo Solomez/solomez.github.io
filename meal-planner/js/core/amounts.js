@@ -108,7 +108,8 @@ export function stepIngredients(recipe, text) {
   const tokens = t.split(/[^а-яa-z]+/).filter(Boolean);
   const at = (s) => tokens.reduce((a, tok, i) => (tok.startsWith(s) ? [...a, i] : a), []);
   const found = recipe.ingredients.map((i) => {
-    const ws = (i.name_ru || '').toLowerCase().replace(/ё/g, 'е').split(/[^а-яa-z]+/).filter((w) => w.length >= 3 && !GEN.has(w));
+    // у заменённого в блюде ингредиента шаги называют исходный продукт («нарежь лук» — это теперь лук-порей)
+    const ws = (i.replaced?.name_ru || i.name_ru || '').toLowerCase().replace(/ё/g, 'е').split(/[^а-яa-z]+/).filter((w) => w.length >= 3 && !GEN.has(w));
     const pos = ws.map((w, k) => [w, stems(w, k === 0).flatMap(at)]).filter(([, p]) => p.length);
     return { i, got: pos.map(([w]) => w), pos };
   });
@@ -119,7 +120,7 @@ export function stepIngredients(recipe, text) {
   return recipe.ingredients.filter((i) => {
     const f = found.find((x) => x.i === i);
     if (f.got.length) return !drop.has(i);
-    const kw = Object.entries(KEY_WORDS).find(([k]) => i.key.startsWith(k));
+    const kw = Object.entries(KEY_WORDS).find(([k]) => (i.replaced?.key || i.key).startsWith(k));
     return !!kw && !i.basic && kw[1].some((s) => at(s).length);
   });
 }

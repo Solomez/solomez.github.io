@@ -123,9 +123,11 @@ export function storageDetails(key) {
     s.tip ? h('p', { class: 'st-tip' }, s.tip) : null);
 }
 
-// Все упаковки продукта в разных магазинах: фото, название как на ценнике, цена, €/кг
-export function showVariants(product, { needGrams } = {}) {
+// Все упаковки продукта в разных магазинах: фото, название как на ценнике, цена, €/кг.
+// swap — из рецепта: { current, onPick(subKey | null) } — у замен кнопка «Заменить в блюде», у выбранной — «Вернуть»
+export function showVariants(product, { needGrams, swap } = {}) {
   if (!product) return;
+  let close;
   const packs = sortedPacks(product);
   const best = needGrams ? chooseOffer(product, needGrams)?.pack : bestPack(product);
   const content = h('div', null,
@@ -144,10 +146,26 @@ export function showVariants(product, { needGrams } = {}) {
           offer ? h('span', { class: 'muted' }, `на неделю: ${formatPack(offer)} — ${eur(offer.cost)}`) : null,
           p.url && /^https?:/.test(p.url) ? h('a', { href: p.url, target: '_blank', rel: 'noopener', class: 'variant-link' }, 'Открыть в магазине') : null));
     })),
-    substituteList(product, best?.store, needGrams, 3),
+    swap ? swapSection(product, swap, () => close?.()) : substituteList(product, best?.store, needGrams, 3),
     !SHOW_PHOTOS ? h('p', { class: 'muted' }, 'Нажмите на значок камеры — фото товара откроется на весь экран в новой вкладке.') : null,
     h('p', { class: 'muted small-print' }, 'Фото — с сайтов магазинов; упаковка в конкретном магазине может отличаться.'));
-  sheet(product.name_ru || 'Варианты', content);
+  close = sheet(product.name_ru || 'Варианты', content);
+}
+
+// Замены в блюде: выбранная — сверху с «Вернуть как в рецепте», остальные — «Заменить в блюде»
+function swapSection(product, { current, onPick }, close) {
+  const subs = substitutesOf(product.key);
+  if (!subs.length) return null;
+  return h('section', { class: 'alt-section' },
+    h('div', { class: 'eyebrow' }, 'Чем заменить в этом блюде'),
+    current ? h('p', { style: { margin: '4px 0 8px' } }, h('button', { class: 'btn small', onclick: () => { close(); onPick(null); } }, `Вернуть: ${product.name_ru}`)) : null,
+    h('ul', { class: 'variants' }, subs.map(([k, note, ratio = 1]) => {
+      const sp = productOf(k);
+      const on = k === current;
+      return altRow(sp, bestPack(sp), { note: [note, ratio !== 1 ? `в блюде — ×${String(ratio).replace('.', ',')} по весу` : null].filter(Boolean).join(' · '), best: on, otherStore: true,
+        pickLabel: on ? 'Сейчас в блюде' : 'Заменить в блюде', onPick: on ? null : () => { close(); onPick(k); } });
+    })),
+    h('p', { class: 'muted small-print' }, 'Замена — только в этом блюде: пересчитаются количество, КБЖУ, цена и список покупок.'));
 }
 
 // ---------- Если нет в наличии ----------
@@ -163,7 +181,7 @@ function packIn(product, store, needGrams) {
   return needGrams ? chooseOffer({ ...product, packs }, needGrams)?.pack : packs[0];
 }
 
-function altRow(product, p, { note, needGrams, best, otherStore, onPick } = {}) {
+function altRow(product, p, { note, needGrams, best, otherStore, onPick, pickLabel = 'Взял это' } = {}) {
   const offer = needGrams ? chooseOffer({ packs: [p] }, needGrams) : null;
   return h('li', { class: 'variant' + (best ? ' best' : '') },
     photo(product, p, { cls: 'thumb lg', label: product.name_ru }),
@@ -174,7 +192,7 @@ function altRow(product, p, { note, needGrams, best, otherStore, onPick } = {}) 
       h('span', { class: 'muted' }, `${unitText(p)} · ${eur(p.price_eur)} · ${eur(p.eur_per_kg)}/кг`),
       offer ? h('span', { class: 'muted' }, `на неделю: ${formatPack(offer)} — ${eur(offer.cost)}`) : null,
       onPick ? h('button', { class: 'btn small primary', style: { justifySelf: 'start', marginTop: '6px' },
-        onclick: () => onPick({ ref: product.key, name: `${product.name_ru} — ${p.name_de}`, price: p.price_eur, image: p.image, store: p.store }) }, 'Взял это') : null));
+        onclick: () => onPick({ ref: product.key, name: `${product.name_ru} — ${p.name_de}`, price: p.price_eur, image: p.image, store: p.store }) }, pickLabel) : pickLabel !== 'Взял это' ? h('span', { class: 'badge accent', style: { justifySelf: 'start', marginTop: '6px' } }, pickLabel) : null));
 }
 
 // Замены другим продуктом: сначала те, что есть в этом же магазине, затем — где их найти

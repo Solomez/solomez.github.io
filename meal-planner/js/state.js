@@ -4,6 +4,7 @@
 import { DEFAULT_PROFILE, DEFAULTABLE, dailyTargets } from './core/nutrition.js';
 import { DEFAULT_PREFS } from './core/planner.js';
 import { buildCustomRecipe } from './core/custom.js';
+import { applySubs } from './core/subs.js';
 
 const KEY = 'mealplanner.v1';
 // Опубликованная страница работает внутри claude.ai: там есть window.claude, нет печати и скачивания файлов
@@ -37,7 +38,7 @@ export const state = {
   routes: saved.routes || {}, // магазин → { order: [зоны], seen: { зона: [сумма мест, раз] } }
   places: saved.places || {}, // магазин → { ref: полка } — «лежит в другом отделе»
   unavailable: saved.unavailable || {}, // 'магазин|ref' → дата, когда не нашли на полке
-  custom: saved.custom || { recipes: [], products: {} }, // свои приёмы пищи (черновики) и свои продукты из каталога
+  custom: saved.custom || { recipes: [], products: {} }, // свои приёмы пищи (черновики), свои продукты и замены в блюдах ({ subs: { блюдо: { ингредиент: замена } } })
   stamps: saved.stamps || {}, // раздел → время изменения
   libFilters: saved.libFilters || {},
   savedAt: saved.savedAt || 0,
@@ -251,15 +252,28 @@ export async function loadData() {
   dropMissing(state.plan);
 }
 
-// Свои продукты и приёмы пищи — к данным приложения: рецепты пересобираются из черновиков (цены могли обновиться)
+// Свои продукты, приёмы пищи и замены ингредиентов — к данным приложения: рецепты пересобираются из черновиков
+// (цены могли обновиться), в блюдах с заменой пересчитываются количество, КБЖУ и цена (core/subs.js)
 export function applyCustom() {
   if (!state.data?.baseRecipes) return;
   const c = state.custom || {};
   const products = { ...state.data.baseProducts, ...(c.products || {}) };
   const mine = (c.recipes || []).map((d) => { try { return buildCustomRecipe(d, products); } catch { return null; } }).filter((r) => r && r.ingredients.length);
+  const subs = c.subs || {};
   state.data.products = products;
-  state.data.recipes = [...state.data.baseRecipes, ...mine];
+  state.data.recipes = [...state.data.baseRecipes, ...mine].map((r) => (subs[r.id] ? applySubs(r, subs[r.id], products, state.data.substitutes) : r));
   state.recipeMap = new Map(state.data.recipes.map((x) => [x.id, x]));
+}
+
+// Замена ингредиента в одном блюде: subKey — чем заменить, null — вернуть как в рецепте
+export function setSub(recipeId, key, subKey) {
+  const all = { ...(state.custom?.subs || {}) };
+  const mine = { ...(all[recipeId] || {}) };
+  if (subKey) mine[key] = subKey; else delete mine[key];
+  if (Object.keys(mine).length) all[recipeId] = mine; else delete all[recipeId];
+  state.custom = { ...state.custom, subs: all };
+  applyCustom();
+  save();
 }
 
 export function toggleIn(listName, id) {
