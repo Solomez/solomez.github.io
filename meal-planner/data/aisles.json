@@ -197,7 +197,7 @@
    "ru": "Свежий хлеб и булочки",
    "en": "Fresh bread & rolls",
    "de": "Ofenfrisches Brot & Gebäck",
-   "count": 376
+   "count": 377
   },
   {
    "id": "bread_packed",
@@ -485,7 +485,7 @@
    "ru": "Томаты, пассата, соусы для пасты, песто",
    "en": "Tomatoes, passata, pasta sauces & pesto",
    "de": "Tomatenprodukte, Sugo & Pesto",
-   "count": 234
+   "count": 235
   },
   {
    "id": "canned_veg",
@@ -493,7 +493,7 @@
    "ru": "Овощные консервы, фасоль, нут",
    "en": "Canned vegetables & beans",
    "de": "Gemüsekonserven & Hülsenfrüchte",
-   "count": 288
+   "count": 289
   },
   {
    "id": "pickles",
@@ -621,7 +621,7 @@
    "ru": "Мюсли, хлопья, овсянка",
    "en": "Muesli, cereal & oats",
    "de": "Müsli, Cerealien & Haferflocken",
-   "count": 361
+   "count": 362
   },
   {
    "id": "sweet_spreads",
@@ -661,7 +661,7 @@
    "ru": "Шоколад и конфеты",
    "en": "Chocolate & sweets",
    "de": "Schokolade & Süßes",
-   "count": 1049
+   "count": 1053
   },
   {
    "id": "biscuits",
@@ -9113,20 +9113,20 @@
   {
    "key": "billa",
    "name": "Billa",
-   "count": 9256,
-   "fetched": "2026-10-16"
+   "count": 9264,
+   "fetched": "2026-10-17"
   },
   {
    "key": "spar",
    "name": "Spar",
    "count": 12861,
-   "fetched": "2026-10-16"
+   "fetched": "2026-10-17"
   },
   {
    "key": "penny",
    "name": "Penny",
    "count": 303,
-   "fetched": "2026-10-16"
+   "fetched": "2026-10-17"
   }
  ]
 }
