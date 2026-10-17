@@ -7,6 +7,7 @@ import { missingTools, stepHints, has } from '../core/equipment.js';
 import { difficulty } from '../core/difficulty.js';
 import { missingFromHome } from '../core/planner.js';
 import { homeForPlanning } from './money.js';
+import { editCustomProduct } from './builder.js';
 
 const storeHint = (p) => {
   const best = p?.packs?.find((x) => !x.stale) || p?.packs?.[0];
@@ -144,6 +145,13 @@ export function renderRecipe(root, rerender, id, params) {
         h('span', null, h('i', { class: 'f' }), `Жиры ${num(ps.fat * factor)} г`),
         h('span', null, h('i', { class: 'c' }), `Углеводы ${num(ps.carbs * factor)} г`))),
     h('p', { class: 'muted small-print' }, `На одну порцию для одного человека${Math.abs(factor - 1) > 0.01 ? ` — на ${Math.round(Math.abs(factor - 1) * 100)} % ${factor < 1 ? 'меньше' : 'больше'} базовой, под вашу норму` : ''}. Цены от ${humanDate(state.data.meta.price_date)}, состав — по этикеткам Billa или справочным таблицам.`)));
+
+  // Свой вариант, у продукта которого нет КБЖУ: калории занижены — предлагаем указать
+  if (r.custom && r.unknownKeys?.length) {
+    root.append(h('p', { class: 'notice' }, 'Калории и белок без учёта: ',
+      r.unknownKeys.map((k, j) => [j ? ', ' : '', h('button', { class: 'linkbtn', onclick: () => editCustomProduct(k, () => rerender({ keepScroll: true })) }, `${state.data.products[k]?.name_ru} — указать КБЖУ`)]),
+      '. ', h('a', { href: `#/builder/${r.id}` }, 'Изменить вариант')));
+  }
 
   // Сложность и что есть дома
   const d = difficulty(r);

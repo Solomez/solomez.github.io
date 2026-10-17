@@ -2,7 +2,7 @@
 // КБЖУ и цена считаются сразу; сохранённое становится обычным рецептом (рецепты, план, покупки, запасы).
 import { h, eur, num, icon, seg, toast, sheet } from '../ui.js';
 import { state, save, targets, applyCustom } from '../state.js';
-import { buildCustomRecipe, unitOf, gramsOf, autoTitle, productFromCatalog, mealHint } from '../core/custom.js';
+import { buildCustomRecipe, unitOf, gramsOf, autoTitle, productFromCatalog, mealHint, similarNutrition } from '../core/custom.js';
 import { aisles } from '../core/catalog.js';
 import { photo, thumbPack } from './products.js';
 import { pickFromCatalog } from './catalog.js';
@@ -69,7 +69,10 @@ export function renderBuilder(root, rerender, id, params) {
       h('span', null, h('span', { class: 'big' }, `${num(ps.kcal)} ккал`), h('span', { class: 'muted' }, ` · ${eur(ps.cost)} за порцию`)),
       h('span', { class: 'muted' }, `Б ${num(ps.protein)} · Ж ${num(ps.fat)} · У ${num(ps.carbs)} г`)),
     hint ? h('div', { class: 'need-line small' }, hint) : null,
-    recipe.unknownNutrition.length ? h('div', { class: 'muted small' }, `Без КБЖУ: ${recipe.unknownNutrition.join(', ')} — не учтены в калориях.`) : null));
+    recipe.noPriceKeys.length ? h('div', { class: 'need-line small' }, 'Цена не посчитана — нет веса упаковки: ',
+      recipe.noPriceKeys.map((k, j) => [j ? ', ' : '', state.data.products[k]?.custom ? h('button', { class: 'linkbtn', onclick: () => editCustomProduct(k, () => redraw()) }, `${state.data.products[k].name_ru} — указать вес`) : state.data.products[k]?.name_ru])) : null,
+    recipe.unknownKeys.length ? h('div', { class: 'need-line small' }, 'Без КБЖУ — не учтены в калориях: ',
+      recipe.unknownKeys.map((k, j) => [j ? ', ' : '', state.data.products[k]?.custom ? h('button', { class: 'linkbtn', onclick: () => editCustomProduct(k, () => redraw()) }, `${state.data.products[k].name_ru} — указать`) : state.data.products[k]?.name_ru])) : null));
 
   // Что входит
   root.append(h('h2', null, d.items.length ? 'Что входит' : 'Добавьте продукты'));
@@ -127,7 +130,8 @@ function itemRow(it, idx, products, redraw) {
     h('div', { class: 'home-main' },
       h('span', { class: 'cat-name' }, p?.name_ru || it.key),
       h('span', { class: 'muted small' }, [u.unit !== 'г' && u.unit !== 'мл' ? `${Math.round(g)} г` : null,
-        Array.isArray(n) ? `${num((g * n[0]) / 100)} ккал · ${num((g * n[1]) / 100, 1)} г белка` : 'КБЖУ не указано'].filter(Boolean).join(' · '))),
+        Array.isArray(n) ? `${num((g * n[0]) / 100)} ккал · ${num((g * n[1]) / 100, 1)} г белка` : 'КБЖУ не указано'].filter(Boolean).join(' · ')),
+      p?.custom ? nutritionLink(p, redraw) : null),
     h('div', { class: 'home-actions' },
       h('div', { class: 'stepper', role: 'group', 'aria-label': `Сколько: ${p?.name_ru}` },
         h('button', { 'aria-label': 'Меньше', onclick: () => set(it.qty - u.step) }, '−'),
@@ -144,39 +148,81 @@ function pickRow(k, products, d, redraw) {
     photo(p, thumbPack(p), { cls: 'thumb sm', label: p.name_ru }),
     h('div', { class: 'home-main' },
       h('span', { class: 'cat-name' }, p.name_ru, p.custom ? h('span', { class: 'badge', style: { marginLeft: '6px' } }, 'свой') : null),
-      h('span', { class: 'muted small' }, [Array.isArray(n) ? `${num(n[0])} ккал, ${num(n[1], 1)} г белка на 100 г` : 'КБЖУ не указано', p.packs?.[0] ? `от ${eur(Math.min(...p.packs.map((x) => x.price_eur || 99)))}` : null].filter(Boolean).join(' · '))),
+      h('span', { class: 'muted small' }, [Array.isArray(n) ? `${num(n[0])} ккал, ${num(n[1], 1)} г белка на 100 г` : 'КБЖУ не указано', p.packs?.[0] ? `от ${eur(Math.min(...p.packs.map((x) => x.price_eur || 99)))}` : null].filter(Boolean).join(' · ')),
+      p.custom ? nutritionLink(p, redraw) : null),
     h('div', { class: 'home-actions' },
       h('button', { class: 'btn small' + (inIt ? ' on' : ''), onclick: () => { if (inIt) inIt.qty += unitOf(k, p).step; else d.items.push({ key: k, qty: unitOf(k, p).def }); redraw(); } },
         icon('plus'), inIt ? 'Ещё' : 'Добавить')));
 }
 
+// «Указать КБЖУ» / «изменить КБЖУ» у своего продукта
+function nutritionLink(p, redraw) {
+  const has = Array.isArray(p.nutrition_per_100g);
+  return h('button', { class: 'linkbtn small-link', style: { justifySelf: 'start' }, onclick: () => editCustomProduct(p.key, redraw) }, has ? 'изменить КБЖУ' : 'Указать КБЖУ');
+}
+
+// Форма своего продукта: название и КБЖУ на 100 г с этикетки; «как у похожих» — средние по той же полке из базы.
+// fields: дополнительные поля (вес упаковки, вес штуки) — только при добавлении из каталога
+function productForm({ title, intro, product, fields = [], submit, onSave }) {
+  let close;
+  const n = product.nutrition_per_100g || [];
+  const f = (id, label, val) => h('label', { class: 'field' }, h('span', null, label), h('input', { type: 'number', inputmode: 'decimal', min: 0, step: 0.1, id, value: val ?? '' }));
+  const name = h('input', { type: 'text', value: product.custom && product.name_ru !== product.name_de_generic ? product.name_ru : '', placeholder: product.name_de_generic || product.name_ru, 'aria-label': 'Название по-русски' });
+  const sim = similarNutrition(product, state.data.products);
+  const ids = ['cf-k', 'cf-p', 'cf-f', 'cf-c'];
+  const content = h('div', { class: 'stack' },
+    h('p', { class: 'muted', style: { margin: 0 } }, intro),
+    h('label', { class: 'field' }, h('span', null, 'Как назвать (по-русски)'), name),
+    h('div', { class: 'eyebrow' }, 'В 100 г — с этикетки (Nährwerte pro 100 g)'),
+    h('div', { class: 'filters' }, f('cf-k', 'Ккал (kcal)', n[0]), f('cf-p', 'Белки (Eiweiß), г', n[1]), f('cf-f', 'Жиры (Fett), г', n[2]), f('cf-c', 'Углеводы (Kohlenhydrate), г', n[3])),
+    sim ? h('button', { class: 'btn small', style: { justifySelf: 'start' }, onclick: () => ids.forEach((id, j) => { document.getElementById(id).value = sim.values[j]; }) },
+      `Этикетки нет под рукой — как у похожих: ${num(sim.values[0])} ккал, ${num(sim.values[1], 1)} г белка`) : null,
+    sim ? h('div', { class: 'muted small' }, `Среднее по: ${sim.names.join(', ')}. Это приблизительно — с этикетки точнее.`) : null,
+    ...fields.map(([id, label]) => f(id, label)),
+    h('button', { class: 'btn primary wide', onclick: () => {
+      const v = (id) => +(document.getElementById(id)?.value || 0);
+      onSave({ name: name.value.trim(), nutrition: ids.map(v), v });
+      close();
+    } }, submit));
+  close = sheet(title, content);
+}
+
+export function editCustomProduct(key, after) {
+  const p = state.custom?.products?.[key];
+  if (!p) return;
+  const pack = p.packs?.[0];
+  const noWeight = pack && !pack.loose && !(pack.grams > 0);
+  productForm({ title: p.name_ru, intro: `${pack?.name_de || p.name_de} · ${pack?.store || ''}. Перепишите с этикетки, сколько в 100 г — калории и белок пересчитаются во всех ваших вариантах с этим продуктом.`,
+    product: p, submit: 'Сохранить', fields: noWeight ? [['cf-size', `Вес всей упаковки, г${pack.pack_unit === 'pcs' ? ` (${pack.pack_size} шт.)` : ''} — чтобы посчитать цену`]] : [],
+    onSave: ({ name, nutrition, v }) => {
+      const has = nutrition.some((x) => x > 0);
+      const size = noWeight ? v('cf-size') : 0;
+      const packs = size > 0 ? [{ ...pack, grams: size, eur_per_kg: Math.round((pack.price_eur / size) * 1000 * 100) / 100 }, ...p.packs.slice(1)] : p.packs;
+      state.custom.products = { ...state.custom.products, [key]: { ...p, packs, name_ru: name || p.name_ru, nutrition_per_100g: has ? nutrition : null } };
+      applyCustom();
+      save();
+      after?.();
+      toast(has ? `КБЖУ сохранено: ${name || p.name_ru}` : 'КБЖУ не указано');
+    } });
+}
+
 // Товар из каталога: КБЖУ с этикетки (на 100 г), вес упаковки — если в каталоге нет
 function addFromCatalog(d, redraw) {
   pickFromCatalog({ title: 'Добавить из каталога', pickLabel: 'Выбрать', onPick: (it) => {
-    let close;
-    const f = (id, label, val = '') => h('label', { class: 'field' }, h('span', null, label), h('input', { type: 'number', inputmode: 'decimal', min: 0, step: 0.1, id, value: val }));
-    const name = h('input', { type: 'text', value: '', placeholder: it.name, 'aria-label': 'Название по-русски' });
-    const needSize = !it.size && !it.byWeight;
-    const content = h('div', { class: 'stack' },
-      h('p', { class: 'muted', style: { margin: 0 } }, `${it.name} · ${it.store} · ${eur(it.price)}. Перепишите с этикетки, сколько в 100 г — тогда калории и белок посчитаются. Можно пропустить.`),
-      h('label', { class: 'field' }, h('span', null, 'Как назвать (по-русски)'), name),
-      h('div', { class: 'filters' }, f('cf-k', 'Ккал на 100 г'), f('cf-p', 'Белки, г'), f('cf-f', 'Жиры, г'), f('cf-c', 'Углеводы, г')),
-      needSize ? f('cf-size', 'Вес упаковки, г') : null,
-      it.unit === 'pcs' ? f('cf-piece', 'Вес одной штуки, г') : null,
-      h('button', { class: 'btn primary', onclick: () => {
-        const v = (id) => +(document.getElementById(id)?.value || 0);
-        const nutrition = [v('cf-k'), v('cf-p'), v('cf-f'), v('cf-c')];
-        const zone = aisles(state.data).shelf[it.shelf]?.zone || null;
-        const p = productFromCatalog(it, { name: name.value, nutrition, sizeGrams: v('cf-size') || null, pieceGrams: v('cf-piece') || null, zone });
+    const zone = aisles(state.data).shelf[it.shelf]?.zone || null;
+    const draftP = { ...productFromCatalog(it, { zone }), name_ru: it.name };
+    const fields = [...(!it.size && !it.byWeight ? [['cf-size', 'Вес упаковки, г']] : []), ...(it.unit === 'pcs' ? [['cf-piece', 'Вес одной штуки, г']] : [])];
+    productForm({ title: 'Свой продукт', intro: `${it.name} · ${it.store} · ${eur(it.price)}. Перепишите с этикетки, сколько в 100 г — тогда калории и белок посчитаются. Можно пропустить и указать позже.`,
+      product: draftP, fields, submit: 'Добавить',
+      onSave: ({ name, nutrition, v }) => {
+        const p = productFromCatalog(it, { name, nutrition, sizeGrams: v('cf-size') || null, pieceGrams: v('cf-piece') || null, zone });
         state.custom.products = { ...(state.custom.products || {}), [p.key]: p };
         applyCustom();
         save();
         if (!d.items.some((i) => i.key === p.key)) d.items.push({ key: p.key, qty: unitOf(p.key, p).def });
-        close();
         redraw();
         toast(`Добавлено: ${p.name_ru}`);
-      } }, 'Добавить'));
-    close = sheet('Свой продукт', content);
+      } });
   } });
 }
 

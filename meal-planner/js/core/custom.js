@@ -60,12 +60,16 @@ export function buildCustomRecipe(draft, products) {
   const tot = [0, 0, 0, 0];
   let cost = 0;
   const unknown = [];
+  const unknownKeys = [];
+  const noPriceKeys = []; // нет веса упаковки — цену за кг не посчитать
   const breakdown = ingredients.map((i) => {
     const p = products[i.key];
     const n = p.nutrition_per_100g;
     if (Array.isArray(n)) for (let j = 0; j < 4; j++) tot[j] += (i.grams * (+n[j] || 0)) / 100;
-    else unknown.push(p.name_ru);
-    const c = (i.grams * eurPerKg(p)) / 1000;
+    else { unknown.push(p.name_ru); unknownKeys.push(i.key); }
+    const perKg = eurPerKg(p);
+    if (!perKg) noPriceKeys.push(i.key);
+    const c = (i.grams * perKg) / 1000;
     cost += c;
     const best = chooseOffer(p, i.grams || 1)?.pack;
     return { key: i.key, name_ru: i.name_ru, grams_per_serving: i.grams, cost_per_serving: round2(c), store: best?.store || null, is_estimate: false };
@@ -101,6 +105,8 @@ export function buildCustomRecipe(draft, products) {
     cost_breakdown: breakdown,
     main_ingredient_count: ingredients.length,
     unknownNutrition: unknown,
+    unknownKeys,
+    noPriceKeys,
     draft: { items: draft.items || [], tea: draft.tea || null, note: draft.note || '', title: draft.title || '', meal_type: draft.meal_type || 'snack' },
   };
 }
@@ -133,6 +139,19 @@ export function productFromCatalog(it, { name, nutrition, sizeGrams, pieceGrams,
     nutrition_per_100g: Array.isArray(nutrition) && nutrition.some((x) => +x > 0) ? nutrition.map((x) => +x || 0) : null,
     packs: [pack],
   };
+}
+
+// «Как у похожих»: средние КБЖУ продуктов базы с той же полки (хлопья — как у хлопьев, батончик — как у батончиков),
+// если на этой полке нет — из того же отдела. null — сравнить не с чем
+export function similarNutrition(product, products) {
+  // почти без калорий (чай) — не пример для сравнения
+  const base = Object.values(products).filter((p) => !p.custom && !p.basic && Array.isArray(p.nutrition_per_100g) && p.nutrition_per_100g[0] > 20);
+  for (const same of [base.filter((p) => product.shelf && p.shelf === product.shelf), base.filter((p) => product.zone && p.zone === product.zone)]) {
+    if (!same.length) continue;
+    const avg = [0, 1, 2, 3].map((j) => Math.round((same.reduce((a, p) => a + +p.nutrition_per_100g[j], 0) / same.length) * 10) / 10);
+    return { values: avg, names: same.map((p) => p.name_ru).slice(0, 4) };
+  }
+  return null;
 }
 
 // Подсказка под тип приёма пищи: чего не хватает до привычной нормы приложения
