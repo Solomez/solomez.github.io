@@ -28,6 +28,38 @@ export const DEFAULT_PROFILE = {
   reserve: 20, // € в неделю на завтраки и перекусы (не входят в план)
 };
 
+// Допустимые значения полей профиля: вне диапазона значение не сохраняется (опечатка «202022» не должна сломать неделю)
+export const RANGES = {
+  age: [14, 99, 'лет'], height: [120, 230, 'см'], weight: [35, 250, 'кг'], budget: [20, 400, '€'], reserve: [0, 200, '€'],
+  surplusPct: [0, 25, '%'], proteinPerKg: [1.2, 3, 'г/кг'], mealShare: [40, 90, '%'],
+};
+export function validNumber(key, v) {
+  const r = RANGES[key];
+  if (v == null || !Number.isFinite(+v)) return false;
+  return !r || (+v >= r[0] && +v <= r[1]);
+}
+export const rangeText = (key) => { const r = RANGES[key]; return r ? `от ${String(r[0]).replace('.', ',')} до ${String(r[1]).replace('.', ',')}` : ''; };
+
+// Белок на кг по умолчанию зависит от цели (если пользователь не вводил своё значение)
+export const goalProtein = (goal) => GOALS[goal]?.proteinPerKg ?? 2;
+
+// Поля, которые человек ещё не трогал, — значения по умолчанию (их стоит проверить)
+export const DEFAULTABLE = ['age', 'activity', 'goal', 'proteinPerKg', 'budget', 'reserve'];
+export function isDefaultValue(p, key) {
+  if ((p.touched || []).includes(key)) return false;
+  return key === 'proteinPerKg' ? +p.proteinPerKg === goalProtein(p.goal) : p[key] === DEFAULT_PROFILE[key];
+}
+
+// Откуда норма белка — одной строкой
+export function proteinWhy(p, t) {
+  const ppk = Number.isFinite(+p.proteinPerKg) && +p.proteinPerKg > 0 ? +p.proteinPerKg : goalProtein(p.goal);
+  const w = t.complete ? p.weight : 72;
+  const why = p.goal === 'gain' ? 'для набора мышц обычно советуют 1,6–2,2 г на кг'
+    : p.goal === 'cut' ? 'при снижении веса белка нужно больше, чтобы сохранить мышцы'
+    : 'для поддержания веса обычно хватает 1,2–1,6 г на кг';
+  return `Белок: ${String(ppk).replace('.', ',')} г × ${String(w).replace('.', ',')} кг = ${t.protein} г в день — ${why}.`;
+}
+
 export function isProfileComplete(p) {
   return Boolean(p && (p.sex === 'male' || p.sex === 'female') && p.height > 0 && p.weight > 0 && p.age > 0);
 }

@@ -24,7 +24,37 @@ export function planToText(plan, recipeMap) {
   return lines.join('\n');
 }
 
-export function shoppingToText(list, products, departments, checked = {}, cart = []) {
+// Список по походам (F15): «Вт, 20 октября · Billa», в каждой строке — название, количество и как на ценнике.
+// which: 'next' — только ближайший поход, 'all' — все походы периода
+export function tripsToText(ck, plan, products, { which = 'all', checked = {} } = {}) {
+  const trips = which === 'next' ? ck.trips.slice(0, 1) : ck.trips;
+  const lines = [which === 'next' ? 'СПИСОК НА БЛИЖАЙШИЙ ПОХОД' : 'СПИСОК ПОКУПОК ПО ПОХОДАМ', ''];
+  for (const t of trips) {
+    const d = dayDate(plan, t.day);
+    lines.push(`${fmtDate(d)} · ${t.store}`);
+    for (const ti of t.items) {
+      const it = ck.list.items.find((i) => i.key === ti.key);
+      if (!it) continue;
+      const pack = it.offer ? `${formatPack(it.offer)}${it.offer.pack.name_de ? ` (${it.offer.pack.name_de})` : ''}` : formatAmount(it.key, it.needGrams, products[it.key]);
+      lines.push(`${checked[it.key] ? '✓' : '—'} ${it.name_ru}, ${pack}`);
+    }
+    for (const c of ck.own.filter((c) => c.store === t.store)) lines.push(`— ${c.name}${c.byWeight ? '' : ` × ${c.qty}`}`);
+    lines.push(`Итого: ${eur(t.total)}`, '');
+  }
+  if (which !== 'next') {
+    const tripStores = new Set(ck.trips.map((t) => t.store));
+    const elsewhere = ck.own.filter((c) => !c.done && !tripStores.has(c.store));
+    if (elsewhere.length) lines.push('Ваши товары в других магазинах', ...elsewhere.map((c) => `— ${c.name}${c.byWeight ? '' : ` × ${c.qty}`} (${c.store})`), '');
+    const noPrice = ck.list.items.filter((i) => !i.offer);
+    if (noPrice.length) lines.push('Без цены — в любом магазине', ...noPrice.map((i) => `— ${i.name_ru}, ${formatAmount(i.key, i.needGrams, products[i.key])}`), '');
+    if (ck.list.basics.length) lines.push('Базовое (купить, если нет дома)', ...ck.list.basics.map((i) => `— ${i.name_ru}${i.name_de_generic ? ` (${i.name_de_generic})` : ''}`), '');
+    lines.push(`К оплате: ${eur(ck.toPay)}`);
+  }
+  return lines.join('\n').trim();
+}
+
+// ck — результат checkout(): итоги по магазинам и «к оплате» те же, что на экранах
+export function shoppingToText(list, products, departments, checked = {}, cart = [], ck = null) {
   const lines = ['СПИСОК ПОКУПОК', ''];
   for (const dep of departments) {
     const items = list.items.filter((i) => i.department === dep.id);
@@ -45,8 +75,8 @@ export function shoppingToText(list, products, departments, checked = {}, cart =
   }
   if (list.atHome?.length) lines.push(`УЖЕ ДОМА (не покупать): ${list.atHome.map((i) => i.name_ru).join(', ')}`, '');
   lines.push('ИТОГО ПО МАГАЗИНАМ');
-  for (const [s, v] of Object.entries(list.byStore)) lines.push(`  ${s}: ${eur(v.total)} (${v.count} поз.)`);
-  lines.push(`  Всего: ${eur(list.total)}`, '');
+  for (const [s, v] of Object.entries(ck ? ck.byStore : list.byStore)) lines.push(`  ${s}: ${eur(v.total)} (${v.count} поз.)`);
+  lines.push(`  К оплате: ${eur(ck ? ck.toPay : list.total)}`, '');
   if (list.basics.length) {
     lines.push('БАЗОВЫЕ ПРОДУКТЫ (купить один раз, если нет дома)');
     for (const it of list.basics) {

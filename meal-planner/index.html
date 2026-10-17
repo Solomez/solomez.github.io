@@ -22,6 +22,16 @@
 <body>
   <nav id="nav" class="nav" aria-label="Разделы"></nav>
   <main id="main" class="app"><p class="muted">Загрузка…</p></main>
-  <script type="module" src="js/app.js"></script>
+  <script>
+    // Если приложение не запустилось (не загрузился файл, обрыв сети) — не оставляем вечную «Загрузка…»
+    window.__loadFailed = function () {
+      if (window.__appStarted) return;
+      var m = document.getElementById('main');
+      m.innerHTML = '<div class="notice" role="alert"><p>Не удалось загрузить приложение. Проверьте интернет и попробуйте ещё раз.</p>' +
+        '<button class="btn primary" type="button" onclick="location.reload()">Повторить</button></div>';
+    };
+    setTimeout(window.__loadFailed, 15000);
+  </script>
+  <script type="module" src="js/app.js" onerror="window.__loadFailed()"></script>
 </body>
 </html>

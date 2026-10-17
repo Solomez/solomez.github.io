@@ -68,7 +68,7 @@ export function toast(msg, action) {
   const t = h('div', { class: 'toast', role: 'status' }, h('span', null, msg),
     action ? h('button', { class: 'toast-action', onclick: () => { t.remove(); action.onClick(); } }, action.label) : null);
   document.body.append(t);
-  setTimeout(() => t.remove(), action ? 6000 : 2200);
+  setTimeout(() => t.remove(), action ? 10000 : 2600); // с «Отменить» — дольше: успеть прочитать и нажать
 }
 
 const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
@@ -81,7 +81,9 @@ export function humanDate(iso) {
 // Полоска прогресса к цели: value/goal, отметка цели, перебор подсвечивается
 export function meter(value, goal, cls = '') {
   const max = Math.max(goal * 1.25, value, 1);
-  return h('div', { class: 'meter ' + cls + (value > goal * 1.15 ? ' over' : ''), role: 'img', 'aria-label': `${Math.round(value)} из ${Math.round(goal)}` },
+  // бюджет: любой перерасход — красным; белок выше нормы — не ошибка (для набора это нормально); калории — с запасом 15 %
+  const over = cls === 'budget' ? value > goal + 0.005 : cls === 'protein' ? false : value > goal * 1.15;
+  return h('div', { class: 'meter ' + cls + (over ? ' over' : ''), role: 'img', 'aria-label': `${Math.round(value)} из ${Math.round(goal)}` },
     h('i', { style: { width: `${Math.min(100, (value / max) * 100)}%` } }),
     h('span', { class: 'goal', style: { left: `${(goal / max) * 100}%` } }));
 }
@@ -115,6 +117,7 @@ if (typeof document !== 'undefined') {
 
 export function sheet(title, content) {
   const opener = document.activeElement;
+  document.querySelectorAll('.toast').forEach((x) => x.remove()); // сообщение снизу перекрывало кнопки шторки (UX-ревью)
   let closed = false;
   const close = () => {
     if (closed) return;

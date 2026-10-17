@@ -33,8 +33,11 @@ function parseHash() {
 
 function renderNav(view) {
   const active = view === 'recipe' ? 'recipes' : view === 'stats' ? 'plan' : view;
+  // крупный системный шрифт: подписи разделов не помещаются — оставляем значки (с названием для экранного диктора)
+  // и подпись только текущего раздела (F35)
+  document.documentElement.classList.toggle('big-text', parseFloat(getComputedStyle(document.documentElement).fontSize) >= 22);
   nav.replaceChildren(h('div', { class: 'nav-inner' }, TABS.map(([v, label, ic]) =>
-    h('a', { href: `#/${v}`, class: v === active ? 'active' : '', 'aria-current': v === active ? 'page' : null }, icon(ic), h('span', null, label)))));
+    h('a', { href: `#/${v}`, class: v === active ? 'active' : '', 'aria-current': v === active ? 'page' : null, 'aria-label': label }, icon(ic), h('span', null, label)))));
 }
 
 function render(opts = {}) {
@@ -54,7 +57,7 @@ function render(opts = {}) {
       case 'cook': renderCook(root, rerender, id, params); break;
       case 'shop': renderShop(root, rerender); break;
       case 'stats': renderStats(root); break;
-      case 'products': renderProducts(root, rerender); break;
+      case 'products': renderProducts(root, rerender, params); break;
       case 'profile': renderProfile(root, rerender); break;
       default: renderPlan(root, rerender);
     }
@@ -89,6 +92,16 @@ window.addEventListener('hashchange', (e) => {
 const fromLink = ACCOUNTS_ENABLED ? takeSessionFromUrl() : null;
 const onSync = (changed) => { if (changed) render({ keepScroll: true, keepFocus: true }); else refreshSyncText(); };
 
+// размер шрифта мог измениться (настройки системы, масштаб) — пересчитать меню
+window.addEventListener('resize', () => renderNav(parseHash().view));
+// размер шрифта могут поменять и без изменения окна (настройки браузера, масштаб текста) — следим за шириной 1rem
+if (typeof ResizeObserver === 'function') {
+  const probe = h('span', { 'aria-hidden': 'true', style: { position: 'fixed', left: '0', top: '0', visibility: 'hidden', width: '1rem', height: '1px', pointerEvents: 'none' } });
+  document.body.append(probe);
+  let last = 0;
+  new ResizeObserver(() => { const w = probe.getBoundingClientRect().width; if (Math.abs(w - last) > 0.5) { last = w; renderNav(parseHash().view); } }).observe(probe);
+}
+window.__appStarted = true; // модули загрузились — запасной экран ошибки из index.html больше не нужен
 loadData()
   .then(() => {
     render();
@@ -97,14 +110,23 @@ loadData()
   })
   .catch((err) => {
     console.error(err);
-    main.replaceChildren(h('p', { class: 'notice' }, 'Не удалось загрузить данные (data/recipes.json). Запустите приложение командой python3 serve.py из папки проекта.'));
+    main.replaceChildren(h('div', { class: 'notice', role: 'alert' },
+      h('p', null, 'Не удалось загрузить рецепты и цены. Проверьте интернет и попробуйте ещё раз.'),
+      h('button', { class: 'btn primary', type: 'button', onclick: () => location.reload() }, 'Повторить')));
   });
 
-// Офлайн-кэш отключён: он показывал устаревшие версии. Удаляем то, что осталось от прошлых версий.
-if ('serviceWorker' in navigator && !window.claude) {
-  navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
-  if (window.caches) caches.keys().then((keys) => keys.forEach((k) => caches.delete(k))).catch(() => {});
+// Офлайн (F39): service worker «сначала сеть» — свежая версия при сети, последнее загруженное без сети.
+// На claude.ai (window.claude) не регистрируется — там своя среда.
+if ('serviceWorker' in navigator && !window.claude && location.protocol !== 'file:') {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
 }
+// Индикатор «нет сети»: отметки сохраняются в браузере и уйдут в аккаунт, когда сеть вернётся
+const offlineBar = h('div', { class: 'offline-bar', role: 'status', hidden: navigator.onLine }, 'Нет сети — отметки сохраняются на этом устройстве');
+document.body.append(offlineBar);
+const setOnline = (on) => { offlineBar.hidden = on; document.documentElement.classList.toggle('is-offline', !on); };
+setOnline(navigator.onLine);
+window.addEventListener('online', () => setOnline(true));
+window.addEventListener('offline', () => setOnline(false));
 
 function toastIn() { toast(`Вы вошли: ${state.account?.email || ''}. Данные синхронизируются.`); }
 function alertLink(msg) { toast(`Ссылка для входа не сработала: ${msg}. Введите код из письма в Профиле.`); }

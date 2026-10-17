@@ -107,6 +107,25 @@ export function search(data, items, q, { limit = 80 } = {}) {
     it.concepts.forEach((c, i) => { const v = m.get(c); if (v) best = Math.max(best, i === 0 ? v : v * 0.6); });
     return best;
   };
+  // немецкое название понятия в названии товара отдельным словом — сильный признак: «Kaffee gemahlen» для «кофе»
+  // выше «Kaffeefilter» и «Café-Konfekt», которые тоже помечены понятием «кофе» (F17)
+  const deOf = new Map((data?.aisles?.concepts || []).map((c) => [c.id, norm(c.de || '')]));
+  const top = byWord.concat([phrase]).flatMap((m) => { const mx = Math.max(0, ...m.values()); return [...m].filter(([, v]) => v === mx && mx >= 4).map(([id]) => id); });
+  const deBonus = (hay, it) => (top.some((id) => it.concepts[0] === id && deOf.get(id) && new RegExp(`(^|[^a-zäöüß])${deOf.get(id).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}($|[^a-zäöüß])`).test(hay)) ? 3 : 0);
+  // разметка каталога шумная (понятие «кофе» есть и у краски для волос): поднимаем товары из обычного для понятия отдела
+  // и с уточняющим понятием той же семьи («кофе» + «кофе в зёрнах»)
+  const zoneOfShelf = new Map((data?.aisles?.shelves || []).map((x) => [x.id, x.zone]));
+  const usual = new Map();
+  for (const id of top) {
+    const cnt = {};
+    for (const it of items) if (it.concepts[0] === id) { const z = zoneOfShelf.get(it.shelf); cnt[z] = (cnt[z] || 0) + 1; }
+    usual.set(id, Object.entries(cnt).sort((x, y) => y[1] - x[1])[0]?.[0]);
+  }
+  const fit = (it) => top.reduce((acc, id) => {
+    if (!it.concepts.includes(id)) return acc;
+    const family = it.concepts.filter((c) => c !== id && c.startsWith(id + '_')).length ? 2 : 0;
+    return Math.max(acc, (zoneOfShelf.get(it.shelf) === usual.get(id) ? 2 : 0) + family);
+  }, 0);
   const scored = [];
   for (const it of items) {
     const hay = norm(` ${it.name} ${it.brand || ''} `);
@@ -123,7 +142,7 @@ export function search(data, items, q, { limit = 80 } = {}) {
         score += Math.max(viaConcept, inName) + (viaConcept && inName ? 1 : 0);
       }
     }
-    if (ok) scored.push({ it, score });
+    if (ok) scored.push({ it, score: score + deBonus(hay, it) + fit(it) });
   }
   scored.sort((a, b) => b.score - a.score || (a.it.per ?? 1e9) - (b.it.per ?? 1e9));
   return scored.slice(0, limit).map((x) => x.it);

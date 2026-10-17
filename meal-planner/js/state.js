@@ -1,7 +1,7 @@
 // Состояние приложения: данные (JSON) + настройки пользователя.
 // Хранение: localStorage в этом браузере; в опубликованной версии (claude.ai) —
 // ещё и личная запись в db аккаунта, чтобы план был одинаковым на телефоне и компьютере.
-import { DEFAULT_PROFILE, dailyTargets } from './core/nutrition.js';
+import { DEFAULT_PROFILE, DEFAULTABLE, dailyTargets } from './core/nutrition.js';
 import { DEFAULT_PREFS } from './core/planner.js';
 
 const KEY = 'mealplanner.v1';
@@ -37,12 +37,18 @@ export const state = {
   places: saved.places || {}, // магазин → { ref: полка } — «лежит в другом отделе»
   unavailable: saved.unavailable || {}, // 'магазин|ref' → дата, когда не нашли на полке
   stamps: saved.stamps || {}, // раздел → время изменения
-  altCursor: {}, // batchId → индекс следующей замены (не сохраняется)
   libFilters: saved.libFilters || {},
   savedAt: saved.savedAt || 0,
   sync: 'local', // 'local' | 'connecting' | 'cloud'
   account: null, // { email } — вход через Supabase на своём сайте
 };
+
+// Профиль из старых версий: заполненный профиль считается проверенным (не помечаем его поля «по умолчанию»)
+export function normalizeProfile(p) {
+  if (!Array.isArray(p.touched)) p.touched = p.sex && p.height > 0 && p.weight > 0 ? [...DEFAULTABLE] : [];
+  return p;
+}
+normalizeProfile(state.profile);
 
 // У разделов без метки (данные до этого обновления) — время прошлого сохранения на этом устройстве.
 // Фиксируем его сразу: иначе любое следующее сохранение сделало бы «свежими» и все нетронутые разделы.
@@ -121,7 +127,7 @@ export function mergeRemote(d) {
     const remoteT = stampOf(d, k);
     const localT = localStamp(k);
     if (d[k] === undefined || remoteT <= localT) continue;
-    state[k] = k === 'profile' ? { ...DEFAULT_PROFILE, ...(d[k] || {}) } : k === 'prefs' ? { ...DEFAULT_PREFS, ...(d[k] || {}) } : d[k];
+    state[k] = k === 'profile' ? normalizeProfile({ ...DEFAULT_PROFILE, ...(d[k] || {}) }) : k === 'prefs' ? { ...DEFAULT_PREFS, ...(d[k] || {}) } : d[k];
     state.stamps[k] = remoteT;
     prints[k] = printOf(k);
     changed = true;
@@ -223,13 +229,18 @@ export function dropMissing(plan) {
 
 export async function loadData() {
   const base = document.querySelector('meta[name="data-base"]')?.content || '../data/';
+  // тайм-аут: при очень плохой связи — экран «Не удалось загрузить» с «Повторить», а не вечная «Загрузка…»
+  const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timer = setTimeout(() => ctl?.abort(), 25000);
+  const get = (f) => fetch(base + f, { signal: ctl?.signal }).then((x) => { if (!x.ok) throw new Error(`${f}: ${x.status}`); return x.json(); });
   const [r, p, st, sub, ai] = await Promise.all([
-    fetch(base + 'recipes.json').then((x) => x.json()),
-    fetch(base + 'products.json').then((x) => x.json()),
+    get('recipes.json'),
+    get('products.json'),
     fetch(base + 'storage.json').then((x) => x.json()).catch(() => ({})),
     fetch(base + 'substitutes.json').then((x) => x.json()).catch(() => ({})),
     fetch(base + 'aisles.json').then((x) => x.json()).catch(() => ({ zones: [], shelves: [], concepts: [], stores: [] })),
   ]);
+  clearTimeout(timer);
   state.data = { recipes: r.recipes, products: p.products, meta: r.meta, storage: st, substitutes: sub, aisles: ai, base };
   state.recipeMap = new Map(r.recipes.map((x) => [x.id, x]));
   // план мог ссылаться на удалённый рецепт — убираем такие приготовления

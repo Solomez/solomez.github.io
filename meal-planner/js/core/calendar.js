@@ -43,16 +43,17 @@ export const mealPast = (plan, day, meal, now = new Date()) => now >= at(plan, d
 // Приготовление (batch) уже сделано, если наступило время его готовки
 export const cookPast = (plan, day, meal, now = new Date()) => now >= at(plan, day, COOK_HOUR[meal] ?? 18);
 
-// План только с тем, что ещё предстоит приготовить и съесть: по нему считается список покупок
+// План только с тем, что ещё предстоит приготовить и съесть: по нему считается список покупок.
+// Приготовление остаётся, пока не прошло время самого приёма пищи (ужин — до 20:00): в 19:00 сегодняшний ужин
+// ещё не приготовлен, и продукты для него нужны (F46; раньше он пропадал уже в 18:00 — время начала готовки)
 export function remainingPlan(plan, now = new Date()) {
   return {
     ...plan,
     batches: plan.batches.filter((b) => {
       const first = b.slots[0]; // первый приём пищи приготовления — момент готовки
-      return !cookPast(plan, first.day, first.meal, now);
+      return !mealPast(plan, first.day, first.meal, now);
     }),
-    // завтрак и перекус тоже: к их времени продукты уже должны быть дома
-    extras: (plan.extras || []).filter((x) => !cookPast(plan, x.day, x.meal, now)),
+    extras: (plan.extras || []).filter((x) => !mealPast(plan, x.day, x.meal, now)),
   };
 }
 

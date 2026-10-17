@@ -1,6 +1,7 @@
-import { h, eur, num, icon, factorText, humanDate, nb, plural } from '../ui.js';
+import { h, eur, num, icon, factorText, humanDate, nb, plural, toast } from '../ui.js';
 import { state, save, toggleIn } from '../state.js';
-import { formatAmount } from '../core/shopping.js';
+import { formatAmount, chooseOffer, buildShoppingList } from '../core/shopping.js';
+import { scaleMeasure, scaleWords, packShare } from '../core/amounts.js';
 import { photo, thumbPack, showVariants, substitutesOf } from './products.js';
 import { missingTools, stepHints, has } from '../core/equipment.js';
 
@@ -10,12 +11,20 @@ const storeHint = (p) => {
   return `${best.store}: ${best.name_de}${best.is_estimate ? ' (цена — оценка)' : ''}`;
 };
 
-// Количество: бытовая мера из рецепта; при другом размере порции — пересчитанные граммы + исходная мера
-export function ingredientAmount(ing, scale, products, servings = 2) {
+// Количество для человека. При другом размере порции бытовая мера пересчитывается («1,5 ст. л.» × 0,8 → «1¼ ст. л.»),
+// без множителей; у продуктов с весом — граммы и доля упаковки, которую покупают (а не мера базового рецепта)
+export function ingredientAmount(ing, scale, products, servings = 2, packOf = null) {
   const same = Math.abs(scale - 1) < 0.01;
   if (same) return { main: ing.amount, sub: ing.grams ? `${Math.round(ing.grams)} г` : '' };
-  if (ing.basic || !ing.grams) return { main: `${ing.amount} ${factorText(Math.round(scale * 100) / 100)}`, sub: '' };
-  return { main: formatAmount(ing.key, ing.grams * scale, products[ing.key]), sub: `в рецепте на ${servings} ${plural(servings, 'порцию', 'порции', 'порций')}: ${ing.amount}` };
+  if (ing.basic || !ing.grams) return { main: scaleMeasure(ing.amount, scale) ?? scaleWords(ing.amount, scale), sub: '' };
+  const g = ing.grams * scale;
+  const p = products[ing.key];
+  // доля той упаковки, что в списке покупок этой недели (купили 1 кг — «половина упаковки 1 кг», а не «почти вся 500 г»)
+  const pack = packOf?.get(ing.key) || (p ? chooseOffer(p, g)?.pack : null);
+  const unit = pack?.pack_unit === 'ml' ? 'мл' : 'г';
+  const share = pack && !pack.loose && pack.pack_unit !== 'pcs' ? packShare(g, pack.grams, unit) : null;
+  const measure = /шт|зубч|ломт|филе|яйц|кубик|стакан|ст\. л|ч\. л/.test(ing.amount) ? scaleMeasure(ing.amount.split(' (')[0].split(' — ')[0], scale) : null;
+  return { main: formatAmount(ing.key, g, p), sub: [measure, share].filter(Boolean).join(' · ') };
 }
 
 // Параметры ссылки: размер порции (×0,25–4) и число порций (1–8); мусор — значения по умолчанию
@@ -35,11 +44,19 @@ export function prepState(id) {
   return c;
 }
 
+// Упаковки из списка покупок текущей недели: key → упаковка
+export function weekPacks() {
+  if (!state.plan?.batches?.length) return null;
+  const list = buildShoppingList(state.plan, state.recipeMap, state.data.products, { stores: state.prefs.stores });
+  return new Map(list.items.filter((i) => i.offer).map((i) => [i.key, i.offer.pack]));
+}
+
 export function ingredientList(r, scale, { checkable = true, onToggle } = {}) {
   const products = state.data.products;
+  const packs = weekPacks();
   const prep = prepState(r.id);
   const row = (i) => {
-    const a = ingredientAmount(i, scale, products, r.servings);
+    const a = ingredientAmount(i, scale, products, r.servings, packs);
     const done = prep.ings.includes(i.key);
     const toggle = () => {
       const s = new Set(prep.ings);
@@ -87,19 +104,19 @@ export function renderRecipe(root, rerender, id, params) {
   const kcal = ps.kcal * factor;
 
   // Шапка: назад, название, действия
-  root.append(h('div', { class: 'row between no-print', style: { marginBottom: '6px', flexWrap: 'nowrap' } },
+  root.append(h('div', { class: 'row between no-print', style: { marginBottom: '6px', flexWrap: 'wrap', gap: '6px' } },
     h('a', { class: 'btn icon ghost', href: lastListRoute, 'aria-label': 'Назад', title: 'Назад' }, icon('back')),
-    h('div', { class: 'row', style: { flexWrap: 'nowrap', gap: '2px' } },
-      h('button', { class: 'btn icon ghost', 'aria-pressed': String(fav), 'aria-label': fav ? 'Убрать из избранного' : 'В избранное', title: fav ? 'В избранном' : 'В избранное',
-        onclick: () => { toggleIn('favorites', r.id); rerender({ keepScroll: true }); } }, icon(fav ? 'starOn' : 'star')),
-      h('button', { class: 'btn icon ghost', 'aria-pressed': String(hidden), 'aria-label': hidden ? 'Вернуть в подбор' : 'Не предлагать в плане', title: hidden ? 'Вернуть в подбор' : 'Не предлагать в плане',
-        onclick: () => { toggleIn('hidden', r.id); rerender({ keepScroll: true }); } }, icon(hidden ? 'eye' : 'eyeOff')))));
+    h('div', { class: 'row', style: { flexWrap: 'wrap', gap: '6px' } },
+      h('button', { class: 'btn small', 'aria-pressed': String(fav), title: 'Избранное чаще попадает в новые недели',
+        onclick: () => { const on = toggleIn('favorites', r.id); rerender({ keepScroll: true }); toast(on ? 'В избранном — будет чаще в новых неделях' : 'Убрано из избранного'); } }, icon(fav ? 'starOn' : 'star'), fav ? 'В избранном' : 'В избранное'),
+      h('button', { class: 'btn small', 'aria-pressed': String(hidden),
+        onclick: () => hideToggle(r, rerender) }, icon(hidden ? 'eye' : 'eyeOff'), hidden ? 'Вернуть' : 'Не предлагать'))));
   root.append(h('h1', null, r.title));
   if (r.title_de) root.append(h('p', { class: 'muted', style: { marginTop: '-4px' } }, r.title_de));
   root.append(h('p', null, r.description));
   if ((r.tags || []).includes('спорное') || hidden) {
     root.append(h('div', { class: 'row', style: { marginBottom: '10px' } },
-      (r.tags || []).includes('спорное') ? h('span', { class: 'badge warn' }, 'спорное блюдо') : null,
+      (r.tags || []).includes('спорное') ? h('span', { class: 'badge', title: 'Сочетание продуктов на любителя' }, 'необычное сочетание — на любителя') : null,
       hidden ? h('span', { class: 'badge' }, 'не предлагается в плане') : null));
   }
 
@@ -108,10 +125,10 @@ export function renderRecipe(root, rerender, id, params) {
   const mk = macroK.p + macroK.f + macroK.c || 1;
   root.append(h('section', { class: 'facts-line' },
     h('div', { class: 'fl-row' }, icon('clock'),
-      h('span', null, h('b', null, `${r.time.active} мин`), ' активно · всего ', `${r.time.total} мин`,
+      h('span', null, h('b', null, `${r.time.total} мин всего`), ` · активно ${r.time.active} мин`,
         h('span', { class: 'muted' }, ` (подготовка ${r.time.prep}, готовка ${r.time.cook})`))),
     h('div', { class: 'fl-row' },
-      h('span', { class: 'big' }, eur(ps.cost * factor)), h('span', { class: 'muted' }, ' за порцию'),
+      h('span', { class: 'big' }, eur(ps.cost * factor)), h('span', { class: 'muted' }, ' за порцию на 1 человека'),
       h('span', { class: 'fl-sep' }), h('b', null, `${num(kcal)} ккал`)),
     h('div', { class: 'macros' },
       h('div', { class: 'macro-bar', role: 'img', 'aria-label': 'Доля калорий из белков, жиров и углеводов' },
@@ -122,7 +139,7 @@ export function renderRecipe(root, rerender, id, params) {
         h('span', null, h('i', { class: 'p' }), `Белки ${num(ps.protein * factor)} г`),
         h('span', null, h('i', { class: 'f' }), `Жиры ${num(ps.fat * factor)} г`),
         h('span', null, h('i', { class: 'c' }), `Углеводы ${num(ps.carbs * factor)} г`))),
-    h('p', { class: 'muted small-print' }, `На одну порцию${factor !== 1 ? ` размером ${factorText(factor)} от базовой` : ''}. Цены от ${humanDate(state.data.meta.price_date)}, состав — по этикеткам Billa или справочным таблицам.`)));
+    h('p', { class: 'muted small-print' }, `На одну порцию для одного человека${Math.abs(factor - 1) > 0.01 ? ` — на ${Math.round(Math.abs(factor - 1) * 100)} % ${factor < 1 ? 'меньше' : 'больше'} базовой, под вашу норму` : ''}. Цены от ${humanDate(state.data.meta.price_date)}, состав — по этикеткам Billa или справочным таблицам.`)));
 
   root.append(h('div', { class: 'no-print', style: { margin: '16px 0 4px' } },
     h('a', { class: 'btn primary wide', href: `#/cook/${r.id}?f=${factor}&p=${portions}` }, icon('pot'), 'Готовить по шагам')));
@@ -141,10 +158,10 @@ export function renderRecipe(root, rerender, id, params) {
 
   root.append(h('details', { class: 'plain', style: { marginTop: '12px' } },
     h('summary', null, `Из чего складывается ${eur(ps.cost * factor)} за порцию`),
-    h('table', null, h('tbody', null, r.cost_breakdown.filter((c) => c.cost_per_serving > 0.004).sort((a, b) => b.cost_per_serving - a.cost_per_serving).map((c) =>
+    h('div', { class: 'table-wrap', tabindex: '0', 'aria-label': 'Из чего складывается цена, таблица' }, h('table', null, h('tbody', null, r.cost_breakdown.filter((c) => c.cost_per_serving > 0.004).sort((a, b) => b.cost_per_serving - a.cost_per_serving).map((c) =>
       h('tr', null, h('td', null, c.name_ru, c.is_estimate ? h('span', { class: 'badge', style: { marginLeft: '6px' } }, 'оценка') : null),
         h('td', { class: 'muted' }, `${num(c.grams_per_serving * factor)} г · ${c.store || ''}`),
-        h('td', { class: 'num' }, eur(c.cost_per_serving * factor)))))),
+        h('td', { class: 'num' }, eur(c.cost_per_serving * factor))))))),
     h('p', { class: 'muted', style: { marginTop: '8px' } }, 'Стоимость — по доле упаковки, которая уходит в блюдо (самая выгодная обычная цена, без акций).')));
 
   const eq = state.prefs.equipment;
@@ -153,7 +170,8 @@ export function renderRecipe(root, rerender, id, params) {
   if (missing.length) root.append(h('p', { class: 'notice' }, `Для этого блюда нужно то, чего у вас нет: ${missing.join(', ').toLowerCase()}. В план оно не попадает. `, h('a', { href: '#/profile' }, 'Изменить в профиле')));
   root.append(h('div', { class: 'chips' }, r.equipment.map((e) => h('span', { class: 'chip static' }, e))));
 
-  root.append(h('h2', null, 'Как готовить'));
+  root.append(h('div', { class: 'row between no-print', style: { marginTop: '1.75rem' } }, h('h2', { style: { margin: 0 } }, 'Как готовить'),
+    h('a', { class: 'btn primary', href: `#/cook/${r.id}?f=${factor}&p=${portions}` }, icon('pot'), 'Готовить по шагам')));
   root.append(h('ol', { class: 'steps' }, r.steps.map((s) => h('li', null, nb(s.text),
     stepHints(s, eq).map((t) => h('div', { class: 'tool-hint' }, t)),
     s.heat || s.timer_min ? h('div', { class: 'row', style: { marginTop: '4px' } },
@@ -178,6 +196,15 @@ export function renderRecipe(root, rerender, id, params) {
   }
   if (r.notes) root.append(h('p', { class: 'muted', style: { marginTop: '16px' } }, 'Адаптация: ', r.notes));
   if (r.source?.url) root.append(h('p', { class: 'muted', style: { marginTop: '8px' } }, 'Оригинал: ', h('a', { href: r.source.url, target: '_blank', rel: 'noopener' }, r.source.name), '. Шаги пересказаны своими словами.'));
+}
+
+// «Не предлагать»: с отменой; подсказка — убрать блюдо из текущей недели можно через «Заменить» в плане
+export function hideToggle(r, rerender) {
+  const on = toggleIn('hidden', r.id);
+  rerender({ keepScroll: true });
+  const inPlan = on && state.plan?.batches?.some((b) => b.recipeId === r.id);
+  toast(on ? `Не будет в новых неделях${inPlan ? '. В этой неделе — замените в плане' : ''}` : 'Снова предлагается в плане',
+    { label: 'Отменить', onClick: () => { toggleIn('hidden', r.id); rerender({ keepScroll: true }); } });
 }
 
 export function amountCell(a) {

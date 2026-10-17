@@ -91,7 +91,7 @@ export function pickFromCatalog({ title, store, query = '', onPick, pickLabel })
   const draw = () => {
     const found = search(state.data, items, input.value, { limit: 40 });
     out.replaceChildren(input.value.trim()
-      ? (found.length ? h('ul', { class: 'cat-list' }, found.map((it) => itemCard(it, { onPick: (x) => { close(); onPick(x); }, pickLabel }))) : h('p', { class: 'muted' }, 'Ничего не нашлось. Попробуйте другое слово — например, по-немецки.'))
+      ? (found.length ? h('ul', { class: 'cat-list' }, found.map((it) => itemCard(it, { onPick: (x) => { close(); onPick(x); }, pickLabel }))) : h('p', { class: 'muted' }, navigator.onLine ? 'Ничего не нашлось. Попробуйте другое слово — например, по-немецки.' : 'Нет сети — каталог магазина откроется, когда сеть вернётся.'))
       : h('p', { class: 'muted' }, `Каталог ${key ? store : 'магазинов'}: ${items.length} товаров. Начните вводить название.`));
   };
   input.addEventListener('input', draw);
@@ -100,12 +100,17 @@ export function pickFromCatalog({ title, store, query = '', onPick, pickLabel })
 }
 
 // ---------- Экран ----------
-export function renderProducts(root, rerender) {
+export function renderProducts(root, rerender, params) {
   const redraw = () => rerender({ keepScroll: true });
+  // вкладка из ссылки («изменить запасы» → Дома) — только при переходе по ней, дальше переключается как обычно
+  const want = params?.get('tab');
+  if (want && want !== ui.appliedTab && ['catalog', 'home', 'cart'].includes(want)) ui.tab = want;
+  ui.appliedTab = want || null;
   root.append(h('div', { class: 'topbar' }, h('h1', null, 'Продукты')));
+  root.append(h('p', { class: 'muted', style: { marginTop: '-8px' } }, 'Что есть дома, свои товары и каталог Billa, Spar и Penny — чтобы добавить в список что-то сверх плана.'));
   const cartOpen = state.cart.filter((c) => !c.done);
   root.append(h('div', { style: { marginBottom: '12px' } }, seg([['catalog', 'Каталог'], ['home', 'Дома'], ['cart', `Мой список${cartOpen.length ? ' · ' + cartOpen.length : ''}`]], ui.tab, (v) => { ui.tab = v; ui.limit = 60; redraw(); })));
-  if (ui.tab === 'home') return renderHome(root, redraw);
+  if (ui.tab === 'home') return renderHome(root, redraw, rerender);
   if (ui.tab === 'cart') return renderCart(root, redraw);
 
   // Каталог
@@ -173,7 +178,7 @@ export function renderProducts(root, rerender) {
 }
 
 // ---------- Дома ----------
-function renderHome(root, redraw) {
+function renderHome(root, redraw, rerender) {
   const products = state.data.products;
   root.append(h('p', { class: 'muted', style: { marginTop: 0 } }, 'Отметьте, что уже есть дома — список покупок станет короче. Если есть, но мало, укажите сколько: докупится только разница.'));
   if (state.plan?.batches?.length) {
@@ -182,7 +187,13 @@ function renderHome(root, redraw) {
     const plain = buildShoppingList(remainingPlan(state.plan, new Date()), state.recipeMap, products, { stores: state.prefs.stores, home: {} });
     const total = Object.fromEntries([...plain.items, ...plain.basics].map((i) => [i.key, i.needGrams]));
     root.append(h('h2', null, 'Нужно для плана'));
-    root.append(h('ul', { class: 'home-list' }, all.map((it) => homeRow(it.key, products[it.key], total[it.key], redraw))));
+    // поиск по списку (F19): «творог», «Topfen», «eggs» — вместо прокрутки 40–60 строк
+    const q = (ui.homeQ || '').trim().toLowerCase();
+    root.append(h('input', { type: 'search', id: 'home-q', placeholder: 'Найти: творог, рис, Topfen…', value: ui.homeQ || '', 'aria-label': 'Найти продукт в списке', oninput: (e) => { ui.homeQ = e.target.value; rerender({ keepScroll: true, keepFocus: true }); } }));
+    const hit = (it) => !q || [it.name_ru, products[it.key]?.name_de_generic, products[it.key]?.name_de, products[it.key]?.name_en].filter(Boolean).join(' ').toLowerCase().includes(q.length > 4 ? q.slice(0, -1) : q);
+    const shown = all.filter(hit);
+    root.append(shown.length ? h('ul', { class: 'home-list' }, shown.map((it) => homeRow(it.key, products[it.key], total[it.key], redraw)))
+      : h('p', { class: 'muted' }, `«${ui.homeQ}» в плане этой недели нет — покупать не нужно.`));
   } else {
     root.append(h('p', null, 'Плана пока нет — составьте неделю, и здесь появится, что для неё нужно. ', h('a', { href: '#/plan' }, 'К плану')));
   }

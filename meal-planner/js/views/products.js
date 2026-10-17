@@ -213,4 +213,5 @@ export function showAlternatives(product, { store, needGrams, chosen, onPick, ex
     h('p', { class: 'muted small-print' }, 'Количество замены — как в рецепте, по весу. Пояснения — чем замена отличается при готовке.'));
   close = sheet(`Если нет: ${product.name_ru}`, content);
   closeAlt = close;
+  return close;
 }

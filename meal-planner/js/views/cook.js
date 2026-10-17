@@ -1,7 +1,9 @@
 import { h, icon, num, sheet, nb, toast, hasLayer } from '../ui.js';
 import { state, save } from '../state.js';
-import { ingredientAmount, ingredientList, portionParams } from './recipe.js';
+import { ingredientAmount, ingredientList, portionParams, weekPacks } from './recipe.js';
 import { stepHints } from '../core/equipment.js';
+import { stepIngredients, stepTerms } from '../core/amounts.js';
+import { fmtDate } from '../core/calendar.js';
 
 // Таймеры живут вне перерисовок: key → { label, total, endAt | null, left, ringing }
 const timers = new Map();
@@ -95,6 +97,17 @@ export function leaveCook() {
   }
 }
 
+// Экран завершения: что делать со второй порцией и когда её съесть
+function finishCard(r, portions, restart) {
+  const days = r.storage?.fridge_days || 0;
+  const until = days ? fmtDate(new Date(Date.now() + days * 86400000)) : null;
+  return h('div', { class: 'notice', style: { marginTop: '20px' } },
+    h('p', { style: { margin: '0 0 6px', fontWeight: 500 } }, 'Готово! Приятного аппетита.'),
+    portions > 1 && until ? h('p', { style: { margin: '0 0 6px' } }, `Вторую порцию остудите и уберите в контейнер в холодильник — съесть до ${until}.`) : null,
+    r.storage?.reheat ? h('p', { class: 'muted', style: { margin: '0 0 8px' } }, `Разогрев: ${r.storage.reheat}`) : null,
+    h('button', { class: 'btn small', onclick: restart }, 'Начать заново'));
+}
+
 export function renderCook(root, rerender, id, params) {
   const r = state.recipeMap.get(id);
   if (!r) {
@@ -104,17 +117,24 @@ export function renderCook(root, rerender, id, params) {
   }
   const { factor, portions } = portionParams(params, r);
   const scale = (factor * portions) / r.servings;
-  const prog = (state.cook[id] = state.cook[id] || { step: 0, done: [] });
+  let prog = (state.cook[id] = state.cook[id] || { step: 0, done: [] });
+  // готовка, начатая больше 12 часов назад, — это прошлый раз: начинаем с первого шага (отметки ингредиентов сохраняем)
+  if (prog.at && Date.now() - prog.at > 12 * 3600000) prog = state.cook[id] = { step: 0, done: [], ings: prog.ings };
+  prog.at = Date.now();
   const n = r.steps.length;
   prog.step = Math.min(Math.max(0, prog.step), n - 1);
   keepAwake();
 
-  const go = (d) => { prog.step = Math.min(n - 1, Math.max(0, prog.step + d)); save(); rerender(); };
-  const toggleDone = () => {
-    const s = new Set(prog.done);
-    s.has(prog.step) ? s.delete(prog.step) : s.add(prog.step);
-    prog.done = [...s];
-    if (s.has(prog.step) && prog.step < n - 1) prog.step++;
+  // ушли с шага — сработавшие и закончившиеся таймеры этого рецепта больше не нужны (сигнал услышан)
+  const clearRung = () => { for (const [k, t] of timers) if (k.startsWith(id + '#') && (t.ringing || (!t.endAt && leftOf(t) === 0))) timers.delete(k); };
+  const go = (d) => { clearRung(); if (d < 0) prog.finished = false; prog.step = Math.min(n - 1, Math.max(0, prog.step + d)); save(); rerender(); };
+  // «Дальше» = шаг сделан и следующий; на последнем шаге — «Готово» и экран завершения
+  const next = () => {
+    clearRung();
+    prog.done = [...new Set([...prog.done, prog.step])];
+    if (prog.step < n - 1) prog.step++;
+    // блюдо готово — сработавшие и не запущенные таймеры не нужны (P1); идущий (например, духовка) остаётся со своим сигналом
+    else { prog.finished = true; for (const [k, t] of [...timers]) if (k.startsWith(id + '#') && (t.ringing || !t.endAt)) timers.delete(k); }
     save();
     rerender();
   };
@@ -180,14 +200,15 @@ export function renderCook(root, rerender, id, params) {
   };
 
   // Продукты, которые упоминаются в тексте шага, — с количеством, чтобы не листать список
-  const stepText = step.text.toLowerCase();
-  const stepIngs = r.ingredients.filter((i) => {
-    const w = (i.name_ru || '').toLowerCase().split(/[^а-яёa-z]+/).find((x) => x.length >= 3);
-    if (!w) return false;
-    return stepText.includes(w.length > 5 ? w.slice(0, w.length - 2) : w);
-  });
-  // Оставшееся время: таймеры невыполненных шагов + ~1 минута на остальные
-  const leftMin = Math.round(r.steps.reduce((a, s, i) => a + (prog.done.includes(i) ? 0 : (s.timer_min || 1)), 0));
+  const stepIngs = stepIngredients(r, step.text);
+  // соль, масло, специи в нескольких шагах — количество на всё блюдо, его делят между шагами (P1: «3–4 щепотки» в 4 шагах).
+  // У основных продуктов (лук нарезали, потом добавили) это тот же лук, а не доля — им пометка не нужна
+  const inSteps = (i) => (i.basic ? r.steps.filter((s) => stepIngredients(r, s.text).includes(i)).length : 1);
+  const ingAmounts = stepIngs.map((i) => ({ i, a: ingredientAmount(i, scale, state.data.products, r.servings, weekPacks()).main, k: inSteps(i) }));
+  const terms = stepTerms(step.text, step.heat ? `огонь: ${step.heat}` : '', ...ingAmounts.map((x) => x.a));
+  // Оставшееся время — доля полного времени рецепта по невыполненным шагам (как «всего N мин» в карточке)
+  const timersAhead = r.steps.reduce((a, s, i) => a + (prog.done.includes(i) ? 0 : (s.timer_min || 0)), 0);
+  const leftMin = Math.round(Math.max((r.time?.total || n) * (n - prog.done.length) / n, timersAhead));
 
   const el = h('div', { class: 'cook', tabindex: '-1' },
     h('div', { class: 'cook-head' },
@@ -200,15 +221,17 @@ export function renderCook(root, rerender, id, params) {
       h('div', { class: 'cook-step-n' }, `Шаг ${prog.step + 1} из ${n}`, isDone ? ' · выполнен ✓' : '', leftMin > 0 ? ` · осталось ≈ ${leftMin} мин` : ''),
       h('div', { class: 'cook-text' }, nb(step.text)),
       stepHints(step, state.prefs.equipment).map((t) => h('div', { class: 'tool-hint' }, t)),
-      stepIngs.length ? h('ul', { class: 'step-ings' }, stepIngs.map((i) => h('li', null, h('span', null, i.name_ru), h('b', null, ingredientAmount(i, scale, state.data.products, r.servings).main)))) : null,
+      ingAmounts.length ? h('ul', { class: 'step-ings' }, ingAmounts.map(({ i, a, k }) => h('li', null, h('span', null, i.name_ru),
+        h('b', null, a, k > 1 ? h('span', { class: 'muted', style: { fontWeight: 400 } }, ` — на всё блюдо, в ${k} шагах`) : null)))) : null,
+      terms.length ? h('details', { class: 'step-terms' }, h('summary', null, 'Что значит?'), h('ul', null, terms.map((t) => h('li', null, t)))) : null,
       step.heat ? h('div', { class: 'cook-heat' }, h('span', { class: 'badge accent' }, `Огонь: ${step.heat}`)) : null,
-      stepTimer,
-      prog.done.length === n ? h('p', { class: 'notice', style: { marginTop: '20px' } }, 'Все шаги выполнены. Приятного аппетита! ',
-        h('button', { class: 'btn small', onclick: () => { state.cook[id] = { step: 0, done: [] }; save(); rerender(); } }, 'Начать заново')) : null),
+      prog.finished ? null : stepTimer, // на экране «Готово» таймер шага не нужен (UX-ревью Н10)
+      prog.finished ? finishCard(r, portions, () => { state.cook[id] = { step: 0, done: [] }; save(); rerender(); }) : null),
     h('div', { class: 'cook-foot' },
       h('button', { class: 'btn', disabled: prog.step === 0, onclick: () => go(-1) }, '← Назад'),
-      h('button', { class: 'btn primary', onclick: toggleDone }, isDone ? 'Снять отметку' : 'Готово ✓'),
-      h('button', { class: 'btn', disabled: prog.step === n - 1, onclick: () => go(1) }, 'Дальше →')));
+      prog.finished
+        ? h('a', { class: 'btn primary', href: '#/plan' }, 'Выйти')
+        : h('button', { class: 'btn primary', onclick: next }, prog.step === n - 1 ? 'Готово ✓' : 'Дальше →')));
 
   // свайпы и клавиатура
   let x0 = null;
@@ -227,7 +250,7 @@ export function renderCook(root, rerender, id, params) {
     if (e.key === 'ArrowRight') go(1);
     if (e.key === 'ArrowLeft') go(-1);
     const onControl = e.target.closest?.('a, button, input, select, textarea, label');
-    if ((e.key === ' ' || e.key === 'Enter') && !onControl) { e.preventDefault(); toggleDone(); }
+    if ((e.key === ' ' || e.key === 'Enter') && !onControl) { e.preventDefault(); next(); }
   };
   document.addEventListener('keydown', keyHandler);
   root.append(el);

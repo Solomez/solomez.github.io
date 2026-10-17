@@ -19,8 +19,8 @@ export function whereLine(place, { short = false } = {}) {
 }
 
 // Сгруппировать позиции по зонам в порядке маршрута магазина
-export function byZones(entries, store, zoneOf) {
-  const order = routeOrder(state.data, state.routes, store);
+export function byZones(entries, store, zoneOf, frozenOrder = null) {
+  const order = frozenOrder || routeOrder(state.data, state.routes, store);
   const groups = new Map(order.map((z) => [z, []]));
   for (const e of entries) {
     const z = zoneOf(e);
@@ -86,8 +86,16 @@ export function askPhrase(de, en) {
     en ? h('div', { class: 'muted', lang: 'en' }, `Excuse me, where can I find ${en.toLowerCase()}?`) : null);
 }
 
-// Меню товара в списке покупок
-export function itemMenu({ key, store, name, de, en, pack, onChanged, onSwap, onUnavailable, onHome }) {
+// Фраза для продавца крупно — показать экран телефона (F13)
+export function showPhrase(de, en) {
+  de = (de || '').split(/\s*\/\s*/)[0];
+  sheet('Покажите продавцу', h('div', { class: 'stack' },
+    h('p', { class: 'ask-big', lang: 'de' }, `Entschuldigung, wo finde ich ${de}?`),
+    en ? h('p', { class: 'muted', lang: 'en' }, `Excuse me, where can I find ${(en || '').split(/\s*\/\s*/)[0].toLowerCase()}?`) : null));
+}
+
+// Меню товара в списке покупок: где лежит, фраза, действия; для каких блюд и как хранить (F13, F34, F51)
+export function itemMenu({ key, store, name, de, en, pack, uses, need, details, onChanged, onSwap, onUnavailable, onHome }) {
   const place = whereIs(key, store);
   let close;
   const act = (label, sub, fn) => h('button', { class: 'menu-item', onclick: () => { close(); fn(); } }, h('b', null, label), sub ? h('span', { class: 'muted' }, sub) : null);
@@ -101,10 +109,13 @@ export function itemMenu({ key, store, name, de, en, pack, onChanged, onSwap, on
       h('div', { class: 'muted', lang: 'de' }, `${place.zone?.de} › ${place.shelf.de}`),
       place.zone?.hint ? h('div', { class: 'muted' }, place.zone.hint) : null) : null,
     askPhrase(de, en),
-    pack ? h('div', { class: 'muted' }, `В списке: ${pack.store} — ${pack.name_de}, ${eur(pack.price_eur)}`) : null,
+    h('button', { class: 'btn', onclick: () => showPhrase(de, en) }, 'Показать продавцу крупно'),
+    pack ? h('div', { class: 'muted' }, `В списке: ${pack.store} — ${pack.name_de}, ${eur(pack.price_eur)}${pack.eur_per_kg ? ` · ${eur(pack.eur_per_kg)} за ${pack.pack_unit === 'ml' ? 'л' : 'кг'}` : ''}`) : null,
+    need || uses?.length ? h('div', { class: 'muted' }, need ? `Нужно ${need}` : '', uses?.length ? `: ${uses.map(([t, g]) => `${t} — ${Math.round(g)} г`).join('; ')}` : '') : null,
     h('div', { class: 'menu' },
       act('Нет на полке', 'предложу другую упаковку, замену или другой магазин', onUnavailable),
       act('Взял другое вместо', 'отмечу, что куплено, и что именно', onSwap),
       act('Лежит в другом отделе', 'запомню для этого магазина', () => pickShelf(store, key, name, onChanged)),
-      act('Уже есть дома', 'не покупать или купить меньше', onHome))));
+      act('Уже есть дома', 'не покупать или купить меньше', onHome)),
+    details || null));
 }

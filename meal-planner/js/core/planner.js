@@ -15,7 +15,8 @@ export const DEFAULT_PREFS = {
   hidden: [], // скрытые блюда
   favorites: [],
   planBreakfast: true, // подбирать завтрак и перекусы под остаток дневной нормы
-  allowTwoStores: false, // в плане походов разрешить два магазина в один день, если так дешевле
+  allowTwoStores: false, // устарело: заменено saveMode
+  saveMode: 'money', // покупки: 'money' — дешевле (до двух магазинов в день), 'trips' — меньше походов (один магазин в день)
   equipment: {}, // кухонная утварь: id → есть ли (не указано — по умолчанию из equipment.js)
 };
 
@@ -114,17 +115,52 @@ const COST_WEIGHT = 0.6;
 
 const mainKeys = (r) => new Set(r.ingredients.filter((i) => !i.basic).map((i) => i.key));
 
-export function generatePlan({ recipes, products, targets, prefs = DEFAULT_PREFS, budget = 70, reserve = 20, seed = Date.now(), iterations = 120, locked = {} }) {
+// Неделя в бюджете (F02): раньше бюджет ограничивал только обеды и ужины, а завтраки и перекусы добавлялись после
+// и в бюджет не входили. Теперь считается вся неделя; если вышло дороже — второй, более строгий проход.
+// cheap — «Подобрать дешевле»: цена важнее разнообразия. Белок не снижается никогда (требование).
+export function generatePlan(opts) {
+  const { recipes, products, targets, prefs = DEFAULT_PREFS, budget = 70, reserve = 20, cheap = false } = opts;
+  const withExtras = prefs.planBreakfast !== false && !!targets;
+  const limit = withExtras ? budget : Math.max(10, budget - reserve);
+  // «дешевле»: дешёвые блюда можно повторять трижды, «вкус недели» почти не мешает цене, завтраки и перекусы — дешевле
+  const p2 = cheap ? { ...prefs, maxRepeats: Math.max(3, prefs.maxRepeats || 2) } : prefs;
+  const run = (mealBudget, overPenalty, costWeight) => {
+    const plan = buildPlan({ ...opts, prefs: p2, mealBudget, overPenalty, costWeight, tasteScale: cheap ? 0.25 : 1 });
+    if (withExtras) plan.extras = planExtras({ plan, recipes, products, targets, prefs: p2, seed: opts.seed ?? 1, costWeight: cheap ? 3 : EXTRA_COST_WEIGHT });
+    return { plan, cost: planCost(plan, recipes, products, prefs) };
+  };
+  let best = run(Math.max(10, budget - reserve), cheap ? 8 : 4, cheap ? 1.5 : COST_WEIGHT);
+  if (best.cost > limit + 0.01) {
+    const strict = run(Math.max(10, budget - reserve - (best.cost - limit)), 12, cheap ? 2 : 1.2);
+    if (strict.cost < best.cost) best = strict;
+  }
+  best.plan.costEstimate = round2(best.cost);
+  return best.plan;
+}
+
+// Стоимость покупок недели по самой выгодной цене (упаковками), включая завтраки и перекусы
+export function planCost(plan, recipes, products, prefs = DEFAULT_PREFS) {
+  const byId = new Map(recipes.map((r) => [r.id, r]));
+  const cost = makeCoster(products, { stores: prefs.stores });
+  const needs = new Map();
+  for (const b of plan.batches) if (byId.get(b.recipeId)) addNeeds(needs, byId.get(b.recipeId), b.factor, b.slots.length);
+  for (const x of plan.extras || []) if (byId.get(x.recipeId)) addNeeds(needs, byId.get(x.recipeId), x.factor, 1);
+  for (const [k] of needs) if (products[k]?.basic) needs.delete(k); // базовые (масло, специи) — отдельно, «купить один раз»
+  return totalCost(needs, cost);
+}
+
+function buildPlan({ recipes, products, targets, prefs = DEFAULT_PREFS, seed = Date.now(), iterations = 120, locked = {}, mealBudget, overPenalty = 4, costWeight = COST_WEIGHT, tasteScale = 1 }) {
   const pool = eligibleRecipes(recipes, prefs);
   const template = slotTemplate(prefs.batchCooking !== false);
   const cost = makeCoster(products, { stores: prefs.stores });
   const maxRep = Math.max(1, prefs.maxRepeats || 2);
-  const mealBudget = Math.max(10, budget - reserve);
   const byId = new Map(recipes.map((r) => [r.id, r]));
   // «Вкус недели»: случайные предпочтения на всю генерацию, чтобы каждая новая неделя была другой,
   // а внутри генерации по-прежнему выбирался самый выгодный вариант
   const rng0 = mulberry32(seed >>> 0);
-  const taste = new Map(pool.map((r) => [r.id, rng0() * 2.4 + ((r.tags || []).includes('спорное') ? 0.8 : 0)]));
+  // избранное — заметно чаще (звёздочка влияет на подбор), «спорное» — реже
+  const fav = new Set(prefs.favorites || []);
+  const taste = new Map(pool.map((r) => [r.id, (rng0() * 2.4 + ((r.tags || []).includes('спорное') ? 0.8 : 0)) * tasteScale - (fav.has(r.id) ? 1.6 : 0)]));
   let best = null;
 
   for (let it = 0; it < iterations; it++) {
@@ -148,7 +184,7 @@ export function generatePlan({ recipes, products, targets, prefs = DEFAULT_PREFS
           if ((counts[r.id] || 0) >= maxRep) continue;
           const f = portionFactor(r, targets);
           // цена важна, но внутри бюджета не перевешивает разнообразие (перерасход штрафуется ниже)
-          let s = (COST_WEIGHT * marginalCost(needs, r, f, portions, cost)) / portions;
+          let s = (costWeight * marginalCost(needs, r, f, portions, cost)) / portions;
           s += taste.get(r.id) || 0;
           s += (counts[r.id] || 0) * 2.5; // разнообразие
           if (r.protein_type === prevType) s += 1.2;
@@ -173,7 +209,7 @@ export function generatePlan({ recipes, products, targets, prefs = DEFAULT_PREFS
       batches.push({ id: `b${gi}`, recipeId: pick.id, factor: f, slots: slots.map((s) => ({ ...s })) });
     }
     const total = totalCost(needs, cost);
-    const objective = COST_WEIGHT * total + penalty + Math.max(0, total - mealBudget) * 4;
+    const objective = costWeight * total + penalty + Math.max(0, total - mealBudget) * overPenalty;
     if (!best || objective < best.objective) best = { objective, total, batches };
   }
   const plan = {
@@ -183,7 +219,6 @@ export function generatePlan({ recipes, products, targets, prefs = DEFAULT_PREFS
     batches: best ? best.batches : [],
     extras: [],
   };
-  if (prefs.planBreakfast !== false && targets) plan.extras = planExtras({ plan, recipes, products, targets, prefs, seed });
   return plan;
 }
 
@@ -191,7 +226,7 @@ export function generatePlan({ recipes, products, targets, prefs = DEFAULT_PREFS
 // Под остаток дневной нормы после обеда и ужина: 1 завтрак + 0–2 перекуса в день.
 const EXTRA_COST_WEIGHT = 1.2;
 
-export function planExtras({ plan, recipes, products, targets, prefs = DEFAULT_PREFS, seed = 1 }) {
+export function planExtras({ plan, recipes, products, targets, prefs = DEFAULT_PREFS, seed = 1, costWeight = EXTRA_COST_WEIGHT }) {
   const map = new Map(recipes.map((r) => [r.id, r]));
   // цена с учётом уже купленных упаковок (открытая пачка творога дешевле новой)
   const cost = products ? makeCoster(products, { stores: prefs.stores }) : () => 0;
@@ -217,7 +252,7 @@ export function planExtras({ plan, recipes, products, targets, prefs = DEFAULT_P
         const f = wantK >= ps.kcal * 1.4 ? 1.5 : 1;
         let s = Math.abs(ps.kcal * f - wantK) / 300 + Math.max(0, Math.min(remP, 40) - ps.protein * f) * 0.05;
         s += Math.max(0, ps.protein * f - Math.max(remP, 25)) * 0.03;
-        s += extraCost(r, f) * EXTRA_COST_WEIGHT;
+        s += extraCost(r, f) * costWeight;
         s += (counts[r.id] || 0) * 0.9 + (r.id === prev ? 2 : 0) + rng() * 0.8;
         if (!best || s < best.s) best = { r, f, s };
       }
@@ -236,7 +271,7 @@ export function planExtras({ plan, recipes, products, targets, prefs = DEFAULT_P
         // при недоборе белка — белковый перекус, иначе калорийный
         let s = remP > 15 ? -Math.min(ps.protein, remP) * 0.08 : -Math.min(ps.kcal, remK) / 150;
         s += Math.max(0, ps.protein - Math.max(remP, 0)) * 0.05; // белок сверх нормы не нужен
-        s += extraCost(r, 1) * EXTRA_COST_WEIGHT;
+        s += extraCost(r, 1) * costWeight;
         s += (counts[r.id] || 0) * 0.3 + extras.some((x) => x.day === d && x.recipeId === r.id) * 3 + rng() * 0.4;
         if (!best || s < best.s) best = { r, s };
       }
@@ -272,7 +307,11 @@ export function swapFactor(oldRecipe, oldFactor, recipe) {
 }
 
 export function swapExtra(plan, extraId, recipe, oldRecipe) {
-  return { ...plan, extras: plan.extras.map((e) => (e.id === extraId ? { ...e, recipeId: recipe.id, factor: swapFactor(oldRecipe, e.factor, recipe) } : e)) };
+  return {
+    ...plan,
+    edited: [...new Set([...(plan.edited || []), extraId])], // ручная замена завтрака или перекуса — «досоставить» её не тронет
+    extras: plan.extras.map((e) => (e.id === extraId ? { ...e, recipeId: recipe.id, factor: swapFactor(oldRecipe, e.factor, recipe) } : e)),
+  };
 }
 
 // Похожие блюда для замены: сначала те, что похожи по типу белка и продуктам и дёшевы при текущем плане
@@ -320,6 +359,7 @@ export function alternatives(plan, batchId, { recipes, products, targets, prefs 
 export function swapBatch(plan, batchId, recipe, targets) {
   return {
     ...plan,
+    edited: [...new Set([...(plan.edited || []), batchId])], // ручная правка — «досоставить» её не тронет
     batches: plan.batches.map((b) => (b.id === batchId ? { ...b, recipeId: recipe.id, factor: portionFactor(recipe, targets) } : b)),
   };
 }
@@ -354,4 +394,95 @@ export function daySums(plan, recipeMap, { mainOnly = false } = {}) {
     }
     return sum;
   });
+}
+
+// ---------- Гибкий план (F21, F22, F05): «ем вне дома / пропустил», перенос, досоставить оставшиеся дни ----------
+// plan.skips: { ключ: 'out' | 'skipped' } — необязательное поле (старые планы без него работают как раньше).
+// Ключ обеда и ужина — 'день|приём', завтрака и перекуса — id («x1s0»): перекусов в день бывает два.
+export const slotKey = (day, meal) => `${day}|${meal}`;
+export const skipKeyOf = (e) => (e.extra ? e.extra.id : slotKey(e.day, e.meal));
+export const skipOf = (plan, key) => plan?.skips?.[key] || null;
+
+// План без пропущенных приёмов пищи. kinds: какие пропуски учитывать — для покупок только 'out' («ем вне дома»):
+// под прошедшее «не ел» продукты уже куплены и остаются в сумме к оплате; для съеденного — оба вида.
+// Ужин на 2 порции, у которого пропущен обед следующего дня, готовится на 1 порцию; пропущено всё — не готовится.
+export function effectivePlan(plan, kinds = ['out', 'skipped']) {
+  if (!plan || !plan.skips || !Object.keys(plan.skips).length) return plan;
+  const off = (k) => kinds.includes(plan.skips[k]);
+  return {
+    ...plan,
+    batches: plan.batches.map((b) => ({ ...b, slots: b.slots.filter((s) => !off(slotKey(s.day, s.meal))) })).filter((b) => b.slots.length),
+    extras: (plan.extras || []).filter((x) => !off(x.id)),
+  };
+}
+
+export function toggleSkip(plan, key, kind = 'out') {
+  const skips = { ...(plan.skips || {}) };
+  if (skips[key]) delete skips[key]; else skips[key] = kind;
+  return { ...plan, skips };
+}
+
+// Перенести ужин на другой день: блюда двух ужинов меняются местами (вместе с обедом-остатком)
+export function moveBatch(plan, batchId, toDay) {
+  const a = plan.batches.find((b) => b.id === batchId);
+  const b = plan.batches.find((x) => x.id !== batchId && x.slots[0].day === toDay && x.slots[0].meal === a?.slots[0].meal);
+  if (!a || !b) return plan;
+  const edited = [...new Set([...(plan.edited || []), a.id, b.id])];
+  return {
+    ...plan, edited,
+    batches: plan.batches.map((x) => (x.id === a.id ? { ...x, recipeId: b.recipeId, factor: b.factor } : x.id === b.id ? { ...x, recipeId: a.recipeId, factor: a.factor } : x)),
+  };
+}
+
+// Досоставить оставшиеся дни: закреплённое (isLocked: прошедшее, сегодня и завтра — продукты могли быть уже куплены)
+// и изменённое вручную остаётся, остальное подбирается заново. План сохраняет id (отметки покупок не теряются),
+// дату начала, пропуски и чеки. cheap — «Подобрать дешевле».
+export function refillPlan(plan, { recipes, products, targets, prefs = DEFAULT_PREFS, budget = 70, reserve = 20, seed = 1, isLocked, isDone = () => false, cheap = false }) {
+  const locked = {};
+  const edited = new Set(plan.edited || []);
+  // блюдо, которое больше нельзя предлагать (нет утвари, скрыто, исключён продукт), не закрепляется —
+  // кроме уже приготовленного
+  const okMain = new Set(eligibleRecipes(recipes, prefs, 'main').map((r) => r.id));
+  const okExtra = (x) => eligibleRecipes(recipes, prefs, x.meal).some((r) => r.id === x.recipeId);
+  for (const b of plan.batches) {
+    const gi = +b.id.slice(1);
+    const { day, meal } = b.slots[0];
+    if (isDone(day, meal) || ((edited.has(b.id) || isLocked(day, meal)) && okMain.has(b.recipeId))) locked[gi] = b.recipeId;
+  }
+  // шаблон приготовлений — как у этого плана, даже если настройку «ужин на 2 порции» с тех пор поменяли
+  const fresh = generatePlan({ recipes, products, targets, prefs: { ...prefs, batchCooking: plan.batchCooking !== false }, budget, reserve, seed, locked, cheap });
+  const keepExtra = (x) => isDone(x.day, x.meal) || ((edited.has(x.id) || isLocked(x.day, x.meal)) && okExtra(x));
+  return {
+    ...fresh, id: plan.id, startDate: plan.startDate, settingsKey: plan.settingsKey, skips: plan.skips, edited: plan.edited, receipts: plan.receipts,
+    // закреплённые завтраки и перекусы — целиком из прежнего плана, остальные — новые
+    // (id слота одинаковый: «x<день>b», «x<день>s<n>»; новый берётся для всех слотов, где прежний не оставлен)
+    extras: (() => {
+      const kept = (plan.extras || []).filter(keepExtra);
+      const keptIds = new Set(kept.map((x) => x.id));
+      return [...kept, ...(fresh.extras || []).filter((x) => !keptIds.has(x.id))];
+    })(),
+    // факторы порций у закреплённых — прежние
+    batches: fresh.batches.map((b) => { const o = plan.batches.find((x) => x.id === b.id); return o && locked[+b.id.slice(1)] ? { ...b, factor: o.factor } : b; }),
+  };
+}
+
+// «Не предлагать» из плана: блюдо убирается и из текущей недели — каждое ещё не приготовленное
+// появление заменяется самым похожим (prefs уже со скрытым блюдом). Возвращает { plan, count }
+export function dropRecipe(plan, recipeId, { recipes, products, targets, prefs = DEFAULT_PREFS, isDone = () => false }) {
+  let p = plan;
+  let count = 0;
+  for (const b of plan.batches) {
+    if (b.recipeId !== recipeId || isDone(b.slots[0].day, b.slots[0].meal)) continue;
+    const alt = alternatives(p, b.id, { recipes, products, targets, prefs, limit: 1 })[0];
+    if (alt) { p = swapBatch(p, b.id, alt.recipe, targets); count++; }
+  }
+  const byId = new Map(recipes.map((r) => [r.id, r]));
+  for (const x of plan.extras || []) {
+    if (x.recipeId !== recipeId || isDone(x.day, x.meal)) continue;
+    const alt = extraAlternatives(p, x.id, { recipes, prefs })[0];
+    if (alt) { p = swapExtra(p, x.id, alt, byId.get(recipeId)); count++; }
+  }
+  const left = [...p.batches.filter((b) => b.recipeId === recipeId && !isDone(b.slots[0].day, b.slots[0].meal)),
+    ...(p.extras || []).filter((x) => x.recipeId === recipeId && !isDone(x.day, x.meal))].length;
+  return { plan: p, count, left };
 }

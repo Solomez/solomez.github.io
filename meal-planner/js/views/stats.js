@@ -1,8 +1,9 @@
 import { h, eur, num, plural, icon } from '../ui.js';
 import { state, targets } from '../state.js';
-import { daySums } from '../core/planner.js';
+import { daySums, effectivePlan } from '../core/planner.js';
 import { dayShort, dayName, dayDate } from '../core/calendar.js';
 import { buildShoppingList, consumedPlanCost } from '../core/shopping.js';
+import { checkoutNow, weekBudget } from './money.js';
 
 export function renderStats(root) {
   root.append(h('div', { class: 'row', style: { marginBottom: '6px' } }, h('a', { class: 'btn icon ghost', href: '#/plan', 'aria-label': 'К плану' }, icon('back'))));
@@ -12,9 +13,10 @@ export function renderStats(root) {
     return;
   }
   const t = targets();
-  const plan = state.plan;
+  const plan = effectivePlan(state.plan); // съеденное — без пропущенного и «вне дома»
   const opts = { stores: state.prefs.stores };
   const list = buildShoppingList(plan, state.recipeMap, state.data.products, opts);
+  const week = checkoutNow(plan, 'week'); // та же сумма, что на Плане и в Покупках
   const consumed = consumedPlanCost(plan, state.recipeMap, state.data.products, opts);
   const consumedMain = consumedPlanCost(plan, state.recipeMap, state.data.products, { ...opts, only: 'main' });
   const meals = plan.batches.reduce((a, b) => a + b.slots.length, 0);
@@ -23,18 +25,22 @@ export function renderStats(root) {
   // цель для сравнения: вся норма, если завтраки в плане, иначе доля на обед + ужин
   const goal = hasExtras ? { kcal: t.kcal, protein: t.protein } : t.plannedDay;
   const avg = (k) => sums.reduce((a, s) => a + s[k], 0) / 7;
-  const mealBudget = state.profile.budget - state.profile.reserve;
+  const budget = weekBudget(plan);
 
   root.append(h('div', { class: 'kpis' },
-    kpi(eur(list.total), 'покупки (целые упаковки)'),
-    kpi(eur(consumed), 'съедено за неделю'),
-    kpi(eur(consumedMain / meals), `средняя цена обеда или ужина`),
-    hasExtras
-      ? kpi(eur(Math.abs(state.profile.budget - list.total)), state.profile.budget >= list.total ? 'остаток бюджета недели' : 'перерасход бюджета')
-      : kpi(eur(Math.abs(mealBudget - list.total)), mealBudget >= list.total ? 'остаток бюджета на обед/ужин' : 'перерасход бюджета')));
+    kpi(eur(week.toPay), 'к оплате за неделю (как в Покупках)'),
+    kpi(eur(consumed), 'стоимость съеденного'),
+    kpi(meals ? eur(consumedMain / meals) : '—', `средняя цена обеда или ужина`),
+    kpi(eur(Math.abs(budget - week.toPay)), budget >= week.toPay ? 'остаток бюджета недели' : 'перерасход бюджета')));
+  const receipts = Object.values(state.plan.receipts || {});
+  const skipped = Object.keys(state.plan.skips || {}).length;
+  if (receipts.length || skipped) root.append(h('p', { class: 'notice', style: { marginTop: '10px' } },
+    receipts.length ? `По чекам потрачено ${eur(receipts.reduce((a, v) => a + v, 0))} (${receipts.length} ${plural(receipts.length, 'поход', 'похода', 'походов')}). ` : '',
+    skipped ? `Без ${skipped} ${plural(skipped, 'пропущенного приёма', 'пропущенных приёмов', 'пропущенных приёмов')} пищи — они не считаются съеденными.` : ''));
   root.append(h('p', { class: 'muted', style: { marginTop: '10px' } },
-    `Остатки упаковок после недели стоят ≈ ${eur(Math.max(0, list.total - list.items.reduce((a, i) => a + i.consumedCost, 0)))} — они пригодятся на следующей неделе. `,
-    `Базовые продукты (масло, специи) не входят в сумму покупок, но входят в «съедено» по доле.`));
+    `Это расчёт по плану. Остатки упаковок после недели стоят ≈ ${eur(Math.max(0, list.total - list.items.reduce((a, i) => a + i.consumedCost, 0)))} — они пригодятся на следующей неделе. `,
+    week.ownTotal > 0 ? `Ваши товары вне плана (${eur(week.ownTotal)}) входят в сумму к оплате. ` : '',
+    `Базовые продукты (масло, специи) не входят в сумму покупок, но входят в стоимость съеденного по доле.`));
 
   root.append(h('h2', null, hasExtras ? 'Калории и белок по дням (все приёмы пищи)' : 'Калории и белок по дням (обед + ужин)'));
   root.append(h('div', { class: 'legend' },
@@ -48,7 +54,7 @@ export function renderStats(root) {
     h('div', { class: 'day-stat', style: { marginTop: '-4px' } }, h('span'), bar(s.protein / maxP, goal.protein / maxP, 'protein'), h('span', { class: 'muted' }, `${num(s.protein)} г`))))));
 
   root.append(h('h2', null, 'КБЖУ по дням'));
-  root.append(h('div', { class: 'card', style: { overflowX: 'auto' } }, h('table', { class: 'stats-table' },
+  root.append(h('div', { class: 'card', tabindex: '0', 'aria-label': 'КБЖУ по дням, таблица', style: { overflowX: 'auto' } }, h('table', { class: 'stats-table' },
     h('thead', null, h('tr', null, h('th', null, 'День'), h('th', { class: 'num' }, 'Ккал'), h('th', { class: 'num' }, 'Белки'), h('th', { class: 'num' }, 'Жиры'), h('th', { class: 'num' }, 'Углев.'), h('th', { class: 'num' }, 'Цена'))),
     h('tbody', null,
       sums.map((s, i) => h('tr', null, h('td', { class: 'nowrap' }, `${dayShort(plan, i)}, ${dayDate(plan, i).getDate()}`), h('td', { class: 'num' }, num(s.kcal)), h('td', { class: 'num' }, num(s.protein)), h('td', { class: 'num' }, num(s.fat)), h('td', { class: 'num' }, num(s.carbs)), h('td', { class: 'num' }, eur(s.cost)))),

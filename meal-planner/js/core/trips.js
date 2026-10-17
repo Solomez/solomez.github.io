@@ -31,7 +31,8 @@ export function buyAheadDays(key, storage) {
  * Возвращает [{ day, store, items, total, early }] по возрастанию дня; early — пришлось купить раньше и заморозить.
  * У товара lateFor — день, к которому его не успеть купить (до него магазины закрыты).
  */
-export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost = () => null, canFreeze = () => false, maxExtra = 2 }) {
+// maxStoresPerDay: 1 — один магазин в день (меньше походов), 2 — режим «дешевле»: до двух магазинов в день
+export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost = () => null, canFreeze = () => false, maxExtra = 2, maxStoresPerDay = 1 }) {
   const open = (d) => !storesClosed(dateOf(d));
   const win = items.map((it) => {
     const b = Math.max(firstDay, needDay(it.key));
@@ -78,14 +79,20 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
   // 2) разводим магазины по разным дням: меньший поход переносим на свободный день внутри общего окна
   const rangeOf = (t) => ({ a: Math.max(...t.ws.map((w) => w.a)), b: Math.min(...t.ws.map((w) => w.b)) });
   const total = (t) => t.ws.reduce((s, w) => s + (w.it.cost || 0), 0);
-  // Развести один день: оставляем магазин keep, остальные походы этого дня переносим или раскладываем.
+  // Развести один день: оставляем магазины keep (Set), остальные походы этого дня переносим или раскладываем.
   // Работает на копии; возвращает новые походы, сколько товаров не удалось развести и доплату.
+  // «Занятый» день — где уже maxStoresPerDay других магазинов.
+  const busyDays = (all, t) => {
+    const per = new Map();
+    for (const x of all) if (x !== t && x.store !== t.store) { if (!per.has(x.day)) per.set(x.day, new Set()); per.get(x.day).add(x.store); }
+    return new Set([...per].filter(([, st]) => st.size >= maxStoresPerDay).map(([d]) => d));
+  };
   const resolveDay = (src, day, keep) => {
     let all = src.map((t) => ({ ...t, ws: [...t.ws] }));
     let left = 0;
     let extra = 0;
-    for (const t of all.filter((x) => x.day === day && x.store !== keep)) {
-      const used = new Set(all.filter((x) => x !== t && x.store !== t.store).map((x) => x.day));
+    for (const t of all.filter((x) => x.day === day && !keep.has(x.store))) {
+      const used = busyDays(all, t);
       const r = rangeOf(t);
       // сначала — день, где этот магазин уже есть (сольются), затем любой свободный
       const same = all.find((x) => x !== t && x.store === t.store && x.day >= r.a && x.day <= r.b && !used.has(x.day));
@@ -119,9 +126,12 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
     const days = [...new Set(trips.map((t) => t.day))].sort((x, y) => x - y);
     for (const day of days) {
       const ts = trips.filter((t) => t.day === day);
-      if (new Set(ts.map((t) => t.store)).size < 2) continue;
-      // какой магазин оставить в этот день: тот, при котором всё разводится, затем — дешевле, затем — больший поход
-      const keeps = [...new Set(ts.sort((x, y) => total(y) - total(x)).map((t) => t.store))];
+      if (new Set(ts.map((t) => t.store)).size <= maxStoresPerDay) continue;
+      // какие магазины оставить в этот день: при которых всё разводится, затем — дешевле, затем — больший поход
+      const stores = [...new Set(ts.sort((x, y) => total(y) - total(x)).map((t) => t.store))];
+      const keeps = maxStoresPerDay >= 2
+        ? stores.flatMap((a, i) => stores.slice(i + 1).map((b2) => new Set([a, b2])))
+        : stores.map((a) => new Set([a]));
       let best = null;
       for (const keep of keeps) {
         const r = resolveDay(trips, day, keep);
