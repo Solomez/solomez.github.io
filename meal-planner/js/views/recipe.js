@@ -4,6 +4,9 @@ import { formatAmount, chooseOffer, buildShoppingList } from '../core/shopping.j
 import { scaleMeasure, scaleWords, packShare } from '../core/amounts.js';
 import { photo, thumbPack, showVariants, substitutesOf } from './products.js';
 import { missingTools, stepHints, has } from '../core/equipment.js';
+import { difficulty } from '../core/difficulty.js';
+import { missingFromHome } from '../core/planner.js';
+import { homeForPlanning } from './money.js';
 
 const storeHint = (p) => {
   const best = p?.packs?.find((x) => !x.stale) || p?.packs?.[0];
@@ -140,6 +143,17 @@ export function renderRecipe(root, rerender, id, params) {
         h('span', null, h('i', { class: 'f' }), `Жиры ${num(ps.fat * factor)} г`),
         h('span', null, h('i', { class: 'c' }), `Углеводы ${num(ps.carbs * factor)} г`))),
     h('p', { class: 'muted small-print' }, `На одну порцию для одного человека${Math.abs(factor - 1) > 0.01 ? ` — на ${Math.round(Math.abs(factor - 1) * 100)} % ${factor < 1 ? 'меньше' : 'больше'} базовой, под вашу норму` : ''}. Цены от ${humanDate(state.data.meta.price_date)}, состав — по этикеткам Billa или справочным таблицам.`)));
+
+  // Сложность и что есть дома
+  const d = difficulty(r);
+  const { home } = homeForPlanning();
+  const lacking = missingFromHome(r, factor, portions, home);
+  root.append(h('section', { class: 'diff-box' },
+    h('div', null, h('b', null, `Сложность: ${d.label.toLowerCase()}`), d.reasons.length ? h('span', { class: 'muted' }, ` — ${d.reasons.join(', ')}`) : null),
+    d.tip ? h('div', { class: 'muted small' }, d.tip) : null,
+    lacking.length
+      ? h('div', { class: 'need-line small' }, `Дома не хватает: ${lacking.map((m) => state.data.products[m.key]?.name_ru?.toLowerCase() || m.key).join(', ')}`)
+      : h('div', { class: 'have-line small' }, 'Всё нужное есть дома')));
 
   root.append(h('div', { class: 'no-print', style: { margin: '16px 0 4px' } },
     h('a', { class: 'btn primary wide', href: `#/cook/${r.id}?f=${factor}&p=${portions}` }, icon('pot'), 'Готовить по шагам')));

@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated": "2026-10-16",
+  "generated": "2026-10-17",
   "price_date": "2026-10-16",
   "departments": [
    {
@@ -21859,6 +21859,1859 @@
     }
    ],
    "main_ingredient_count": 2
+  },
+  {
+   "id": "cornflakes-milch-skyr",
+   "meal_type": "breakfast",
+   "title": "Кукурузные хлопья с молоком и скиром",
+   "title_de": "Cornflakes mit Milch und Skyr",
+   "description": "Завтрак за 3 минуты без плиты: хлопья с молоком плюс скир — около 28 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "завтрак",
+    "просто",
+    "без готовки",
+    "хлопья"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 3,
+    "cook": 0,
+    "total": 3,
+    "active": 3
+   },
+   "equipment": [
+    "Глубокая миска",
+    "Чашка",
+    "Ложка"
+   ],
+   "ingredients": [
+    {
+     "key": "cornflakes",
+     "name_ru": "Кукурузные хлопья",
+     "name_de": "Cornflakes",
+     "amount": "2 большие горсти (~1,5 стакана)",
+     "grams": 60,
+     "basic": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "name_de": "Vollmilch",
+     "amount": "1 стакан (250 мл)",
+     "grams": 250,
+     "basic": false
+    },
+    {
+     "key": "skyr",
+     "name_ru": "Скир",
+     "name_de": "Skyr natur",
+     "amount": "5 ст. л. с горкой (~150 г)",
+     "grams": 150,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Выложи скир в чашку, добавь 2–3 ст. л. молока из стакана и размешай ложкой ~30 секунд до гладкого крема.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Насыпь хлопья в глубокую миску.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Залей хлопья оставшимся холодным молоком прямо перед едой и ешь сразу, пока они хрустят; скир — ложками вприкуску или выложи сверху.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Залить хлопья молоком заранее: через 5 минут они размокнут и потеряют хруст — заливай в последний момент.",
+    "Есть одни хлопья с молоком: это всего ~12 г белка, скир добавляет ещё ~15 г — без него до обеда не дотянешь.",
+    "Брать глазированные хлопья (Frosties, «Honey»): сахара почти вдвое больше — ищи обычные «Cornflakes»."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Скир",
+     "to": "Magertopfen + 3 ст. л. молока",
+     "note": "белка столько же, дешевле"
+    },
+    {
+     "from": "Кукурузные хлопья любой марки",
+     "to": "Clever или S-BUDGET Cornflakes",
+     "note": "состав почти одинаковый, а стоят вдвое дешевле фирменных"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "Скир делает из «детского» завтрака полноценный белковый.",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.87,
+    "kcal": 467,
+    "protein": 27.9,
+    "fat": 10.0,
+    "carbs": 66.3
+   },
+   "cost_breakdown": [
+    {
+     "key": "cornflakes",
+     "name_ru": "Кукурузные хлопья",
+     "grams_per_serving": 60.0,
+     "cost_per_serving": 0.191,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.228,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "skyr",
+     "name_ru": "Скир",
+     "grams_per_serving": 150.0,
+     "cost_per_serving": 0.449,
+     "store": "Spar",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 3
+  },
+  {
+   "id": "schinken-kaese-brote",
+   "meal_type": "breakfast",
+   "title": "Бутерброды с ветчиной и сыром",
+   "title_de": "Schinken-Käse-Brote",
+   "description": "Классика без плиты: 2 бутерброда с ветчиной, гаудой и огурцом — около 32 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "завтрак",
+    "просто",
+    "без готовки",
+    "ветчина",
+    "с собой"
+   ],
+   "protein_type": "ham",
+   "servings": 1,
+   "time": {
+    "prep": 4,
+    "cook": 0,
+    "total": 4,
+    "active": 4
+   },
+   "equipment": [
+    "Доска и нож"
+   ],
+   "ingredients": [
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "name_de": "Mischbrot",
+     "amount": "2 ломтика",
+     "grams": 100,
+     "basic": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "name_de": "Butter",
+     "amount": "2 ч. л.",
+     "grams": 10,
+     "basic": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "name_de": "Toastschinken",
+     "amount": "4 ломтика",
+     "grams": 80,
+     "basic": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "name_de": "Gouda Scheiben",
+     "amount": "2 ломтика",
+     "grams": 40,
+     "basic": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "name_de": "Gurke",
+     "amount": "кусочек ~6 см",
+     "grams": 60,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Намажь каждый ломтик хлеба тонким слоем сливочного масла.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Нарежь огурец кружками толщиной ~3 мм.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Положи на каждый ломтик по 2 ломтика ветчины, 1 ломтик сыра и сверху кружки огурца.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Масло прямо из холодильника рвёт хлеб — достань его за 10 минут или срезай тонкие пластинки и раскладывай ножом.",
+    "Огурец на бутерброде с вечера — хлеб промокает; если берёшь с собой, огурец заверни отдельно."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Гауда",
+     "to": "Эмменталь (Emmentaler Scheiben)",
+     "note": "белка даже чуть больше"
+    },
+    {
+     "from": "Mischbrot",
+     "to": "Toastbrot, 4 ломтика",
+     "note": "мягче, можно поджарить"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "Можно взять с собой: заверни в бумагу, до обеда бутерброды нормально переносят комнатную температуру.",
+   "tools": [],
+   "per_serving": {
+    "cost": 1.28,
+    "kcal": 544,
+    "protein": 32.6,
+    "fat": 22.7,
+    "carbs": 49.7
+   },
+   "cost_breakdown": [
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "grams_per_serving": 100.0,
+     "cost_per_serving": 0.161,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "grams_per_serving": 10.0,
+     "cost_per_serving": 0.06,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "grams_per_serving": 80.0,
+     "cost_per_serving": 0.664,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.277,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "grams_per_serving": 60.0,
+     "cost_per_serving": 0.113,
+     "store": "Spar",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 5
+  },
+  {
+   "id": "toast-erdnuss-banane-milch",
+   "meal_type": "breakfast",
+   "title": "Тосты с арахисовой пастой, банан и стакан молока",
+   "title_de": "Toast mit Erdnussbutter, Banane und Milch",
+   "description": "Сытный завтрак за 5 минут: тосты с арахисовой пастой и бананом плюс большой стакан молока — около 27 г белка",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "завтрак",
+    "просто",
+    "арахисовая паста",
+    "перед тренировкой"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 3,
+    "cook": 2,
+    "total": 5,
+    "active": 5
+   },
+   "equipment": [
+    "Тостер (по желанию)",
+    "Нож",
+    "Стакан"
+   ],
+   "ingredients": [
+    {
+     "key": "toast_bread",
+     "name_ru": "Тостовый хлеб",
+     "name_de": "Toastbrot",
+     "amount": "3 ломтика",
+     "grams": 75,
+     "basic": false
+    },
+    {
+     "key": "peanut_butter",
+     "name_ru": "Арахисовая паста",
+     "name_de": "Erdnusscreme",
+     "amount": "2 ст. л. без горки",
+     "grams": 30,
+     "basic": false
+    },
+    {
+     "key": "banana",
+     "name_ru": "Банан",
+     "name_de": "Bananen",
+     "amount": "1 шт.",
+     "grams": 120,
+     "basic": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "name_de": "Vollmilch",
+     "amount": "1 большой стакан (300 мл)",
+     "grams": 300,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Поджарь хлеб в тостере ~2 минуты до золотистого цвета. Нет тостера — на сухой сковороде на среднем огне по ~1 минуте с каждой стороны, или ешь не поджаренным.",
+     "timer_min": 2,
+     "heat": "средний"
+    },
+    {
+     "text": "Сразу намажь тосты арахисовой пастой: на тёплом хлебе она подтаивает и легко размазывается.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Очисти банан, нарежь кружками ~1 см и разложи поверх пасты.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Налей большой стакан молока и ешь тосты, запивая.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Толстый слой пасты: 2 ст. л. — это уже ~190 ккал; больше — лишний жир, а белка почти не прибавится.",
+    "Пропустить молоко: без него белка всего ~17 г вместо ~27 г.",
+    "Паста с сахаром и пальмовым маслом — бери ту, где в составе почти только арахис (Erdnüsse ≥ 90 %)."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Банан",
+     "to": "Яблоко, тонкими дольками",
+     "note": "меньше сахара"
+    },
+    {
+     "from": "Молоко",
+     "to": "150 г скира",
+     "note": "белка столько же, если молоко не любишь"
+    },
+    {
+     "from": "Toastbrot",
+     "to": "Mischbrot, 2 ломтика",
+     "note": "плотнее и сытнее"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "Хороший вариант за 1–2 часа до тренировки: быстрые углеводы из банана и хлеба плюс белок из молока.",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.81,
+    "kcal": 692,
+    "protein": 27.3,
+    "fat": 28.8,
+    "carbs": 75.0
+   },
+   "cost_breakdown": [
+    {
+     "key": "toast_bread",
+     "name_ru": "Тостовый хлеб",
+     "grams_per_serving": 75.0,
+     "cost_per_serving": 0.141,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "peanut_butter",
+     "name_ru": "Арахисовая паста",
+     "grams_per_serving": 30.0,
+     "cost_per_serving": 0.202,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "banana",
+     "name_ru": "Банан",
+     "grams_per_serving": 120.0,
+     "cost_per_serving": 0.191,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "grams_per_serving": 300.0,
+     "cost_per_serving": 0.274,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 4
+  },
+  {
+   "id": "cornflakes-milch-eier",
+   "meal_type": "breakfast",
+   "title": "Хлопья с молоком и два яйца вкрутую",
+   "title_de": "Cornflakes mit Milch und zwei harten Eiern",
+   "description": "Хлопья с молоком плюс 2 яйца вкрутую — около 28 г белка; яйца можно сварить с вечера",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "завтрак",
+    "просто",
+    "яйца",
+    "хлопья"
+   ],
+   "protein_type": "eggs",
+   "servings": 1,
+   "time": {
+    "prep": 2,
+    "cook": 15,
+    "total": 17,
+    "active": 5
+   },
+   "equipment": [
+    "Маленькая кастрюля",
+    "Глубокая миска",
+    "Ложка"
+   ],
+   "ingredients": [
+    {
+     "key": "eggs",
+     "name_ru": "Яйцо",
+     "name_de": "Eier (Größe M)",
+     "amount": "2 шт.",
+     "grams": 120,
+     "basic": false
+    },
+    {
+     "key": "cornflakes",
+     "name_ru": "Кукурузные хлопья",
+     "name_de": "Cornflakes",
+     "amount": "1,5 горсти (~1 стакан)",
+     "grams": 50,
+     "basic": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "name_de": "Vollmilch",
+     "amount": "1 стакан (250 мл)",
+     "grams": 250,
+     "basic": false
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "name_de": "Salz",
+     "amount": "щепотка",
+     "grams": 1,
+     "basic": true
+    }
+   ],
+   "steps": [
+    {
+     "text": "Положи яйца в маленькую кастрюлю, залей холодной водой на 2 см выше и доведи до кипения на сильном огне, ~4 минуты.",
+     "timer_min": 4,
+     "heat": "сильный"
+    },
+    {
+     "text": "Убавь огонь до среднего и вари 9 минут — желток станет полностью твёрдым.",
+     "timer_min": 9,
+     "heat": "средний"
+    },
+    {
+     "text": "Слей горячую воду и залей яйца холодной на 2 минуты — так скорлупа легче отходит.",
+     "timer_min": 2,
+     "heat": null
+    },
+    {
+     "text": "Очисти яйца и посоли.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Насыпь хлопья в миску и залей холодным молоком прямо перед едой.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Класть яйца прямо в кипяток — скорлупа лопается; клади в холодную воду и грей вместе.",
+    "Залить хлопья молоком, пока варятся яйца, — к еде они размокнут; молоко — в последний момент.",
+    "Варить яйца каждое утро: свари сразу 4–6 штук с вечера, в скорлупе они хранятся 3 дня — утром останется 2 минуты."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Яйца вкрутую",
+     "to": "150 г скира",
+     "note": "без варки, белка столько же"
+    },
+    {
+     "from": "Кукурузные хлопья",
+     "to": "2 ломтика тостового хлеба с маслом",
+     "note": "если хлопья закончились"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "Варёные яйца в скорлупе храни в холодильнике до 3 дней.",
+   "tools": [
+    [
+     "pot"
+    ]
+   ],
+   "per_serving": {
+    "cost": 0.89,
+    "kcal": 537,
+    "protein": 27.8,
+    "fat": 22.4,
+    "carbs": 54.3
+   },
+   "cost_breakdown": [
+    {
+     "key": "eggs",
+     "name_ru": "Яйцо",
+     "grams_per_serving": 120.0,
+     "cost_per_serving": 0.507,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "cornflakes",
+     "name_ru": "Кукурузные хлопья",
+     "grams_per_serving": 50.0,
+     "cost_per_serving": 0.159,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.228,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "grams_per_serving": 1.0,
+     "cost_per_serving": 0.001,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 3
+  },
+  {
+   "id": "snack-cornflakes-milch",
+   "meal_type": "snack",
+   "title": "Хлопья с молоком",
+   "title_de": "Cornflakes mit Milch",
+   "description": "Перекус за минуту: миска кукурузных хлопьев с холодным молоком",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "хлопья"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 0,
+    "total": 1,
+    "active": 1
+   },
+   "equipment": [
+    "Глубокая миска",
+    "Ложка"
+   ],
+   "ingredients": [
+    {
+     "key": "cornflakes",
+     "name_ru": "Кукурузные хлопья",
+     "name_de": "Cornflakes",
+     "amount": "1,5 горсти (~1 стакан)",
+     "grams": 50,
+     "basic": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "name_de": "Vollmilch",
+     "amount": "1 стакан (250 мл)",
+     "grams": 250,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Насыпь хлопья в миску, залей холодным молоком и ешь сразу, пока они хрустят.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Залить заранее — через 5 минут хлопья размокают: заливай прямо перед едой."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Часть молока",
+     "to": "3 ст. л. скира сверху",
+     "note": "+8 г белка"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.39,
+    "kcal": 348,
+    "protein": 12.2,
+    "fat": 9.2,
+    "carbs": 53.2
+   },
+   "cost_breakdown": [
+    {
+     "key": "cornflakes",
+     "name_ru": "Кукурузные хлопья",
+     "grams_per_serving": 50.0,
+     "cost_per_serving": 0.159,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.228,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-protein-pudding-banane",
+   "meal_type": "snack",
+   "title": "Протеиновый пудинг с бананом",
+   "title_de": "High Protein Pudding mit Banane",
+   "description": "Сладкий перекус без готовки: стаканчик протеинового пудинга (20 г белка) и банан",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "сладкое"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 0,
+    "total": 1,
+    "active": 1
+   },
+   "equipment": [
+    "Ложка",
+    "Нож"
+   ],
+   "ingredients": [
+    {
+     "key": "protein_pudding",
+     "name_ru": "Протеиновый пудинг",
+     "name_de": "High Protein Pudding Vanille",
+     "amount": "1 стаканчик 200 г",
+     "grams": 200,
+     "basic": false
+    },
+    {
+     "key": "banana",
+     "name_ru": "Банан",
+     "name_de": "Bananen",
+     "amount": "1 шт.",
+     "grams": 120,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Открой стаканчик и размешай пудинг ложкой ~10 секунд — сверху иногда собирается немного жидкости.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Нарежь банан кружками прямо в стаканчик или ешь вприкуску.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Взять обычный пудинг (Schokopudding) вместо «High Protein» — белка в 3–4 раза меньше, а сахара больше: ищи на крышке «High Protein» и ~20 г белка."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Протеиновый пудинг",
+     "to": "200 г скира с 1 ч. л. мёда",
+     "note": "белка столько же, дешевле"
+    },
+    {
+     "from": "Банан",
+     "to": "без банана",
+     "note": "останется ~150 ккал и 20 г белка"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "Пудинг продаётся в холодильнике рядом с йогуртами и десертами.",
+   "tools": [],
+   "per_serving": {
+    "cost": 1.19,
+    "kcal": 257,
+    "protein": 21.3,
+    "fat": 3.4,
+    "carbs": 36.0
+   },
+   "cost_breakdown": [
+    {
+     "key": "protein_pudding",
+     "name_ru": "Протеиновый пудинг",
+     "grams_per_serving": 200.0,
+     "cost_per_serving": 1.0,
+     "store": "Penny",
+     "is_estimate": false
+    },
+    {
+     "key": "banana",
+     "name_ru": "Банан",
+     "grams_per_serving": 120.0,
+     "cost_per_serving": 0.191,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "snack-schinkenbrot",
+   "meal_type": "snack",
+   "title": "Бутерброд с ветчиной",
+   "title_de": "Schinkenbrot",
+   "description": "Перекус за 2 минуты: ломоть хлеба с маслом, ветчиной и огурцом",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "с собой"
+   ],
+   "protein_type": "ham",
+   "servings": 1,
+   "time": {
+    "prep": 2,
+    "cook": 0,
+    "total": 2,
+    "active": 2
+   },
+   "equipment": [
+    "Доска и нож"
+   ],
+   "ingredients": [
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "name_de": "Mischbrot",
+     "amount": "1 ломтик",
+     "grams": 50,
+     "basic": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "name_de": "Butter",
+     "amount": "1 ч. л.",
+     "grams": 5,
+     "basic": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "name_de": "Toastschinken",
+     "amount": "2 ломтика",
+     "grams": 40,
+     "basic": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "name_de": "Gurke",
+     "amount": "4–5 кружков",
+     "grams": 30,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Намажь хлеб тонким слоем масла, положи ветчину и сверху кружки огурца толщиной ~3 мм.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "С собой огурец кладут отдельно — иначе к обеду хлеб промокнет."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Сливочное масло",
+     "to": "1 ч. л. горчицы",
+     "note": "меньше калорий, острее"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.5,
+    "kcal": 203,
+    "protein": 11.5,
+    "fat": 5.8,
+    "carbs": 24.9
+   },
+   "cost_breakdown": [
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "grams_per_serving": 50.0,
+     "cost_per_serving": 0.081,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "grams_per_serving": 5.0,
+     "cost_per_serving": 0.03,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.332,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "grams_per_serving": 30.0,
+     "cost_per_serving": 0.057,
+     "store": "Spar",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 4
+  },
+  {
+   "id": "snack-milch-banane",
+   "meal_type": "snack",
+   "title": "Стакан молока и банан",
+   "title_de": "Milch und Banane",
+   "description": "Самый простой перекус перед тренировкой: стакан молока и банан",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "перекус",
+    "просто",
+    "без готовки",
+    "перед тренировкой"
+   ],
+   "protein_type": "dairy",
+   "servings": 1,
+   "time": {
+    "prep": 1,
+    "cook": 0,
+    "total": 1,
+    "active": 1
+   },
+   "equipment": [
+    "Стакан"
+   ],
+   "ingredients": [
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "name_de": "Vollmilch",
+     "amount": "1 стакан (250 мл)",
+     "grams": 250,
+     "basic": false
+    },
+    {
+     "key": "banana",
+     "name_ru": "Банан",
+     "name_de": "Bananen",
+     "amount": "1 шт.",
+     "grams": 120,
+     "basic": false
+    }
+   ],
+   "steps": [
+    {
+     "text": "Налей стакан молока и очисти банан — ешь вприкуску.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Есть прямо перед тренировкой — тяжело в животе: лучше за 30–60 минут до неё."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Молоко",
+     "to": "150 г скира",
+     "note": "больше белка, если молоко не любишь"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "",
+   "tools": [],
+   "per_serving": {
+    "cost": 0.42,
+    "kcal": 267,
+    "protein": 9.8,
+    "fat": 9.1,
+    "carbs": 35.8
+   },
+   "cost_breakdown": [
+    {
+     "key": "milk",
+     "name_ru": "Молоко",
+     "grams_per_serving": 250.0,
+     "cost_per_serving": 0.228,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "banana",
+     "name_ru": "Банан",
+     "grams_per_serving": 120.0,
+     "cost_per_serving": 0.191,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 2
+  },
+  {
+   "id": "wraps-schinken-kaese-gemuese",
+   "title": "Роллы-тортильи с ветчиной, сыром и овощами",
+   "title_de": "Wraps mit Schinken, Käse und Gemüse",
+   "description": "Ужин без плиты за 15 минут: по 2 ролла с ветчиной, гаудой, огурцом и помидором на сметанно-горчичном соусе",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "просто",
+    "без готовки",
+    "ветчина",
+    "тортилья",
+    "быстро",
+    "с собой"
+   ],
+   "protein_type": "ham",
+   "servings": 2,
+   "time": {
+    "prep": 15,
+    "cook": 0,
+    "total": 15,
+    "active": 15
+   },
+   "equipment": [
+    "Доска и нож",
+    "Миска",
+    "Бумажное полотенце"
+   ],
+   "ingredients": [
+    {
+     "key": "tortilla",
+     "name_ru": "Пшеничные тортильи",
+     "name_de": "Tortilla Wraps Weizen",
+     "amount": "4 шт. (из упаковки 6 шт.)",
+     "grams": 248,
+     "basic": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "name_de": "Toastschinken",
+     "amount": "⅔ упаковки 300 г (~10 ломтиков)",
+     "grams": 200,
+     "basic": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "name_de": "Gouda Scheiben",
+     "amount": "5 ломтиков",
+     "grams": 100,
+     "basic": false
+    },
+    {
+     "key": "sour_cream",
+     "name_ru": "Сметана",
+     "name_de": "Sauerrahm",
+     "amount": "½ стаканчика 250 г",
+     "grams": 120,
+     "basic": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "name_de": "Gurke",
+     "amount": "⅓ огурца",
+     "grams": 150,
+     "basic": false
+    },
+    {
+     "key": "tomato",
+     "name_ru": "Помидор",
+     "name_de": "Paradeiser",
+     "amount": "1 крупный",
+     "grams": 150,
+     "basic": false
+    },
+    {
+     "key": "mustard",
+     "name_ru": "Горчица",
+     "name_de": "Kremser Senf",
+     "amount": "1 ч. л.",
+     "grams": 10,
+     "basic": true
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "name_de": "Pfeffer schwarz",
+     "amount": "щепотка",
+     "grams": 1,
+     "basic": true
+    }
+   ],
+   "steps": [
+    {
+     "text": "Достань тортильи из холодильника и оставь в упаковке при комнатной температуре ~10 минут, пока режешь остальное, — так они не треснут при сворачивании.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Смешай в миске сметану, горчицу и щепотку перца ложкой ~30 секунд до однородного соуса.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Нарежь огурец тонкими длинными брусками ~5 мм.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Нарежь помидор тонкими полукружьями и промокни бумажным полотенцем, чтобы сок не размочил тортилью.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Разложи тортильи на столе и намажь каждую ~2 ст. л. соуса, не доходя 2 см до края.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Выложи на нижнюю треть каждой тортильи 2–3 ломтика ветчины и сыр (5 ломтиков раздели на 4 ролла), сверху — полоску огурца и помидора.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Подверни боковые края внутрь и плотно сверни каждую тортилью снизу вверх, придерживая начинку пальцами.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Разрежь каждый ролл наискосок пополам. Если ролл раскрывается, проткни его зубочисткой.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Мокрые помидоры прямо на соус — тортилья промокает и рвётся: промокни их и клади поверх сыра.",
+    "Слишком много начинки — ролл не закрывается: оставь 2 см свободного края и не клади начинку в верхнюю половину.",
+    "Холодные тортильи прямо из холодильника трескаются на сгибе — дай им 10 минут полежать при комнатной температуре.",
+    "Соус до самого края — при сворачивании выдавится наружу."
+   ],
+   "storage": {
+    "fridge_days": 1,
+    "freezable": false,
+    "freeze_note": "огурец и помидор после заморозки водянистые",
+    "reheat": "Не разогревается: ешь холодным. Вторую порцию плотно заверни в фольгу без помидора, его добавь перед едой. Хочешь тёплый ролл — прогрей на сухой сковороде на среднем огне ~1 минуту с каждой стороны."
+   },
+   "substitutions": [
+    {
+     "from": "Гауда",
+     "to": "Эмменталь (Emmentaler Scheiben)",
+     "note": "чуть больше белка"
+    },
+    {
+     "from": "Сметана (Sauerrahm)",
+     "to": "Frischkäse natur",
+     "note": "жирнее, зато лучше держит ролл"
+    },
+    {
+     "from": "Тостовая ветчина",
+     "to": "Putenschinken (ветчина из индейки)",
+     "note": "постнее, обычно чуть дороже"
+    },
+    {
+     "from": "Огурец",
+     "to": "Сладкий перец, тонкими полосками",
+     "note": "хрустит так же и не течёт"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "Собственный рецепт: ужин без плиты и без мытья сковороды.",
+   "meal_type": "main",
+   "tools": [],
+   "per_serving": {
+    "cost": 2.19,
+    "kcal": 773,
+    "protein": 45.6,
+    "fat": 32.9,
+    "carbs": 71.5
+   },
+   "cost_breakdown": [
+    {
+     "key": "tortilla",
+     "name_ru": "Пшеничные тортильи",
+     "grams_per_serving": 124.0,
+     "cost_per_serving": 0.497,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "grams_per_serving": 100.0,
+     "cost_per_serving": 0.83,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "grams_per_serving": 50.0,
+     "cost_per_serving": 0.346,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "sour_cream",
+     "name_ru": "Сметана",
+     "grams_per_serving": 60.0,
+     "cost_per_serving": 0.238,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "cucumber",
+     "name_ru": "Огурец",
+     "grams_per_serving": 75.0,
+     "cost_per_serving": 0.142,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "tomato",
+     "name_ru": "Помидор",
+     "grams_per_serving": 75.0,
+     "cost_per_serving": 0.106,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "mustard",
+     "name_ru": "Горчица",
+     "grams_per_serving": 5.0,
+     "cost_per_serving": 0.018,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "grams_per_serving": 0.5,
+     "cost_per_serving": 0.008,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 6
+  },
+  {
+   "id": "pasta-schinken-erbsen-kaese",
+   "title": "Паста с ветчиной, горошком и сыром",
+   "title_de": "Nudeln mit Schinken, Erbsen und Käse",
+   "description": "Ленивая паста за 20 минут: ветчина, зелёный горошек и сливочно-сырный соус прямо в сковороде",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "просто",
+    "паста",
+    "ветчина",
+    "быстро",
+    "meal-prep"
+   ],
+   "protein_type": "ham",
+   "servings": 2,
+   "time": {
+    "prep": 3,
+    "cook": 17,
+    "total": 20,
+    "active": 12
+   },
+   "equipment": [
+    "Кастрюля (2–3 л) с крышкой",
+    "Сковорода (Ø 26–28 см)",
+    "Дуршлаг",
+    "Доска и нож",
+    "Кружка"
+   ],
+   "ingredients": [
+    {
+     "key": "pasta",
+     "name_ru": "Паста (пенне/фузилли)",
+     "name_de": "Penne oder Fusilli",
+     "amount": "половина упаковки 500 г",
+     "grams": 250,
+     "basic": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "name_de": "Toastschinken",
+     "amount": "⅔ упаковки 300 г",
+     "grams": 200,
+     "basic": false
+    },
+    {
+     "key": "frozen_peas",
+     "name_ru": "Зелёный горошек замороженный",
+     "name_de": "Junge Erbsen (tiefgekühlt)",
+     "amount": "2 большие горсти",
+     "grams": 200,
+     "basic": false
+    },
+    {
+     "key": "cream",
+     "name_ru": "Сливки 32%",
+     "name_de": "Schlagobers",
+     "amount": "⅓ стакана (80 мл)",
+     "grams": 80,
+     "basic": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "name_de": "Gouda Scheiben",
+     "amount": "4 ломтика",
+     "grams": 80,
+     "basic": false
+    },
+    {
+     "key": "oil",
+     "name_ru": "Растительное масло",
+     "name_de": "Rapsöl",
+     "amount": "1 ст. л.",
+     "grams": 10,
+     "basic": true
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "name_de": "Salz",
+     "amount": "1 ч. л. с горкой (в воду)",
+     "grams": 10,
+     "basic": true
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "name_de": "Pfeffer schwarz",
+     "amount": "щепотка",
+     "grams": 1,
+     "basic": true
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода",
+     "name_de": "Wasser",
+     "amount": "2 л (для варки)",
+     "grams": 0,
+     "basic": true
+    }
+   ],
+   "steps": [
+    {
+     "text": "Налей в кастрюлю ~2 л воды, накрой крышкой и доведи до кипения на сильном огне, ~7 минут (быстрее — вскипяти воду в чайнике).",
+     "timer_min": 7,
+     "heat": "сильный",
+     "tools": [
+      {
+       "tool": "lid",
+       "kind": "cover"
+      }
+     ]
+    },
+    {
+     "text": "Пока вода греется, нарежь ветчину полосками ~1 см, а сыр — мелкими квадратиками.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Посоли кипящую воду, всыпь пасту, помешай и вари без крышки на среднем огне на 1 минуту меньше, чем написано на пачке, ~9 минут.",
+     "timer_min": 9,
+     "heat": "средний"
+    },
+    {
+     "text": "Тем временем разогрей масло на сковороде на среднем огне ~1 минуту, выложи ветчину и обжаривай, помешивая, ~3 минуты до лёгкой золотистости по краям.",
+     "timer_min": 3,
+     "heat": "средний"
+    },
+    {
+     "text": "Всыпь замороженный горошек прямо в сковороду и грей, помешивая, ~3 минуты, пока он не станет ярко-зелёным и горячим.",
+     "timer_min": 3,
+     "heat": "средний"
+    },
+    {
+     "text": "Влей сливки, поперчи и прогрей на слабом огне ~1 минуту, пока по краям не появятся первые пузырьки.",
+     "timer_min": 1,
+     "heat": "слабый"
+    },
+    {
+     "text": "Зачерпни кружкой ~100 мл воды из-под пасты, затем откинь пасту на дуршлаг.",
+     "timer_min": null,
+     "heat": null,
+     "tools": [
+      {
+       "tool": "sieve",
+       "kind": "drain"
+      }
+     ]
+    },
+    {
+     "text": "Переложи пасту в сковороду, добавь сыр и 3–4 ст. л. отложенной воды и перемешивай на слабом огне ~1 минуту, пока сыр не расплавится и соус не обволочёт пасту.",
+     "timer_min": 1,
+     "heat": "слабый"
+    }
+   ],
+   "mistakes": [
+    "Сыр в соус на сильном огне — он сворачивается комками и тянется: добавляй на слабом и сразу мешай.",
+    "Мало соли в воде — паста пресная, и ветчина её не спасёт: 1 ч. л. с горкой на 2 л.",
+    "Размораживать горошек заранее — он становится мятым; бросай прямо из морозилки.",
+    "Слить всю воду из-под пасты — без пары ложек этой воды соус получится сухим и липким."
+   ],
+   "storage": {
+    "fridge_days": 2,
+    "freezable": false,
+    "freeze_note": "сливочный соус после заморозки расслаивается",
+    "reheat": "На сковороде на среднем огне с 2–3 ст. л. воды или молока, ~4–5 минут, помешивая, пока не прогреется насквозь."
+   },
+   "substitutions": [
+    {
+     "from": "Сливки (Schlagobers)",
+     "to": "100 мл молока + 1 ч. л. сливочного масла",
+     "note": "соус чуть жиже, зато легче"
+    },
+    {
+     "from": "Гауда",
+     "to": "Grana Padano, 40 г тёртого",
+     "note": "ароматнее, хватит вдвое меньше"
+    },
+    {
+     "from": "Тостовая ветчина",
+     "to": "Frankfurter Würstel, кружками",
+     "note": "дешевле, чуть меньше белка"
+    },
+    {
+     "from": "Зелёный горошек",
+     "to": "Консервированная кукуруза (Gemüsemais)",
+     "note": "без жидкости, добавь на шаге с горошком"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "Собственный рецепт: всё готовится, пока варится паста.",
+   "meal_type": "main",
+   "tools": [
+    [
+     "pot"
+    ],
+    [
+     "pan"
+    ]
+   ],
+   "per_serving": {
+    "cost": 1.69,
+    "kcal": 920,
+    "protein": 49.6,
+    "fat": 34.4,
+    "carbs": 99.2
+   },
+   "cost_breakdown": [
+    {
+     "key": "pasta",
+     "name_ru": "Паста (пенне/фузилли)",
+     "grams_per_serving": 125.0,
+     "cost_per_serving": 0.16,
+     "store": "Hofer",
+     "is_estimate": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "grams_per_serving": 100.0,
+     "cost_per_serving": 0.83,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "frozen_peas",
+     "name_ru": "Зелёный горошек замороженный",
+     "grams_per_serving": 100.0,
+     "cost_per_serving": 0.189,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "cream",
+     "name_ru": "Сливки 32%",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.207,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "grams_per_serving": 40.0,
+     "cost_per_serving": 0.277,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "oil",
+     "name_ru": "Растительное масло",
+     "grams_per_serving": 5.0,
+     "cost_per_serving": 0.01,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "grams_per_serving": 5.0,
+     "cost_per_serving": 0.004,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "grams_per_serving": 0.5,
+     "cost_per_serving": 0.008,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "water",
+     "name_ru": "Вода",
+     "grams_per_serving": 0.0,
+     "cost_per_serving": 0.0,
+     "store": "любой",
+     "is_estimate": true
+    }
+   ],
+   "main_ingredient_count": 5
+  },
+  {
+   "id": "spiegeleier-schinken-kaese-brot",
+   "title": "Яичница с ветчиной, сыром и хлебом",
+   "title_de": "Spiegeleier mit Schinken und Käse",
+   "description": "Ужин за 12 минут на одной сковороде: глазунья из 3 яиц на ветчине под сыром, хлеб и помидоры",
+   "source": {
+    "name": "собственный рецепт",
+    "url": null
+   },
+   "tags": [
+    "просто",
+    "яйца",
+    "ветчина",
+    "сковорода",
+    "быстро"
+   ],
+   "protein_type": "eggs",
+   "servings": 2,
+   "time": {
+    "prep": 3,
+    "cook": 9,
+    "total": 12,
+    "active": 12
+   },
+   "equipment": [
+    "Сковорода (Ø 26–28 см) с крышкой",
+    "Лопатка",
+    "Чашка",
+    "Доска и нож"
+   ],
+   "ingredients": [
+    {
+     "key": "eggs",
+     "name_ru": "Яйцо",
+     "name_de": "Eier (Größe M)",
+     "amount": "6 шт.",
+     "grams": 360,
+     "basic": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "name_de": "Toastschinken",
+     "amount": "5 ломтиков",
+     "grams": 100,
+     "basic": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "name_de": "Gouda Scheiben",
+     "amount": "3 ломтика",
+     "grams": 60,
+     "basic": false
+    },
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "name_de": "Mischbrot",
+     "amount": "4 ломтика",
+     "grams": 200,
+     "basic": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "name_de": "Butter",
+     "amount": "1 ст. л. без горки",
+     "grams": 10,
+     "basic": false
+    },
+    {
+     "key": "tomato",
+     "name_ru": "Помидор",
+     "name_de": "Paradeiser",
+     "amount": "2 шт.",
+     "grams": 200,
+     "basic": false
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "name_de": "Salz",
+     "amount": "2 щепотки",
+     "grams": 2,
+     "basic": true
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "name_de": "Pfeffer schwarz",
+     "amount": "щепотка",
+     "grams": 1,
+     "basic": true
+    }
+   ],
+   "steps": [
+    {
+     "text": "Нарежь помидоры дольками, разложи на 2 тарелки и посоли — это салат к яичнице.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Нарежь ветчину полосками ~2 см.",
+     "timer_min": null,
+     "heat": null
+    },
+    {
+     "text": "Растопи масло на сковороде на среднем огне ~1 минуту, пока оно не перестанет пениться.",
+     "timer_min": 1,
+     "heat": "средний"
+    },
+    {
+     "text": "Выложи ветчину одним слоем и обжаривай ~2 минуты до лёгкой золотистости снизу.",
+     "timer_min": 2,
+     "heat": "средний"
+    },
+    {
+     "text": "Разбей яйца по одному в чашку и выливай поверх ветчины, чтобы в сковороду не попала скорлупа. Посоли и поперчи белок.",
+     "timer_min": null,
+     "heat": "средний"
+    },
+    {
+     "text": "Жарь на среднем огне ~3 минуты, пока белок по краям не станет белым и плотным.",
+     "timer_min": 3,
+     "heat": "средний"
+    },
+    {
+     "text": "Разложи сыр поверх, убавь огонь до слабого, накрой крышкой и держи ~2 минуты, пока сыр не расплавится, а белок сверху не перестанет быть прозрачным.",
+     "timer_min": 2,
+     "heat": "слабый",
+     "tools": [
+      {
+       "tool": "lid",
+       "kind": "cover"
+      }
+     ]
+    },
+    {
+     "text": "Раздели яичницу лопаткой на 2 порции и подавай с хлебом и помидорами.",
+     "timer_min": null,
+     "heat": null
+    }
+   ],
+   "mistakes": [
+    "Слишком сильный огонь — низ подгорает, а белок сверху остаётся сырым: держи средний, а в конце — крышка и слабый огонь.",
+    "Разбивать яйца прямо в сковороду — легко уронить скорлупу; сначала в чашку.",
+    "Холодная сковорода — яйца прилипают и растекаются: масло должно перестать пениться.",
+    "Снять крышку раньше времени — сыр не расплавится, а белок сверху останется жидким."
+   ],
+   "storage": {
+    "fridge_days": 0,
+    "freezable": false,
+    "freeze_note": "",
+    "reheat": null
+   },
+   "substitutions": [
+    {
+     "from": "Mischbrot",
+     "to": "Toastbrot, 6 ломтиков",
+     "note": "можно поджарить в тостере"
+    },
+    {
+     "from": "Гауда",
+     "to": "Эмменталь (Emmentaler Scheiben)",
+     "note": "плавится так же"
+    },
+    {
+     "from": "Тостовая ветчина",
+     "to": "Frankfurter Würstel, кружками",
+     "note": "дешевле"
+    },
+    {
+     "from": "Помидоры",
+     "to": "Огурец",
+     "note": "если помидоры не сезонные и безвкусные"
+    }
+   ],
+   "soft_exclusion_note": null,
+   "notes": "Собственный рецепт. Яичница не хранится — на обед следующего дня приготовь вторую порцию заново, это 10 минут.",
+   "meal_type": "main",
+   "tools": [
+    [
+     "pan"
+    ]
+   ],
+   "per_serving": {
+    "cost": 1.73,
+    "kcal": 735,
+    "protein": 48.5,
+    "fat": 34.8,
+    "carbs": 52.9
+   },
+   "cost_breakdown": [
+    {
+     "key": "eggs",
+     "name_ru": "Яйцо",
+     "grams_per_serving": 180.0,
+     "cost_per_serving": 0.76,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "ham",
+     "name_ru": "Ветчина (тостовая)",
+     "grams_per_serving": 50.0,
+     "cost_per_serving": 0.415,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "gouda",
+     "name_ru": "Сыр гауда в ломтиках",
+     "grams_per_serving": 30.0,
+     "cost_per_serving": 0.208,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "bread",
+     "name_ru": "Хлеб пшенично-ржаной",
+     "grams_per_serving": 100.0,
+     "cost_per_serving": 0.161,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "butter",
+     "name_ru": "Сливочное масло",
+     "grams_per_serving": 5.0,
+     "cost_per_serving": 0.03,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "tomato",
+     "name_ru": "Помидор",
+     "grams_per_serving": 100.0,
+     "cost_per_serving": 0.142,
+     "store": "Spar",
+     "is_estimate": false
+    },
+    {
+     "key": "salt",
+     "name_ru": "Соль",
+     "grams_per_serving": 1.0,
+     "cost_per_serving": 0.001,
+     "store": "Billa",
+     "is_estimate": false
+    },
+    {
+     "key": "black_pepper",
+     "name_ru": "Чёрный перец молотый",
+     "grams_per_serving": 0.5,
+     "cost_per_serving": 0.008,
+     "store": "Billa",
+     "is_estimate": false
+    }
+   ],
+   "main_ingredient_count": 6
   }
  ]
 }

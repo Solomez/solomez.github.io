@@ -1,7 +1,17 @@
-import { h, eur, num, icon, seg, plural } from '../ui.js';
-import { state, save, toggleIn } from '../state.js';
+import { h, eur, num, icon, seg, plural, toast, sheet } from '../ui.js';
+import { state, save, toggleIn, targets } from '../state.js';
 import { missingTools } from '../core/equipment.js';
+import { difficulty } from '../core/difficulty.js';
+import { rankByHome, cookableNow, almostCookable, buySuggestions, runningLow } from '../core/suggest.js';
+import { formatPack, chooseOffer } from '../core/shopping.js';
+import { MEALS, planDays, swapBatch, swapExtra } from '../core/planner.js';
+import { mealPast, dayName, dayDate } from '../core/calendar.js';
+import { homeForPlanning } from './money.js';
+import { cartEntryOf } from './catalog.js';
 import { hideToggle } from './recipe.js';
+
+// Сложность — маленькой плашкой: «очень просто», «средне»
+export const diffBadge = (r) => { const d = difficulty(r); return d ? h('span', { class: `diff d-${d.id}`, title: d.reasons.join(', ') }, d.short) : null; };
 
 const PROTEIN_TYPES = { chicken: 'Курица', turkey: 'Индейка', pork: 'Свинина', beef: 'Говядина', mince: 'Фарш', eggs: 'Яйца', legumes: 'Бобовые', sausage: 'Колбаски', dairy: 'Молочное', ham: 'Ветчина' };
 
@@ -32,8 +42,17 @@ export function matchRecipe(r, f) {
   return true;
 }
 
-export function renderLibrary(root, rerender) {
+// Три режима экрана: все рецепты / из того, что дома / если докупить
+const SOURCES = [['all', 'Все'], ['home', 'Из того, что дома'], ['shop', 'Если докупить']];
+let appliedSrc = null; // режим из ссылки применяется один раз — дальше переключается как обычно
+
+export function renderLibrary(root, rerender, params) {
   const f = state.libFilters;
+  const want = params?.get('src');
+  if (want && want !== appliedSrc && SOURCES.some(([v]) => v === want)) { f.src = want; save(); }
+  appliedSrc = want || null;
+  const src = f.src || 'all';
+  if (src !== 'all') return renderFromHome(root, rerender, src);
   // фильтр времени раньше был по активному времени — старое значение сбрасываем один раз, иначе список молча сужается
   if (!f.totalTime) { f.time = null; f.totalTime = 1; save(); }
   const set = (k, v) => { f[k] = v; save(); rerender({ keepFocus: k === 'q' }); };
@@ -41,6 +60,7 @@ export function renderLibrary(root, rerender) {
   const ingOptions = Object.values(products).filter((p) => !p.basic).sort((a, b) => (a.name_ru || '').localeCompare(b.name_ru || '', 'ru'));
 
   root.append(h('div', { class: 'topbar' }, h('h1', null, 'Рецепты'), h('span', { class: 'muted' }, `${recipes.length} ${plural(recipes.length, 'рецепт', 'рецепта', 'рецептов')}`)));
+  root.append(sourceSwitch(src, rerender));
   root.append(h('div', { style: { marginBottom: '12px' } }, seg([['main', 'Обеды и ужины'], ['breakfast', 'Завтраки'], ['snack', 'Перекусы']], f.kind || 'main', (v) => set('kind', v))));
   // Быстрые фильтры — одним касанием; полный набор ниже, в «Фильтрах»
   const quick = [
@@ -103,9 +123,152 @@ export function recipeCard(r, rerender) {
         h('button', { class: 'btn icon ghost small', 'aria-label': hidden ? 'Вернуть в подбор' : 'Не предлагать в плане', title: hidden ? 'Вернуть в подбор' : 'Не предлагать в плане', onclick: () => hideToggle(r, rerender) }, icon(hidden ? 'eye' : 'eyeOff')))),
     h('div', { class: 'desc' }, r.description),
     h('div', { class: 'meta' }, `${r.time.total}\u00a0мин (активно ${r.time.active}) · ${eur(ps.cost)} · ${num(ps.protein)}\u00a0г белка · ${num(ps.kcal)}\u00a0ккал`),
-    (r.tags || []).includes('спорное') || missing.length ? h('div', { class: 'row' },
+    h('div', { class: 'row' },
+      diffBadge(r),
       (r.tags || []).includes('спорное') ? h('span', { class: 'badge', title: 'Сочетание продуктов на любителя' }, 'необычное') : null,
-      missing.length ? h('span', { class: 'badge warn' }, `нужно: ${missing.join(', ').toLowerCase()}`) : null) : null);
+      missing.length ? h('span', { class: 'badge warn' }, `нужно: ${missing.join(', ').toLowerCase()}`) : null));
+}
+
+function sourceSwitch(src, rerender) {
+  const el = seg(SOURCES, src, (v) => { state.libFilters.src = v; save(); rerender(); });
+  el.classList.add('scroll');
+  return h('div', { class: 'source-switch' }, el);
+}
+
+// ---------- «Из того, что дома» и «Если докупить» ----------
+function renderFromHome(root, rerender, src) {
+  const f = state.libFilters;
+  const { recipes, products } = state.data;
+  const kind = f.kind || 'main';
+  const { stock, home, expiring } = homeForPlanning();
+  const opts = { prefs: state.prefs, targets: targets(), products, prefer: expiring.map((e) => e.key) };
+  const marked = Object.keys(stock).filter((k) => products[k] && !products[k].basic && stock[k].grams > 0).length;
+  root.append(h('div', { class: 'topbar' }, h('h1', null, 'Рецепты')));
+  root.append(sourceSwitch(src, rerender));
+  root.append(h('p', { class: 'muted source-note' }, src === 'home'
+    ? 'Только то, что уже есть дома — в магазин идти не нужно. Соль, масло и специи считаются в наличии. '
+    : 'Что купить, чтобы из того, что дома, получилось больше блюд, — и какие рецепты станут доступны. ',
+  `Дома отмечено: ${marked} ${plural(marked, 'продукт', 'продукта', 'продуктов')}. `, h('a', { href: '#/products?tab=home' }, 'Изменить запасы')));
+  root.append(h('div', { style: { marginBottom: '12px' } }, seg([['main', 'Обеды и ужины'], ['breakfast', 'Завтраки'], ['snack', 'Перекусы']], kind, (v) => { f.kind = v; save(); rerender(); })));
+  if (!marked) {
+    root.append(h('section', { class: 'empty' },
+      h('h2', null, 'Сначала отметьте, что есть дома'),
+      h('p', null, 'Хватит примерно: «половина пачки риса», «4 яйца». Купленное в Покупках добавится само.'),
+      h('a', { class: 'btn primary', href: '#/products?tab=home' }, 'Отметить запасы')));
+    if (src === 'home') return;
+  }
+  const ranked = rankByHome(recipes, home, { ...opts, type: kind });
+  if (src === 'home') {
+    const now = cookableNow(ranked);
+    root.append(h('h2', null, now.length ? `Можно приготовить сейчас · ${now.length}` : 'Сейчас целиком ничего не собрать'));
+    if (expiring.length && now.some((x) => x.expiring.length)) root.append(h('p', { class: 'muted', style: { marginTop: 0 } }, 'Сверху — блюда с продуктами, которые скоро испортятся.'));
+    root.append(h('div', { class: 'recipe-list' }, now.map((x) => homeCard(x, rerender))));
+    const almost = almostCookable(ranked, 2);
+    if (almost.length) {
+      root.append(h('h2', null, 'Не хватает одного-двух продуктов'));
+      root.append(h('p', { class: 'muted', style: { marginTop: 0 } }, h('a', { href: '#/recipes?src=shop', onclick: () => { f.src = 'shop'; save(); } }, 'Если докупить'), ' — что выгоднее всего купить.'));
+      root.append(h('div', { class: 'recipe-list' }, almost.slice(0, 12).map((x) => homeCard(x, rerender))));
+    }
+    return;
+  }
+  // «Если докупить»: сначала — что купить, затем блюда, которые это откроет
+  const lists = ['main', 'breakfast', 'snack'].map((t) => (t === kind ? ranked : rankByHome(recipes, home, { ...opts, type: t })));
+  const { singles, bundles } = buySuggestions(lists, products);
+  if (singles.length) {
+    root.append(h('h2', null, 'Что докупить'));
+    root.append(h('ul', { class: 'buy-list' }, singles.map((e) => buyRow(e, rerender))));
+  }
+  if (bundles.length) {
+    root.append(h('div', { class: 'eyebrow', style: { marginTop: '14px' } }, 'Вместе'));
+    root.append(h('ul', { class: 'buy-list' }, bundles.map((b) => h('li', { class: 'buy-item' },
+      h('span', null, h('b', null, b.names.join(' + ')), h('span', { class: 'muted' }, ` · ≈ ${eur(b.cost)}`)),
+      h('button', { class: 'btn small', onclick: () => { for (const k of b.keys) addProductToCart(k); rerender({ keepScroll: true }); toast(`В списке покупок: ${b.names.join(', ')}`); } }, icon('plus'), 'В список'),
+      h('span', { class: 'muted buy-why' }, `откроют ${b.unlock.length} ${plural(b.unlock.length, 'блюдо', 'блюда', 'блюд')}: ${b.unlock.map((r) => r.title).join(', ')}`)))));
+  }
+  const low = runningLow(stock, recipes, products);
+  if (low.length) {
+    root.append(h('h2', null, 'Заканчивается'));
+    root.append(h('ul', { class: 'buy-list' }, low.slice(0, 6).map((e) => h('li', { class: 'buy-item' },
+      h('span', null, h('b', null, e.name), h('span', { class: 'muted' }, ` · нужно в ${e.uses} ${plural(e.uses, 'рецепте', 'рецептах', 'рецептах')}`)),
+      h('button', { class: 'btn small', onclick: () => { addProductToCart(e.key); rerender({ keepScroll: true }); toast(`В списке покупок: ${e.name}`); } }, icon('plus'), 'В список')))));
+  }
+  const almost = almostCookable(ranked, 3);
+  root.append(h('h2', null, almost.length ? 'Если докупить — можно приготовить' : 'Почти всё нужно покупать'));
+  if (!almost.length) root.append(h('p', { class: 'muted' }, 'Из отмеченного дома почти ничего не собрать даже с 2–3 покупками. Проще составить неделю с покупками на Плане.'));
+  root.append(h('div', { class: 'recipe-list' }, almost.slice(0, 20).map((x) => homeCard(x, rerender))));
+}
+
+// Добавить продукт рецептов в «Мой список» (встанет в поход в свой магазин): самая выгодная упаковка
+export function addProductToCart(key, grams = 1) {
+  const p = state.data.products[key];
+  const ref = `plan:${key}`;
+  if (!p || state.cart.some((c) => c.ref === ref && !c.done)) return;
+  const offer = chooseOffer(p, grams);
+  const pack = offer?.pack;
+  const loose = !!pack?.loose;
+  state.cart.push(cartEntryOf({ ref, name: pack ? `${p.name_ru} — ${pack.name_de}` : p.name_ru, store: pack && pack.store !== 'любой' ? pack.store : null, shelf: p.shelf,
+    price: offer ? (loose ? offer.cost : pack.price_eur) : null, size: pack?.pack_size, unit: pack?.pack_unit, image: pack?.image, url: pack?.url, concepts: [] }, loose ? 1 : offer?.count || 1));
+  save();
+}
+
+function buyRow(e, rerender) {
+  const inCart = state.cart.some((c) => c.ref === `plan:${e.key}` && !c.done);
+  const why = [e.unlock.length ? `откроет ${e.unlock.length} ${plural(e.unlock.length, 'блюдо', 'блюда', 'блюд')}: ${e.unlock.slice(0, 3).map((r) => r.title).join(', ')}${e.unlock.length > 3 ? '…' : ''}` : null,
+    e.helps.length ? `нужен ещё в ${e.helps.length} ${plural(e.helps.length, 'блюде', 'блюдах', 'блюдах')} вместе с 1–2 другими продуктами` : null].filter(Boolean).join('; ');
+  return h('li', { class: 'buy-item' },
+    h('span', null, h('b', null, e.name), e.offer ? h('span', { class: 'muted' }, ` · ${formatPack(e.offer)} — ${eur(e.offer.cost)}${e.offer.pack.store !== 'любой' ? `, ${e.offer.pack.store}` : ''}`) : null),
+    h('button', { class: 'btn small' + (inCart ? ' on' : ''), disabled: inCart, onclick: () => { addProductToCart(e.key, e.grams); rerender({ keepScroll: true }); toast(`В списке покупок: ${e.name}`, { label: 'Открыть', onClick: () => { location.hash = '#/shop'; } }); } }, inCart ? 'В списке' : [icon('plus'), 'В список']),
+    h('span', { class: 'muted buy-why' }, why));
+}
+
+// Карточка блюда в режимах «дома» и «докупить»: что есть, чего нет, сложность и «В план»
+function homeCard(x, rerender) {
+  const r = x.recipe;
+  const ps = r.per_serving;
+  const href = `#/recipe/${r.id}?f=${x.factor}&p=${x.portions}`;
+  const d = difficulty(r);
+  return h('article', { class: 'card rcard' },
+    h('a', { class: 'title', href }, r.title),
+    h('div', { class: 'meta' }, `${r.time.total}\u00a0мин (активно ${r.time.active}) · ${num(ps.protein * x.factor)}\u00a0г белка · ${num(ps.kcal * x.factor)}\u00a0ккал${x.portions > 1 ? ' · на 2 порции' : ''}`),
+    h('div', { class: 'row' }, diffBadge(r), d?.reasons?.length && d.id !== 'none' ? h('span', { class: 'muted small' }, d.reasons.slice(0, 2).join(', ')) : null),
+    x.missing.length
+      ? h('div', { class: 'need-line small' }, `Докупить: ${x.missing.map((m) => m.name.toLowerCase()).join(', ')} · ≈ ${eur(x.buyCost)}`)
+      : h('div', { class: 'have-line small' }, `Всё есть дома${x.expiring.length ? ` · спасёт: ${x.expiring.map((k) => state.data.products[k]?.name_ru?.toLowerCase()).join(', ')}` : ''}`),
+    h('div', { class: 'row' },
+      h('a', { class: 'btn small', href }, 'Рецепт'),
+      state.plan?.batches?.length ? h('button', { class: 'btn small', onclick: () => putInPlan(x, rerender) }, 'В план') : null,
+      x.missing.length ? h('button', { class: 'btn small', onclick: () => { for (const m of x.missing) addProductToCart(m.key, m.grams); rerender({ keepScroll: true }); toast(`В списке покупок: ${x.missing.map((m) => m.name).join(', ')}`); } }, icon('plus'), 'Докупить')
+        : h('a', { class: 'btn small primary', href: `#/cook/${r.id}?f=${x.factor}&p=${x.portions}` }, icon('pot'), 'Готовить')));
+}
+
+// «В план»: поставить блюдо вместо одного из ещё не наступивших приёмов пищи того же типа
+function putInPlan(x, rerender) {
+  const plan = state.plan;
+  const now = new Date();
+  const type = x.recipe.meal_type || 'main';
+  const days = planDays(plan, state.recipeMap);
+  const slots = [];
+  days.forEach((d, i) => {
+    const entries = type === 'main' ? [['dinner', d.dinner], ['lunch', d.lunch]] : type === 'breakfast' ? [['breakfast', d.breakfast]] : d.snacks.map((e) => ['snack', e]);
+    for (const [meal, e] of entries) {
+      if (!e?.recipe || e.recipe.id === x.recipe.id || mealPast(plan, i, meal, now)) continue;
+      if (e.batch && e.leftover) continue; // обед из второй порции меняется вместе с ужином
+      slots.push({ day: i, meal, e });
+    }
+  });
+  if (!slots.length) return toast('В плане нет свободных будущих приёмов пищи этого типа');
+  let close;
+  close = sheet(`«${x.recipe.title}» — вместо чего?`, h('div', { class: 'stack' },
+    h('p', { class: 'muted', style: { margin: 0 } }, type === 'main' ? 'Ужин готовится на 2 порции: вторая станет обедом следующего дня, как в плане.' : 'Заменится только этот приём пищи.'),
+    slots.slice(0, 14).map((s) => h('button', { class: 'alt', onclick: () => {
+      close();
+      const prev = state.plan;
+      state.plan = s.e.batch ? swapBatch(plan, s.e.batch.id, x.recipe, targets()) : swapExtra(plan, s.e.extra.id, x.recipe, s.e.recipe);
+      save();
+      rerender({ keepScroll: true });
+      toast(`В плане: ${x.recipe.title} — ${dayName(plan, s.day).toLowerCase()}`, { label: 'Отменить', onClick: () => { state.plan = prev; save(); rerender({ keepScroll: true }); } });
+    } }, h('span', { class: 'alt-main' }, h('span', { class: 'alt-title' }, `${dayName(plan, s.day)}, ${dayDate(plan, s.day).getDate()} · ${MEALS[s.meal]}`),
+      h('span', { class: 'muted' }, `сейчас: ${s.e.recipe.title}`))))));
 }
 
 function activeCount(f) {

@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated": "2026-10-16",
+  "generated": "2026-10-17",
   "price_date": "2026-10-16",
   "departments": [
    {
@@ -1878,6 +1878,59 @@
    "name_en": "Canned sweetcorn",
    "shelf": "canned_veg",
    "zone": "cans"
+  },
+  "cornflakes": {
+   "key": "cornflakes",
+   "name_ru": "Кукурузные хлопья",
+   "name_de": "S-BUDGET Cornflakes 500G",
+   "department": "breakfast",
+   "basic": false,
+   "nutrition_per_100g": [
+    377,
+    7.3,
+    0.9,
+    83
+   ],
+   "packs": [
+    {
+     "store": "Spar",
+     "name_de": "S-BUDGET Cornflakes 500G",
+     "brand": "S-BUDGET",
+     "budget_line": true,
+     "pack_size": 500.0,
+     "pack_unit": "g",
+     "grams": 500.0,
+     "price_eur": 1.59,
+     "eur_per_kg": 3.18,
+     "url": "https://www.interspar.at/shop/lebensmittel/s-budget-cornflakes-500g/p/2448459",
+     "date": "2026-10-16",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://cdn1.interspar.at/cachableservlets/articleImage.dam/at/2448459/dt_main.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Clever Cornflakes",
+     "brand": "Clever",
+     "budget_line": true,
+     "pack_size": 500.0,
+     "pack_unit": "g",
+     "grams": 500.0,
+     "price_eur": 1.69,
+     "eur_per_kg": 3.38,
+     "url": "https://shop.billa.at/produkte/clever-cornflakes-00778898",
+     "date": "2026-10-16",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-778898-0121102690-rO045viv.jpg"
+    }
+   ],
+   "name_de_generic": "Cornflakes",
+   "name_en": "Cornflakes",
+   "shelf": "cereal",
+   "zone": "breakfast"
   },
   "cottage_cheese": {
    "key": "cottage_cheese",
@@ -5727,6 +5780,59 @@
    "name_en": "Potatoes",
    "shelf": "potato_onion",
    "zone": "produce"
+  },
+  "protein_pudding": {
+   "key": "protein_pudding",
+   "name_ru": "Протеиновый пудинг",
+   "name_de": "High Protein Pudding",
+   "department": "dairy",
+   "basic": false,
+   "nutrition_per_100g": [
+    75,
+    10,
+    1.5,
+    6
+   ],
+   "packs": [
+    {
+     "store": "Penny",
+     "name_de": "High Protein Pudding",
+     "brand": "Ehrmann",
+     "budget_line": false,
+     "pack_size": 200.0,
+     "pack_unit": "g",
+     "grams": 200.0,
+     "price_eur": 1.0,
+     "eur_per_kg": 5.0,
+     "url": "https://www.penny.at/produkte/high-protein-pudding-78382874",
+     "date": "2026-10-16",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/787b77ab-692c-4e25-91f4-697690dc3c7c/78-382874-1468197365-XUuLaKu2.jpg"
+    },
+    {
+     "store": "Billa",
+     "name_de": "Ehrmann High Protein Vanille Pudding",
+     "brand": "Ehrmann",
+     "budget_line": false,
+     "pack_size": 200.0,
+     "pack_unit": "g",
+     "grams": 200.0,
+     "price_eur": 1.49,
+     "eur_per_kg": 7.45,
+     "url": "https://shop.billa.at/produkte/ehrmann-high-protein-vanille-pudding-00382874",
+     "date": "2026-10-16",
+     "stale": false,
+     "is_estimate": false,
+     "loose": false,
+     "image": "https://images.cdn.europe-west1.gcp.commercetools.com/723b2575-66c7-4d92-ae49-82bf1d168d26/00-382874-0166561284-jpNVOYtD.jpg"
+    }
+   ],
+   "name_de_generic": "High Protein Pudding Vanille",
+   "name_en": "High-protein pudding",
+   "shelf": "desserts",
+   "zone": "dairy"
   },
   "red_lentils": {
    "key": "red_lentils",

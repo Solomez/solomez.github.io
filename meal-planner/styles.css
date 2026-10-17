@@ -567,3 +567,23 @@ input.grams { width: 84px; padding: 6px 10px; }
   .cat-item { grid-template-columns: 60px minmax(0, 1fr); }
   .cat-item .thumb.lg { width: 60px; height: 60px; }
 }
+
+/* ---------- Запасы дома, подбор «из дома / с покупками», сложность ---------- */
+.small { font-size: .84rem; }
+.home-summary { display: grid; gap: 8px; padding: 12px 14px; margin: 4px 0 12px; border-radius: var(--radius-sm); background: var(--accent-soft); }
+.stock-amount { font-weight: 500; }
+.stock-row.open { background: var(--surface-2); border-radius: var(--radius-sm); padding-inline: 8px; }
+.level-picker { display: grid; gap: 8px; width: 100%; }
+.level-picker .chip { min-height: 36px; }
+.source-switch { margin: 0 0 12px; }
+.source-switch .seg button { padding: 8px 14px; }
+.source-note { margin: 0 0 12px; }
+.diff { font-size: .74rem; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); display: inline-block; }
+.diff.d-none, .diff.d-easy { background: var(--accent-soft); color: var(--text); }
+.diff.d-hard { background: var(--warn-soft); color: var(--warn); }
+.diff-box { display: grid; gap: 4px; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--surface-2); margin: 10px 0; }
+.buy-list { list-style: none; padding: 0; margin: 0; }
+.buy-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: center; }
+.buy-item .buy-why { grid-column: 1 / -1; }
+.need-line { color: var(--warn); }
+.have-line { color: var(--accent); }

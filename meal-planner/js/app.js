@@ -52,7 +52,7 @@ function render(opts = {}) {
   const rerender = (o) => render(o);
   try {
     switch (view) {
-      case 'recipes': renderLibrary(root, rerender); break;
+      case 'recipes': renderLibrary(root, rerender, params); break;
       case 'recipe': renderRecipe(root, rerender, id, params); break;
       case 'cook': renderCook(root, rerender, id, params); break;
       case 'shop': renderShop(root, rerender); break;
