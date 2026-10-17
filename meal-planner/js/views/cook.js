@@ -3,8 +3,7 @@ import { state, save } from '../state.js';
 import { ingredientAmount, ingredientList, portionParams, weekPacks } from './recipe.js';
 import { stepHints } from '../core/equipment.js';
 import { stepIngredients, stepTerms } from '../core/amounts.js';
-import { fmtDate, todayIndex, MEALS_ORDER } from '../core/calendar.js';
-import { toggleDone, doneOf, skipOf, MEALS } from '../core/planner.js';
+import { fmtDate } from '../core/calendar.js';
 
 // Таймеры живут вне перерисовок: key → { label, total, endAt | null, left, ringing }
 const timers = new Map();
@@ -98,23 +97,6 @@ export function leaveCook() {
   }
 }
 
-// «Готово» в режиме готовки = отметка «приготовил» у этого блюда в плане (ближайшее к сегодня, ещё не отмеченное):
-// продукты сразу списываются из запасов дома. Возвращает подпись для экрана завершения или null
-function markCookedInPlan(recipeId) {
-  const plan = state.plan;
-  if (!plan?.batches?.length) return null;
-  const today = todayIndex(plan, new Date());
-  const cands = [
-    ...plan.batches.map((b) => ({ day: b.slots[0].day, meal: b.slots[0].meal, key: `${b.slots[0].day}|${b.slots[0].meal}`, recipeId: b.recipeId })),
-    ...(plan.extras || []).map((x) => ({ day: x.day, meal: x.meal, key: x.id, recipeId: x.recipeId })),
-  ].filter((c) => c.recipeId === recipeId && !doneOf(plan, c.key) && !skipOf(plan, c.key) && Math.abs(c.day - today) <= 1)
-    .sort((a, b) => Math.abs(a.day - today) - Math.abs(b.day - today) || (MEALS_ORDER[a.meal] ?? 9) - (MEALS_ORDER[b.meal] ?? 9));
-  const c = cands[0];
-  if (!c) return null;
-  state.plan = toggleDone(plan, c.key);
-  return { prev: plan, text: `${MEALS[c.meal]} ${c.day === today ? 'сегодня' : c.day < today ? 'вчера' : 'завтра'}` };
-}
-
 // Экран завершения: что делать со второй порцией и когда её съесть
 function finishCard(r, portions, restart) {
   const days = r.storage?.fridge_days || 0;
@@ -152,17 +134,7 @@ export function renderCook(root, rerender, id, params) {
     prog.done = [...new Set([...prog.done, prog.step])];
     if (prog.step < n - 1) prog.step++;
     // блюдо готово — сработавшие и не запущенные таймеры не нужны (P1); идущий (например, духовка) остаётся со своим сигналом
-    else {
-      prog.finished = true;
-      for (const [k, t] of [...timers]) if (k.startsWith(id + '#') && (t.ringing || !t.endAt)) timers.delete(k);
-      const m = markCookedInPlan(id);
-      if (m) {
-        save();
-        rerender();
-        toast(`Отмечено в плане: ${m.text.toLowerCase()} — приготовлено, продукты списаны из запасов`, { label: 'Отменить', onClick: () => { state.plan = m.prev; save(); } });
-        return;
-      }
-    }
+    else { prog.finished = true; for (const [k, t] of [...timers]) if (k.startsWith(id + '#') && (t.ringing || !t.endAt)) timers.delete(k); }
     save();
     rerender();
   };

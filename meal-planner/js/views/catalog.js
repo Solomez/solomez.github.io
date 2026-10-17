@@ -1,14 +1,10 @@
 // «Продукты»: каталог магазинов с фото (поиск по-русски, по-английски и по-немецки, обзор по отделам),
 // что есть дома (от этого зависит список покупок) и свои товары в списке покупок.
 import { h, eur, num, sheet, toast, icon, seg, plural } from '../ui.js';
-import { state, save, targets } from '../state.js';
+import { state, save } from '../state.js';
 import { loadStore, search, asPack, packText, perText, conceptLabel, aisles, shelvesOf } from '../core/catalog.js';
-import { formatAmount, planNeeds } from '../core/shopping.js';
+import { buildShoppingList, formatAmount } from '../core/shopping.js';
 import { remainingPlan } from '../core/calendar.js';
-import { effectivePlan } from '../core/planner.js';
-import { describeStock, stockKind, levelGrams, nearestLevel, PACK_LEVELS, BASIC_LEVELS, PIECES, refPack, isProductKey } from '../core/stock.js';
-import { rankByHome, cookableNow } from '../core/suggest.js';
-import { homeForPlanning } from './money.js';
 import { photo, thumbPack } from './products.js';
 
 const STORE_KEYS = [['billa', 'Billa'], ['spar', 'Spar'], ['penny', 'Penny']];
@@ -182,70 +178,26 @@ export function renderProducts(root, rerender, params) {
 }
 
 // ---------- Дома ----------
-// Отмечается примерно (упаковки, штуки, «кончается»), дальше учёт ведётся сам: купленное в Покупках прибавляется,
-// приготовленное по плану — вычитается (core/stock.js)
-export function setStock(key, grams) {
-  const prev = state.pantry[key];
-  const had = prev?.have && (prev.grams > 0 || prev.grams == null);
-  const have = grams !== 0;
-  state.pantry[key] = { have, grams: have && grams > 0 ? Math.round(grams) : null, at: Date.now(), src: 'user', freshAt: have ? (had && prev.freshAt) || Date.now() : null };
-  save();
-}
-
 function renderHome(root, redraw, rerender) {
-  const { products, recipes } = state.data;
-  const now = new Date();
-  const { stock, home, expiring } = homeForPlanning(now);
-  const t = targets();
-  root.append(h('p', { class: 'muted', style: { marginTop: 0 } }, 'Отмечайте примерно: «половина пачки», «3 шт.», «кончается» — взвешивать не нужно. Дальше приложение считает само: купленное в Покупках прибавляется, приготовленное по плану — вычитается.'));
-
-  // что можно приготовить из этого
-  const opts = { prefs: state.prefs, targets: t, products, prefer: expiring.map((e) => e.key) };
-  const mains = cookableNow(rankByHome(recipes, home, { ...opts, type: 'main' }));
-  const breakfasts = cookableNow(rankByHome(recipes, home, { ...opts, type: 'breakfast' }));
-  root.append(h('section', { class: 'home-summary' },
-    h('div', null, h('b', null, mains.length || breakfasts.length
-      ? `Из того, что дома: ${mains.length} ${plural(mains.length, 'обед или ужин', 'обеда или ужина', 'обедов или ужинов')}, ${breakfasts.length} ${plural(breakfasts.length, 'завтрак', 'завтрака', 'завтраков')}`
-      : 'Из того, что отмечено дома, пока ничего не собрать')),
-    h('div', { class: 'row' },
-      h('a', { class: 'btn small primary', href: '#/recipes?src=home' }, 'Что приготовить'),
-      h('a', { class: 'btn small', href: '#/recipes?src=shop' }, 'Что докупить'))));
-  if (expiring.length) {
-    root.append(h('p', { class: 'notice' }, h('b', null, 'Скоро испортится: '),
-      expiring.slice(0, 5).map((e) => `${products[e.key]?.name_ru || e.key}${e.over ? ' (проверьте — срок мог пройти)' : e.left <= 1 ? ' (сегодня-завтра)' : ` (≈ ${e.left} дн.)`}`).join(', '),
-      '. Блюда с ними — первыми в ', h('a', { href: '#/recipes?src=home' }, 'Что приготовить'), '.'));
+  const products = state.data.products;
+  root.append(h('p', { class: 'muted', style: { marginTop: 0 } }, 'Отметьте, что уже есть дома — список покупок станет короче. Если есть, но мало, укажите сколько: докупится только разница.'));
+  if (state.plan?.batches?.length) {
+    const list = buildShoppingList(remainingPlan(state.plan, new Date()), state.recipeMap, products, { stores: state.prefs.stores });
+    const all = [...list.items, ...list.atHome, ...list.basics].sort((a, b) => a.name_ru.localeCompare(b.name_ru, 'ru'));
+    const plain = buildShoppingList(remainingPlan(state.plan, new Date()), state.recipeMap, products, { stores: state.prefs.stores, home: {} });
+    const total = Object.fromEntries([...plain.items, ...plain.basics].map((i) => [i.key, i.needGrams]));
+    root.append(h('h2', null, 'Нужно для плана'));
+    // поиск по списку (F19): «творог», «Topfen», «eggs» — вместо прокрутки 40–60 строк
+    const q = (ui.homeQ || '').trim().toLowerCase();
+    root.append(h('input', { type: 'search', id: 'home-q', placeholder: 'Найти: творог, рис, Topfen…', value: ui.homeQ || '', 'aria-label': 'Найти продукт в списке', oninput: (e) => { ui.homeQ = e.target.value; rerender({ keepScroll: true, keepFocus: true }); } }));
+    const hit = (it) => !q || [it.name_ru, products[it.key]?.name_de_generic, products[it.key]?.name_de, products[it.key]?.name_en].filter(Boolean).join(' ').toLowerCase().includes(q.length > 4 ? q.slice(0, -1) : q);
+    const shown = all.filter(hit);
+    root.append(shown.length ? h('ul', { class: 'home-list' }, shown.map((it) => homeRow(it.key, products[it.key], total[it.key], redraw)))
+      : h('p', { class: 'muted' }, `«${ui.homeQ}» в плане этой недели нет — покупать не нужно.`));
+  } else {
+    root.append(h('p', null, 'Плана пока нет — составьте неделю, и здесь появится, что для неё нужно. ', h('a', { href: '#/plan' }, 'К плану')));
   }
-
-  const q = (ui.homeQ || '').trim().toLowerCase();
-  root.append(h('input', { type: 'search', id: 'home-q', placeholder: 'Найти: творог, рис, Topfen…', value: ui.homeQ || '', 'aria-label': 'Найти продукт', oninput: (e) => { ui.homeQ = e.target.value; rerender({ keepScroll: true, keepFocus: true }); } }));
-  const hit = (key) => { const p = products[key]; return !q || [p?.name_ru, p?.name_de_generic, p?.name_de, p?.name_en, key].filter(Boolean).join(' ').toLowerCase().includes(q.length > 4 ? q.slice(0, -1) : q); };
-  const byName = (a, b) => (products[a]?.name_ru || a).localeCompare(products[b]?.name_ru || b, 'ru');
-
-  // нужно плану (на оставшиеся дни)
-  const need = {};
-  if (state.plan?.batches?.length) for (const [k, v] of planNeeds(remainingPlan(effectivePlan(state.plan, ['out']), now), state.recipeMap)) need[k] = v.grams;
-  const expSet = new Map(expiring.map((e) => [e.key, e]));
-  const haveKeys = Object.keys(stock).filter((k) => products[k] && stock[k].grams > 0 && hit(k)).sort(byName);
-  const missingKeys = Object.keys(need).filter((k) => products[k] && !(stock[k]?.grams > 0) && !products[k].basic && hit(k)).sort(byName);
-  const basicsMissing = Object.keys(need).filter((k) => products[k]?.basic && k !== 'water' && !(stock[k]?.grams > 0) && hit(k)).sort(byName);
-  const row = (k) => stockRow(k, products[k], stock[k], need[k], expSet.get(k), redraw);
-
-  root.append(h('div', { class: 'row between' }, h('h2', null, `Есть дома${haveKeys.length ? ` · ${haveKeys.length}` : ''}`),
-    h('button', { class: 'btn small', onclick: () => addProductSheet(redraw) }, icon('plus'), 'Добавить')));
-  root.append(haveKeys.length ? h('ul', { class: 'home-list' }, haveKeys.map(row))
-    : h('p', { class: 'muted' }, q ? 'Не нашлось.' : 'Пока ничего не отмечено. Нажмите «Добавить» или отметьте продукты из плана ниже.'));
-  if (missingKeys.length) {
-    root.append(h('h2', null, 'Нужно для плана — есть дома?'));
-    root.append(h('p', { class: 'muted', style: { marginTop: 0 } }, 'Если что-то из этого уже есть, отметьте — список покупок станет короче.'));
-    root.append(h('ul', { class: 'home-list' }, missingKeys.map(row)));
-  }
-  if (basicsMissing.length) {
-    root.append(h('details', { class: 'plain', style: { marginTop: '10px' } }, h('summary', null, `Базовое для плана: масло, соль, специи · ${basicsMissing.length}`),
-      h('p', { class: 'muted', style: { margin: '6px 0 0' } }, 'Обычно есть дома. Отметьте «нет» — тогда они попадут в «купить один раз».'),
-      h('ul', { class: 'home-list' }, basicsMissing.map(row))));
-  }
-
-  const other = Object.entries(state.pantry).filter(([ref, v]) => v?.have && !isProductKey(ref));
+  const other = Object.entries(state.pantry).filter(([ref, v]) => v?.have && ref.includes(':'));
   root.append(h('h2', null, 'Другое дома'));
   root.append(h('p', { class: 'muted', style: { marginTop: 0 } }, 'Что угодно из каталога: отметьте «Есть дома» в карточке товара. Закончилось — отправьте в список покупок.'));
   if (other.length) {
@@ -259,86 +211,22 @@ function renderHome(root, redraw, rerender) {
   root.append(h('button', { class: 'btn', style: { marginTop: '10px' }, onclick: () => pickFromCatalog({ title: 'Что есть дома?', pickLabel: 'Есть дома', onPick: (it) => { setHome(it.ref, { have: true, name: it.name, store: it.store, shelf: it.shelf, image: it.image }); redraw(); } }) }, icon('plus'), 'Добавить из каталога'));
 }
 
-// Строка запаса: сколько есть (по-человечески), откуда это число, хватит ли плану; «Изменить» — уровни
-function stockRow(key, p, s, need, exp, redraw) {
-  const grams = s?.grams || 0;
-  const open = ui.editKey === key;
-  const auto = s && (s.added > 0 || s.used > 0);
-  const enough = need ? grams >= need * 0.95 : null;
-  const sub = [
-    auto ? `считается само: ${[s.base > 0 && s.base !== Infinity ? `было ${describeStock(key, s.base, p).replace(/^≈ /, '')}` : null, s.added > 0 ? `куплено ${describeStock(key, s.added, p).replace(/^≈ /, '')}` : null, s.used > 0 ? `ушло в готовку ${describeStock(key, s.used, p).replace(/^≈ /, '').replace(/^почти нет \(≈ (.+)\)$/, '$1')}` : null].filter(Boolean).join(', ')}` : null,
-    need && !p?.basic ? (grams === Infinity || enough ? 'для плана хватает' : grams > 0 ? `для плана нужно ещё ${needText(key, need - grams, p)}` : `для плана: ${needText(key, need, p)}`) : null,
-  ].filter(Boolean);
-  return h('li', { class: 'home-row stock-row' + (open ? ' open' : '') },
+function homeRow(key, p, need, redraw) {
+  const v = state.pantry[key] || {};
+  const st = v.have ? (v.grams > 0 ? 'some' : 'yes') : v.have === false ? 'no' : '';
+  const input = h('input', { type: 'number', inputmode: 'numeric', min: 0, step: 10, class: 'grams', value: v.grams || '', placeholder: 'г', 'aria-label': `Сколько есть: ${p?.name_ru}`,
+    onchange: (e) => { const g = Math.max(0, Math.round(+e.target.value || 0)); setHome(key, { have: g > 0 || st !== 'no', grams: g || null }); redraw(); } });
+  return h('li', { class: 'home-row' },
     photo(p, thumbPack(p), { cls: 'thumb sm', label: p?.name_ru }),
     h('div', { class: 'home-main' },
-      h('span', { class: 'cat-name' }, p?.name_ru || key, exp ? h('span', { class: 'badge warn', style: { marginLeft: '6px' } }, exp.over ? 'проверьте свежесть' : 'скоро испортится') : null),
-      h('span', { class: grams > 0 ? 'stock-amount' : 'muted' }, grams > 0 ? describeStock(key, grams, p) : s?.at ? 'нет' : 'не отмечено'),
-      sub.length ? h('span', { class: 'muted small' }, sub.join(' · ')) : null),
+      h('span', { class: 'cat-name' }, p?.name_ru || key),
+      h('span', { class: 'muted' }, [p?.name_de_generic, p?.name_en].filter(Boolean).join(' · ')),
+      need ? h('span', { class: 'muted' }, `для плана: ${formatAmount(key, need, p)}${p?.basic ? ' (базовое)' : ''}`) : null),
     h('div', { class: 'home-actions' },
-      open ? levelPicker(key, p, grams, redraw) : [
-        h('button', { class: 'btn small', 'aria-expanded': 'false', onclick: () => { ui.editKey = key; redraw(); } }, grams > 0 ? 'Изменить' : 'Есть дома'),
-        grams > 0 ? h('button', { class: 'btn small ghost', onclick: () => { const prev = state.pantry[key] ? { ...state.pantry[key] } : null; setStock(key, 0); redraw(); toast(`${p?.name_ru}: закончилось`, { label: 'Отменить', onClick: () => { if (prev) state.pantry[key] = prev; else delete state.pantry[key]; save(); redraw(); } }); } }, 'Закончилось') : null,
-      ]));
-}
-
-// Сколько нужно — штуками для штучного («≈ 4 шт.»), иначе как в списке покупок
-function needText(key, grams, p) {
-  if (stockKind(key, p) !== 'pcs') return formatAmount(key, grams, p);
-  const [per, unit] = PIECES[key];
-  return `≈ ${Math.max(1, Math.ceil(grams / per - 0.15))} ${unit}`;
-}
-
-// Выбор уровня: упаковки (доли), штуки (− N +) или «есть / кончается / нет»
-function levelPicker(key, p, grams, redraw) {
-  const kind = stockKind(key, p);
-  const cur = nearestLevel(key, grams, p);
-  const done = () => { ui.editKey = null; redraw(); };
-  const pick = (g) => { setStock(key, g); done(); };
-  const box = h('div', { class: 'level-picker' });
-  if (kind === 'pcs') {
-    const [, unit] = PIECES[key];
-    const n = Math.max(0, cur || 0);
-    box.append(h('div', { class: 'row' },
-      h('div', { class: 'stepper', role: 'group', 'aria-label': `Сколько: ${p?.name_ru}` },
-        h('button', { 'aria-label': 'Меньше', onclick: () => { setStock(key, levelGrams(key, p, Math.max(0, n - 1))); redraw(); } }, '−'),
-        h('span', null, `${n} ${unit}`),
-        h('button', { 'aria-label': 'Больше', onclick: () => { setStock(key, levelGrams(key, p, n + 1)); redraw(); } }, '+')),
-      h('button', { class: 'btn small primary', onclick: done }, 'Готово')));
-  } else {
-    const levels = kind === 'basic' ? BASIC_LEVELS : PACK_LEVELS;
-    const pg = refPack(p);
-    if (kind === 'pack' && pg) box.append(h('span', { class: 'muted small' }, `Сколько упаковок по ${Math.round(pg.pack_size)} ${pg.pack_unit === 'ml' ? 'мл' : 'г'}:`));
-    box.append(h('div', { class: 'chips' }, levels.map((l) => h('button', { class: 'chip' + (cur === l.id ? ' on' : ''), 'aria-pressed': String(cur === l.id), onclick: () => pick(levelGrams(key, p, l.id)) }, l.label)),
-      kind === 'pack' ? h('button', { class: 'chip' + (grams === Infinity ? ' on' : ''), onclick: () => pick(null) }, 'есть, не знаю сколько') : null));
-  }
-  // кто знает граммы — может ввести
-  box.append(h('details', { class: 'plain' }, h('summary', { class: 'muted small' }, 'Точнее, в граммах'),
-    h('label', { class: 'grams-field' }, h('input', { type: 'number', inputmode: 'numeric', min: 0, step: 10, class: 'grams', value: grams > 0 && grams !== Infinity ? Math.round(grams) : '', 'aria-label': `Граммы: ${p?.name_ru}`,
-      onchange: (e) => pick(Math.max(0, Math.round(+e.target.value || 0))) }), h('span', { class: 'muted' }, 'г'))));
-  box.append(h('button', { class: 'linkbtn small', onclick: done }, 'Закрыть'));
-  return box;
-}
-
-// «Добавить»: любой продукт из рецептов (не только из плана)
-function addProductSheet(redraw) {
-  const products = state.data.products;
-  const input = h('input', { type: 'search', placeholder: 'Рис, яйца, Topfen…', 'aria-label': 'Найти продукт' });
-  const list = h('ul', { class: 'home-list' });
-  let close;
-  const draw = () => {
-    const q = input.value.trim().toLowerCase();
-    const keys = Object.keys(products).filter((k) => k !== 'water' && (!q || [products[k].name_ru, products[k].name_de_generic, products[k].name_en].filter(Boolean).join(' ').toLowerCase().includes(q)))
-      .sort((a, b) => (products[a].basic - products[b].basic) || (products[a].name_ru || a).localeCompare(products[b].name_ru || b, 'ru'));
-    list.replaceChildren(...keys.slice(0, 60).map((k) => h('li', { class: 'home-row' },
-      photo(products[k], thumbPack(products[k]), { cls: 'thumb sm', label: products[k].name_ru }),
-      h('div', { class: 'home-main' }, h('span', { class: 'cat-name' }, products[k].name_ru), h('span', { class: 'muted' }, [products[k].name_de_generic, products[k].basic ? 'базовое' : null].filter(Boolean).join(' · '))),
-      h('div', { class: 'home-actions' }, h('button', { class: 'btn small', onclick: () => { close(); ui.editKey = k; ui.homeQ = ''; if (!(state.pantry[k]?.have)) setStock(k, levelGrams(k, products[k], stockKind(k, products[k]) === 'pcs' ? 1 : stockKind(k, products[k]) === 'basic' ? 'ok' : 'full')); redraw(); } }, 'Есть дома')))));
-  };
-  input.addEventListener('input', draw);
-  draw();
-  close = sheet('Что есть дома?', h('div', { class: 'stack' }, input, list));
-  setTimeout(() => input.focus(), 50);
+      h('div', { class: 'seg small', role: 'group', 'aria-label': 'Есть ли дома' },
+        h('button', { class: st === 'yes' || st === 'some' ? 'on' : '', onclick: () => { setHome(key, { have: true }); redraw(); } }, 'есть'),
+        h('button', { class: st === 'no' ? 'on' : '', onclick: () => { setHome(key, { have: false, grams: null }); redraw(); } }, 'нет')),
+      st === 'yes' || st === 'some' ? h('label', { class: 'grams-field' }, input, h('span', { class: 'muted' }, v.grams ? 'г' : 'сколько?')) : null));
 }
 
 // ---------- Мой список ----------

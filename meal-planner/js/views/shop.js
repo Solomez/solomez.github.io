@@ -45,7 +45,7 @@ export function renderShop(root, rerender) {
   const swaps = (state.swaps[state.plan.id] = state.swaps[state.plan.id] || {});
   // отметка в походе: заодно запоминаем порядок отделов в этом магазине
   const toggle = (k, v, store) => {
-    checked[k] = v ? Date.now() : false; // время покупки — для учёта запасов дома
+    checked[k] = v;
     if (v) ui.justChecked.add(k);
     if (v && store && !k.startsWith('basic:')) learnStep(state.routes, store, zoneOfKey(k, store));
     save();
@@ -137,6 +137,7 @@ export function renderShop(root, rerender) {
     renderTrips(root, { ck, list, listPlan, plan, now, products, checked, toggle, redraw, freezeNote, placeOf, ctx });
     renderBasics(root, list, checked, toggle);
     renderAtHome(root, list, ctx);
+    shopLayout(root);
     return;
   }
 
@@ -173,6 +174,28 @@ export function renderShop(root, rerender) {
 
   renderBasics(root, list, checked, toggle);
   renderAtHome(root, list, ctx);
+  shopLayout(root);
+}
+
+// Раскладка экрана (research/ui, вариант C): сначала поход и товары. Период, группировка и режим свёрнуты в строку
+// «Список и магазины: …», подробности суммы — по касанию; сумма и «куплено N из M» закреплены внизу (стили — .view-shop)
+function fold(label, nodes, cls) {
+  const list = nodes.filter(Boolean);
+  if (!list.length) return null;
+  const d = h('details', { class: 'fold ' + cls }, h('summary', null, label));
+  list[0].before(d);
+  d.append(...list);
+  return d;
+}
+function shopLayout(root) {
+  const sum = root.querySelector(':scope > .summary');
+  const more = sum && fold('Подробнее о сумме', [...sum.querySelectorAll(':scope > .muted, :scope > .store-sums')], 'sum-more');
+  const picked = [...root.querySelectorAll('.scope .seg .on, .shop-controls .seg .on, .trips-head .seg .on')].map((b) => b.textContent.trim());
+  const d = fold(`Список и магазины: ${picked.join(' · ') || 'настройки'}`, [root.querySelector(':scope > .scope'), root.querySelector(':scope > .shop-controls'), root.querySelector(':scope > .trips-head')], 'list-settings');
+  // «Меньше походов» внутри — подсказка в самой строке (агенты не находили его в свёрнутом блоке)
+  if (d) d.querySelector('summary').append(h('span', { class: 'fold-hint' }, 'период, группировка, «Дешевле» или «Меньше походов»'));
+  // подробности суммы — в конце списка, прямо над закреплённой панелью: в панели они занимали треть экрана, а над списком отодвигали товары
+  if (more) root.append(more);
 }
 
 // Что уже есть дома — не покупаем; можно вернуть в список
@@ -215,7 +238,7 @@ function markUnavailable(key, store, ctx, pack) {
 // here — магазин, где стоите (замена могла быть товаром из другой сети, но куплена здесь); onUndo — что ещё отменить
 function recordSwap(key, store, choice, ctx, onUndo) {
   ctx.swaps[key] = { ...choice, store: choice.store || store, here: store, at: Date.now() };
-  ctx.checked[key] = Date.now();
+  ctx.checked[key] = true;
   save();
   ctx.redraw();
   toast(`Отмечено: вместо «${ctx.products[key]?.name_ru}» — ${choice.name}`, { label: 'Отменить', onClick: () => { delete ctx.swaps[key]; delete ctx.checked[key]; onUndo?.(); save(); ctx.redraw(); } });

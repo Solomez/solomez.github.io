@@ -3,7 +3,6 @@
 // ещё и личная запись в db аккаунта, чтобы план был одинаковым на телефоне и компьютере.
 import { DEFAULT_PROFILE, DEFAULTABLE, dailyTargets } from './core/nutrition.js';
 import { DEFAULT_PREFS } from './core/planner.js';
-import { buildCustomRecipe } from './core/custom.js';
 
 const KEY = 'mealplanner.v1';
 // Опубликованная страница работает внутри claude.ai: там есть window.claude, нет печати и скачивания файлов
@@ -21,7 +20,7 @@ const saved = read();
 
 // Разделы, которые синхронизируются между устройствами. У каждого — время последнего изменения,
 // при встрече двух версий (ноутбук и телефон) берётся более свежая по каждому разделу.
-export const SECTIONS = ['profile', 'prefs', 'plan', 'checked', 'cook', 'pantry', 'cart', 'swaps', 'routes', 'places', 'unavailable', 'custom'];
+export const SECTIONS = ['profile', 'prefs', 'plan', 'checked', 'cook', 'pantry', 'cart', 'swaps', 'routes', 'places', 'unavailable'];
 
 export const state = {
   data: null, // { recipes, products, meta, storage, substitutes, aisles }
@@ -37,7 +36,6 @@ export const state = {
   routes: saved.routes || {}, // магазин → { order: [зоны], seen: { зона: [сумма мест, раз] } }
   places: saved.places || {}, // магазин → { ref: полка } — «лежит в другом отделе»
   unavailable: saved.unavailable || {}, // 'магазин|ref' → дата, когда не нашли на полке
-  custom: saved.custom || { recipes: [], products: {} }, // свои приёмы пищи (черновики) и свои продукты из каталога
   stamps: saved.stamps || {}, // раздел → время изменения
   libFilters: saved.libFilters || {},
   savedAt: saved.savedAt || 0,
@@ -63,7 +61,7 @@ function snapshot() {
   const fresh = Object.fromEntries(Object.entries(state.unavailable).filter(([, t]) => Date.now() - t < 21 * 86400000));
   return JSON.parse(JSON.stringify({
     profile: state.profile, prefs: state.prefs, plan: state.plan, checked: only(state.checked), cook: state.cook,
-    pantry: state.pantry, cart: state.cart, swaps: only(state.swaps), routes: state.routes, places: state.places, unavailable: fresh, custom: state.custom,
+    pantry: state.pantry, cart: state.cart, swaps: only(state.swaps), routes: state.routes, places: state.places, unavailable: fresh,
     stamps: state.stamps, savedAt: state.savedAt,
   }));
 }
@@ -135,7 +133,6 @@ export function mergeRemote(d) {
     changed = true;
   }
   if (changed) {
-    applyCustom();
     dropMissing(state.plan);
     try { localStorage.setItem(KEY, JSON.stringify({ ...snapshot(), libFilters: state.libFilters })); } catch { /* ignore */ }
   }
@@ -244,21 +241,10 @@ export async function loadData() {
     fetch(base + 'aisles.json').then((x) => x.json()).catch(() => ({ zones: [], shelves: [], concepts: [], stores: [] })),
   ]);
   clearTimeout(timer);
-  state.data = { recipes: r.recipes, products: p.products, meta: r.meta, storage: st, substitutes: sub, aisles: ai, base, baseRecipes: r.recipes, baseProducts: p.products };
-  applyCustom();
+  state.data = { recipes: r.recipes, products: p.products, meta: r.meta, storage: st, substitutes: sub, aisles: ai, base };
+  state.recipeMap = new Map(r.recipes.map((x) => [x.id, x]));
   // план мог ссылаться на удалённый рецепт — убираем такие приготовления
   dropMissing(state.plan);
-}
-
-// Свои продукты и приёмы пищи — к данным приложения: рецепты пересобираются из черновиков (цены могли обновиться)
-export function applyCustom() {
-  if (!state.data?.baseRecipes) return;
-  const c = state.custom || {};
-  const products = { ...state.data.baseProducts, ...(c.products || {}) };
-  const mine = (c.recipes || []).map((d) => { try { return buildCustomRecipe(d, products); } catch { return null; } }).filter((r) => r && r.ingredients.length);
-  state.data.products = products;
-  state.data.recipes = [...state.data.baseRecipes, ...mine];
-  state.recipeMap = new Map(state.data.recipes.map((x) => [x.id, x]));
 }
 
 export function toggleIn(listName, id) {

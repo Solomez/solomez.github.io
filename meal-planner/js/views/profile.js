@@ -232,7 +232,7 @@ function syncText() {
 // Сброс в два нажатия: первое спрашивает, второе выполняет (окна confirm() в опубликованной версии не работают)
 let resetArmed = false;
 function resetButton(rerender) {
-  if (!resetArmed) return h('button', { class: 'btn ghost', onclick: () => { resetArmed = true; rerender({ keepScroll: true }); } }, 'Сбросить всё');
+  if (!resetArmed) return h('button', { class: 'btn danger', onclick: () => { resetArmed = true; rerender({ keepScroll: true }); } }, 'Сбросить всё');
   return h('div', { class: 'row' },
     h('span', { class: 'muted' }, 'Удалить профиль, план и отметки?'),
     h('button', { class: 'btn small', onclick: () => {

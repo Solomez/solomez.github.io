@@ -7,7 +7,6 @@ export const WEEKDAYS_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', '
 const MONTHS_GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
 // Когда приём пищи считается прошедшим (час, местное время). Для готовки — время начала готовки.
-export const MEALS_ORDER = { breakfast: 0, lunch: 1, snack: 2, dinner: 3 };
 export const MEAL_END_HOUR = { breakfast: 10, lunch: 14, snack: 17, dinner: 20 };
 export const COOK_HOUR = { breakfast: 8, lunch: 12, snack: 16, dinner: 18 };
 
@@ -50,12 +49,11 @@ export const cookPast = (plan, day, meal, now = new Date()) => now >= at(plan, d
 export function remainingPlan(plan, now = new Date()) {
   return {
     ...plan,
-    // отмеченное «приготовил / съел» тоже уже не нужно покупать
     batches: plan.batches.filter((b) => {
       const first = b.slots[0]; // первый приём пищи приготовления — момент готовки
-      return !mealPast(plan, first.day, first.meal, now) && !plan.done?.[`${first.day}|${first.meal}`];
+      return !mealPast(plan, first.day, first.meal, now);
     }),
-    extras: (plan.extras || []).filter((x) => !mealPast(plan, x.day, x.meal, now) && !plan.done?.[x.id]),
+    extras: (plan.extras || []).filter((x) => !mealPast(plan, x.day, x.meal, now)),
   };
 }
 
