@@ -4,6 +4,7 @@
 import { h, eur, num, sheet, icon, openLayer, closedLayer, isTopLayer } from '../ui.js';
 import { IS_ARTIFACT, state } from '../state.js';
 import { formatPack, chooseOffer } from '../core/shopping.js';
+import { ingredientMeasure } from '../core/cookbook.js';
 
 export const SHOW_PHOTOS = !IS_ARTIFACT;
 
@@ -152,8 +153,62 @@ export function showVariants(product, { needGrams, swap } = {}) {
   close = sheet(product.name_ru || 'Варианты', content);
 }
 
+// Замены в блюде-шаблоне: только совместимые; до подтверждения — что изменится (время, количество, способ,
+// белок и калории, цена, предупреждения), после — пересобранный рецепт с подсветкой изменённых шагов
+function swapSectionTemplate(product, { current, onPick, options, preview, origName }, close) {
+  const ok = options.filter((o) => o.allowed && !(state.prefs?.excludedKeys || []).includes(o.key));
+  const no = options.filter((o) => !o.allowed);
+  const signed = (x, unit, digits = 0) => (Math.abs(x) < (digits ? 0.05 : 0.5) ? 'так же' : `${x > 0 ? '+' : '−'}${num(Math.abs(x), digits)}${unit}`);
+  const row = (o) => {
+    const sp = productOf(o.key);
+    const on = o.key === current;
+    const box = h('div', { class: 'swap-preview', hidden: true });
+    const show = () => {
+      if (!box.hidden) { box.hidden = true; return; }
+      const pv = preview(o.key);
+      const kit = state.data.kitchen;
+      const r0 = pv.base;
+      const r1 = pv.recipe;
+      const qty = (r, ing) => (ing ? ingredientMeasure(r, ing, 1, kit).measure : '—');
+      const liq0 = r0.ingredients.find((x) => x.derived?.from === (pv.from.id || pv.from.key));
+      const liq1 = r1.ingredients.find((x) => x.derived?.from === (pv.to.id || pv.to.key));
+      box.replaceChildren(
+        h('ul', { class: 'clean swap-diff' },
+          h('li', null, h('b', null, 'Время: '), `${signed(pv.time, ' мин')} — всего ≈ ${r1.time.total} мин, руками ${r1.time.active} мин`),
+          h('li', null, h('b', null, 'Количество: '), `${qty(r0, pv.from)} ${pv.from.name_ru.toLowerCase()} → ${qty(r1, pv.to)} ${pv.to.name_ru.toLowerCase()}`),
+          liq0 || liq1 ? h('li', null, h('b', null, 'Жидкость: '), `${qty(r0, liq0)} → ${qty(r1, liq1)}`) : null,
+          pv.method ? h('li', null, h('b', null, 'Способ: '), `${methodLabel(pv.method.from)} → ${methodLabel(pv.method.to)}`) : null,
+          h('li', null, h('b', null, 'На порцию: '), `белок ${signed(pv.protein, ' г', 1)}, ${signed(pv.kcal, ' ккал')}, цена ${Math.abs(pv.cost) < 0.005 ? 'так же' : (pv.cost > 0 ? '+' : '−') + eur(Math.abs(pv.cost))}`),
+          h('li', null, h('b', null, 'Шаги: '), pv.changedSteps ? `изменится ${pv.changedSteps}` : 'те же'),
+          pv.note ? h('li', null, h('b', null, 'Вкус и текстура: '), pv.note) : null,
+          ...pv.warnings.map((w) => h('li', { class: 'need-line' }, `⚠ ${w}`))),
+        h('button', { class: 'btn small primary', onclick: () => { close(); onPick(o.key); } }, 'Заменить'));
+      box.hidden = false;
+    };
+    return h('li', { class: 'variant' + (on ? ' best' : '') },
+      photo(sp, bestPack(sp), { cls: 'thumb lg', label: sp.name_ru }),
+      h('div', { class: 'variant-main' },
+        h('span', { class: 'variant-store' }, sp.name_ru),
+        o.note ? h('span', { class: 'alt-note' }, o.note) : null,
+        on ? h('span', { class: 'badge accent', style: { justifySelf: 'start', marginTop: '6px' } }, 'Сейчас в блюде')
+          : h('button', { class: 'btn small', style: { justifySelf: 'start', marginTop: '6px' }, onclick: show }, 'Что изменится?'),
+        box));
+  };
+  return h('section', { class: 'alt-section' },
+    h('div', { class: 'eyebrow' }, 'Чем заменить в этом блюде'),
+    current ? h('p', { style: { margin: '4px 0 8px' } }, h('button', { class: 'btn small', onclick: () => { close(); onPick(null); } }, `Вернуть как в рецепте: ${origName || product.name_ru}`)) : null,
+    ok.length ? h('ul', { class: 'variants' }, ok.map(row)) : h('p', { class: 'muted' }, 'Подходящих замен для этого блюда нет.'),
+    no.length ? h('details', { class: 'plain' }, h('summary', null, `Не подходят к этому блюду (${no.length})`),
+      h('ul', { class: 'clean' }, no.map((o) => h('li', { class: 'muted' }, `${o.name_ru} — ${o.reason}`)))) : null,
+    h('p', { class: 'muted small-print' }, 'Замена — только в этом блюде: пересчитаются количество, шаги, жидкость, огонь, время, таймеры, признаки готовности, КБЖУ, цена и список покупок.'));
+}
+const METHOD = { absorb: 'варить под крышкой', steep: 'запарить кипятком', boil_drain: 'отварить и слить воду', in_dish: 'в той же посуде', boil: 'отварить' };
+const methodLabel = (m) => METHOD[m] || String(m || '').replace(/_/g, ' ');
+
 // Замены в блюде: выбранная — сверху с «Вернуть как в рецепте», остальные — «Заменить в блюде»
-function swapSection(product, { current, onPick }, close) {
+function swapSection(product, swap, close) {
+  if (swap.options) return swapSectionTemplate(product, swap, close);
+  const { current, onPick } = swap;
   const subs = substitutesOf(product.key);
   if (!subs.length) return null;
   return h('section', { class: 'alt-section' },

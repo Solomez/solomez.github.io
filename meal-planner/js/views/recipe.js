@@ -1,7 +1,8 @@
 import { h, eur, num, icon, factorText, humanDate, nb, plural, toast } from '../ui.js';
-import { state, save, toggleIn, setSub } from '../state.js';
-import { formatAmount, chooseOffer, buildShoppingList } from '../core/shopping.js';
-import { scaleMeasure, scaleWords, packShare } from '../core/amounts.js';
+import { state, save, toggleIn, setSub, cookEnv, validSubs } from '../state.js';
+import { subOptions, previewSub } from '../core/compile.js';
+import { buildShoppingList } from '../core/shopping.js';
+import { ingredientMeasure, stepText, MEASURE_HINT } from '../core/cookbook.js';
 import { photo, thumbPack, showVariants, substitutesOf } from './products.js';
 import { missingTools, stepHints, has } from '../core/equipment.js';
 import { difficulty } from '../core/difficulty.js';
@@ -9,6 +10,7 @@ import { missingFromHome } from '../core/planner.js';
 import { homeForPlanning } from './money.js';
 import { editCustomProduct } from './builder.js';
 import { putInPlan } from './library.js';
+import { readyBlock, doneWhenBlock } from './ready.js';
 
 const storeHint = (p) => {
   const best = p?.packs?.find((x) => !x.stale) || p?.packs?.[0];
@@ -16,20 +18,27 @@ const storeHint = (p) => {
   return `${best.store}: ${best.name_de}${best.is_estimate ? ' (цена — оценка)' : ''}`;
 };
 
-// Количество для человека. При другом размере порции бытовая мера пересчитывается («1,5 ст. л.» × 0,8 → «1¼ ст. л.»),
-// без множителей; у продуктов с весом — граммы и доля упаковки, которую покупают (а не мера базового рецепта)
-export function ingredientAmount(ing, scale, products, servings = 2, packOf = null) {
-  const same = Math.abs(scale - 1) < 0.01;
-  if (same) return { main: ing.amount, sub: ing.grams && ing.amount !== `${Math.round(ing.grams)} г` ? `${Math.round(ing.grams)} г` : '' };
-  if (ing.basic || !ing.grams) return { main: scaleMeasure(ing.amount, scale) ?? scaleWords(ing.amount, scale), sub: '' };
-  const g = ing.grams * scale;
-  const p = products[ing.key];
-  // доля той упаковки, что в списке покупок этой недели (купили 1 кг — «половина упаковки 1 кг», а не «почти вся 500 г»)
-  const pack = packOf?.get(ing.key) || (p ? chooseOffer(p, g)?.pack : null);
-  const unit = pack?.pack_unit === 'ml' ? 'мл' : 'г';
-  const share = pack && !pack.loose && pack.pack_unit !== 'pcs' ? packShare(g, pack.grams, unit) : null;
-  const measure = /шт|зубч|ломт|филе|яйц|кубик|стакан|ст\. л|ч\. л/.test(ing.amount) ? scaleMeasure(ing.amount.split(' (')[0].split(' — ')[0], scale) : null;
-  return { main: formatAmount(ing.key, g, p), sub: [measure, share].filter(Boolean).join(' · ') };
+// Количество для человека: бытовая мера (стакан 250 мл, ложки, штуки, доля упаковки) из граммов — заново при
+// каждом размере порции (core/measures.js). Граммы — мелко, если включено «Показывать граммы» в профиле.
+// packOf — упаковки из списка покупок недели: «¾ пачки (400 г)» по той пачке, что куплена
+export function ingredientAmount(r, ing, scale, packOf = null) {
+  const res = ingredientMeasure(r, ing, scale, state.data.kitchen, { packOf: packOf ? (k) => packOf.get(k)?.grams : null });
+  return { main: res.measure, sub: state.prefs.showGrams && res.gramsText && res.unit !== 'g' && res.unit !== 'text' ? res.gramsText : '' };
+}
+
+// Огонь шага: «огонь: средний», «духовка 200 °C, верх-низ»
+export function heatLabel(s) {
+  if (s.oven) return `духовка ${s.oven.c} °C${s.oven.mode ? ', ' + s.oven.mode : ''}`;
+  return s.heat ? `огонь: ${s.heat}` : '';
+}
+// Время шага диапазоном: «12–15 мин»; у шагов без времени — пусто
+export function timeLabel(s) {
+  if (!s.time) return s.timer_min ? `${num(s.timer_min, 1)} мин` : '';
+  const a = s.time.active[0] + s.time.passive[0];
+  const b = s.time.active[1] + s.time.passive[1];
+  if (!(b >= 1)) return '';
+  const r = a === b ? `${num(a, 1)}` : `${num(a, 1)}–${num(b, 1)}`;
+  return `${r} мин${s.time.attended ? ', у плиты' : s.time.passive[1] > s.time.active[1] ? ', можно отойти' : ''}`;
 }
 
 // Параметры ссылки: размер порции (×0,25–4) и число порций (1–8); мусор — значения по умолчанию
@@ -62,7 +71,7 @@ export function ingredientList(r, scale, { checkable = true, onToggle, onSwap } 
   const packs = weekPacks();
   const prep = prepState(r.id);
   const row = (i) => {
-    const a = ingredientAmount(i, scale, products, r.servings, packs);
+    const a = ingredientAmount(r, i, scale, packs);
     const done = prep.ings.includes(i.key);
     const toggle = () => {
       const s = new Set(prep.ings);
@@ -77,7 +86,8 @@ export function ingredientList(r, scale, { checkable = true, onToggle, onSwap } 
       h('label', { class: 'ing-text', for: checkable ? `ing-${r.id}-${i.key}` : null },
         h('span', { class: 'ing-name' }, i.name_ru, i.optional ? h('span', { class: 'muted' }, ' · по желанию') : null),
         h('span', { class: 'de' }, [i.name_de, !i.basic ? storeHint(products[i.key]) : null].filter(Boolean).join(' · ')),
-        i.replaced ? h('span', { class: 'swap-note' }, `Замена: вместо «${i.replaced.name_ru}» (${i.replaced.amount})`) : null,
+        i.replaced ? h('span', { class: 'swap-note' }, `Замена: вместо «${i.replaced.name_ru}»`,
+          onSwap ? h('button', { class: 'linkbtn small-link', type: 'button', onclick: (e) => { e.preventDefault(); setSub(r.id, i.id || i.key, null); onSwap(); toast(`Вернул: ${i.replaced.name_ru}`); } }, ` Вернуть «${i.replaced.name_ru.toLowerCase()}»`) : null) : null,
         variantsButton(r, i, products, onSwap),
         i.note ? h('span', { class: 'de' }, i.note) : null,
         swapOf(i.key) ? h('span', { class: 'swap-note' }, `На этой неделе куплено вместо: ${swapOf(i.key).name}`) : null),
@@ -90,9 +100,14 @@ export function ingredientList(r, scale, { checkable = true, onToggle, onSwap } 
     basic.length ? [h('div', { class: 'eyebrow', style: { marginTop: '14px' } }, 'Базовое: масло, соль, специи'), h('ul', { class: 'ing-list' }, basic.map(row))] : null);
 }
 
-// Шаги написаны под исходный продукт — напоминание, что в этом блюде он заменён
+// Замены в блюде: что заменено и чем отличается; у шаблонов шаги, время и признаки уже пересобраны под замену
 export function swapNotice(r) {
   if (!r.swapped?.length) return null;
+  if (r.compiled) {
+    return h('div', { class: 'notice' }, h('b', null, 'Замена в этом блюде: '),
+      r.swapped.map((x, j) => [j ? '; ' : '', `${x.to_ru.toLowerCase()} вместо «${x.from_ru.toLowerCase()}»`, x.note ? h('span', { class: 'muted' }, ` — ${x.note}`) : '']), '. ',
+      'Шаги, время, таймеры и признаки готовности пересчитаны; изменённые шаги отмечены.');
+  }
   return h('p', { class: 'notice' }, 'В шагах — продукты из рецепта, у вас замена: ',
     r.swapped.map((x, j) => [j ? '; ' : '', h('b', null, x.to_ru.toLowerCase()), ` вместо «${x.from_ru.toLowerCase()}»`, x.note ? ` (${x.note})` : '']), '.');
 }
@@ -100,16 +115,24 @@ export function swapNotice(r) {
 // «варианты и замены»: упаковки в магазинах и замены; со страницы блюда замену можно выбрать — блюдо пересчитается
 function variantsButton(r, i, products, onSwap) {
   const orig = i.replaced?.key || i.key; // у заменённого — варианты исходного продукта: другая замена или вернуть
-  const subs = substitutesOf(orig).length;
+  const slot = i.id || i.key;
+  const card = r.compiled ? state.data.cards?.get(r.id) : null;
+  const options = card ? subOptions(card, slot, cookEnv()) : null;
+  const subs = options ? options.length : substitutesOf(orig).length;
   if (!(subs || (products[i.key]?.packs || []).length > 1)) return null;
-  const swap = onSwap && subs && !i.basic ? { current: i.replaced ? i.key : null, onPick: (k) => {
-    setSub(r.id, orig, k);
+  const pick = (k) => {
+    const prev = i.replaced ? i.key : null;
+    setSub(r.id, slot, k);
     onSwap();
     const name = (key) => products[key]?.name_ru || key;
-    toast(k ? `В этом блюде: ${name(k)} вместо «${name(orig)}»` : `Вернул: ${name(orig)}`, { label: 'Отменить', onClick: () => { setSub(r.id, orig, i.replaced ? i.key : null); onSwap(); } });
-  } } : null;
+    toast(k ? `В этом блюде: ${name(k)} вместо «${name(orig)}» — шаги пересчитаны` : `Вернул: ${name(orig)}`, { label: 'Отменить', onClick: () => { setSub(r.id, slot, prev); onSwap(); } });
+  };
+  const swap = onSwap && subs && !i.basic ? {
+    current: i.replaced ? i.key : null, onPick: pick, origName: products[orig]?.name_ru || orig,
+    ...(options ? { options, preview: (k) => previewSub(card, validSubs(card, state.custom?.subs?.[r.id], cookEnv()), slot, k, cookEnv()) } : {}),
+  } : null;
   return h('button', { class: 'linkbtn small-link', type: 'button', onclick: (e) => { e.preventDefault(); showVariants(products[orig], { swap }); } },
-    i.replaced ? 'другая замена или вернуть' : subs ? 'варианты и замены' : 'варианты в магазинах');
+    i.replaced ? 'другая замена' : subs ? 'варианты и замены' : 'варианты в магазинах');
 }
 
 // «Взял другое вместо» в магазине — показываем у ингредиента в рецептах текущей недели
@@ -156,8 +179,12 @@ export function renderRecipe(root, rerender, id, params) {
   const mk = macroK.p + macroK.f + macroK.c || 1;
   root.append(h('section', { class: 'facts-line' },
     h('div', { class: 'fl-row' }, icon('clock'),
-      h('span', null, h('b', null, `${r.time.total} мин всего`), ` · активно ${r.time.active} мин`,
-        h('span', { class: 'muted' }, ` (подготовка ${r.time.prep}, готовка ${r.time.cook})`))),
+      r.compiled
+        ? h('span', null, h('b', null, `≈ ${r.time.total} мин всего`), r.time.total_range[0] !== r.time.total_range[1] ? h('span', { class: 'muted' }, ` (${r.time.total_range[0]}–${r.time.total_range[1]})`) : null,
+          ` · руками ${r.time.active} мин`, h('span', { class: 'muted' }, ` · само готовится ${r.time.passive} мин`))
+        : h('span', null, h('b', null, `${r.time.total} мин всего`), ` · активно ${r.time.active} мин`,
+          h('span', { class: 'muted' }, ` (подготовка ${r.time.prep}, готовка ${r.time.cook})`))),
+    (r.warnings || []).map((w) => h('div', { class: 'need-line small' }, `⚠ ${w}`)),
     h('div', { class: 'fl-row' },
       h('span', { class: 'big' }, eur(ps.cost * factor)), h('span', { class: 'muted' }, ' за порцию на 1 человека'),
       h('span', { class: 'fl-sep' }), h('b', null, `${num(kcal)} ккал`)),
@@ -201,7 +228,7 @@ export function renderRecipe(root, rerender, id, params) {
       h('button', { 'aria-label': 'Меньше порций', onclick: () => setPortions(Math.max(1, portions - 1)) }, '−'),
       h('span', null, `${portions} порц.`),
       h('button', { 'aria-label': 'Больше порций', onclick: () => setPortions(Math.min(8, portions + 1)) }, '+'))));
-  root.append(h('p', { class: 'muted', style: { margin: '6px 0 0' } }, 'Отмечайте, что уже достали и отмерили.',
+  root.append(h('div', { class: 'muted', style: { margin: '6px 0 0' } }, 'Отмечайте, что уже достали и отмерили. ', h('details', { class: 'measure-hint' }, h('summary', null, 'Какой стакан?'), h('span', null, MEASURE_HINT)),
     prep.ings.length ? h('button', { class: 'linkbtn', onclick: () => { prep.ings = []; save(); rerender({ keepScroll: true }); } }, ' Снять отметки') : null));
   root.append(ingredientList(r, scale, { onToggle: () => rerender({ keepScroll: true }), onSwap: () => rerender({ keepScroll: true }) }));
 
@@ -223,11 +250,21 @@ export function renderRecipe(root, rerender, id, params) {
     h('a', { class: 'btn primary', href: `#/cook/${r.id}?f=${factor}&p=${portions}` }, icon('pot'), 'Готовить по шагам')));
   const sw = swapNotice(r);
   if (sw) root.append(sw);
-  root.append(h('ol', { class: 'steps' }, r.steps.map((s) => h('li', null, nb(s.text),
+  const showGrams = !!state.prefs.showGrams;
+  root.append(h('ol', { class: 'steps' }, r.steps.map((s, k) => h('li', { class: s.changed ? 'changed' : null }, nb(stepText(r, s, scale, state.data.kitchen, { showGrams })),
+    s.changed ? h('span', { class: 'badge warn', style: { marginLeft: '6px' } }, 'изменено заменой') : null,
     stepHints(s, eq).map((t) => h('div', { class: 'tool-hint' }, t)),
-    s.heat || s.timer_min ? h('div', { class: 'row', style: { marginTop: '4px' } },
-      s.heat ? h('span', { class: 'badge' }, `огонь: ${s.heat}`) : null,
-      s.timer_min ? h('span', { class: 'badge accent' }, `${num(s.timer_min, 1)} мин`) : null) : null))));
+    s.why ? h('div', { class: 'muted small' }, `Зачем: ${s.why}`) : null,
+    s.note ? h('div', { class: 'tool-hint' }, s.note) : null,
+    readyBlock(r, s, { open: false }),
+    s.wait_for != null ? h('div', { class: 'muted small' }, `Начни, когда закончится шаг ${s.wait_for + 1}.`) : null,
+    s.parallel?.length ? h('div', { class: 'muted small' }, `Параллельно идёт шаг ${s.parallel.map((j) => j + 1).join(', ')} — не выключай его`) : null,
+    heatLabel(s) || timeLabel(s) ? h('div', { class: 'row', style: { marginTop: '4px' } },
+      heatLabel(s) ? h('span', { class: 'badge' }, heatLabel(s)) : null,
+      timeLabel(s) ? h('span', { class: 'badge accent' }, timeLabel(s)) : null) : null))));
+
+  const fin = doneWhenBlock(r);
+  if (fin) root.append(fin);
 
   if (r.mistakes?.length) {
     root.append(h('h2', null, 'Частые ошибки'));
@@ -242,7 +279,18 @@ export function renderRecipe(root, rerender, id, params) {
     has(eq, 'microwave') ? h('p', { style: { margin: 0 } }, h('b', null, 'В микроволновке: '), 'под крышкой или перевёрнутой тарелкой 2–3 мин на полной мощности, перемешать на середине. Если суховато — добавь 1 ст. л. воды.') : null,
     st.reheat ? h('p', { style: { margin: 0 } }, h('b', null, has(eq, 'microwave') ? 'Без микроволновки: ' : 'Разогрев: '), st.reheat) : null));
 
-  if (r.substitutions?.length) {
+  // Замены шаблона: только совместимые с этим блюдом (роль, способ, посуда); выбрать — «варианты и замены» у ингредиента
+  const card = r.compiled ? state.data.cards?.get(r.id) : null;
+  const subRows = card ? card.ingredients.filter((i) => !i.basic).map((i) => {
+    const slot = i.id || i.key;
+    const opts = subOptions(card, slot, cookEnv()).filter((o) => o.allowed);
+    return opts.length ? h('li', null, h('span', null, i.name_ru), h('span', { class: 'muted' }, ' → '), h('b', null, opts.map((o) => o.name_ru.toLowerCase()).join(', '))) : null;
+  }).filter(Boolean) : [];
+  if (subRows.length) {
+    root.append(h('h2', null, 'Замены'));
+    root.append(h('ul', { class: 'subs' }, subRows));
+    root.append(h('p', { class: 'muted' }, 'Выбрать — «варианты и замены» у ингредиента: покажем, что изменится (время, количество, способ, белок, цена), шаги и таймеры пересоберутся.'));
+  } else if (r.substitutions?.length) {
     root.append(h('h2', null, 'Замены'));
     root.append(h('ul', { class: 'subs' }, r.substitutions.map((s) =>
       h('li', null, h('span', null, s.from), h('span', { class: 'muted' }, ' → '), h('b', null, s.to), s.note ? h('div', { class: 'muted' }, s.note) : null))));

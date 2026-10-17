@@ -772,3 +772,27 @@ html:not(.big-text) .view-shop > .summary { gap: var(--sp-1); padding-block: var
 .trip-tools { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: var(--sp-4); }  /* ссылки похода — одной строкой */
 .trip-tools::-webkit-scrollbar { display: none; }
 .trip-tools > * { flex: none; }
+
+/* Как понять, что готово: признаки из профиля ингредиента; «Проверь:» по окончании таймера; финал блюда */
+.ready-box { margin-top: 12px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--text); }
+.ready-box > summary { cursor: pointer; font-weight: 500; color: var(--accent); }
+.ready-box p { margin: 6px 0 0; }
+.ready-box.final { background: var(--surface-2); margin-top: 18px; }
+.ready-title { font-weight: 600; margin-bottom: 6px; }
+.ready-list { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 6px; }
+.ready-list li { line-height: 1.35; }
+.ready-list.big li { font-size: 1.15rem; }
+.ready-list label { display: flex; gap: 8px; align-items: flex-start; }
+.ready-list input[type=checkbox] { width: 22px; height: 22px; flex: none; margin-top: 2px; }
+.cue-type { color: var(--muted); font-weight: 500; }
+.ready-check { font-weight: 500; }
+.safety { margin-top: 8px; padding: 8px 10px; border-radius: var(--r-md, 10px); background: #fce8e6; color: var(--text); }
+.safety.partial { background: var(--warn-soft); }
+.check-now { display: grid; gap: 8px; padding: 12px 14px; border-radius: var(--radius-sm); border: 2px solid var(--accent); background: var(--surface); width: 100%; }
+.cook-timer:has(.check-now) { flex-wrap: wrap; }
+.steps li.changed { background: var(--warn-soft); border-radius: var(--radius-sm); padding: 6px 8px; }
+.swap-preview { margin-top: 8px; display: grid; gap: 8px; }
+.swap-diff li { margin: 2px 0; }
+.measure-hint { display: inline; }
+.measure-hint > summary { display: inline; cursor: pointer; color: var(--accent); }
+.measure-hint > span { display: block; margin-top: 4px; }

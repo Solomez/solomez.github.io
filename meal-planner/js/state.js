@@ -5,6 +5,8 @@ import { DEFAULT_PROFILE, DEFAULTABLE, dailyTargets } from './core/nutrition.js'
 import { DEFAULT_PREFS } from './core/planner.js';
 import { buildCustomRecipe } from './core/custom.js';
 import { applySubs } from './core/subs.js';
+import { compile, subOptions } from './core/compile.js';
+import { has as hasTool } from './core/equipment.js';
 
 const KEY = 'mealplanner.v1';
 // Опубликованная страница работает внутри claude.ai: там есть window.claude, нет печати и скачивания файлов
@@ -42,6 +44,7 @@ export const state = {
   stamps: saved.stamps || {}, // раздел → время изменения
   libFilters: saved.libFilters || {},
   savedAt: saved.savedAt || 0,
+  schema: saved.schema || 1, // версия формата сохранённых данных (2 — рецепты-шаблоны, migrateStored)
   sync: 'local', // 'local' | 'connecting' | 'cloud'
   account: null, // { email } — вход через Supabase на своём сайте
 };
@@ -65,7 +68,7 @@ function snapshot() {
   return JSON.parse(JSON.stringify({
     profile: state.profile, prefs: state.prefs, plan: state.plan, checked: only(state.checked), cook: state.cook,
     pantry: state.pantry, cart: state.cart, swaps: only(state.swaps), routes: state.routes, places: state.places, unavailable: fresh, custom: state.custom,
-    stamps: state.stamps, savedAt: state.savedAt,
+    stamps: state.stamps, savedAt: state.savedAt, schema: state.schema,
   }));
 }
 
@@ -238,22 +241,32 @@ export async function loadData() {
   const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
   const timer = setTimeout(() => ctl?.abort(), 25000);
   const get = (f) => fetch(base + f, { signal: ctl?.signal }).then((x) => { if (!x.ok) throw new Error(`${f}: ${x.status}`); return x.json(); });
-  const [r, p, st, sub, ai] = await Promise.all([
+  const [r, p, st, sub, ai, kit] = await Promise.all([
     get('recipes.json'),
     get('products.json'),
     fetch(base + 'storage.json').then((x) => x.json()).catch(() => ({})),
     fetch(base + 'substitutes.json').then((x) => x.json()).catch(() => ({})),
     fetch(base + 'aisles.json').then((x) => x.json()).catch(() => ({ zones: [], shelves: [], concepts: [], stores: [] })),
+    get('kitchen.json'),
   ]);
   clearTimeout(timer);
-  state.data = { recipes: r.recipes, products: p.products, meta: r.meta, storage: st, substitutes: sub, aisles: ai, base, baseRecipes: r.recipes, baseProducts: p.products };
+  state.data = { recipes: r.recipes, products: p.products, meta: r.meta, storage: st, substitutes: sub, aisles: ai, kitchen: kit, base, baseRecipes: r.recipes, baseProducts: p.products };
   applyCustom();
   // план мог ссылаться на удалённый рецепт — убираем такие приготовления
   dropMissing(state.plan);
+  if (state.schema !== SCHEMA) {
+    state.migrationNotes = migrateStored();
+    save();
+  }
 }
 
 // Свои продукты, приёмы пищи и замены ингредиентов — к данным приложения: рецепты пересобираются из черновиков
-// (цены могли обновиться), в блюдах с заменой пересчитываются количество, КБЖУ и цена (core/subs.js)
+// (цены могли обновиться). Рецепты-шаблоны (формат 2) собираются движком core/compile.js: замена меняет не только
+// количество, КБЖУ и цену, но и шаги, жидкость, огонь, время, порядок, таймеры и признаки готовности.
+export const cookEnv = () => ({
+  kitchen: state.data.kitchen, products: state.data.products, substitutes: state.data.substitutes,
+  hasTool: (id) => hasTool(state.prefs.equipment, id),
+});
 export function applyCustom() {
   if (!state.data?.baseRecipes) return;
   const c = state.custom || {};
@@ -261,9 +274,70 @@ export function applyCustom() {
   const mine = (c.recipes || []).map((d) => { try { return buildCustomRecipe(d, products); } catch { return null; } }).filter((r) => r && r.ingredients.length);
   const subs = c.subs || {};
   state.data.products = products;
-  state.data.recipes = [...state.data.baseRecipes, ...mine].map((r) => (subs[r.id] ? applySubs(r, subs[r.id], products, state.data.substitutes) : r));
+  const env = cookEnv();
+  state.data.cards = new Map(state.data.baseRecipes.map((r) => [r.id, r]));
+  state.data.recipes = [...state.data.baseRecipes, ...mine].map((r) => {
+    if (r.format === 2) {
+      const base = compile(r, env);
+      const ok = validSubs(r, subs[r.id], env);
+      return Object.keys(ok).length ? compile(r, { ...env, subs: ok, base }) : base;
+    }
+    return subs[r.id] ? applySubs(r, subs[r.id], products, state.data.substitutes) : r;
+  });
   state.recipeMap = new Map(state.data.recipes.map((x) => [x.id, x]));
 }
+
+// Только допустимые замены (те же правила, что в «Чем заменить»): слот → ключ
+export function validSubs(card, map, env) {
+  const out = {};
+  for (const [slot, key] of Object.entries(map || {})) {
+    const ing = card.ingredients.find((i) => (i.id || i.key) === slot) || card.ingredients.find((i) => i.key === slot);
+    const id = ing && (ing.id || ing.key);
+    if (id && subOptions(card, id, env).some((o) => o.key === key && o.allowed)) out[id] = key;
+  }
+  return out;
+}
+
+// Данные из прошлых версий (схема хранения 1 → 2): замены, которых нет среди допустимых по новым правилам
+// (другая роль, нет такого способа, исключённый продукт), снимаются; прогресс готовки сбрасывается у блюд,
+// чьи шаги изменились. Планы, избранное, профиль, свои продукты не трогаются. → [сообщения для человека]
+export const SCHEMA = 2;
+export function migrateStored() {
+  if (!state.data?.baseRecipes) return [];
+  const notes = [];
+  const env = cookEnv();
+  const subs = { ...(state.custom?.subs || {}) };
+  let subsChanged = false;
+  for (const [rid, map] of Object.entries(subs)) {
+    const card = state.data.cards?.get(rid);
+    if (!card || card.format !== 2) continue;
+    const keep = {};
+    for (const [slot, key] of Object.entries(map || {})) {
+      // слот у старых данных — ключ продукта; у шаблона слот может называться иначе
+      const ing = card.ingredients.find((i) => (i.id || i.key) === slot) || card.ingredients.find((i) => i.key === slot);
+      const id = ing && (ing.id || ing.key);
+      const opt = id && subOptions(card, id, env).find((o) => o.key === key);
+      if (opt?.allowed) keep[id] = key;
+      else notes.push(`«${card.title}»: замена ${state.data.products[key]?.name_ru || key} снята — ${opt?.reason || 'больше не подходит к этому блюду'}`);
+    }
+    if (JSON.stringify(keep) !== JSON.stringify(map)) { subsChanged = true; if (Object.keys(keep).length) subs[rid] = keep; else delete subs[rid]; }
+  }
+  if (subsChanged) { state.custom = { ...state.custom, subs }; applyCustom(); }
+  // прогресс готовки: подпись шагов
+  for (const [rid, prog] of Object.entries(state.cook || {})) {
+    const r = state.recipeMap.get(rid);
+    if (!r?.compiled) continue;
+    const sig = stepsSig(r);
+    if (prog.sig !== sig) state.cook[rid] = { step: 0, done: [], ings: prog.ings || [], sig };
+  }
+  state.schema = SCHEMA;
+  return notes;
+}
+export const stepsSig = (r) => {
+  let h = 0;
+  for (const ch of r.steps.map((s) => s.tpl || s.text).join('|')) h = (h * 31 + ch.charCodeAt(0)) | 0;
+  return `${r.steps.length}:${h}`;
+};
 
 // Замена ингредиента в одном блюде: subKey — чем заменить, null — вернуть как в рецепте
 export function setSub(recipeId, key, subKey) {

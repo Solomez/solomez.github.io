@@ -6,6 +6,9 @@ export const DAYS = ['Понедельник', 'Вторник', 'Среда', '
 export const DAYS_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 export const MEALS = { breakfast: 'Завтрак', lunch: 'Обед', dinner: 'Ужин', snack: 'Перекус' };
 
+// Предел активной готовки для плана недели (исходное условие); то же — core/compile.js ACTIVE_LIMIT
+export const ACTIVE_MAX = 30;
+
 export const DEFAULT_PREFS = {
   maxRepeats: 2, // одно блюдо не чаще N приготовлений в неделю
   batchCooking: true, // ужин на 2 порции → обед следующего дня
@@ -18,6 +21,7 @@ export const DEFAULT_PREFS = {
   allowTwoStores: false, // устарело: заменено saveMode
   saveMode: 'money', // покупки: 'money' — дешевле (до двух магазинов в день), 'trips' — меньше походов (один магазин в день)
   equipment: {}, // кухонная утварь: id → есть ли (не указано — по умолчанию из equipment.js)
+  showGrams: false, // в рецептах и режиме готовки — граммы мелко рядом с бытовой мерой
   planSource: 'shop', // откуда продукты для новой недели: 'home' — только из того, что дома, 'shop' — с покупками (запасы — в первую очередь)
 };
 
@@ -57,6 +61,8 @@ export function eligibleRecipes(recipes, prefs = DEFAULT_PREFS, type = 'main') {
     if (hidden.has(r.id)) return false;
     if (!prefs.showBorderline && (r.tags || []).includes('спорное')) return false;
     if (!canCook(r, prefs.equipment)) return false; // нет нужной утвари
+    // активной готовки больше 30 минут (считает движок по шагам, с заменами) — не в план; в рецептах есть с предупреждением
+    if (r.compiled && r.time?.active > ACTIVE_MAX) return false;
     return !r.ingredients.some((i) => !i.basic && !i.optional && excluded.has(i.key));
   });
 }

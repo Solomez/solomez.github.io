@@ -2,6 +2,7 @@ import { h, num, eur, seg, toast, download, humanDate } from '../ui.js';
 import { state, save, targets, IS_ARTIFACT, dropMissing, claimAll, normalizeProfile } from '../state.js';
 import { ACTIVITY, GOALS, DEFAULT_PROFILE, validNumber, rangeText, RANGES, goalProtein, isDefaultValue, proteinWhy } from '../core/nutrition.js';
 import { TOOLS, has, canCook } from '../core/equipment.js';
+import { MEASURE_HINT } from '../core/cookbook.js';
 import { ACCOUNTS_ENABLED, sendCode, verifyCode, startAccount, signOut, signedIn } from '../account.js';
 
 export function renderProfile(root, rerender) {
@@ -104,7 +105,11 @@ export function renderProfile(root, rerender) {
     TOOLS.filter((t) => t.hard).map(toolRow),
     h('div', { class: 'eyebrow', style: { marginTop: '8px' } }, 'Можно обойтись — в рецепте будет подсказка как'),
     TOOLS.filter((t) => !t.hard).map(toolRow),
-    has(eq, 'microwave') ? h('p', { class: 'muted', style: { margin: 0 } }, 'С микроволновкой в рецептах появится быстрый разогрев готового.') : null));
+    has(eq, 'microwave') ? h('p', { class: 'muted', style: { margin: 0 } }, 'С микроволновкой в рецептах появится быстрый разогрев готового.') : null,
+    h('div', { class: 'eyebrow', style: { marginTop: '8px' } }, 'Меры в рецептах'),
+    h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: !!pr.showGrams, onchange: (e) => setPr('showGrams', e.target.checked) }),
+      h('span', null, 'Показывать граммы', h('span', { class: 'muted' }, ' — мелко рядом со стаканами и ложками (для кухонных весов)'))),
+    h('p', { class: 'muted', style: { margin: 0 } }, MEASURE_HINT)));
 
   const inRecipes = new Set(state.data.recipes.flatMap((r) => r.ingredients.map((i) => i.key)));
   // только то, что встречается в рецептах (продукты-замены из «если нет» сюда не попадают)
