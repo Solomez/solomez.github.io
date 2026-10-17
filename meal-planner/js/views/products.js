@@ -178,7 +178,7 @@ function swapSectionTemplate(product, { current, onPick, options, preview, origN
           h('li', null, h('b', null, 'Количество: '), `${qty(r0, pv.from)} ${pv.from.name_ru.toLowerCase()} → ${qty(r1, pv.to)} ${pv.to.name_ru.toLowerCase()}`),
           liq0 || liq1 ? h('li', null, h('b', null, 'Жидкость: '), `${qty(r0, liq0)} → ${qty(r1, liq1)}`) : null,
           pv.method ? h('li', null, h('b', null, 'Способ: '), `${methodLabel(pv.method.from)} → ${methodLabel(pv.method.to)}`) : null,
-          h('li', null, h('b', null, 'На порцию: '), `белок ${signed(pv.protein, ' г', 1)}, ${signed(pv.kcal, ' ккал')}, цена ${Math.abs(pv.cost) < 0.005 ? 'так же' : (pv.cost > 0 ? '+' : '−') + eur(Math.abs(pv.cost))}`),
+          h('li', null, h('b', null, 'На порцию: '), `белок ${signed(pv.protein, ' г', 1)}, калории ${signed(pv.kcal, ' ккал')}, цена ${Math.abs(pv.cost) < 0.005 ? 'так же' : (pv.cost > 0 ? '+' : '−') + eur(Math.abs(pv.cost))}`),
           h('li', null, h('b', null, 'Шаги: '), pv.changedSteps ? `изменится ${pv.changedSteps}` : 'те же'),
           pv.note ? h('li', null, h('b', null, 'Вкус и текстура: '), pv.note) : null,
           ...pv.warnings.map((w) => h('li', { class: 'need-line' }, `⚠ ${w}`))),

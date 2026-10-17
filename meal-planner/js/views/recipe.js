@@ -80,12 +80,14 @@ export function ingredientList(r, scale, { checkable = true, onToggle, onSwap } 
       save();
       onToggle?.();
     };
-    return h('li', { class: 'ing-row' + (checkable ? '' : ' no-check') + (i.basic ? ' no-thumb' : '') + (done ? ' done' : '') },
+    // фото и магазин — у всех продуктов, кроме воды (базовые — тоже: соль, масло, специи надо узнать на полке)
+    const shown = products[i.key] && i.key !== 'water';
+    return h('li', { class: 'ing-row' + (checkable ? '' : ' no-check') + (shown ? '' : ' no-thumb') + (done ? ' done' : '') },
       checkable ? h('input', { type: 'checkbox', id: `ing-${r.id}-${i.key}`, checked: done, onchange: toggle, 'aria-label': `Подготовлено: ${i.name_ru}` }) : null,
-      !i.basic && products[i.key] ? photo(products[i.key], thumbPack(products[i.key]), { cls: 'thumb sm', label: i.name_ru }) : null,
+      shown ? photo(products[i.key], thumbPack(products[i.key]), { cls: 'thumb sm', label: i.name_ru }) : null,
       h('label', { class: 'ing-text', for: checkable ? `ing-${r.id}-${i.key}` : null },
         h('span', { class: 'ing-name' }, i.name_ru, i.optional ? h('span', { class: 'muted' }, ' · по желанию') : null),
-        h('span', { class: 'de' }, [i.name_de, !i.basic ? storeHint(products[i.key]) : null].filter(Boolean).join(' · ')),
+        h('span', { class: 'de' }, [i.name_de, shown ? storeHint(products[i.key]) : null].filter(Boolean).join(' · ')),
         i.replaced ? h('span', { class: 'swap-note' }, `Замена: вместо «${i.replaced.name_ru}»`,
           onSwap ? h('button', { class: 'linkbtn small-link', type: 'button', onclick: (e) => { e.preventDefault(); setSub(r.id, i.id || i.key, null); onSwap(); toast(`Вернул: ${i.replaced.name_ru}`); } }, ` Вернуть «${i.replaced.name_ru.toLowerCase()}»`) : null) : null,
         variantsButton(r, i, products, onSwap),
@@ -127,7 +129,7 @@ function variantsButton(r, i, products, onSwap) {
     const name = (key) => products[key]?.name_ru || key;
     toast(k ? `В этом блюде: ${name(k)} вместо «${name(orig)}» — шаги пересчитаны` : `Вернул: ${name(orig)}`, { label: 'Отменить', onClick: () => { setSub(r.id, slot, prev); onSwap(); } });
   };
-  const swap = onSwap && subs && !i.basic ? {
+  const swap = onSwap && subs ? {
     current: i.replaced ? i.key : null, onPick: pick, origName: products[orig]?.name_ru || orig,
     ...(options ? { options, preview: (k) => previewSub(card, validSubs(card, state.custom?.subs?.[r.id], cookEnv()), slot, k, cookEnv()) } : {}),
   } : null;
@@ -281,7 +283,7 @@ export function renderRecipe(root, rerender, id, params) {
 
   // Замены шаблона: только совместимые с этим блюдом (роль, способ, посуда); выбрать — «варианты и замены» у ингредиента
   const card = r.compiled ? state.data.cards?.get(r.id) : null;
-  const subRows = card ? card.ingredients.filter((i) => !i.basic).map((i) => {
+  const subRows = card ? card.ingredients.map((i) => {
     const slot = i.id || i.key;
     const opts = subOptions(card, slot, cookEnv()).filter((o) => o.allowed);
     return opts.length ? h('li', null, h('span', null, i.name_ru), h('span', { class: 'muted' }, ' → '), h('b', null, opts.map((o) => o.name_ru.toLowerCase()).join(', '))) : null;

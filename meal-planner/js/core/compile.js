@@ -61,7 +61,9 @@ function substituteSlots(card, subs, env) {
     const to = subs?.[id];
     if (!to || to === ing.key) return { ...ing, id };
     const p = products[to];
-    const ratio = factorOf(kitchen?.profiles?.[ing.key]) / factorOf(kitchen?.profiles?.[to]);
+    // количество: коэффициент из data/substitutes.json (специи: чили острее паприки), иначе — по выходу продукта
+    const row = (env.substitutes?.[ing.key] || []).find(([k]) => k === to);
+    const ratio = +row?.[2] > 0 ? +row[2] : factorOf(kitchen?.profiles?.[ing.key]) / factorOf(kitchen?.profiles?.[to]);
     const grams = Math.round((ing.grams || 0) * ratio * 10) / 10;
     swapped.push({ slot: id, from: ing.key, from_ru: ing.name_ru, to, to_ru: p?.name_ru || to, note: kitchen?.profiles?.[to]?.note_as_sub || null });
     return {
@@ -378,7 +380,7 @@ export function compile(card, env = {}) {
 export function subOptions(card, id, env) {
   const { kitchen, products = {}, substitutes = {}, hasTool = () => true } = env;
   const ing = card.ingredients.find((i) => slotId(i) === id);
-  if (!ing || ing.basic) return [];
+  if (!ing || ing.key === 'water') return [];
   const from = kitchen?.profiles?.[ing.key];
   const uses = card.steps.filter((s) => s.use === id);
   return (substitutes[ing.key] || []).map(([key, note]) => {
