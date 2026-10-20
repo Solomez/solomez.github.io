@@ -20,21 +20,22 @@
 // - battery: nothing runs while nothing moves; the canvas covers only the bend;
 // - keyboard: a link reached with Tab that lands in the bend is lifted above it; print hides the effect;
 // - colours come from the page (curtain = page background, text twin = nearest background), ready for a redesign.
-// Clicks go through the bend. Off with reduced motion. Phones: sync mode and a gentler bend (see below).
+// Clicks go through the bend. Off with reduced motion, and on phones and tablets (see below).
 // Tuning: ?lens=zone,fan,power,chroma px,boost.
 (() => {
   const main = document.querySelector('main.frame');
   if (!main || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  // Phones and tablets scroll the page on a separate thread, so a twin drawn by the page's own code trails the page by
-  // a frame or two and the bend shakes (iPhone, 2026-10-20). There the page itself is moved by this code in the same
-  // frame as the bend («sync»): the window still scrolls natively (momentum, the Safari toolbar), the page follows its
-  // position, and the two can never drift apart. ?touch=off turns the effect off on a phone, ?touch=on shows it
-  // without sync (for comparison).
+  // Phones and tablets: off by default, as on system.studio (designer on iPhone, 2026-10-20). Their browsers scroll on a
+  // separate thread at up to 120 frames a second, while page code gets 60 (30 in Low Power Mode):
+  // - drawn as usual, the twin trails the page and the bend shakes («очень дергано»);
+  // - with the page moved by this code in the same frame as the bend («sync»), the two stay together, but the whole
+  //   scroll drops to the page's frame rate and trails the finger («очень лагает»).
+  // For trials: ?touch=sync (page moved by this code) or ?touch=on (drawn as usual).
   const touch = window.matchMedia('(pointer: coarse)').matches || /iPad|iPhone|iPod/.test(navigator.userAgent)
     || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
   const touchMode = new URLSearchParams(location.search).get('touch');
-  if (touch && touchMode === 'off') return;
-  const sync = touch && touchMode !== 'on';
+  if (touch && touchMode !== 'sync' && touchMode !== 'on') return;
+  const sync = touch && touchMode === 'sync';
   try { if (sessionStorage.getItem('lens-off')) return; } catch (e) { /* storage blocked: carry on */ }
 
   const qs = new URLSearchParams(location.search);
