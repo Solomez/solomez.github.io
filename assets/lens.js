@@ -20,10 +20,16 @@
 // - battery: nothing runs while nothing moves; the canvas covers only the bend;
 // - keyboard: a link reached with Tab that lands in the bend is lifted above it; print hides the effect;
 // - colours come from the page (curtain = page background, text twin = nearest background), ready for a redesign.
-// Clicks go through the bend. Off with reduced motion. Tuning: ?lens=zone,fan,power,chroma px,boost.
+// Clicks go through the bend. Off with reduced motion and on phones and tablets (?touch=on forces it, for tests).
+// Tuning: ?lens=zone,fan,power,chroma px,boost.
 (() => {
   const main = document.querySelector('main.frame');
   if (!main || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // Phones and tablets: off, as on system.studio. Their browsers scroll the page on a separate thread, so a twin drawn
+  // by the page's own code trails the page by a frame or two and the bend shakes (iPhone, 2026-10-20).
+  const touch = window.matchMedia('(pointer: coarse)').matches || /iPad|iPhone|iPod/.test(navigator.userAgent)
+    || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+  if (touch && new URLSearchParams(location.search).get('touch') !== 'on') return;
   try { if (sessionStorage.getItem('lens-off')) return; } catch (e) { /* storage blocked: carry on */ }
 
   const qs = new URLSearchParams(location.search);
@@ -43,7 +49,7 @@
   const canvas = document.createElement('canvas');
   const curtain = document.createElement('div');
   for (const n of [canvas, curtain]) { n.setAttribute('aria-hidden', 'true'); n.dataset.lens = ''; }
-  canvas.style.cssText = 'position:fixed;left:0;top:0;pointer-events:none;z-index:15';
+  canvas.style.cssText = 'position:fixed;left:0;bottom:0;pointer-events:none;z-index:15';   // anchored to the bottom, like the curtain
   curtain.style.cssText = 'position:fixed;left:0;right:0;bottom:0;pointer-events:none;z-index:14;display:none';
   const css = document.createElement('style');
   css.textContent = '@media print{[data-lens]{display:none!important}}';
@@ -380,7 +386,7 @@
     cTop = Math.floor(H * (1 - P.zone) - FADE) - 2;
     cH = H - cTop;
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(cH * dpr);
-    canvas.style.width = W + 'px'; canvas.style.height = cH + 'px'; canvas.style.top = cTop + 'px';
+    canvas.style.width = W + 'px'; canvas.style.height = cH + 'px';
     if (!lost) gl.viewport(0, 0, canvas.width, canvas.height);
     curtain.style.height = Math.ceil(H * P.zone) + 'px';
     curtain.style.background = pageBg();
@@ -424,6 +430,12 @@
   function step(now) {
     if (document.hidden) { lastT = 0; lastY = -1; return false; }
     const sy = window.scrollY;
+    const hNow = window.innerHeight;
+    if (hNow !== H) {                                              // toolbar shown or hidden: follow the bottom at once
+      H = hNow;
+      if (H * P.zone + FADE + 4 > cH) resize(); else { cTop = H - cH; curtain.style.height = Math.ceil(H * P.zone) + 'px'; }
+      dirty = true;
+    }
     const raw = lastT ? now - lastT : 16.7;                        // ms since the last frame
     const dt = Math.min(Math.max(raw, 4), 100);
     lastT = now;
