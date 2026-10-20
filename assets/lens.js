@@ -20,25 +20,34 @@
 // - battery: nothing runs while nothing moves; the canvas covers only the bend;
 // - keyboard: a link reached with Tab that lands in the bend is lifted above it; print hides the effect;
 // - colours come from the page (curtain = page background, text twin = nearest background), ready for a redesign.
-// Clicks go through the bend. Off with reduced motion and on phones and tablets (?touch=on forces it, for tests).
+// Clicks go through the bend. Off with reduced motion. Phones: sync mode and a gentler bend (see below).
 // Tuning: ?lens=zone,fan,power,chroma px,boost.
 (() => {
   const main = document.querySelector('main.frame');
   if (!main || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  // Phones and tablets: off, as on system.studio. Their browsers scroll the page on a separate thread, so a twin drawn
-  // by the page's own code trails the page by a frame or two and the bend shakes (iPhone, 2026-10-20).
+  // Phones and tablets scroll the page on a separate thread, so a twin drawn by the page's own code trails the page by
+  // a frame or two and the bend shakes (iPhone, 2026-10-20). There the page itself is moved by this code in the same
+  // frame as the bend («sync»): the window still scrolls natively (momentum, the Safari toolbar), the page follows its
+  // position, and the two can never drift apart. ?touch=off turns the effect off on a phone, ?touch=on shows it
+  // without sync (for comparison).
   const touch = window.matchMedia('(pointer: coarse)').matches || /iPad|iPhone|iPod/.test(navigator.userAgent)
     || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
-  if (touch && new URLSearchParams(location.search).get('touch') !== 'on') return;
+  const touchMode = new URLSearchParams(location.search).get('touch');
+  if (touch && touchMode === 'off') return;
+  const sync = touch && touchMode !== 'on';
   try { if (sessionStorage.getItem('lens-off')) return; } catch (e) { /* storage blocked: carry on */ }
 
   const qs = new URLSearchParams(location.search);
-  const P = { zone: 0.1, fan: 0.6, pow: 2.6, chroma: 10, boost: 1.5 };
+  // a phone gets a gentler bend: its text column fills the screen, so the desktop fan threw pictures far off the edges
+  // (designer on iPhone: «картинка слишком сильно искажается»)
+  const narrow = window.innerWidth <= 600;
+  const P = narrow ? { zone: 0.1, fan: 0.3, pow: 2.6, chroma: 6, boost: 0.5 }
+    : { zone: 0.1, fan: 0.6, pow: 2.6, chroma: 10, boost: 1.5 };
   if (qs.get('lens')) {
     const [z, f, p, c, b] = qs.get('lens').split(',').map(Number);
     if (z) P.zone = z; if (f) P.fan = f; if (p) P.pow = p; if (c >= 0) P.chroma = c; if (b >= 0) P.boost = b;
   }
-  const FULL_SPEED = 3.5;    // px per ms that counts as a full-speed flick
+  const FULL_SPEED = touch ? 5 : 3.5;   // px per ms that counts as a full-speed flick (a finger flicks faster)
   const SMOOTH = 24;         // ms: first pass against uneven trackpad steps
   const OMEGA = 22;          // rad/s: the width follows the speed like a critically damped spring, ~0.2 s
   const FX = 0.012;          // the rainbow fades in over the first part of the bend
@@ -352,6 +361,30 @@
     for (const t of tiles) { const r = t.el.getBoundingClientRect(); t.top = r.top + sy; t.left = r.left; t.w = r.width; t.h = r.height; }
   }
 
+  // ------------------------------------------------------------------ sync mode (phones, trial)
+  let syncTop = 0, syncRO = null, tocHome = null;
+  function moveMain(sy) { main.style.transform = `translate3d(0, ${syncTop - sy}px, 0)`; }
+  function setupSync() {
+    syncTop = main.getBoundingClientRect().top + window.scrollY;
+    const toc = main.querySelector('.toc');
+    if (toc) { tocHome = [toc, toc.parentNode, toc.nextSibling]; document.body.appendChild(toc); }   // a fixed outline must not ride along
+    const fit = () => { document.body.style.minHeight = Math.ceil(syncTop + main.offsetHeight) + 'px'; };
+    fit();
+    Object.assign(main.style, { position: 'fixed', top: '0', left: '0', right: '0', willChange: 'transform' });
+    moveMain(window.scrollY);
+    syncRO = new ResizeObserver(fit);
+    syncRO.observe(main);
+  }
+  // back to the plain page (the effect turned off): the page scrolls on its own again
+  function teardownSync() {
+    if (!sync) return;
+    if (syncRO) syncRO.disconnect();
+    for (const k of ['position', 'top', 'left', 'right', 'willChange', 'transform']) main.style[k] = '';
+    document.body.style.minHeight = '';
+    if (tocHome) tocHome[1].insertBefore(tocHome[0], tocHome[2]);
+  }
+  if (sync) setupSync();
+
   // ------------------------------------------------------------------ state, sleep and wake
   let W = 0, H = 0, lastW = 0, cTop = 0, cH = 0;
   let dirty = true, running = false, off = false, lost = false, shown = false;
@@ -363,6 +396,7 @@
   function turnOff(why) {
     if (off) return;
     off = true;
+    teardownSync();
     hideCurtain();
     for (const t of tiles) evict(t);
     canvas.remove(); curtain.remove();
@@ -430,6 +464,7 @@
   function step(now) {
     if (document.hidden) { lastT = 0; lastY = -1; return false; }
     const sy = window.scrollY;
+    if (sync) moveMain(sy);                                        // page and bend move in the same frame
     const hNow = window.innerHeight;
     if (hNow !== H) {                                              // toolbar shown or hidden: follow the bottom at once
       H = hNow;
