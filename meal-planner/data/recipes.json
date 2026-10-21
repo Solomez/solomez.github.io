@@ -1,7 +1,7 @@
 {
  "meta": {
-  "generated": "2026-10-20",
-  "price_date": "2026-10-17",
+  "generated": "2026-10-21",
+  "price_date": "2026-10-21",
   "schema": 2,
   "departments": [
    {
@@ -22217,7 +22217,7 @@
    },
    "tools": [],
    "per_serving": {
-    "cost": 1.26,
+    "cost": 1.27,
     "kcal": 317,
     "protein": 34.9,
     "fat": 2.7,
@@ -22236,7 +22236,7 @@
      "key": "banana",
      "name_ru": "Банан",
      "grams_per_serving": 120.0,
-     "cost_per_serving": 0.191,
+     "cost_per_serving": 0.203,
      "store": "Billa",
      "is_estimate": false
     },
@@ -22365,7 +22365,7 @@
    ],
    "tools": [],
    "per_serving": {
-    "cost": 1.35,
+    "cost": 1.36,
     "kcal": 439,
     "protein": 40.6,
     "fat": 14.0,
@@ -22384,7 +22384,7 @@
      "key": "banana",
      "name_ru": "Банан",
      "grams_per_serving": 120.0,
-     "cost_per_serving": 0.191,
+     "cost_per_serving": 0.203,
      "store": "Billa",
      "is_estimate": false
     },
@@ -23175,7 +23175,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 1.22,
+    "cost": 1.23,
     "kcal": 506,
     "protein": 36.7,
     "fat": 19.2,
@@ -23202,7 +23202,7 @@
      "key": "banana",
      "name_ru": "Банан",
      "grams_per_serving": 120.0,
-     "cost_per_serving": 0.191,
+     "cost_per_serving": 0.203,
      "store": "Billa",
      "is_estimate": false
     },
@@ -23798,7 +23798,7 @@
    },
    "tools": [],
    "per_serving": {
-    "cost": 0.39,
+    "cost": 0.41,
     "kcal": 297,
     "protein": 8.8,
     "fat": 15.4,
@@ -23809,7 +23809,7 @@
      "key": "banana",
      "name_ru": "Банан",
      "grams_per_serving": 120.0,
-     "cost_per_serving": 0.191,
+     "cost_per_serving": 0.203,
      "store": "Billa",
      "is_estimate": false
     },
@@ -24548,7 +24548,7 @@
    },
    "tools": [],
    "per_serving": {
-    "cost": 0.81,
+    "cost": 0.82,
     "kcal": 692,
     "protein": 27.3,
     "fat": 28.8,
@@ -24575,7 +24575,7 @@
      "key": "banana",
      "name_ru": "Банан",
      "grams_per_serving": 120.0,
-     "cost_per_serving": 0.191,
+     "cost_per_serving": 0.203,
      "store": "Billa",
      "is_estimate": false
     },
@@ -24928,7 +24928,7 @@
    },
    "tools": [],
    "per_serving": {
-    "cost": 1.68,
+    "cost": 1.69,
     "kcal": 257,
     "protein": 21.3,
     "fat": 3.4,
@@ -24947,7 +24947,7 @@
      "key": "banana",
      "name_ru": "Банан",
      "grams_per_serving": 120.0,
-     "cost_per_serving": 0.191,
+     "cost_per_serving": 0.203,
      "store": "Billa",
      "is_estimate": false
     }
@@ -25164,7 +25164,7 @@
    },
    "tools": [],
    "per_serving": {
-    "cost": 0.42,
+    "cost": 0.43,
     "kcal": 267,
     "protein": 9.8,
     "fat": 9.1,
@@ -25183,7 +25183,7 @@
      "key": "banana",
      "name_ru": "Банан",
      "grams_per_serving": 120.0,
-     "cost_per_serving": 0.191,
+     "cost_per_serving": 0.203,
      "store": "Billa",
      "is_estimate": false
     }
@@ -30060,7 +30060,7 @@
    "notes": "",
    "tools": [],
    "per_serving": {
-    "cost": 1.08,
+    "cost": 1.1,
     "kcal": 304,
     "protein": 19.1,
     "fat": 7.4,
@@ -30079,7 +30079,7 @@
      "key": "banana",
      "name_ru": "Банан",
      "grams_per_serving": 120.0,
-     "cost_per_serving": 0.191,
+     "cost_per_serving": 0.203,
      "store": "Billa",
      "is_estimate": false
     },
