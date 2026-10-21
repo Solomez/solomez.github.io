@@ -6,7 +6,7 @@ import { DEFAULT_PREFS } from './core/planner.js';
 import { buildCustomRecipe } from './core/custom.js';
 import { applySubs } from './core/subs.js';
 import { compile, subOptions } from './core/compile.js';
-import { has as hasTool } from './core/equipment.js';
+import { has as hasTool, OLD_DEFAULT_TRUE, OLD_DEFAULT_TRUE_5 } from './core/equipment.js';
 
 const KEY = 'mealplanner.v1';
 // Опубликованная страница работает внутри claude.ai: там есть window.claude, нет печати и скачивания файлов
@@ -43,6 +43,8 @@ export const state = {
   custom: saved.custom || { recipes: [], products: {} }, // свои приёмы пищи (черновики), свои продукты и замены в блюдах ({ subs: { блюдо: { ингредиент: замена } } })
   stamps: saved.stamps || {}, // раздел → время изменения
   libFilters: saved.libFilters || {},
+  // таймеры готовки (core/timers.js) — только на этом устройстве: переживают перезагрузку и закрытие вкладки (S61)
+  timers: saved.timers && typeof saved.timers === 'object' ? saved.timers : {},
   savedAt: saved.savedAt || 0,
   schema: saved.schema || 1, // версия формата сохранённых данных (2 — рецепты-шаблоны, migrateStored)
   sync: 'local', // 'local' | 'connecting' | 'cloud'
@@ -72,6 +74,9 @@ function snapshot() {
   }));
 }
 
+// Запись в этом браузере: всё синхронизируемое + то, что живёт только на этом устройстве (фильтры, таймеры)
+const localJSON = () => JSON.stringify({ ...snapshot(), libFilters: state.libFilters, timers: state.timers });
+
 // Какие разделы изменились с прошлого сохранения — по отпечатку содержимого
 const prints = {};
 const printOf = (k) => JSON.stringify(state[k] ?? null);
@@ -84,7 +89,7 @@ export function save() {
     if (p !== prints[k]) { prints[k] = p; state.stamps[k] = state.savedAt; }
   }
   try {
-    localStorage.setItem(KEY, JSON.stringify({ ...snapshot(), libFilters: state.libFilters }));
+    localStorage.setItem(KEY, localJSON());
   } catch {
     /* приватный режим или переполнение — работаем без локального сохранения */
   }
@@ -141,7 +146,7 @@ export function mergeRemote(d) {
   if (changed) {
     applyCustom();
     dropMissing(state.plan);
-    try { localStorage.setItem(KEY, JSON.stringify({ ...snapshot(), libFilters: state.libFilters })); } catch { /* ignore */ }
+    try { localStorage.setItem(KEY, localJSON()); } catch { /* ignore */ }
   }
   return changed;
 }
@@ -190,7 +195,7 @@ export function claimAll() {
   const t = Date.now();
   for (const k of SECTIONS) { state.stamps[k] = t; prints[k] = printOf(k); }
   state.savedAt = t;
-  try { localStorage.setItem(KEY, JSON.stringify({ ...snapshot(), libFilters: state.libFilters })); } catch { /* ignore */ }
+  try { localStorage.setItem(KEY, localJSON()); } catch { /* ignore */ }
   if (backend) { dirty = true; clearTimeout(timer); return flushCloud(); }
   return Promise.resolve();
 }
@@ -301,8 +306,49 @@ export function validSubs(card, map, env) {
 // Данные из прошлых версий (схема хранения 1 → 2): замены, которых нет среди допустимых по новым правилам
 // (другая роль, нет такого способа, исключённый продукт), снимаются; прогресс готовки сбрасывается у блюд,
 // чьи шаги изменились. Планы, избранное, профиль, свои продукты не трогаются. → [сообщения для человека]
-export const SCHEMA = 2;
+// Схема 3 — кухня: заменимая утварь (крышка, тёрка, дуршлаг, миска…) по умолчанию теперь «нет» (core/equipment.js).
+// Схема 4 — режим готовки (S61, S67): таймеры хранятся (state.timers), у прогресса — отметки признаков по шагам
+// (checks), порции, на которые начата готовка (portions, factor). Старый прогресс дополняется, шаг и отметки остаются.
+// Схема 5 (этап 8а) — форма для запекания и прихватки по умолчанию «нет», противень идёт с духовкой.
+export const SCHEMA = 5;
+export function migrateCook(cook) {
+  let changed = false;
+  for (const prog of Object.values(cook || {})) {
+    if (!prog || typeof prog !== 'object') continue;
+    if (!Array.isArray(prog.done)) { prog.done = []; changed = true; }
+    if (!prog.checks || typeof prog.checks !== 'object') { prog.checks = {}; changed = true; }
+    if (!Array.isArray(prog.ings)) { prog.ings = []; changed = true; }
+    if (typeof prog.step !== 'number' || prog.step < 0) { prog.step = 0; changed = true; }
+  }
+  return changed;
+}
+// У тех, кто уже сохранил свою кухню (отметил хоть что-то в профиле), крышка, тёрка и дуршлаг, которые раньше
+// считались по умолчанию, остаются отмеченными — ничего не теряется. Нетронутая кухня получает новые умолчания.
+export function migrateEquipment(prefs, ids = OLD_DEFAULT_TRUE) {
+  const eq = prefs?.equipment;
+  if (!eq || !Object.keys(eq).length) return false;
+  let changed = false;
+  for (const id of ids) if (eq[id] === undefined) { eq[id] = true; changed = true; }
+  return changed;
+}
+// Схема 5: форма и прихватки были «есть» по умолчанию — у сохранённой кухни остаются отмеченными; противень теперь
+// идёт с духовкой (отдельной отметки в профиле нет) — прежняя отметка снимается
+export function migrateEquipment5(prefs) {
+  const eq = prefs?.equipment;
+  if (!eq) return false;
+  const had = Object.keys(eq).length > 0;
+  let changed = false;
+  if ('tray' in eq) { delete eq.tray; changed = true; }
+  if (had && migrateEquipment(prefs, OLD_DEFAULT_TRUE_5)) changed = true;
+  return changed;
+}
 export function migrateStored() {
+  if ((state.schema || 1) < 3) migrateEquipment(state.prefs);
+  if ((state.schema || 1) < 5) migrateEquipment5(state.prefs);
+  if ((state.schema || 1) < 4) {
+    migrateCook(state.cook);
+    if (!state.timers || typeof state.timers !== 'object') state.timers = {};
+  }
   if (!state.data?.baseRecipes) return [];
   const notes = [];
   const env = cookEnv();
@@ -322,13 +368,18 @@ export function migrateStored() {
     }
     if (JSON.stringify(keep) !== JSON.stringify(map)) { subsChanged = true; if (Object.keys(keep).length) subs[rid] = keep; else delete subs[rid]; }
   }
-  if (subsChanged) { state.custom = { ...state.custom, subs }; applyCustom(); }
+  // кухня могла измениться (схема 3) — рецепты пересобираются под неё (шаги без тёрки, без дуршлага…)
+  if (subsChanged) state.custom = { ...state.custom, subs };
+  applyCustom();
   // прогресс готовки: подпись шагов
   for (const [rid, prog] of Object.entries(state.cook || {})) {
     const r = state.recipeMap.get(rid);
     if (!r?.compiled) continue;
     const sig = stepsSig(r);
-    if (prog.sig !== sig) state.cook[rid] = { step: 0, done: [], ings: prog.ings || [], sig };
+    if (prog.sig !== sig) {
+      state.cook[rid] = { step: 0, done: [], ings: prog.ings || [], checks: {}, sig };
+      for (const [k, t] of Object.entries(state.timers || {})) if (t.rid === rid) delete state.timers[k];
+    }
   }
   state.schema = SCHEMA;
   return notes;

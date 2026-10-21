@@ -35,8 +35,10 @@ export function tripsToText(ck, plan, products, { which = 'all', checked = {} } 
     for (const ti of t.items) {
       const it = ck.list.items.find((i) => i.key === ti.key);
       if (!it) continue;
-      const pack = it.offer ? `${formatPack(it.offer)}${it.offer.pack.name_de ? ` (${it.offer.pack.name_de})` : ''}` : formatAmount(it.key, it.needGrams, products[it.key]);
-      lines.push(`${checked[it.key] ? '✓' : '—'} ${it.name_ru}, ${pack}`);
+      const offer = ti.offer || it.offer; // партия второй закупки — своя упаковка
+      const pack = offer ? `${formatPack(offer)}${offer.pack.name_de ? ` (${offer.pack.name_de})` : ''}` : formatAmount(it.key, it.needGrams, products[it.key]);
+      const fz = ti.freeze?.length ? ` — ≈ ${Math.round(ti.freeze.reduce((a, f) => a + f.grams, 0) / 10) * 10} г сразу в морозилку` : '';
+      lines.push(`${checked[ti.ckey || it.key] ? '✓' : '—'} ${it.name_ru}, ${pack}${fz}`);
     }
     for (const c of ck.own.filter((c) => c.store === t.store)) lines.push(`— ${c.name}${c.byWeight ? '' : ` × ${c.qty}`}`);
     lines.push(`Итого: ${eur(t.total)}`, '');

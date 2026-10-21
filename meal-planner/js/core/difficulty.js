@@ -1,3 +1,8 @@
+import { count } from './qty.js';
+import { TOOL } from './equipment.js';
+
+const joinRu = (xs) => (xs.length > 1 ? `${xs.slice(0, -1).join(', ')} и ${xs[xs.length - 1]}` : xs[0] || '');
+
 // Сложность готовки для новичка: уровень и почему. Считается по самому рецепту — шагам, времени, приёмам и посуде.
 // Не «оценка вкуса», а ответ на вопрос «справлюсь ли я сегодня, если устал».
 
@@ -9,16 +14,26 @@ export const LEVELS = [
   { id: 'hard', label: 'Посложнее', short: 'посложнее' },
 ];
 
+// S76: приём — только если шаг его делает: сухари в фарше — не панировка, хлебец — не котлеты, «не взбивай блендером» — не блендер
 const TECH = [
-  [/панир|сухар/, 'панировка', 2],
+  [/обваля|в панировк|панируй/, 'панировка', 2],
   [/отбе?й|отбив/, 'отбить мясо', 1],
-  [/сформ|скатай|слепи/, 'сформовать котлеты или тефтели', 1],
+  [/(сформуй|слепи|сформируй)[^.]*(хлебец|батон|рулет)/, 'сформовать хлебец', 1],
+  [/скатай|(сформуй|слепи|сформируй)[^.]*тефтел/, 'скатать тефтели', 1],
+  [/(сформуй|слепи|сформируй)[^.]*(котлет|лепёшк|лепешк)/, 'слепить котлеты', 1],
   [/тесто|замеси/, 'тесто', 2],
-  [/блендер/, 'блендер', 1],
-  [/внутри не розов|сок прозрачн/, 'проверить готовность мяса', 1],
+  [/(сложи|положи|налей|переложи|выложи)[^.]*в блендер|(взбей|измельчи|пюрируй)[^.]*блендер/, 'блендер', 1],
+  [/внутри не розов|сок прозрачн|без розового/, 'проверить готовность мяса', 1],
 ];
-// Делать две вещи сразу: «пока рис варится, …», «тем временем», «займись мясом»
+// Делать две вещи сразу (S76): по таймлайну — шаги разных частей блюда (рис и соус) идут в одно время. Разогрев
+// духовки, мытьё рук и «достань и отмерь» не в счёт. Собранного таймлайна нет (старые рецепты) — по словам в тексте
 const PARALLEL = /пока (он|она|оно|они|рис|картофель|картошка|паста|макароны|вода|булгур|кускус|лапша|мясо|курица|соус)\S* (вар|жар|запека|туш|кипит|печ|готов)|тем временем|одновременно|параллельно|займись/;
+function twoAtOnce(steps, text) {
+  const xs = steps.filter((s) => s.at && !s.background && !s.chore && s.kind !== 'mise' && s.kind !== 'hygiene');
+  if (!xs.length) return PARALLEL.test(text);
+  return xs.some((a, i) => xs.slice(i + 1).some((b) => a.track !== b.track && a.track !== 'finish' && b.track !== 'finish'
+    && a.at.start < b.at.end - 0.5 && b.at.start < a.at.end - 0.5));
+}
 
 export function difficulty(r) {
   if (!r) return null;
@@ -36,19 +51,23 @@ export function difficulty(r) {
   score += active <= 10 ? 0 : active <= 18 ? 1 : active <= 25 ? 2 : 3;
   if (active > 18) reasons.push(`активно ${active} мин`);
   score += steps.length <= 4 ? 0 : steps.length <= 8 ? 1 : steps.length <= 12 ? 2 : 3;
-  if (steps.length > 10) reasons.push(`${steps.length} шагов`);
-  const parallel = PARALLEL.test(text);
+  if (steps.length > 10) reasons.push(count(steps.length, ['шаг', 'шага', 'шагов']));
+  const parallel = twoAtOnce(steps, text);
   if (parallel) { score += 2; reasons.push('две вещи одновременно'); }
   for (const [re, label, w] of TECH) if (re.test(text)) { score += w; reasons.push(label); }
   if (oven) { score += 1; reasons.push('духовка'); }
+  // посуда называется словами (S54: «3 вида посуды» при пяти строках в «Посуде» читалось как ошибка)
   const tools = (r.tools || []).length;
-  if (tools >= 3) { score += 1; reasons.push(`${tools} вида посуды`); }
+  // из «или» — то, что в посуде рецепта (противень, а не «форма»); одно название — один раз (S76)
+  const inGear = new Set((r.gear || []).map((g) => g.id));
+  const names = [...new Set((r.tools || []).map((g) => (TOOL[g.find((id) => inGear.has(id)) || g[0]]?.ru || g[0]).toLowerCase()))];
+  if (tools >= 3) { score += 1; reasons.push(`нужны ${joinRu(names)}`); }
   const main = r.main_ingredient_count ?? (r.ingredients || []).filter((i) => !i.basic).length;
   if (main >= 9) { score += 1; reasons.push(`${main} продуктов`); }
   const level = score <= 2 ? LEVELS[1] : score <= 5 ? LEVELS[2] : score <= 8 ? LEVELS[3] : LEVELS[4];
-  if (!reasons.length) reasons.push(steps.length <= 4 ? `${steps.length} ${steps.length === 1 ? 'шаг' : 'шага'}` : 'обычные шаги, без сложных приёмов');
+  if (!reasons.length) reasons.push(steps.length <= 4 ? count(steps.length, ['шаг', 'шага', 'шагов']) : 'обычные шаги, без сложных приёмов');
   const tip = level.id === 'hard' || level.id === 'medium'
-    ? (parallel ? 'Прочитайте шаги заранее и нарежьте всё до того, как включать плиту — тогда «пока варится» не застанет врасплох.'
+    ? (parallel ? `Прочитайте шаги заранее и нарежьте всё до того, как включать ${heats ? 'плиту' : 'духовку'} — тогда «пока готовится» не застанет врасплох.`
       : 'Прочитайте шаги заранее и подготовьте продукты до начала готовки.')
     : null;
   return { ...level, score, reasons, tip };

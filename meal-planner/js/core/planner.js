@@ -1,6 +1,9 @@
 // Генератор рациона на неделю (обед + ужин) и замена блюд.
 import { chooseOffer, proportionalCost, scaledIngredients, round2 } from './shopping.js';
 import { canCook } from './equipment.js';
+import { makeDated, addDish, datedMarginal, datedTotal } from './spoil.js';
+import { dayDate, COOK_HOUR } from './calendar.js';
+import { closedDays, openedDays } from './shelf.js';
 
 export const DAYS = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 export const DAYS_SHORT = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
@@ -21,6 +24,8 @@ export const DEFAULT_PREFS = {
   allowTwoStores: false, // устарело: заменено saveMode
   saveMode: 'money', // покупки: 'money' — дешевле (до двух магазинов в день), 'trips' — меньше походов (один магазин в день)
   equipment: {}, // кухонная утварь: id → есть ли (не указано — по умолчанию из equipment.js)
+  maxTotal: null, // время блюда целиком (с ожиданием), минут: null — любое; руками — всегда до ACTIVE_MAX (S65)
+  stove: 'electric', // плита: 'electric' (ручка 1–6 или 1–9), 'induction' (1–9), 'gas' — для «Что значит?» про огонь (S55)
   showGrams: false, // в рецептах и режиме готовки — граммы мелко рядом с бытовой мерой
   planSource: 'shop', // откуда продукты для новой недели: 'home' — только из того, что дома, 'shop' — с покупками (запасы — в первую очередь)
 };
@@ -62,7 +67,10 @@ export function eligibleRecipes(recipes, prefs = DEFAULT_PREFS, type = 'main') {
     if (!prefs.showBorderline && (r.tags || []).includes('спорное')) return false;
     if (!canCook(r, prefs.equipment)) return false; // нет нужной утвари
     // активной готовки больше 30 минут (считает движок по шагам, с заменами) — не в план; в рецептах есть с предупреждением
-    if (r.compiled && r.time?.active > ACTIVE_MAX) return false;
+    // предел — по нормам повара (time.active_pro); на странице — время новичка, оно больше (S53)
+    if (r.compiled && (r.time?.active_pro ?? r.time?.active) > ACTIVE_MAX) return false;
+    // «готовлю до 45 минут» в профиле — блюдо целиком, с ожиданием (S65: гуляш на 143 минуты не попадает)
+    if (prefs.maxTotal && type === 'main' && (r.time?.total || 0) > prefs.maxTotal) return false;
     return !r.ingredients.some((i) => !i.basic && !i.optional && excluded.has(i.key));
   });
 }
@@ -161,8 +169,8 @@ export function generatePlan(opts) {
   const p2 = cheap ? { ...prefs, maxRepeats: Math.max(3, prefs.maxRepeats || 2) } : prefs;
   const run = (mealBudget, overPenalty, costWeight) => {
     const plan = buildPlan({ ...opts, prefs: p2, mealBudget, overPenalty, costWeight, tasteScale: cheap ? 0.25 : 1 });
-    if (withExtras) plan.extras = planExtras({ plan, recipes, products, targets, prefs: p2, seed: opts.seed ?? 1, costWeight: cheap ? 3 : EXTRA_COST_WEIGHT, home, onlyHome, locked: opts.lockedExtras });
-    return { plan, cost: planCost(plan, recipes, products, prefs, home) };
+    if (withExtras) plan.extras = planExtras({ plan, recipes, products, targets, prefs: p2, seed: opts.seed ?? 1, costWeight: cheap ? 3 : EXTRA_COST_WEIGHT, home, onlyHome, locked: opts.lockedExtras, storage: opts.storage, buyDay: opts.buyDay, homeUntil: opts.homeUntil, prev: opts.prev?.extras });
+    return { plan, cost: planCost(plan, recipes, products, prefs, home, opts) };
   };
   let best = run(Math.max(10, budget - reserve), cheap ? 8 : 4, cheap ? 1.5 : COST_WEIGHT);
   if (!onlyHome && best.cost > limit + 0.01) {
@@ -174,9 +182,14 @@ export function generatePlan(opts) {
   return best.plan;
 }
 
-// Стоимость покупок недели по самой выгодной цене (упаковками), включая завтраки и перекусы
-export function planCost(plan, recipes, products, prefs = DEFAULT_PREFS, home = null) {
+// Стоимость покупок недели по самой выгодной цене (упаковками), включая завтраки и перекусы.
+// С данными о сроках (dated.storage) — по дням: пачка, вскрытая слишком давно, не доедается, нужна новая (core/spoil.js)
+export function planCost(plan, recipes, products, prefs = DEFAULT_PREFS, home = null, dated = null) {
   const byId = new Map(recipes.map((r) => [r.id, r]));
+  if (dated?.storage) {
+    const d = makeDated({ products, storage: dated.storage, stores: prefs.stores, home, homeUntil: dated.homeUntil, buyDay: dated.buyDay });
+    return datedTotal(datedNeeds(plan, byId), d, { skipBasic: true }).cost;
+  }
   const cost = makeCoster(products, { stores: prefs.stores, home });
   const needs = new Map();
   for (const b of plan.batches) if (byId.get(b.recipeId)) addNeeds(needs, byId.get(b.recipeId), b.factor, b.slots.length);
@@ -185,10 +198,29 @@ export function planCost(plan, recipes, products, prefs = DEFAULT_PREFS, home = 
   return totalCost(needs, cost);
 }
 
-function buildPlan({ recipes, products, targets, prefs = DEFAULT_PREFS, seed = Date.now(), iterations = 120, locked = {}, mealBudget, overPenalty = 4, costWeight = COST_WEIGHT, tasteScale = 1, home = null, source = 'shop', prefer = null }) {
+// Продукты плана по дням готовки: Map key → [{ day, grams }] (обед и ужин — день готовки, завтрак и перекус — свой день)
+export function datedNeeds(plan, byId) {
+  const needs = new Map();
+  for (const b of plan.batches) if (byId.get(b.recipeId) && b.slots.length) addDish(needs, byId.get(b.recipeId), b.factor, b.slots.length, b.slots[0].day);
+  for (const x of plan.extras || []) if (byId.get(x.recipeId)) addDish(needs, byId.get(x.recipeId), x.factor, 1, x.day);
+  return needs;
+}
+
+// Сколько весит «порча» в оценке блюда: штраф в евро (выброшенное, заморозка, вторая закупка) — чуть сильнее цены,
+// чтобы скоропортящееся вставало в начало недели, а вскрытая пачка доедалась в свой срок (блок В)
+export const SPOIL_WEIGHT = 1;
+
+// «Досоставить»: прежнее блюдо готовки остаётся, если замена не даёт заметной выгоды (свежесть, цена) — иначе новый
+// «вкус недели» перетасовывает план и докупает новое, а купленное лежит (блок В, сценарий пропуска дня)
+const STAY = 2;
+const STAY_EXTRA = 1;
+
+function buildPlan({ recipes, products, targets, prefs = DEFAULT_PREFS, seed = Date.now(), iterations = 120, locked = {}, mealBudget, overPenalty = 4, costWeight = COST_WEIGHT, tasteScale = 1, home = null, source = 'shop', prefer = null, storage = null, buyDay = 0, homeUntil = null, prev = null }) {
   const pool = eligibleRecipes(recipes, prefs);
   const template = slotTemplate(prefs.batchCooking !== false);
   const cost = makeCoster(products, { stores: prefs.stores, home });
+  // с данными о сроках — цена по дням (core/spoil.js): одна модель на всю генерацию (кэш упаковок общий)
+  const dated = storage ? makeDated({ products, storage, stores: prefs.stores, home, homeUntil, buyDay }) : null;
   const onlyHome = source === 'home';
   // скоро испортится — блюда с этими продуктами чуть выгоднее
   const preferSet = new Set(prefer || []);
@@ -210,9 +242,11 @@ function buildPlan({ recipes, products, targets, prefs = DEFAULT_PREFS, seed = D
     const batches = [];
     let penalty = 0;
     let prevType = null;
+    let tripDays = new Set();
     for (let gi = 0; gi < template.length; gi++) {
       const slots = template[gi];
       const portions = slots.length;
+      const day = slots[0].day;
       let pick = null;
       if (locked[gi] && byId.get(locked[gi])) {
         pick = byId.get(locked[gi]);
@@ -221,16 +255,22 @@ function buildPlan({ recipes, products, targets, prefs = DEFAULT_PREFS, seed = D
         for (const r of pool) {
           if (portions > 1 && !canStore(r)) continue;
           if ((counts[r.id] || 0) >= maxRep) continue;
+          // то же блюдо две готовки подряд — 4 приёма пищи одного и того же (со сроками пачку выгодно доедать подряд)
+          if (batches.length && batches[batches.length - 1].recipeId === r.id && batches[batches.length - 1].slots[0].day >= day - 1) continue;
           const f = portionFactor(r, targets);
           if (onlyHome && !fitsHome(needs, r, f, portions, home)) continue;
-          // цена важна, но внутри бюджета не перевешивает разнообразие (перерасход штрафуется ниже)
-          let s = (costWeight * marginalCost(needs, r, f, portions, cost)) / portions;
+          // цена важна, но внутри бюджета не перевешивает разнообразие (перерасход штрафуется ниже);
+          // со сроками — цена по дням и штраф за порчу (скоропортящееся позже срока, недоеденная вскрытая пачка)
+          let s;
+          if (dated) { const m = datedMarginal(needs, r, f, portions, day, dated, tripDays); s = (costWeight * m.cost + SPOIL_WEIGHT * m.pen) / portions; }
+          else s = (costWeight * marginalCost(needs, r, f, portions, cost)) / portions;
           s += taste.get(r.id) || 0;
           s += (counts[r.id] || 0) * 2.5; // разнообразие
           if (r.protein_type === prevType) s += 1.2;
           s += Math.max(0, (typeCounts[r.protein_type] || 0) - 2) * 0.5;
           if (targets) s += Math.max(0, targets.perMeal.protein * 0.9 - r.per_serving.protein * f) * 0.04;
           if (preferSet.size) s -= r.ingredients.filter((i) => preferSet.has(i.key)).length * 1.2;
+          if (prev?.batches?.[gi] === r.id) s -= STAY;
           s += rng() * 0.6; // небольшой шум между итерациями
           if (s < bestScore) {
             bestScore = s;
@@ -240,20 +280,25 @@ function buildPlan({ recipes, products, targets, prefs = DEFAULT_PREFS, seed = D
       }
       if (!pick) continue;
       const f = portionFactor(pick, targets);
-      addNeeds(needs, pick, f, portions);
+      if (dated) { addDish(needs, pick, f, portions, day); tripDays = datedTotal(needs, dated).trips; } else addNeeds(needs, pick, f, portions);
       counts[pick.id] = (counts[pick.id] || 0) + 1;
       typeCounts[pick.protein_type] = (typeCounts[pick.protein_type] || 0) + 1;
       penalty += taste.get(pick.id) || 0;
+      if (prev?.batches?.[gi] === pick.id && !locked[gi]) penalty -= STAY;
       if (counts[pick.id] > 1) penalty += 2.5;
       if (pick.protein_type === prevType) penalty += 1.2;
       prevType = pick.protein_type;
       batches.push({ id: `b${gi}`, recipeId: pick.id, factor: f, slots: slots.map((s) => ({ ...s })) });
     }
-    const total = totalCost(needs, cost);
+    let total;
+    let spoilPen = 0;
+    if (dated) { const t = datedTotal(needs, dated); total = t.cost; spoilPen = t.pen; } else total = totalCost(needs, cost);
     // «из дома»: важнее всего — закрыть как можно больше приёмов пищи тем, что есть
-    const objective = costWeight * total + penalty + Math.max(0, total - mealBudget) * overPenalty - (onlyHome ? batches.length * 100 : 0);
+    const objective = costWeight * total + SPOIL_WEIGHT * spoilPen + penalty + Math.max(0, total - mealBudget) * overPenalty - (onlyHome ? batches.length * 100 : 0);
     if (!best || objective < best.objective) best = { objective, total, batches };
   }
+  // скоропортящееся — в первые дни: переставить готовки одинакового размера, если так меньше порчи (закреплённые — на месте)
+  if (best && dated) best.batches = reorderFresh(best.batches, { byId, dated, costWeight, locked });
   const plan = {
     id: 'plan-' + seed,
     createdAt: new Date().toISOString(),
@@ -264,21 +309,72 @@ function buildPlan({ recipes, products, targets, prefs = DEFAULT_PREFS, seed = D
   return plan;
 }
 
+// Перестановка готовок ради свежести: меняем местами блюда двух готовок с одинаковым числом порций, если так
+// дешевле с учётом порчи (цена по дням + штраф), а одинаковый белок не встаёт подряд. Жадно, пока есть улучшение.
+function reorderFresh(batches, { byId, dated, costWeight, locked = {} }) {
+  let cur = batches.map((b) => ({ ...b }));
+  const score = (bs) => {
+    const t = datedTotal(datedNeeds({ batches: bs, extras: [] }, byId), dated);
+    let adj = 0;
+    for (let i = 1; i < bs.length; i++) {
+      const a = byId.get(bs[i - 1].recipeId);
+      const b = byId.get(bs[i].recipeId);
+      if (a && b && a.protein_type === b.protein_type) adj += 1.2;
+    }
+    return costWeight * t.cost + SPOIL_WEIGHT * t.pen + adj;
+  };
+  let base = score(cur);
+  const free = (b) => !locked[+b.id.slice(1)];
+  for (let pass = 0; pass < 4; pass++) {
+    let improved = false;
+    for (let i = 0; i < cur.length; i++) {
+      for (let j = i + 1; j < cur.length; j++) {
+        const a = cur[i];
+        const b = cur[j];
+        if (!free(a) || !free(b) || a.slots.length !== b.slots.length || a.recipeId === b.recipeId) continue;
+        const next = cur.slice();
+        next[i] = { ...a, recipeId: b.recipeId, factor: b.factor };
+        next[j] = { ...b, recipeId: a.recipeId, factor: a.factor };
+        // то же блюдо две готовки подряд не ставим
+        if (next.some((x, k) => k > 0 && next[k - 1].recipeId === x.recipeId)) continue;
+        const s2 = score(next);
+        if (s2 < base - 0.05) { cur = next; base = s2; improved = true; }
+      }
+    }
+    if (!improved) break;
+  }
+  return cur;
+}
+
 // ---------- Завтраки и перекусы ----------
 // Под остаток дневной нормы после обеда и ужина: 1 завтрак + 0–2 перекуса в день.
 const EXTRA_COST_WEIGHT = 1.2;
 
-export function planExtras({ plan, recipes, products, targets, prefs = DEFAULT_PREFS, seed = 1, costWeight = EXTRA_COST_WEIGHT, home = null, onlyHome = false, locked = null }) {
+export function planExtras({ plan, recipes, products, targets, prefs = DEFAULT_PREFS, seed = 1, costWeight = EXTRA_COST_WEIGHT, home = null, onlyHome = false, locked = null, storage = null, buyDay = 0, homeUntil = null, prev = null }) {
   const map = new Map(recipes.map((r) => [r.id, r]));
   // цена с учётом уже купленных упаковок (открытая пачка творога дешевле новой) и того, что дома
   const cost = products ? makeCoster(products, { stores: prefs.stores, home }) : () => 0;
-  const needs = new Map();
-  for (const b of plan.batches) if (map.get(b.recipeId)) addNeeds(needs, map.get(b.recipeId), b.factor, b.slots.length);
+  // со сроками — по дням: открытая пачка скира бесплатна, только пока она годна; бананы — по сроку от покупки
+  const dated = products && storage ? makeDated({ products, storage, stores: prefs.stores, home, homeUntil, buyDay }) : null;
+  const needs = new Map(); // без сроков: key → граммы
+  let dn = new Map(); // со сроками: key → [{ day, grams }]
+  let tripDays = new Set();
+  const addX = (r, f, portions, day) => {
+    addNeeds(needs, r, f, portions);
+    if (dated) { addDish(dn, r, f, portions, day); tripDays = datedTotal(dn, dated).trips; }
+  };
+  for (const b of plan.batches) if (map.get(b.recipeId)) addX(map.get(b.recipeId), b.factor, b.slots.length, b.slots[0].day);
   // наполовину — цена новых упаковок, наполовину — доля упаковки (банка пасты или мёда живёт неделями)
-  const extraCost = (r, f) => (products ? 0.5 * marginalCost(needs, r, f, 1, cost) : 0) + (home ? 0.25 : 0.5) * r.per_serving.cost * f;
+  const marg = (r, f, day) => {
+    if (!products) return 0;
+    if (!dated) return marginalCost(needs, r, f, 1, cost);
+    const m = datedMarginal(dn, r, f, 1, day, dated, tripDays);
+    return m.cost + (SPOIL_WEIGHT / 0.5) * m.pen; // штраф порчи — в полную силу (extraCost берёт половину)
+  };
+  const extraCost = (r, f, day) => 0.5 * marg(r, f, day) + (home ? 0.25 : 0.5) * r.per_serving.cost * f;
   const fits = (r, f) => !onlyHome || fitsHome(needs, r, f, 1, home);
   // закреплённые завтраки и перекусы («досоставить»): их продукты уже заняты
-  for (const x of locked || []) if (map.get(x.recipeId)) addNeeds(needs, map.get(x.recipeId), x.factor, 1);
+  for (const x of locked || []) if (map.get(x.recipeId)) addX(map.get(x.recipeId), x.factor, 1, x.day);
   const lockedAt = (d, meal) => (locked || []).filter((x) => x.day === d && x.meal === meal);
   const breakfasts = eligibleRecipes(recipes, prefs, 'breakfast');
   const snacks = eligibleRecipes(recipes, prefs, 'snack');
@@ -286,7 +382,8 @@ export function planExtras({ plan, recipes, products, targets, prefs = DEFAULT_P
   const rng = mulberry32((seed ^ 0x9e3779b9) >>> 0);
   const counts = {};
   const extras = [];
-  let prev = null;
+  let prevB = null;
+  const prevX = prev; // «досоставить»: прежние завтраки и перекусы по id слота
   for (let d = 0; d < 7; d++) {
     let remK = targets.kcal - mains[d].kcal;
     let remP = targets.protein - mains[d].protein;
@@ -305,15 +402,16 @@ export function planExtras({ plan, recipes, products, targets, prefs = DEFAULT_P
         if (!fits(r, f)) { if (f > 1 && fits(r, 1)) f = 1; else continue; }
         let s = Math.abs(ps.kcal * f - wantK) / 300 + Math.max(0, Math.min(remP, 40) - ps.protein * f) * 0.05;
         s += Math.max(0, ps.protein * f - Math.max(remP, 25)) * 0.03;
-        s += extraCost(r, f) * costWeight;
-        s += (counts[r.id] || 0) * 0.9 + (r.id === prev ? 2 : 0) + rng() * 0.8;
+        s += extraCost(r, f, d) * costWeight;
+        s += (counts[r.id] || 0) * 0.9 + (r.id === prevB ? 2 : 0) + rng() * 0.8;
+        if (prevX?.[`x${d}b`] === r.id) s -= STAY_EXTRA;
         if (!best || s < best.s) best = { r, f, s };
       }
       if (best) {
         extras.push({ id: `x${d}b`, day: d, meal: 'breakfast', recipeId: best.r.id, factor: best.f });
-        addNeeds(needs, best.r, best.f, 1);
+        addX(best.r, best.f, 1, d);
         counts[best.r.id] = (counts[best.r.id] || 0) + 1;
-        prev = best.r.id;
+        prevB = best.r.id;
         remK -= best.r.per_serving.kcal * best.f;
         remP -= best.r.per_serving.protein * best.f;
       }
@@ -327,8 +425,9 @@ export function planExtras({ plan, recipes, products, targets, prefs = DEFAULT_P
         // при недоборе белка — белковый перекус, иначе калорийный
         let s = remP > 15 ? -Math.min(ps.protein, remP) * 0.08 : -Math.min(ps.kcal, remK) / 150;
         s += Math.max(0, ps.protein - Math.max(remP, 0)) * 0.05; // белок сверх нормы не нужен
-        s += extraCost(r, 1) * costWeight;
+        s += extraCost(r, 1, d) * costWeight;
         s += (counts[r.id] || 0) * 0.3 + [...extras, ...lockedAt(d, 'snack')].some((x) => x.day === d && x.recipeId === r.id) * 3 + rng() * 0.4;
+        if (prevX && Object.entries(prevX).some(([id, rid]) => rid === r.id && id.startsWith(`x${d}s`))) s -= STAY_EXTRA;
         if (!best || s < best.s) best = { r, s };
       }
       if (!best) break;
@@ -336,7 +435,7 @@ export function planExtras({ plan, recipes, products, targets, prefs = DEFAULT_P
       let k = n;
       while (taken.has(`x${d}s${k}`)) k++;
       extras.push({ id: `x${d}s${k}`, day: d, meal: 'snack', recipeId: best.r.id, factor: 1 });
-      addNeeds(needs, best.r, 1, 1);
+      addX(best.r, 1, 1, d);
       counts[best.r.id] = (counts[best.r.id] || 0) + 1;
       remK -= best.r.per_serving.kcal;
       remP -= best.r.per_serving.protein;
@@ -375,7 +474,7 @@ export function swapExtra(plan, extraId, recipe, oldRecipe) {
 }
 
 // Похожие блюда для замены: сначала те, что похожи по типу белка и продуктам и дёшевы при текущем плане
-export function alternatives(plan, batchId, { recipes, products, targets, prefs = DEFAULT_PREFS, limit = 12, home = null }) {
+export function alternatives(plan, batchId, { recipes, products, targets, prefs = DEFAULT_PREFS, limit = 12, home = null, storage = null, buyDay = 0, homeUntil = null }) {
   const b = plan.batches.find((x) => x.id === batchId);
   if (!b) return [];
   const byId = new Map(recipes.map((r) => [r.id, r]));
@@ -390,19 +489,34 @@ export function alternatives(plan, batchId, { recipes, products, targets, prefs 
     addNeeds(needs, r, x.factor, x.slots.length);
     counts[r.id] = (counts[r.id] || 0) + 1;
   }
+  // со сроками: цена и порча по дням — замена в четверг, которой нужен фарш, дороже, чем по сумме граммов
+  const dated = storage ? makeDated({ products, storage, stores: prefs.stores, home, homeUntil, buyDay }) : null;
+  const dn = dated ? datedNeeds({ batches: plan.batches.filter((x) => x.id !== batchId), extras: plan.extras || [] }, byId) : null;
+  const tripDays = dated ? datedTotal(dn, dated).trips : null;
   const maxRep = Math.max(1, prefs.maxRepeats || 2);
   const portions = b.slots.length;
+  const day = b.slots[0].day;
   // блюда соседних приготовлений не предлагаем — иначе одно и то же три раза подряд
   const idx = plan.batches.findIndex((x) => x.id === batchId);
   const neighbours = new Set([plan.batches[idx - 1]?.recipeId, plan.batches[idx + 1]?.recipeId].filter(Boolean));
   const curKeys = cur ? mainKeys(cur) : new Set();
+  // «осиротевшие» продукты: куплены (есть дома) под это блюдо, а больше ни одно блюдо недели их не берёт —
+  // замена, которая их использует, выше; у остальных — «останется без дела: капуста 550 г» (блок В)
+  // дальше по плану (с дня этой готовки); долгого хранения (рис, макароны) — не «сироты»: пригодятся потом
+  const others = new Set([...plan.batches.filter((x) => x.id !== batchId && x.slots[0].day >= day), ...(plan.extras || []).filter((x) => x.day >= day)]
+    .flatMap((x) => (byId.get(x.recipeId)?.ingredients || []).map((i) => i.key)));
+  const shortLived = (k) => !storage || closedDays(k, storage) <= 14 || openedDays(k, storage) <= 7;
+  const orphans = cur ? scaledIngredients(cur, b.factor, portions).filter((i) => !i.basic && !i.optional && i.key !== 'water' && !others.has(i.key) && haveOf(home, i.key) > 0 && shortLived(i.key))
+    .map((i) => ({ key: i.key, grams: Math.min(i.grams, haveOf(home, i.key)) })) : [];
   const out = [];
   for (const r of eligibleRecipes(recipes, prefs)) {
     if (r.id === b.recipeId) continue;
     if (portions > 1 && !canStore(r)) continue;
     if ((counts[r.id] || 0) >= maxRep || neighbours.has(r.id)) continue;
     const f = portionFactor(r, targets);
-    const delta = marginalCost(needs, r, f, portions, cost);
+    let delta;
+    let spoil = 0;
+    if (dated) { const m = datedMarginal(dn, r, f, portions, day, dated, tripDays); delta = m.cost; spoil = m.pen; } else delta = marginalCost(needs, r, f, portions, cost);
     const keys = mainKeys(r);
     const inter = [...keys].filter((k) => curKeys.has(k)).length;
     const jacc = inter / Math.max(1, new Set([...keys, ...curKeys]).size);
@@ -411,8 +525,10 @@ export function alternatives(plan, batchId, { recipes, products, targets, prefs 
     if (cur) sim -= Math.abs((r.time?.active || 20) - (cur.time?.active || 20)) / 30;
     // всё есть дома — выше (в плане «из дома» — обязательно сверху)
     const fromHome = !!home && fitsHome(needs, r, f, portions, home);
-    const rank = sim - (delta / portions) * 0.8 - (counts[r.id] || 0) * 3 + (fromHome ? (plan.source === 'home' ? 20 : 1) : 0);
-    out.push({ recipe: r, factor: f, deltaCost: round2(delta), similarity: round2(sim), rank, fromHome });
+    const leaves = orphans.filter((o) => !keys.has(o.key));
+    const rank = sim - ((delta + SPOIL_WEIGHT * spoil) / portions) * 0.8 - (counts[r.id] || 0) * 3 + (fromHome ? (plan.source === 'home' ? 20 : 1) : 0)
+      + (orphans.length - leaves.length) * 1.5;
+    out.push({ recipe: r, factor: f, deltaCost: round2(delta), similarity: round2(sim), rank, fromHome, leaves });
   }
   out.sort((a, b2) => b2.rank - a.rank);
   return out.slice(0, limit);
@@ -422,7 +538,8 @@ export function swapBatch(plan, batchId, recipe, targets) {
   return {
     ...plan,
     edited: [...new Set([...(plan.edited || []), batchId])], // ручная правка — «досоставить» её не тронет
-    batches: plan.batches.map((b) => (b.id === batchId ? { ...b, recipeId: recipe.id, factor: recipe.custom ? 1 : portionFactor(recipe, targets) } : b)),
+    // что стояло изначально — для «Вернуть исходное» после нескольких замен
+    batches: plan.batches.map((b) => (b.id === batchId ? { ...b, origRecipeId: b.origRecipeId || b.recipeId, recipeId: recipe.id, factor: recipe.custom ? 1 : portionFactor(recipe, targets) } : b)),
   };
 }
 
@@ -468,22 +585,35 @@ export const skipOf = (plan, key) => plan?.skips?.[key] || null;
 // План без пропущенных приёмов пищи. kinds: какие пропуски учитывать — для покупок только 'out' («ем вне дома»):
 // под прошедшее «не ел» продукты уже куплены и остаются в сумме к оплате; для съеденного — оба вида.
 // Ужин на 2 порции, у которого пропущен обед следующего дня, готовится на 1 порцию; пропущено всё — не готовится.
-export function effectivePlan(plan, kinds = ['out', 'skipped']) {
+// cooked — для учёта продуктов (что ушло в готовку): обед из вчерашнего ужина, отмеченный «не ел» уже после готовки,
+// не делает вчерашнюю готовку однопорционной задним числом (блок В: продукты «возвращались» в запасы)
+export function effectivePlan(plan, kinds = ['out', 'skipped'], { cooked = false } = {}) {
   if (!plan || !plan.skips || !Object.keys(plan.skips).length) return plan;
   const off = (k) => kinds.includes(plan.skips[k]);
+  const cookedAlready = (b, s, idx) => {
+    if (!cooked || idx === 0 || off(slotKey(b.slots[0].day, b.slots[0].meal))) return false;
+    const k = slotKey(s.day, s.meal);
+    if (plan.skips[k] === 'skipped') return true;
+    const at = plan.skipAt?.[k];
+    if (!at) return false;
+    const d = dayDate(plan, b.slots[0].day);
+    d.setHours(COOK_HOUR[b.slots[0].meal] ?? 18, 0, 0, 0);
+    return at >= d.getTime(); // «ем вне дома» отметили, когда ужин уже приготовлен
+  };
   return {
     ...plan,
-    batches: plan.batches.map((b) => ({ ...b, slots: b.slots.filter((s) => !off(slotKey(s.day, s.meal))) })).filter((b) => b.slots.length),
+    batches: plan.batches.map((b) => ({ ...b, slots: b.slots.filter((s, idx) => !off(slotKey(s.day, s.meal)) || cookedAlready(b, s, idx)) })).filter((b) => b.slots.length),
     extras: (plan.extras || []).filter((x) => !off(x.id)),
   };
 }
 
-export function toggleSkip(plan, key, kind = 'out') {
+export function toggleSkip(plan, key, kind = 'out', t = Date.now()) {
   const skips = { ...(plan.skips || {}) };
-  if (skips[key]) delete skips[key]; else skips[key] = kind;
+  const skipAt = { ...(plan.skipAt || {}) };
+  if (skips[key]) { delete skips[key]; delete skipAt[key]; } else { skips[key] = kind; skipAt[key] = t; }
   const done = { ...(plan.done || {}) };
   if (skips[key]) delete done[key]; // «не ел» снимает отметку «съел»
-  return { ...plan, skips, done };
+  return { ...plan, skips, skipAt, done };
 }
 
 // ---------- Отметка «приготовил / съел» ----------
@@ -514,7 +644,7 @@ export function moveBatch(plan, batchId, toDay) {
 // Досоставить оставшиеся дни: закреплённое (isLocked: прошедшее, сегодня и завтра — продукты могли быть уже куплены)
 // и изменённое вручную остаётся, остальное подбирается заново. План сохраняет id (отметки покупок не теряются),
 // дату начала, пропуски и чеки. cheap — «Подобрать дешевле».
-export function refillPlan(plan, { recipes, products, targets, prefs = DEFAULT_PREFS, budget = 70, reserve = 20, seed = 1, isLocked, isDone = () => false, cheap = false, home = null, source = 'shop', prefer = null }) {
+export function refillPlan(plan, { recipes, products, targets, prefs = DEFAULT_PREFS, budget = 70, reserve = 20, seed = 1, isLocked, isDone = () => false, cheap = false, home = null, source = 'shop', prefer = null, storage = null, buyDay = 0, homeUntil = null }) {
   const locked = {};
   const edited = new Set(plan.edited || []);
   // блюдо, которое больше нельзя предлагать (нет утвари, скрыто, исключён продукт), не закрепляется —
@@ -529,9 +659,11 @@ export function refillPlan(plan, { recipes, products, targets, prefs = DEFAULT_P
   // шаблон приготовлений — как у этого плана, даже если настройку «ужин на 2 порции» с тех пор поменяли
   const keepExtra = (x) => isDone(x.day, x.meal) || ((edited.has(x.id) || isLocked(x.day, x.meal)) && okExtra(x));
   const fresh = generatePlan({ recipes, products, targets, prefs: { ...prefs, batchCooking: plan.batchCooking !== false }, budget, reserve, seed, locked, cheap, home, source, prefer,
-    lockedExtras: (plan.extras || []).filter(keepExtra) });
+    lockedExtras: (plan.extras || []).filter(keepExtra), storage, buyDay, homeUntil,
+    prev: { batches: Object.fromEntries(plan.batches.map((b) => [+b.id.slice(1), b.recipeId])), extras: Object.fromEntries((plan.extras || []).map((x) => [x.id, x.recipeId])) } });
   return {
-    ...fresh, id: plan.id, startDate: plan.startDate, settingsKey: plan.settingsKey, skips: plan.skips, edited: plan.edited, receipts: plan.receipts,
+    ...fresh, id: plan.id, startDate: plan.startDate, settingsKey: plan.settingsKey, skips: plan.skips, skipAt: plan.skipAt, edited: plan.edited, receipts: plan.receipts,
+    refilledAt: Date.now(), done: plan.done,
     // закреплённые завтраки и перекусы — целиком из прежнего плана, остальные — новые
     // (id слота одинаковый: «x<день>b», «x<день>s<n>»; новый берётся для всех слотов, где прежний не оставлен)
     extras: (() => {
@@ -546,12 +678,12 @@ export function refillPlan(plan, { recipes, products, targets, prefs = DEFAULT_P
 
 // «Не предлагать» из плана: блюдо убирается и из текущей недели — каждое ещё не приготовленное
 // появление заменяется самым похожим (prefs уже со скрытым блюдом). Возвращает { plan, count }
-export function dropRecipe(plan, recipeId, { recipes, products, targets, prefs = DEFAULT_PREFS, isDone = () => false }) {
+export function dropRecipe(plan, recipeId, { recipes, products, targets, prefs = DEFAULT_PREFS, isDone = () => false, storage = null }) {
   let p = plan;
   let count = 0;
   for (const b of plan.batches) {
     if (b.recipeId !== recipeId || isDone(b.slots[0].day, b.slots[0].meal)) continue;
-    const alt = alternatives(p, b.id, { recipes, products, targets, prefs, limit: 1 })[0];
+    const alt = alternatives(p, b.id, { recipes, products, targets, prefs, limit: 1, storage })[0];
     if (alt) { p = swapBatch(p, b.id, alt.recipe, targets); count++; }
   }
   const byId = new Map(recipes.map((r) => [r.id, r]));

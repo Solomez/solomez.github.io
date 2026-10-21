@@ -10,18 +10,8 @@ const HOLIDAYS = new Set([
 const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 export const storesClosed = (date) => date.getDay() === 0 || HOLIDAYS.has(iso(date));
 
-// Сколько дней до готовки продукт можно покупать, не теряя свежести
-export function buyAheadDays(key, storage) {
-  const s = storage?.[key];
-  if (!s) return 7;
-  if (['freezer', 'pantry', 'cool'].includes(s.place)) return 14;
-  if (s.place === 'counter') return ['bread', 'toast_bread'].includes(key) ? 3 : 4;
-  if (/mince/.test(key)) return 1;
-  if (s.place === 'fridge' && /нижняя/.test(s.shelf || '')) return 2;
-  if (['mushrooms', 'spring_onion', 'parsley', 'lettuce', 'cucumber', 'mozzarella'].includes(key)) return 3;
-  if (['cottage_cheese', 'skyr', 'magertopfen', 'natural_yogurt', 'sour_cream', 'bell_pepper', 'cauliflower', 'leek', 'tomato'].includes(key)) return 5;
-  return 10; // яйца, твёрдый сыр, масло, морковь, капуста, молоко, сливки
-}
+// Сколько дней до готовки продукт можно покупать, не теряя свежести — срок в закрытой упаковке из данных (core/shelf.js)
+export { buyAheadDays } from './shelf.js';
 
 /**
  * items: [{ key, store, cost }]
@@ -34,9 +24,10 @@ export function buyAheadDays(key, storage) {
 // maxStoresPerDay: 1 — один магазин в день (меньше походов), 2 — режим «дешевле»: до двух магазинов в день
 export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost = () => null, canFreeze = () => false, maxExtra = 2, maxStoresPerDay = 1 }) {
   const open = (d) => !storesClosed(dateOf(d));
+  // у позиции может быть свой день и срок (партия второй закупки: it.needDay, it.ahead)
   const win = items.map((it) => {
-    const b = Math.max(firstDay, needDay(it.key));
-    const a = Math.max(firstDay, b - aheadOf(it.key));
+    const b = Math.max(firstDay, it.needDay != null ? it.needDay : needDay(it.key));
+    const a = Math.max(firstDay, b - (it.ahead != null ? it.ahead : aheadOf(it.key)));
     return { it, a, b };
   });
   const latestOpen = (a, b, avoid = new Set()) => {
@@ -106,7 +97,7 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
         const other = all.find((x) => x !== t && x.store === t.store && x.day >= w.a && x.day <= w.b && !used.has(x.day));
         if (other) { other.ws.push(w); continue; }
         const hosts = all.filter((x) => x !== t && x.store !== t.store && x.day >= w.a && x.day <= w.b)
-          .map((x) => ({ x, cost: altCost(w.it.key, x.store) })).filter((o) => o.cost != null)
+          .map((x) => ({ x, cost: altCost(w.it.key, x.store, w.it.grams) })).filter((o) => o.cost != null)
           .sort((p, q) => p.cost - q.cost || (q.x.day === day) - (p.x.day === day)); // сначала дешевле
         if (hosts.length) {
           const { x, cost } = hosts[0];
@@ -159,7 +150,7 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
           const inWin = x.day >= w.a && x.day <= w.b;
           const frozen = !inWin && x.day >= firstDay && x.day < w.a && canFreeze(w.it.key);
           if (!inWin && !frozen) continue;
-          const cost = x.store === w.it.store ? w.it.cost : altCost(w.it.key, x.store);
+          const cost = x.store === w.it.store ? w.it.cost : altCost(w.it.key, x.store, w.it.grams);
           if (cost == null) continue;
           const extra = cost - (w.it.cost || 0);
           const score = extra + (frozen ? 0.3 : 0);

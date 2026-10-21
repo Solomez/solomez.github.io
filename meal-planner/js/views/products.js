@@ -1,10 +1,11 @@
 // Фото товаров и варианты по магазинам. Фото показываются прямо с сайтов магазинов (не копируются).
 // На claude.ai внешние картинки на странице запрещены, но ссылки разрешены: там фото открывается
 // во весь экран в новой вкладке по кнопке с камерой.
-import { h, eur, num, sheet, icon, openLayer, closedLayer, isTopLayer } from '../ui.js';
+import { h, eur, num, sheet, icon, openLayer, closedLayer, isTopLayer, seg } from '../ui.js';
 import { IS_ARTIFACT, state } from '../state.js';
 import { formatPack, chooseOffer } from '../core/shopping.js';
-import { ingredientMeasure } from '../core/cookbook.js';
+import { ingredientMeasure, stepText } from '../core/cookbook.js';
+import { lifeWords } from '../core/shelf.js';
 
 export const SHOW_PHOTOS = !IS_ARTIFACT;
 
@@ -117,10 +118,15 @@ export function storageDetails(key) {
   const s = storageOf(key);
   if (!s || s.keep === '—') return null;
   const row = (label, text) => (text ? h('div', { class: 'st-row' }, h('span', { class: 'muted' }, label), h('span', null, text)) : null);
+  // сроки — числами из данных (USDA FoodKeeper, AGES…; без источника — «оценка»), а не прежним текстом «обычно 2–4 дня»
+  const lw = lifeWords(key, state.data.storage);
   return h('section', { class: 'storage-box' },
     h('div', { class: 'eyebrow' }, 'Как хранить'),
     h('div', { class: 'st-place' }, storageChip(key, s.place), s.shelf ? h('span', { class: 'muted' }, ` · ${s.shelf}`) : null),
-    row('Срок', s.keep), row('После вскрытия', s.opened), row('Заморозка', s.freeze),
+    row('Срок', lw ? `${lw.closed} в закрытой упаковке${/zu verbrauchen/.test(s.keep || '') ? ' — и не позже даты «zu verbrauchen bis»' : ''}` : s.keep),
+    row('После вскрытия', lw ? lw.opened : s.opened),
+    row('Заморозка', s.freeze),
+    lw ? row('Откуда сроки', lw.source) : null,
     s.tip ? h('p', { class: 'st-tip' }, s.tip) : null);
 }
 
@@ -131,11 +137,7 @@ export function showVariants(product, { needGrams, swap } = {}) {
   let close;
   const packs = sortedPacks(product);
   const best = needGrams ? chooseOffer(product, needGrams)?.pack : bestPack(product);
-  const content = h('div', null,
-    h('p', { class: 'muted', style: { marginTop: 0 } }, product.name_de_generic || product.name_de || '',
-      needGrams ? ` · на неделю нужно ${num(needGrams)} г` : ''),
-    storageDetails(product.key),
-    h('ul', { class: 'variants' }, packs.map((p) => {
+  const shops = h('ul', { class: 'variants' }, packs.map((p) => {
       const offer = needGrams ? chooseOffer({ packs: [p] }, needGrams) : null;
       return h('li', { class: 'variant' + (p === best ? ' best' : '') },
         photo(product, p, { cls: 'thumb lg' }),
@@ -145,17 +147,30 @@ export function showVariants(product, { needGrams, swap } = {}) {
           h('span', { class: 'variant-name' }, p.name_de),
           h('span', { class: 'muted' }, `${unitText(p)} · ${eur(p.price_eur)} · ${eur(p.eur_per_kg)}/кг`),
           offer ? h('span', { class: 'muted' }, `на неделю: ${formatPack(offer)} — ${eur(offer.cost)}`) : null,
-          p.url && /^https?:/.test(p.url) ? h('a', { href: p.url, target: '_blank', rel: 'noopener', class: 'variant-link' }, 'Открыть в магазине') : null));
-    })),
-    swap ? swapSection(product, swap, () => close?.()) : substituteList(product, best?.store, needGrams, 3),
+          p.url && /^https?:/.test(p.url) ? h('a', { href: p.url, target: '_blank', rel: 'noopener', class: 'variant-link' }, 'Открыть в магазине ↗') : null));
+    }));
+  const shopPart = [shops,
     !SHOW_PHOTOS ? h('p', { class: 'muted' }, 'Нажмите на значок камеры — фото товара откроется на весь экран в новой вкладке.') : null,
-    h('p', { class: 'muted small-print' }, 'Фото — с сайтов магазинов; упаковка в конкретном магазине может отличаться.'));
+    h('p', { class: 'muted small-print' }, 'Фото — с сайтов магазинов; упаковка в конкретном магазине может отличаться.')];
+  const head = h('p', { class: 'muted', style: { marginTop: 0 } }, product.name_de_generic || product.name_de || '', needGrams ? ` · на неделю нужно ${num(needGrams)} г` : '');
+  const swapPart = swap ? swapSection(product, swap, () => close?.()) : null;
+  let content;
+  if (swapPart) {
+    // из блюда: шторка открывается на заменах, «Заменить» видна сразу; магазины и хранение — вкладками (S58)
+    const body = h('div');
+    const tabs = [['subs', 'Замены', () => [swapPart]], ['shops', `Магазины (${packs.length})`, () => shopPart], ['store', 'Хранение', () => [storageDetails(product.key) || h('p', { class: 'muted' }, 'Особых правил хранения нет.')]]];
+    const show = (id) => { body.replaceChildren(seg(tabs.map(([v, l]) => [v, l]), id, show), ...tabs.find(([v]) => v === id)[2]()); };
+    show('subs');
+    content = h('div', null, head, body);
+  } else {
+    content = h('div', null, head, storageDetails(product.key), ...shopPart, substituteList(product, best?.store, needGrams, 3));
+  }
   close = sheet(product.name_ru || 'Варианты', content);
 }
 
 // Замены в блюде-шаблоне: только совместимые; до подтверждения — что изменится (время, количество, способ,
 // белок и калории, цена, предупреждения), после — пересобранный рецепт с подсветкой изменённых шагов
-function swapSectionTemplate(product, { current, onPick, options, preview, origName }, close) {
+function swapSectionTemplate(product, { current, onPick, options, preview, origName, scale = 1, portions = null }, close) {
   const ok = options.filter((o) => o.allowed && !(state.prefs?.excludedKeys || []).includes(o.key));
   const no = options.filter((o) => !o.allowed);
   const signed = (x, unit, digits = 0) => (Math.abs(x) < (digits ? 0.05 : 0.5) ? 'так же' : `${x > 0 ? '+' : '−'}${num(Math.abs(x), digits)}${unit}`);
@@ -169,20 +184,23 @@ function swapSectionTemplate(product, { current, onPick, options, preview, origN
       const kit = state.data.kitchen;
       const r0 = pv.base;
       const r1 = pv.recipe;
-      const qty = (r, ing) => (ing ? ingredientMeasure(r, ing, 1, kit).measure : '—');
-      const liq0 = r0.ingredients.find((x) => x.derived?.from === (pv.from.id || pv.from.key));
-      const liq1 = r1.ingredients.find((x) => x.derived?.from === (pv.to.id || pv.to.key));
+      // количества — на выбранные порции, как на странице рецепта (S58)
+      const qty = (r, ing) => (ing ? ingredientMeasure(r, ing, scale, kit).measure : '—');
+      const changed = r1.steps.map((st, k) => [k, st]).filter(([, st]) => st.changed);
+      const liq0 = r0.ingredients.find((x) => x.derived?.from === (pv.from.id || pv.from.key) && x.derived.by !== 'salt');
+      const liq1 = r1.ingredients.find((x) => x.derived?.from === (pv.to.id || pv.to.key) && x.derived.by !== 'salt');
       box.replaceChildren(
         h('ul', { class: 'clean swap-diff' },
           h('li', null, h('b', null, 'Время: '), `${signed(pv.time, ' мин')} — всего ≈ ${r1.time.total} мин, руками ${r1.time.active} мин`),
-          h('li', null, h('b', null, 'Количество: '), `${qty(r0, pv.from)} ${pv.from.name_ru.toLowerCase()} → ${qty(r1, pv.to)} ${pv.to.name_ru.toLowerCase()}`),
+          h('li', null, h('b', null, `Количество${portions ? ` на ${portions} порц.` : ''}: `), `${pv.from.name_ru} — ${qty(r0, pv.from)} → ${pv.to.name_ru} — ${qty(r1, pv.to)}`),
           liq0 || liq1 ? h('li', null, h('b', null, 'Жидкость: '), `${qty(r0, liq0)} → ${qty(r1, liq1)}`) : null,
           pv.method ? h('li', null, h('b', null, 'Способ: '), `${methodLabel(pv.method.from)} → ${methodLabel(pv.method.to)}`) : null,
           h('li', null, h('b', null, 'На порцию: '), `белок ${signed(pv.protein, ' г', 1)}, калории ${signed(pv.kcal, ' ккал')}, цена ${Math.abs(pv.cost) < 0.005 ? 'так же' : (pv.cost > 0 ? '+' : '−') + eur(Math.abs(pv.cost))}`),
-          h('li', null, h('b', null, 'Шаги: '), pv.changedSteps ? `изменится ${pv.changedSteps}` : 'те же'),
-          pv.note ? h('li', null, h('b', null, 'Вкус и текстура: '), pv.note) : null,
+          changed.length ? h('li', null, h('details', { class: 'plain' }, h('summary', null, `Шаги: изменится ${changed.length} — показать`),
+            h('ol', { class: 'clean swap-steps' }, changed.map(([k, st]) => h('li', null, h('b', null, `Шаг ${k + 1}: `), stepText(r1, st, scale, kit)))))) : h('li', null, h('b', null, 'Шаги: '), 'те же'),
+          pv.note && pv.note !== o.note ? h('li', null, h('b', null, 'Вкус и текстура: '), pv.note) : null,
           ...pv.warnings.map((w) => h('li', { class: 'need-line' }, `⚠ ${w}`))),
-        h('button', { class: 'btn small primary', onclick: () => { close(); onPick(o.key); } }, 'Заменить'));
+      );
       box.hidden = false;
     };
     return h('li', { class: 'variant' + (on ? ' best' : '') },
@@ -191,7 +209,9 @@ function swapSectionTemplate(product, { current, onPick, options, preview, origN
         h('span', { class: 'variant-store' }, sp.name_ru),
         o.note ? h('span', { class: 'alt-note' }, o.note) : null,
         on ? h('span', { class: 'badge accent', style: { justifySelf: 'start', marginTop: '6px' } }, 'Сейчас в блюде')
-          : h('button', { class: 'btn small', style: { justifySelf: 'start', marginTop: '6px' }, onclick: show }, 'Что изменится?'),
+          : h('div', { class: 'row', style: { gap: '8px', marginTop: '6px', flexWrap: 'wrap' } },
+            h('button', { class: 'btn small primary', onclick: () => { close(); onPick(o.key); } }, 'Заменить'),
+            h('button', { class: 'btn small', 'aria-expanded': 'false', onclick: (e) => { show(); e.currentTarget.setAttribute('aria-expanded', String(!box.hidden)); } }, 'Что изменится?')),
         box));
   };
   return h('section', { class: 'alt-section' },

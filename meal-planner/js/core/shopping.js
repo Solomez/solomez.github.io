@@ -12,8 +12,8 @@ export function scaledIngredients(recipe, factor = 1, portions = recipe.servings
 export function planNeeds(plan, recipeMap, { only } = {}) {
   const needs = new Map();
   const cooks = [
-    ...(only === 'extras' ? [] : plan.batches.map((b) => ({ recipeId: b.recipeId, factor: b.factor, portions: b.slots.length }))),
-    ...(only === 'main' ? [] : (plan.extras || []).map((x) => ({ recipeId: x.recipeId, factor: x.factor, portions: 1 }))),
+    ...(only === 'extras' ? [] : plan.batches.filter((b) => b.slots.length).map((b) => ({ recipeId: b.recipeId, factor: b.factor, portions: b.slots.length, day: b.slots[0].day, meal: b.slots[0].meal }))),
+    ...(only === 'main' ? [] : (plan.extras || []).map((x) => ({ recipeId: x.recipeId, factor: x.factor, portions: 1, day: x.day, meal: x.meal }))),
   ];
   for (const b of cooks) {
     const r = recipeMap.get(b.recipeId);
@@ -22,7 +22,7 @@ export function planNeeds(plan, recipeMap, { only } = {}) {
       if (SKIP.has(ing.key) || !(ing.grams > 0)) continue;
       const cur = needs.get(ing.key) || { grams: 0, uses: [] };
       cur.grams += ing.grams;
-      cur.uses.push({ recipeId: r.id, title: r.title, grams: ing.grams, optional: !!ing.optional });
+      cur.uses.push({ recipeId: r.id, title: r.title, grams: ing.grams, optional: !!ing.optional, day: b.day, meal: b.meal });
       needs.set(ing.key, cur);
     }
   }

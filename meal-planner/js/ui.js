@@ -25,8 +25,8 @@ function append(el, children) {
   }
 }
 
-// Неразрывный пробел между числом и единицей: «~4 минуты», «180 °C», «2 ст. л.» не разрываются на две строки
-export const nb = (t) => String(t ?? '').replace(/(\d)\s+(?=(мин|минут|сек|секунд|ч\b|час|°|г\b|кг|мл|л\b|ст\.|ч\.|шт|см|мм|раз|порц))/g, '$1\u00a0');
+// Неразрывный пробел между числом и единицей: «~4 минуты», «180 °C», «2 столовые ложки» не разрываются на две строки
+export const nb = (t) => String(t ?? '').replace(/(\d)\s+(?=(мин|минут|сек|секунд|ч\b|час|°|г\b|кг|мл|л\b|литр|стакан|столов|чайн|щепот|ст\.|ч\.|шт|см|мм|раз|порц))/g, '$1\u00a0');
 
 export const eur = (x) => '€' + (Math.round((x || 0) * 100) / 100).toFixed(2).replace('.', ',');
 export const num = (x, d = 0) => Number(x || 0).toLocaleString('ru-RU', { maximumFractionDigits: d });
@@ -59,17 +59,20 @@ const ICONS = {
   back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
   info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>',
   camera: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+  flame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-3.9 0-6.5-2.6-6.5-6.2 0-3.3 2.4-5.4 3.9-8.3.4 1.8 1.4 3 2.6 3.7.2-2.6 1.3-4.9 3.2-6.7.1 3.2 3.3 5.4 3.3 10 0 4.3-2.6 7.5-6.5 7.5z"/><path d="M12 21c-1.6 0-2.8-1.2-2.8-2.9 0-1.6 1.3-2.6 2.1-4 .5 1.2 1.6 1.7 2.5 2.4.6.5 1 1.1 1 1.8 0 1.5-1.2 2.7-2.8 2.7z"/></svg>',
   clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
 };
 export const icon = (name) => h('span', { 'aria-hidden': 'true', style: { display: 'inline-flex' }, html: ICONS[name] || '' });
 
 // Всплывающее сообщение; с action — кнопка (например, «Отменить»), висит дольше
+// Компактное: до трёх строк над нижним меню (S71: разрастался на полэкрана и закрывал главную кнопку);
+// с «Отменить» — 9 секунд, нажатие на текст закрывает
 export function toast(msg, action) {
   document.querySelectorAll('.toast').forEach((x) => x.remove());
-  const t = h('div', { class: 'toast', role: 'status' }, h('span', null, msg),
+  const t = h('div', { class: 'toast', role: 'status' }, h('span', { class: 'toast-msg', title: msg, onclick: () => t.remove() }, msg),
     action ? h('button', { class: 'toast-action', onclick: () => { t.remove(); action.onClick(); } }, action.label) : null);
   document.body.append(t);
-  setTimeout(() => t.remove(), action ? 10000 : 2600); // с «Отменить» — дольше: успеть прочитать и нажать
+  setTimeout(() => t.remove(), action ? 9000 : 3000);
 }
 
 const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
@@ -93,20 +96,49 @@ export function meter(value, goal, cls = '') {
 
 // Окна поверх страницы (листы снизу, просмотр фото): Escape и смена раздела закрывают верхнее,
 // пока окно открыто — страница под ним не прокручивается
+// Системная кнопка «Назад» телефона (S62) сначала закрывает верхнее окно, а не уходит с экрана: у каждого окна —
+// своя запись в истории браузера (тот же адрес); закрыли окно сами — запись убираем
 const layers = [];
+let skipPops = 0;
+let lidSeq = 0;
+let closingByBack = false;
 export const hasLayer = () => layers.length > 0;
 export const isTopLayer = (close) => layers[layers.length - 1] === close;
 export function openLayer(close) {
   layers.push(close);
   document.body.style.overflow = 'hidden';
+  close.lid = ++lidSeq;
+  try { history.pushState({ ...(history.state || {}), lid: close.lid }, ''); } catch { /* ignore */ }
 }
 export function closedLayer(close) {
   const i = layers.indexOf(close);
   if (i >= 0) layers.splice(i, 1);
   if (!layers.length) document.body.style.overflow = '';
+  // окно закрыли кнопкой — убрать его запись из истории. После текущего нажатия: ссылка в окне («Готовить»)
+  // уже сменила адрес — тогда запись не трогаем
+  if (i >= 0 && !closingByBack) {
+    setTimeout(() => { if (history.state?.lid === close.lid) { skipPops++; history.back(); } }, 0);
+  }
+}
+// «Назад» в режиме готовки: fn(event) — своя обработка, когда окон нет
+let backHandler = null;
+export const onBack = (fn) => { backHandler = fn; };
+if (typeof window !== 'undefined') {
+  window.addEventListener('popstate', (e) => {
+    if (skipPops) { skipPops--; return; }
+    const top = layers[layers.length - 1];
+    if (top && e.state?.lid !== top.lid) {
+      closingByBack = true;
+      try { top(); } finally { closingByBack = false; }
+      return;
+    }
+    backHandler?.(e);
+  });
 }
 export function closeAllLayers() {
-  while (layers.length) layers[layers.length - 1]();
+  // смена экрана: окна закрываются, их записи в истории остаются (тот же адрес — безвредно)
+  closingByBack = true;
+  try { while (layers.length) layers[layers.length - 1](); } finally { closingByBack = false; }
   document.body.style.overflow = '';
 }
 if (typeof document !== 'undefined') {
@@ -151,6 +183,13 @@ export function download(filename, text) {
   document.body.append(a);
   a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  toast(`Файл сохранён: ${filename} — в папке «Загрузки»`); // S71: после «Скачать» не было сообщения
+}
+
+// Системное «Поделиться» (телефон: мессенджеры, заметки) — где есть; false — отменили или недоступно
+export const canShare = () => typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+export async function shareText(title, text) {
+  try { await navigator.share({ title, text }); return true; } catch { return false; }
 }
 
 // Буфер обмена недоступен: выделяем текст в поле, чтобы скопировать его вручную
@@ -166,9 +205,19 @@ export function selectForCopy(id) {
 export async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
-    toast('Скопировано в буфер обмена');
+    toast('Скопировано — вставьте в мессенджер или заметки');
     return true;
   } catch {
+    // старый способ: скрытое поле и команда «копировать» (S71: раньше только выделяли текст)
+    try {
+      const ta = h('textarea', { readonly: true, style: { position: 'fixed', left: '-9999px', top: '0' } });
+      ta.value = text;
+      document.body.append(ta);
+      ta.select();
+      const ok = document.execCommand && document.execCommand('copy');
+      ta.remove();
+      if (ok) { toast('Скопировано — вставьте в мессенджер или заметки'); return true; }
+    } catch { /* ignore */ }
     return false;
   }
 }

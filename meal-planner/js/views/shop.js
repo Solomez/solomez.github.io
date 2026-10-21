@@ -1,8 +1,10 @@
-import { h, eur, num, sheet, copyText, download, icon, meter, plural, selectForCopy, toast, seg } from '../ui.js';
+import { h, eur, num, sheet, copyText, download, icon, meter, plural, selectForCopy, toast, seg, shareText, canShare } from '../ui.js';
 import { state, save, IS_ARTIFACT } from '../state.js';
 import { formatAmount, formatPack, chooseOffer } from '../core/shopping.js';
 import { firstNeededDay as neededDay, lastBuyDay as buyDay, saveModeOf, ownCost, swapCost } from '../core/checkout.js';
 import { storesClosed } from '../core/trips.js';
+import { mustFreeze, closedDays, thawWay } from '../core/shelf.js';
+import { packShare } from '../core/amounts.js';
 import { routeOrder } from '../core/route.js';
 import { checkoutNow, unavailableSet, weekBudget } from './money.js';
 import { shoppingToText, tripsToText } from '../core/export.js';
@@ -47,12 +49,18 @@ export function renderShop(root, rerender) {
   const toggle = (k, v, store) => {
     checked[k] = v ? Date.now() : false; // время покупки — для учёта запасов дома
     if (v) ui.justChecked.add(k);
-    if (v && store && !k.startsWith('basic:')) learnStep(state.routes, store, zoneOfKey(k, store));
+    const key = k.split('#')[0];
+    if (v && store && !k.startsWith('basic:')) learnStep(state.routes, store, zoneOfKey(key, store));
     save();
     redraw();
+    // в день покупки: что сразу заморозить и когда достать (блок В)
+    const ti = v ? ck.trips.flatMap((t) => t.items).find((i) => (i.ckey || i.key) === k) : null;
+    if (ti?.freeze?.length) toast(freezeText(plan, key, ti.freeze, ti.offer || list.items.find((i) => i.key === key)?.offer), { label: 'Понятно', onClick: () => {} });
   };
   const ctx = { products, checked, swaps, toggle, redraw, unavailable, plan };
   const bought = list.items.filter((i) => checked[i.key]);
+  // вторая закупка: скоропортящееся, которое нельзя заморозить, не доживёт с первого похода до дня готовки
+  const second = list.items.filter((i) => i.lots?.some((l, k) => k > 0 || l.late));
 
   const first = rest.batches[0]?.slots[0];
   const firstExtra = [...(rest.extras || [])].sort((a, b) => a.day - b.day)[0];
@@ -73,12 +81,12 @@ export function renderShop(root, rerender) {
   const week = ui.scope === 'rest' ? checkoutNow(plan, 'week', now) : ck;
   root.append(h('section', { class: 'summary' },
     h('div', { class: 'row between' },
-      h('div', null, h('span', { class: 'big' }, eur(ck.toPay)), h('span', { class: 'muted' }, ` к оплате ${ui.scope === 'rest' ? 'с сегодня' : 'за неделю'} · ${allN} ${plural(allN, 'позиция', 'позиции', 'позиций')}`)),
+      // главная сумма — «осталось купить»: уменьшается с каждой отметкой «куплено» (S68)
+      h('div', null, h('span', { class: 'big' }, eur(ck.left)), h('span', { class: 'muted' }, ` осталось купить · из ${eur(ck.toPay)} ${ui.scope === 'rest' ? 'с сегодня' : 'за неделю'}`)),
       h('span', { class: 'muted' }, `куплено ${boughtN} из ${allN}`)),
     meter(ck.bought, ck.toPay || 1, 'progress'),
     h('div', { class: 'muted' }, [
-      ui.scope === 'rest' && week.toPay > ck.toPay + 0.01 ? `За всю неделю — ${eur(week.toPay)}, как на Плане.` : null,
-      allN ? `Осталось купить ≈ ${eur(ck.left)}.` : null, // строка всегда на месте: первая отметка не сдвигает список
+      ui.scope === 'rest' && week.toPay > ck.toPay + 0.01 ? `Вся неделя — ${eur(week.toPay)}, как на Плане.` : null,
       ck.ownTotal > 0 ? `В том числе ваши товары вне плана — ${eur(ck.ownTotal)}.` : null,
       saveModeOf(state.prefs) === 'trips' ? 'Режим «Меньше походов»: разница с «Дешевле» — в шапке походов.' : null,
     ].filter(Boolean).join(' ') || null),
@@ -93,6 +101,11 @@ export function renderShop(root, rerender) {
     h('div', { class: 'store-sums' }, Object.entries(ck.byStore).sort((a, b) => b[1].total - a[1].total).map(([s, v]) =>
       h('span', null, h('b', null, s), ` ${eur(v.total)}`)))));
 
+  if (second.length) {
+    const lines = second.flatMap((i) => i.lots.filter((l, k) => k > 0 || l.late).map((l) => `${i.name_ru.toLowerCase()} ${formatAmount(i.key, l.grams, products[i.key])} — ${dayIn(plan, l.first.day - (l.first.meal === 'breakfast' || l.first.meal === 'lunch' ? 1 : 0))}`));
+    root.append(h('p', { class: 'notice' }, h('b', null, 'Две закупки: '), `одной покупкой на неделю это испортится раньше, чем понадобится. Докупите свежим: ${lines.join('; ')}. В «Походах» — отдельным походом.`));
+  }
+
   // Где покупать и как группировать — компактно, пояснение по кнопке
   const stores = state.prefs.stores || [];
   root.append(h('div', { class: 'shop-controls no-print' },
@@ -105,31 +118,36 @@ export function renderShop(root, rerender) {
     ui.showInfo ? h('p', { class: 'muted', style: { margin: 0 } }, stores.length
       ? 'Показываются только выбранные магазины. Если продукта в них нет, он берётся из любого.'
       : 'Без выбора — для каждого продукта самая выгодная обычная цена из всех магазинов. Lidl и Penny публикуют онлайн в основном акции, поэтому их цен в базе меньше.') : null,
-    h('div', { class: 'seg scroll', role: 'group', 'aria-label': 'Группировка' },
+    h('div', { class: 'seg wrap', role: 'group', 'aria-label': 'Группировка' },
       [['days', 'Походы'], ['department', 'Отделы'], ['store', 'Магазины'], ['storage', 'Хранение']].map(([v, l]) =>
         h('button', { class: ui.group === v ? 'on' : '', 'aria-pressed': String(ui.group === v), onclick: () => { ui.group = v; redraw(); } }, l)))));
 
-  // Когда продукт понадобится впервые (день готовки), считая от сегодня: фарш хранится 1–2 дня,
-  // остальное сырое мясо 2–3 дня — что нужно позже, лучше заморозить сразу после покупки
+  // Когда продукт понадобится впервые (день готовки), считая от сегодня: что в закрытой упаковке столько не проживёт
+  // (срок — из данных о хранении, core/shelf.js), лучше заморозить сразу после покупки
   const firstDay = firstNeededDay(listPlan);
   const today = Math.max(0, todayIndex(plan, now));
   const inDays = (it) => Math.max(0, (firstDay[it.key] ?? today) - today);
   const placeOf = (it) => {
     const s = storageOf(it.key);
     if (!s) return 'pantry';
-    const raw = s.place === 'fridge' && /нижняя/.test(s.shelf || '');
-    const mince = /mince/.test(it.key);
-    if (raw && inDays(it) >= (mince ? 2 : 3)) return 'freezer';
+    if (it.lots) return s.place; // часть на заморозку — в совете у товара
+    if (s.place !== 'freezer' && mustFreeze(it.key, state.data.storage, inDays(it))) return 'freezer';
     return s.place;
   };
   const freezeNote = (it) => {
+    // по партиям (core/spoil.js): какую часть заморозить и когда достать
+    if (it.lots) {
+      const c = closedDays(it.key, state.data.storage);
+      const fz = (it.lot ? [] : it.lots[0].freeze || []).filter((u) => u.day > today + c);
+      return fz.length ? freezeText(plan, it.key, fz, it.offer) : null;
+    }
     if (placeOf(it) !== 'freezer' || storageOf(it.key)?.place === 'freezer') return null;
     const d = firstDay[it.key];
     return `Заморозь сразу: понадобится ${dayIn(plan, d)}. Переложи в холодильник ${dayIn(plan, d - 1)}, вечером.`;
   };
 
   if (ui.group === 'storage') {
-    root.append(h('p', { class: 'storage-guide' }, 'Покупки удобно разложить так. Мясо и фарш, которые понадобятся позже, чем через 1–2 дня, лучше сразу заморозить. Сроки — ориентир; главное — дата на упаковке: «zu verbrauchen bis» для мяса строгая, «mindestens haltbar bis» — срок качества.'));
+    root.append(h('p', { class: 'storage-guide' }, 'Покупки удобно разложить так. Что понадобится позже, чем продукт живёт в закрытой упаковке (сырое мясо и фарш — 1–2 дня), лучше сразу заморозить. Сроки — ориентир; главное — дата на упаковке: «zu verbrauchen bis» для мяса строгая, «mindestens haltbar bis» — срок качества.'));
   }
 
   // По дням: план походов — один магазин в день, скоропортящееся ближе ко дню готовки
@@ -151,15 +169,18 @@ export function renderShop(root, rerender) {
     : ui.group === 'store'
     ? Object.keys(ck.byStore).sort((a, b) => ck.byStore[b].total - ck.byStore[a].total).map((s) => ({ id: s, name: s, test: (i) => storeOf(i) === s }))
     : departments.map((d) => ({ id: d.id, name: d.de ? `${d.name} · ${d.de}` : d.name, test: (i) => i.department === d.id }));
+  // партии второй закупки — отдельными строками со своей отметкой («banana#1»)
+  const rows = list.items.flatMap((i) => [{ ...i, ckey: i.key }, ...(i.lots || []).slice(1).map((l, k) => ({ ...i, ckey: `${i.key}#${k + 1}`, lot: k + 1, offer: l.offer, needGrams: l.grams, lotInfo: l }))]);
+  const rowCost = (i) => (i.lot ? i.offer?.cost || 0 : costOf(i));
   for (const g of groups) {
-    const items = list.items.filter((i) => g.test(i));
+    const items = rows.filter((i) => g.test(i));
     if (!items.length) continue;
-    const left = items.filter((i) => !checked[i.key]);
-    const sum = left.reduce((a, i) => a + costOf(i), 0);
+    const left = items.filter((i) => !checked[i.ckey]);
+    const sum = left.reduce((a, i) => a + rowCost(i), 0);
     root.append(h('div', { class: 'group-head' }, h('h2', null, g.name),
       h('span', { class: 'muted' }, left.length ? eur(sum) : 'всё куплено')));
-    root.append(h('ul', { class: 'shop-list' }, items.map((it) => itemRow(it, products, !!checked[it.key], (v) => toggle(it.key, v, it.offer?.pack.store), ui.group === 'store', redraw,
-      { note: checked[it.key] ? null : freezeNote(it), place: ui.group === 'storage' ? null : placeOf(it), ctx }))));
+    root.append(h('ul', { class: 'shop-list' }, items.map((it) => itemRow(it, products, !!checked[it.ckey], (v) => toggle(it.ckey, v, it.offer?.pack.store), ui.group === 'store', redraw,
+      { note: checked[it.ckey] ? null : it.lot ? lotNote(plan, it.lotInfo) : freezeNote(it), place: ui.group === 'storage' ? null : placeOf(it), ctx }))));
   }
   // свои товары — тоже по отделам или по магазинам
   const own = state.cart.filter((c) => !c.done || Date.now() - (c.doneAt || 0) < 12 * 3600000);
@@ -191,7 +212,9 @@ function shopLayout(root) {
   const sum = root.querySelector(':scope > .summary');
   const more = sum && fold('Подробнее о сумме', [...sum.querySelectorAll(':scope > .muted, :scope > .store-sums')], 'sum-more');
   const picked = [...root.querySelectorAll('.scope .seg .on, .shop-controls .seg .on, .trips-head .seg .on')].map((b) => b.textContent.trim());
-  const d = fold(`Список и магазины: ${picked.join(' · ') || 'настройки'}`, [root.querySelector(':scope > .scope'), root.querySelector(':scope > .shop-controls'), root.querySelector(':scope > .trips-head')], 'list-settings');
+  const d = fold(`Настройки списка: ${picked.join(' · ') || 'период, магазины'}`, [root.querySelector(':scope > .scope'), root.querySelector(':scope > .shop-controls'), root.querySelector(':scope > .trips-head')], 'list-settings');
+  // панель открыта, пока её не закроют: выбор периода, магазина или (i) её не сворачивает (S71)
+  if (d) { d.open = !!ui.settingsOpen; d.addEventListener('toggle', () => { ui.settingsOpen = d.open; }); }
   // «Меньше походов» внутри — подсказка в самой строке (агенты не находили его в свёрнутом блоке)
   if (d) d.querySelector('summary').append(h('span', { class: 'fold-hint' }, 'период, группировка, «Дешевле» или «Меньше походов»'));
   // подробности суммы — в конце списка, прямо над закреплённой панелью: в панели они занимали треть экрана, а над списком отодвигали товары
@@ -305,7 +328,7 @@ function renderTrips(root, { ck, list, listPlan, plan, now, products, checked, t
     const date = dayDate(plan, t.day);
     const rel = relDay(t.day);
     const own = ownByTrip.get(t) || [];
-    const left = t.items.filter((i) => !checked[i.key]);
+    const left = t.items.filter((i) => !checked[i.ckey || i.key]);
     const ownLeft = own.filter((c) => !c.done);
     const all = t.items.length + own.length;
     const leftN = left.length + ownLeft.length;
@@ -320,7 +343,7 @@ function renderTrips(root, { ck, list, listPlan, plan, now, products, checked, t
       t.day === todayIndex(plan, now) ? h('button', { class: 'linkbtn small-link', onclick: () => receiptSheet(t, redraw) }, plan.receipts?.[receiptKey(t.store)] != null ? `Чек: ${eur(plan.receipts[receiptKey(t.store)])}` : 'Сумма чека') : null));
     if (t.early) root.append(h('p', { class: 'freeze-note', style: { margin: '2px 0 0' } }, 'Ближе ко дню готовки магазины закрыты — купите заранее; мясо и фарш заморозьте.'));
     // по отделам — в порядке обхода этого магазина; купленное уходит вниз, в «Куплено»
-    const isDone = (e) => (e.kind === 'own' ? !!e.c.done && !((e.c.doneAt || 0) >= ui.enteredAt) : !!checked[e.ti.key] && !ui.justChecked.has(e.ti.key));
+    const isDone = (e) => (e.kind === 'own' ? !!e.c.done && !((e.c.doneAt || 0) >= ui.enteredAt) : !!checked[e.ti.ckey || e.ti.key] && !ui.justChecked.has(e.ti.ckey || e.ti.key));
     const entries = [...t.items.map((ti) => ({ kind: 'plan', ti })), ...own.map((c) => ({ kind: 'own', c }))];
     const zoneOf = (e) => (e.kind === 'plan' ? zoneOfKey(e.ti.key, t.store) : (idx.shelf[state.places[t.store]?.[e.c.ref] || e.c.shelf]?.zone || 'oils'));
     const order = (ui.frozen[t.store] ||= routeOrder(state.data, state.routes, t.store));
@@ -348,8 +371,10 @@ function renderTrips(root, { ck, list, listPlan, plan, now, products, checked, t
   function tripRow(ti) {
     const t = trips.find((x) => x.items.includes(ti));
     {
-      const base = byKey.get(ti.key);
-      const it = ti.switchedFrom ? { ...base, offer: chooseOffer({ packs: (products[ti.key].packs || []).filter((p) => p.store === t.store && !p.stale) }, base.needGrams) } : base;
+      const b0 = byKey.get(ti.key);
+      // партия второй закупки — своя упаковка, количество и отметка
+      const base = ti.lot ? { ...b0, offer: ti.offer, needGrams: ti.grams, homeGrams: 0 } : b0;
+      const it = { ...(ti.switchedFrom ? { ...base, offer: chooseOffer({ packs: (products[ti.key].packs || []).filter((p) => p.store === t.store && !p.stale) }, base.needGrams) } : base), ckey: ti.ckey || ti.key };
       const note = [
         ti.lateFor != null ? `Нужно уже ${dayIn(plan, cookDay[ti.key] ?? ti.lateFor)}, а раньше магазины закрыты — проверьте, нет ли дома, или поменяйте блюда местами в плане.` : null,
         ti.switchedFrom ? `Здесь, а не в ${ti.switchedFrom}: ${ti.extra > 0 ? '+' + eur(ti.extra) : 'та же цена'} — зато на один поход меньше.` : null,
@@ -357,9 +382,10 @@ function renderTrips(root, { ck, list, listPlan, plan, now, products, checked, t
       // купили раньше срока свежести — заморозить и достать накануне
       const frozen = ti.freezeUntil != null
         ? `Купите сейчас и сразу заморозьте; переложите в холодильник ${dayIn(plan, ti.freezeUntil - 1)}, вечером.`
-        : null;
-      return compactRow(it, products, !!checked[it.key], (v) => toggle(it.key, v, t.store), redraw,
-        { note: checked[it.key] ? null : [note, frozen || (t.day < (need[it.key] ?? t.day) - 1 ? freezeNote(it) : null)].filter(Boolean).join(' ') || null, ctx, store: t.store });
+        : ti.freeze?.length ? freezeText(plan, ti.key, ti.freeze, it.offer) : null;
+      const lotLine = ti.lot ? `Вторая покупка — свежим, ближе к готовке: ${b0.lots?.[ti.lot] ? lotUses(plan, b0.lots[ti.lot]) : ''}.` : null;
+      return compactRow(it, products, !!checked[it.ckey], (v) => toggle(it.ckey, v, t.store), redraw,
+        { note: checked[it.ckey] ? null : [note, lotLine, frozen || (!b0.lots && t.day < (need[it.key] ?? t.day) - 1 ? freezeNote(it) : null)].filter(Boolean).join(' ') || null, ctx, store: t.store });
     }
   }
 }
@@ -432,6 +458,28 @@ const dayIn = (plan, d) => {
 
 const firstNeededDay = (plan) => neededDay(plan, state.recipeMap);
 
+// «Сразу заморозь 500 г из 1 кг (половину): понадобится в пятницу, 6 ноября. Переложи в холодильник в четверг, вечером.»
+// freeze — [{ day, grams }] (порции по дням готовки), offer — что покупается
+export function freezeText(plan, key, freeze, offer) {
+  const g = freeze.reduce((a, f) => a + f.grams, 0);
+  const pg = offer?.pack && !offer.pack.loose ? offer.pack.grams : 0;
+  const n = pg ? Math.round(g / pg) : 0;
+  const whole = pg && offer.count > 1 && n >= 1 && Math.abs(g - n * pg) < pg * 0.1;
+  const unit = offer?.pack?.pack_unit === 'ml' ? 'мл' : 'г';
+  const share = offer?.boughtGrams ? packShare(g, offer.boughtGrams, unit) : null;
+  const part = whole ? `${n} ${plural(n, 'пачку', 'пачки', 'пачек')} из ${offer.count} — не вскрывая`
+    : `≈ ${Math.round(g / 10) * 10} ${unit}${share && !/^≈ \d/.test(share) ? ` — ${share.replace(/^≈ /, '')}` : offer?.boughtGrams ? ` из ${offer.boughtGrams >= 1000 ? fmtKg(offer.boughtGrams) : Math.round(offer.boughtGrams) + ' ' + unit}` : ''}${freeze.length > 1 ? `, порциями по дням — ${freeze.length}` : ''}`;
+  const days = [...new Set(freeze.map((f) => f.day))].sort((a, b) => a - b);
+  const way = thawWay(key, state.data.storage);
+  const thaw = days.map((d) => (way === 'fridge' ? `переложи в холодильник ${dayIn(plan, d - 1)}, вечером` : way === 'counter' ? `достань ${dayIn(plan, d)} утром` : `${dayIn(plan, d)} клади в готовку прямо замороженным`));
+  return `Сразу заморозь ${part}: понадобится ${days.map((d) => dayIn(plan, d)).join(' и ')}. Чтобы разморозить, ${thaw.join('; ')}.`;
+}
+const fmtKg = (g) => `${String(Math.round(g / 100) / 10).replace('.', ',')} кг`;
+// Партия второй закупки: «к ужину в пятницу, 6 ноября»
+const MEAL_DAT = { breakfast: 'завтраку', lunch: 'обеду', snack: 'перекусу', dinner: 'ужину' };
+const lotUses = (plan, l) => `к ${MEAL_DAT[l.first.meal] || 'готовке'} ${dayIn(plan, l.first.day)}`;
+const lotNote = (plan, l) => `Вторая покупка — свежим, ${lotUses(plan, l)}: с первого похода не доживёт.`;
+
 // сколько разных блюд (одно блюдо, приготовленное дважды, — одно)
 const dishes = (it) => new Set(it.uses.map((u) => u.title)).size;
 const usesByDish = (it) => [...it.uses.reduce((m, u) => m.set(u.title, (m.get(u.title) || 0) + u.grams), new Map())];
@@ -441,8 +489,8 @@ const usesByDish = (it) => [...it.uses.reduce((m, u) => m.set(u.title, (m.get(u.
 function compactRow(it, products, isChecked, onToggle, redraw, extra = {}) {
   const o = it.offer;
   const store = extra.store;
-  const swap = extra.ctx?.swaps?.[it.key];
-  const id = `sh-${it.key}`;
+  const swap = it.lot ? null : extra.ctx?.swaps?.[it.key];
+  const id = `sh-${it.ckey || it.key}`;
   // фото — отдельная кнопка (на весь экран); касание по остальной строке отмечает купленное
   return h('li', { class: 'shop-item compact' + (isChecked ? ' done' : '') },
     h('input', { type: 'checkbox', id, checked: isChecked, onchange: (e) => onToggle(e.target.checked) }),
@@ -469,7 +517,7 @@ function itemRow(it, products, isChecked, onToggle, byStore, redraw, extra = {})
   if (o?.pack.is_estimate) flags.push('цена — оценка');
   if (o?.pack.stale) flags.push('цена устарела');
   const open = ui.openUses === it.key;
-  const id = `sh-${it.key}`;
+  const id = `sh-${it.ckey || it.key}`;
   return h('li', { class: 'shop-item with-thumb' + (isChecked ? ' done' : '') },
     h('input', { type: 'checkbox', id, checked: isChecked, onchange: (e) => onToggle(e.target.checked) }),
     photo(products[it.key], o?.pack?.image ? o.pack : thumbPack(products[it.key]), { label: it.name_ru }),
@@ -504,7 +552,8 @@ function exportList(list, products, departments, checked, cart, ck) {
   let close;
   close = sheet('Поделиться списком', h('div', { class: 'stack' }, pick,
     h('div', { class: 'row' },
-      h('button', { class: 'btn primary', onclick: async () => { if (await copyText(text)) close(); else selectForCopy('export-shop'); } }, 'Скопировать'),
+      canShare() ? h('button', { class: 'btn primary', onclick: async () => { if (await shareText('Список покупок', text)) close(); } }, icon('share'), 'Поделиться…') : null,
+      h('button', { class: canShare() ? 'btn' : 'btn primary', onclick: async () => { if (await copyText(text)) close(); else selectForCopy('export-shop'); } }, 'Скопировать'),
       !IS_ARTIFACT && h('button', { class: 'btn', onclick: () => download('pokupki.txt', text) }, 'Скачать .txt'),
       !IS_ARTIFACT && h('button', { class: 'btn', onclick: () => { close(); setTimeout(() => window.print(), 50); } }, 'Печать')),
     area));

@@ -1,6 +1,6 @@
 import { h, num, eur, seg, toast, download, humanDate } from '../ui.js';
-import { state, save, targets, IS_ARTIFACT, dropMissing, claimAll, normalizeProfile } from '../state.js';
-import { ACTIVITY, GOALS, DEFAULT_PROFILE, validNumber, rangeText, RANGES, goalProtein, isDefaultValue, proteinWhy } from '../core/nutrition.js';
+import { state, save, targets, IS_ARTIFACT, dropMissing, claimAll, normalizeProfile, applyCustom } from '../state.js';
+import { ACTIVITY, GOALS, DEFAULT_PROFILE, goalProtein, isDefaultValue, proteinWhy, numError, NUM_EXAMPLE as EXAMPLE, NUM_INTEGER as INTEGER } from '../core/nutrition.js';
 import { TOOLS, has, canCook } from '../core/equipment.js';
 import { MEASURE_HINT } from '../core/cookbook.js';
 import { ACCOUNTS_ENABLED, sendCode, verifyCode, startAccount, signOut, signedIn } from '../account.js';
@@ -11,13 +11,17 @@ export function renderProfile(root, rerender) {
   // Числа: сохраняем и обновляем только расчёт нормы и бюджета — поля ввода не пересоздаются,
   // иначе касание следующего поля теряет фокус (на blur срабатывает change, а страница перерисовывается)
   const touch = (k) => { p.touched = [...new Set([...(p.touched || []), k])]; };
-  // final — выход из поля: только тогда показываем ошибку диапазона (при наборе «1» → «15» → «150» не мигаем)
-  const setN = (k, v, final = true) => {
+  // Сохраняется только проверенный итог (S69): при наборе («1» → «10» → «100» → «100000») ничего не сохраняем —
+  // при выходе из поля (или сворачивании приложения) проверяем диапазон, целое число и связь бюджетов;
+  // ошибка — прежнее значение остаётся, рядом — что не так и пример
+  const setN = (k, v) => {
     const hint = document.getElementById(`hint-${k}`);
-    if (!validNumber(k, v)) {
-      // вне диапазона — не сохраняем, подсказываем рядом с полем (фокус не трогаем)
-      if (hint && final) { hint.textContent = v == null ? 'Введите число, например 84,5.' : `Должно быть ${rangeText(k)} ${RANGES[k]?.[2] || ''}. Сохранено прежнее: ${p[k] ?? '—'}.`; hint.hidden = false; }
-      return;
+    const status = document.getElementById('save-status');
+    const err = numError(k, v, p);
+    if (err) {
+      if (hint) { hint.textContent = err; hint.hidden = false; }
+      if (status) status.textContent = 'Не сохранено — проверьте поле';
+      return false;
     }
     if (hint) hint.hidden = true;
     p[k] = v;
@@ -25,6 +29,7 @@ export function renderProfile(root, rerender) {
     save();
     markSaved();
     drawLive();
+    return true;
   };
   const setP = (k, v) => {
     p[k] = v;
@@ -35,6 +40,9 @@ export function renderProfile(root, rerender) {
     rerender({ keepScroll: true });
   };
   const setPr = (k, v) => { pr[k] = v; save(); rerender({ keepScroll: true }); };
+  // «по умолчанию, проверьте» снимается и подтверждением того же значения (S69)
+  const keep = (k, quiet = false) => { touch(k); save(); if (!quiet) rerender({ keepScroll: true }); };
+  dfltKeep = keep;
 
   const normSlot = h('div', { class: 'stack' });
   const budgetSlot = h('p', { class: 'muted', style: { margin: 0 } });
@@ -63,49 +71,54 @@ export function renderProfile(root, rerender) {
   root.append(h('div', { class: 'card stack' },
     h('h2', { style: { marginTop: 0 } }, 'О вас'),
     h('div', null, h('div', { class: 'muted', style: { marginBottom: '6px' } }, 'Пол'),
-      seg([['male', 'Мужской'], ['female', 'Женский']], p.sex, (v) => setP('sex', v))),
+      seg([['male', 'Мужской'], ['female', 'Женский']], p.sex, (v) => setP('sex', v)),
+      !p.sex ? h('span', { class: 'field-err' }, 'Не выбран — пока расчёт для мужчины.') : null),
     h('div', { class: 'grid two' },
-      numField('Возраст, лет', p.age, (v, f) => setN('age', v, f), { min: 14, max: 99, id: 'f-age', key: 'age', dflt: isDefaultValue(p, 'age') }),
-      numField('Рост, см', p.height, (v, f) => setN('height', v, f), { min: 120, max: 230, id: 'f-height', key: 'height' }),
-      numField('Вес, кг', p.weight, (v, f) => setN('weight', v, f), { min: 35, max: 250, step: 0.1, id: 'f-weight', key: 'weight' })),
-    h('fieldset', { class: 'radios' }, h('legend', null, 'Активность', isDefaultValue(p, 'activity') ? dfltMark() : null),
+      numField('Возраст, лет', p.age, (v) => setN('age', v), { min: 14, max: 99, id: 'f-age', key: 'age', dflt: isDefaultValue(p, 'age') }),
+      numField('Рост, см', p.height, (v) => setN('height', v), { min: 120, max: 230, id: 'f-height', key: 'height' }),
+      numField('Вес, кг', p.weight, (v) => setN('weight', v), { min: 35, max: 250, step: 0.1, id: 'f-weight', key: 'weight' })),
+    h('fieldset', { class: 'radios' }, h('legend', null, 'Активность', isDefaultValue(p, 'activity') ? dfltMark('activity') : null),
       ACTIVITY.map((a) => h('label', { class: 'radio' + (a.id === p.activity ? ' on' : '') },
         h('input', { type: 'radio', name: 'activity', id: `act-${a.id}`, value: a.id, checked: a.id === p.activity, onchange: () => setP('activity', a.id) }),
         h('span', null, a.label), h('span', { class: 'muted' }, `×${String(a.factor).replace('.', ',')}`)))),
-    h('label', { class: 'field' }, h('span', null, 'Цель', isDefaultValue(p, 'goal') ? dfltMark() : null),
+    h('label', { class: 'field' }, h('span', null, 'Цель', isDefaultValue(p, 'goal') ? dfltMark('goal') : null),
       h('select', { onchange: (e) => { setP('goal', e.target.value); } }, Object.entries(GOALS).map(([id, g]) => h('option', { value: id, selected: id === p.goal }, g.label)))),
-    p.goal === 'gain' ? numField('Прибавка к норме для набора, %', p.surplusPct, (v, f) => setN('surplusPct', v, f), { min: 0, max: 25, id: 'f-surplus', key: 'surplusPct' }) : null,
-    numField('Белок, г на кг веса', p.proteinPerKg, (v, f) => setN('proteinPerKg', v, f), { min: 1.2, max: 3, step: 0.1, id: 'f-ppk', key: 'proteinPerKg', dflt: isDefaultValue(p, 'proteinPerKg') && isDefaultValue(p, 'goal') })));
+    p.goal === 'gain' ? numField('Прибавка к норме для набора, %', p.surplusPct, (v) => setN('surplusPct', v), { min: 0, max: 25, id: 'f-surplus', key: 'surplusPct' }) : null,
+    numField('Белок, г на кг веса', p.proteinPerKg, (v) => setN('proteinPerKg', v), { min: 1.2, max: 3, step: 0.1, id: 'f-ppk', key: 'proteinPerKg', dflt: isDefaultValue(p, 'proteinPerKg') && isDefaultValue(p, 'goal') })));
 
   root.append(h('div', { class: 'card stack' },
     h('h2', { style: { marginTop: 0 } }, 'Ваша норма'),
     normSlot,
-    numField('Сколько нормы — на обед и ужин, %', p.mealShare, (v, f) => setN('mealShare', v, f), { min: 40, max: 90, id: 'f-share', key: 'mealShare' }),
+    numField('Сколько нормы — на обед и ужин, %', p.mealShare, (v) => setN('mealShare', v), { min: 40, max: 90, id: 'f-share', key: 'mealShare' }),
     h('p', { class: 'muted', style: { margin: 0 } }, 'Остальное — завтрак и перекусы: они тоже в плане, быстрые и почти без готовки.')));
 
   root.append(h('div', { class: 'card stack' },
     h('h2', { style: { marginTop: 0 } }, 'Бюджет'),
     h('div', { class: 'grid two' },
-      numField('Бюджет на продукты, € в неделю', p.budget, (v, f) => setN('budget', v, f), { min: 20, max: 400, id: 'f-budget', key: 'budget', dflt: isDefaultValue(p, 'budget') }),
-      numField('Из них на завтраки и перекусы, €', p.reserve, (v, f) => setN('reserve', v, f), { min: 0, max: 200, id: 'f-reserve', key: 'reserve' })),
+      numField('Бюджет на продукты, € в неделю', p.budget, (v) => setN('budget', v), { min: 20, max: 400, id: 'f-budget', key: 'budget', dflt: isDefaultValue(p, 'budget') }),
+      numField('Из них на завтраки и перекусы, €', p.reserve, (v) => setN('reserve', v), { min: 0, max: 200, id: 'f-reserve', key: 'reserve' })),
     budgetSlot));
 
   if (ACCOUNTS_ENABLED) root.append(accountCard(rerender));
 
-  // Кухонная утварь: обязательная меняет подбор блюд, заменимая — подсказки в шагах
+  // Кухонная утварь: обязательная меняет подбор блюд, заменимая — формулировку шагов (рецепты пересобираются)
   const eq = (pr.equipment = pr.equipment || {});
   const cookable = state.data.recipes.filter((r) => canCook(r, eq)).length;
   const toolRow = (t) => h('label', { class: 'switch' },
-    h('input', { type: 'checkbox', checked: has(eq, t.id), onchange: (e) => { eq[t.id] = e.target.checked; setPr('equipment', eq); } }),
-    h('span', null, t.ru, h('span', { class: 'muted' }, ` · ${t.de}`)));
+    h('input', { type: 'checkbox', checked: has(eq, t.id), onchange: (e) => { eq[t.id] = e.target.checked; pr.equipment = eq; applyCustom(); setPr('equipment', eq); } }),
+    h('span', null, t.label || t.ru, h('span', { class: 'muted' }, ` · ${t.de}`), !t.hard && t.alt ? h('span', { class: 'muted small' }, ` — нет: ${t.alt}`) : null));
   root.append(h('div', { class: 'card stack' },
     h('h2', { style: { marginTop: 0 } }, 'Что есть на кухне'),
     h('p', { class: 'muted', style: { margin: 0 } }, `Отметьте, что у вас есть: духовка, микроволновка, блендер, посуда. Сейчас можно приготовить ${cookable} из ${state.data.recipes.length} блюд. Текущую неделю под это пересоберёт «Досоставить оставшиеся дни» на экране План.`),
     h('div', { class: 'eyebrow' }, 'Без этого блюдо не приготовить — оно не попадёт в план'),
-    TOOLS.filter((t) => t.hard).map(toolRow),
-    h('div', { class: 'eyebrow', style: { marginTop: '8px' } }, 'Можно обойтись — в рецепте будет подсказка как'),
+    // противень идёт с духовкой — своей строки нет
+    TOOLS.filter((t) => t.hard && !t.with_oven).map(toolRow),
+    h('div', { class: 'eyebrow', style: { marginTop: '8px' } }, 'Можно обойтись — отметьте, что есть; чего нет, шаги расскажут, как без этого'),
     TOOLS.filter((t) => !t.hard).map(toolRow),
     has(eq, 'microwave') ? h('p', { class: 'muted', style: { margin: 0 } }, 'С микроволновкой в рецептах появится быстрый разогрев готового.') : null,
+    h('div', { class: 'eyebrow', style: { marginTop: '8px' } }, 'Плита'),
+    h('p', { class: 'muted', style: { margin: 0 } }, 'Для подсказки «Что значит?» в готовке: «средний огонь» — какое положение ручки на вашей плите.'),
+    seg([['electric', 'Электрическая'], ['induction', 'Индукция'], ['gas', 'Газ']], pr.stove || 'electric', (v) => setPr('stove', v)),
     h('div', { class: 'eyebrow', style: { marginTop: '8px' } }, 'Меры в рецептах'),
     h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: !!pr.showGrams, onchange: (e) => setPr('showGrams', e.target.checked) }),
       h('span', null, 'Показывать граммы', h('span', { class: 'muted' }, ' — мелко рядом со стаканами и ложками (для кухонных весов)'))),
@@ -123,6 +136,9 @@ export function renderProfile(root, rerender) {
       h('span', null, 'Добавлять завтрак и перекусы, чтобы закрыть дневную норму целиком')),
     h('label', { class: 'switch' }, h('input', { type: 'checkbox', checked: !!pr.showBorderline, onchange: (e) => setPr('showBorderline', e.target.checked) }),
       h('span', null, 'Предлагать блюда с необычным сочетанием (шакшука, дал)')),
+    h('div', { class: 'field' }, h('span', null, 'Сколько времени на обед и ужин — целиком, с ожиданием'),
+      seg([[0, 'Любое'], [30, 'до 30 мин'], [45, 'до 45 мин'], [60, 'до 60 мин']], pr.maxTotal || 0, (v) => setPr('maxTotal', v || null)),
+      h('span', { class: 'muted small' }, `Руками — всегда не больше 30 минут. Сейчас подходит ${state.data.recipes.filter((r) => (r.meal_type || 'main') === 'main' && (!pr.maxTotal || r.time.total <= pr.maxTotal)).length} обедов и ужинов.`)),
     h('label', { class: 'field' }, h('span', null, 'Одно блюдо — не чаще N раз в неделю'),
       h('select', { onchange: (e) => setPr('maxRepeats', +e.target.value) }, [1, 2, 3].map((n) => h('option', { value: n, selected: n === pr.maxRepeats }, `${n} ${n === 1 ? 'раз' : 'раза'}`)))),
     h('p', { class: 'muted', style: { margin: 0 } }, 'Всегда исключены: каши и гречка, супы, рыба и морепродукты. Брокколи, баклажаны, кабачки и шпинат встречаются только в мелких количествах.'),
@@ -131,7 +147,8 @@ export function renderProfile(root, rerender) {
         class: 'chip' + (excluded.has(x.key) ? ' on' : ''), 'aria-pressed': String(excluded.has(x.key)),
         onclick: () => { excluded.has(x.key) ? excluded.delete(x.key) : excluded.add(x.key); setPr('excludedKeys', [...excluded]); },
       }, x.name_ru || x.key)))),
-    h('p', { class: 'muted', style: { margin: 0 } }, 'Изменения применятся при следующей генерации недели.')));
+    hiddenList(rerender),
+    h('p', { class: 'muted', style: { margin: 0 } }, 'Изменения применятся при следующей генерации недели или «Досоставить оставшиеся дни» в Плане.')));
 
   root.append(h('div', { class: 'card stack' },
     h('h2', { style: { marginTop: 0 } }, 'Данные'),
@@ -234,6 +251,15 @@ function syncText() {
   return 'Профиль, план и отметки хранятся только в этом браузере.';
 }
 
+// «Больше не предлагать» — навсегда, пока не вернёте здесь (S65)
+function hiddenList(rerender) {
+  const ids = (state.prefs.hidden || []).filter((id) => state.recipeMap.has(id));
+  if (!ids.length) return h('p', { class: 'muted', style: { margin: 0 } }, 'Скрытых блюд нет. «Больше не предлагать» на странице рецепта или в Плане скрывает блюдо навсегда — вернуть можно здесь.');
+  return h('div', null, h('div', { class: 'muted', style: { marginBottom: '6px' } }, `Больше не предлагаются (${ids.length}):`),
+    h('ul', { class: 'clean hidden-list' }, ids.map((id) => h('li', null, h('a', { href: `#/recipe/${id}` }, state.recipeMap.get(id).title), ' ',
+      h('button', { class: 'btn small', onclick: () => { state.prefs.hidden = state.prefs.hidden.filter((x) => x !== id); save(); rerender({ keepScroll: true }); toast(`Снова предлагается: ${state.recipeMap.get(id).title}`); } }, 'Вернуть')))));
+}
+
 // Сброс в два нажатия: первое спрашивает, второе выполняет (окна confirm() в опубликованной версии не работают)
 let resetArmed = false;
 function resetButton(rerender) {
@@ -243,7 +269,7 @@ function resetButton(rerender) {
     h('button', { class: 'btn small', onclick: () => {
       resetArmed = false;
       Object.assign(state.profile, DEFAULT_PROFILE, { touched: [] });
-      state.plan = null; state.checked = {}; state.cook = {};
+      state.plan = null; state.checked = {}; state.cook = {}; state.timers = {};
       save(); rerender();
     } }, 'Да, сбросить'),
     h('button', { class: 'btn small ghost', onclick: () => { resetArmed = false; rerender({ keepScroll: true }); } }, 'Отмена'));
@@ -269,16 +295,26 @@ async function importBackup(e, rerender) {
   }
 }
 
-const dfltMark = () => h('span', { class: 'muted' }, ' · по умолчанию, проверьте');
+let dfltKeep = null;
+// «по умолчанию, проверьте» + «Оставить так» — подтверждение без изменения значения снимает пометку
+const dfltMark = (key) => h('span', { class: 'muted dflt' }, ' · по умолчанию, проверьте',
+  key ? [' ', h('button', { type: 'button', class: 'linkbtn', onclick: (e) => { e.preventDefault(); dfltKeep?.(key); } }, 'Оставить так')] : null);
+
+// Несохранённое число (поле не потеряло фокус) — сохранить, если приложение сворачивают
+let pendingNum = null;
+if (typeof document !== 'undefined') document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && pendingNum) { pendingNum(); pendingNum = null; } });
 
 function numField(label, value, onChange, { min, max, step = 1, id, key, dflt } = {}) {
-  return h('label', { class: 'field' }, h('span', null, label, dflt ? dfltMark() : null),
+  void min; void max; void step;
+  return h('label', { class: 'field' }, h('span', null, label, dflt ? dfltMark(key) : null),
     // текстовое поле с цифровой клавиатурой: у type=number часть браузеров теряет «84,5» (value — пустая строка)
-    h('input', { type: 'text', inputmode: 'decimal', id, 'aria-label': label, value: value == null ? '' : String(value).replace('.', ','), autocomplete: 'off',
-      // при вводе — сразу сохраняем (на телефоне поле часто не теряет фокус перед закрытием браузера), ошибку не показываем;
-      // при выходе из поля — проверка диапазона и подсказка
-      oninput: (e) => { const v = parseNum(e.target.value); if (v != null) onChange(v, false); },
-      onchange: (e) => onChange(parseNum(e.target.value), true) }),
+    h('input', { type: 'text', inputmode: INTEGER.has(key) ? 'numeric' : 'decimal', id, 'aria-label': label, value: value == null ? '' : String(value).replace('.', ','), autocomplete: 'off',
+      placeholder: EXAMPLE[key] ? `например ${EXAMPLE[key]}` : null,
+      // при вводе — не сохраняем (промежуточное «100» вместо «100000»); при выходе из поля — проверка и сохранение
+      oninput: (e) => { const el = e.target; pendingNum = () => onChange(parseNum(el.value)); },
+      onchange: (e) => { pendingNum = null; onChange(parseNum(e.target.value)); },
+      // выход из поля без изменений — подтверждение значения по умолчанию
+      onblur: (e) => { if (dflt && key && parseNum(e.target.value) === value) { dfltKeep?.(key, true); e.target.closest('label')?.querySelector('.dflt')?.remove(); } } }),
     key ? h('span', { class: 'field-err', id: `hint-${key}`, role: 'status', hidden: true }) : null);
 }
 function parseNum(x) {

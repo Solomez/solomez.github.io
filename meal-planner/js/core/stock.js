@@ -7,9 +7,10 @@
 //   at — когда отмечено (с этого момента считаются покупки и готовка); src — 'user' | 'auto' (перенесено с прошлой недели);
 //   freshAt — когда продукт появился дома (для «скоро испортится»).
 // Записи с ':' в ключе — товары каталога («billa:123»), к рецептам не относятся.
-import { scaledIngredients, chooseOffer, fmtNum } from './shopping.js';
+import { scaledIngredients, chooseOffer, fmtNum, proportionalCost } from './shopping.js';
 import { dayDate, COOK_HOUR } from './calendar.js';
 import { packShare } from './amounts.js';
+import { keepDays, lifeOf, endOfDayAfter, PIECE_SPLIT, DAY_MS } from './shelf.js';
 
 const DAY = 86400000;
 
@@ -26,8 +27,8 @@ export const PIECES = {
 
 // Уровни для продуктов в упаковках: доля обычной упаковки
 export const PACK_LEVELS = [
-  { id: 'none', f: 0, label: 'нет' }, { id: 'low', f: 0.15, label: 'почти нет' }, { id: 'quarter', f: 0.25, label: '¼' },
-  { id: 'half', f: 0.5, label: '½' }, { id: 'most', f: 0.75, label: '¾' }, { id: 'full', f: 1, label: 'целая' },
+  { id: 'none', f: 0, label: 'нет' }, { id: 'low', f: 0.15, label: 'почти нет' }, { id: 'quarter', f: 0.25, label: 'четверть' },
+  { id: 'half', f: 0.5, label: 'половина' }, { id: 'most', f: 0.75, label: 'три четверти' }, { id: 'full', f: 1, label: 'целая' },
   { id: 'two', f: 2, label: '2 уп.' }, { id: 'three', f: 3, label: '3 уп.' },
 ];
 // Базовые (масло, соль, специи): без количества
@@ -89,20 +90,8 @@ export function nearestLevel(key, grams, product) {
   return PACK_LEVELS.filter((l) => l.f > 0).reduce((a, b) => (Math.abs(b.f - r) < Math.abs(a.f - r) ? b : a)).id;
 }
 
-// Сколько дней продукт живёт дома (открытый или купленный свежим) — для «скоро испортится»
-export function keepDays(key, storage) {
-  const s = storage?.[key];
-  if (!s) return 14;
-  if (s.place === 'freezer') return 90;
-  if (s.place === 'pantry' || s.place === 'cool') return key === 'potatoes' || key === 'onion' ? 30 : 180;
-  if (s.place === 'counter') return ['bread', 'toast_bread'].includes(key) ? 4 : key === 'banana' ? 5 : 10;
-  if (/mince/.test(key)) return 2;
-  if (s.place === 'fridge' && /нижняя/.test(s.shelf || '')) return 3;
-  if (['mushrooms', 'spring_onion', 'parsley', 'lettuce', 'mozzarella', 'cucumber'].includes(key)) return 5;
-  if (['cottage_cheese', 'skyr', 'magertopfen', 'natural_yogurt', 'greek_yogurt', 'sour_cream', 'cream', 'tomato', 'bell_pepper', 'cauliflower', 'leek', 'protein_pudding'].includes(key)) return 7;
-  if (['gouda', 'emmentaler', 'parmesan', 'eggs', 'butter', 'feta'].includes(key)) return 21;
-  return 14;
-}
+// Сколько дней продукт живёт дома — из данных о сроках (core/shelf.js), а не свои числа (блок В: курица 3 → 1–2 дня)
+export { keepDays } from './shelf.js';
 
 // ---------- Учёт: готовка по плану ----------
 const cookTime = (plan, day, meal) => { const d = dayDate(plan, day); d.setHours(COOK_HOUR[meal] ?? 18, 0, 0, 0); return d.getTime(); };
@@ -133,27 +122,130 @@ export function usedBetween(events, key, from, to) {
 }
 
 /**
- * Запасы сейчас: отмеченное + купленное после отметки − приготовленное после отметки.
- * bought: Map key → { grams, t } — отмеченные в «Покупках» позиции (сколько куплено и когда).
- * Возвращает { key: { grams, base, added, used, at, src, freshAt, unknown } } для всех продуктов,
- * которые отмечены дома, куплены или нужны плану.
+ * Запасы сейчас: отмеченное + купленное после отметки − приготовленное после отметки, с вскрытием и порчей (блок В).
+ * Учёт ведётся по пачкам: купленное — упаковками (packGrams), отмеченное дома — одной «пачкой». Готовка берёт сначала
+ * вскрытое, затем то, что раньше истекает; первая готовка вскрывает пачку (штучное и развес — без вскрытия).
+ * Срок пачки: закрытой — от покупки, вскрытой — min(закрытый, от вскрытия) (core/shelf.js). exp — по нижней границе
+ * («проверьте свежесть»), expMax — по верхней: после него остаток считается испорченным и из запасов уходит.
+ * Замороженное (frozenUntil) не портится до разморозки; после — живёт закрытый срок от разморозки.
+ * bought: Map key → { grams, t, packGrams?, loose?, cost?, frozen?: [{ grams, until }] } или массив таких покупок.
+ * Возвращает { key: { grams, base, added, used, at, src, freshAt, unknown, openedAt, exp, expMax, frozen, spoiled,
+ * spoiledAt, spoiledCost, usedCost, boughtCost, perG } } для всех продуктов, которые отмечены дома, куплены или нужны плану.
  */
-export function currentStock({ pantry = {}, events = [], bought = new Map(), now = Date.now() }) {
+export function currentStock({ pantry = {}, events = [], bought = new Map(), now = Date.now(), storage = null, products = null }) {
   const keys = new Set([...Object.keys(pantry).filter(isProductKey), ...bought.keys(), ...events.flatMap((e) => e.items.map((i) => i.key))]);
   const out = {};
-  for (const key of keys) {
-    const rec = pantry[key];
-    const at = rec?.at || 0;
-    const unknown = !!rec?.have && !(rec.grams > 0);
-    const base = rec?.have ? (rec.grams > 0 ? rec.grams : Infinity) : 0;
-    const b = bought.get(key);
-    const added = b && b.t > at && b.t <= now ? b.grams : 0;
-    const used = usedBetween(events, key, at, now);
-    const grams = unknown ? Infinity : Math.max(0, base + added - used);
-    const freshAt = added ? b.t : rec?.freshAt || at || null;
-    out[key] = { grams, base, added, used, at, src: rec?.src || (rec ? 'user' : null), freshAt, unknown };
-  }
+  for (const key of keys) out[key] = stockOf(key, { rec: pantry[key], events, buys: [].concat(bought.get(key) || []), now, storage, product: products?.[key] });
   return out;
+}
+
+function stockOf(key, { rec, events, buys, now, storage, product }) {
+  const at = rec?.at || 0;
+  const unknown = !!rec?.have && !(rec.grams > 0);
+  const base = rec?.have ? (rec.grams > 0 ? rec.grams : Infinity) : 0;
+  const life = lifeOf(key, storage);
+  const dated = !!storage;
+  const whole = PIECE_SPLIT.has(key);
+  const refPerG = product ? proportionalCost(product, 1000) / 1000 : 0;
+  const mkUnit = (grams, t, extra = {}) => {
+    const u = { grams, rem: grams, t, openedAt: null, frozenUntil: null, perG: refPerG, ...extra };
+    setExp(u);
+    return u;
+  };
+  const setExp = (u) => {
+    if (!dated) { u.exp = u.expMax = Infinity; return; }
+    const from = u.frozenUntil != null ? u.frozenUntil : u.t;
+    u.exp = endOfDayAfter(from, life.closed[0]);
+    u.expMax = endOfDayAfter(from, life.closed[1]);
+    if (u.openedAt != null) {
+      u.exp = Math.min(u.exp, endOfDayAfter(u.openedAt, life.opened[0]));
+      u.expMax = Math.min(u.expMax, endOfDayAfter(u.openedAt, life.opened[1]));
+    }
+  };
+  const units = [];
+  // отмеченное дома: одна «пачка»; неполная упаковка — уже вскрыта (с момента отметки или как было перенесено)
+  if (base > 0 && base !== Infinity) {
+    const pg = refPack(product)?.grams || 0;
+    // в морозилке (перенесено с прошлой недели) — отдельно: не портится, берётся последним
+    const fz = Math.min(base, Math.max(0, +rec.frozen || 0));
+    if (fz > 0) units.push(mkUnit(fz, rec.freshAt || at, { frozenUntil: Infinity, home: true }));
+    const g = base - fz;
+    const partial = pg > 0 && !whole && Math.abs(g / pg - Math.round(g / pg)) > 0.1;
+    if (g > 0) {
+      const u = mkUnit(g, rec.freshAt || at, { openedAt: rec.openedAt ?? (partial ? at : null), home: true });
+      if (rec.exp && dated) { u.exp = Math.min(u.exp, rec.exp); u.expMax = Math.min(u.expMax, rec.expMax || rec.exp); }
+      units.push(u);
+    }
+  }
+  // события по времени: покупки (после отметки) и готовки (после отметки)
+  const timeline = [];
+  for (const b of buys) if (b && b.t > at && b.t <= now) timeline.push({ t: b.t, buy: b });
+  for (const e of events) if (e.t > at && e.t <= now) for (const i of e.items) if (i.key === key) timeline.push({ t: e.t, use: i.grams });
+  timeline.sort((x, y) => x.t - y.t || (x.buy ? -1 : 1));
+  let added = 0;
+  let used = 0;
+  let debt = 0; // готовка, на которую в учёте не было продукта (купили позже, чем отметили) — вычитается из следующей покупки
+  let spoiled = 0;
+  let spoiledAt = null;
+  let spoiledCost = 0;
+  let usedCost = 0;
+  let boughtCost = 0;
+  const spoilUntil = (t) => {
+    for (const u of units) {
+      if (!(u.rem > 0.5)) continue;
+      if (u.frozenUntil != null && t < u.frozenUntil) continue; // в морозилке не портится
+      if (u.expMax <= t) { spoiled += u.rem; spoiledCost += u.rem * u.perG; spoiledAt = Math.max(spoiledAt || 0, u.expMax); u.spoiled = u.rem; u.rem = 0; }
+    }
+  };
+  const take = (g, t) => {
+    const cand = units.filter((u) => u.rem > 1e-6 && (u.frozenUntil == null || u.frozenUntil <= t))
+      .sort((a, b) => (b.openedAt != null) - (a.openedAt != null) || a.exp - b.exp);
+    // замороженное, если больше нечего, — тоже берётся (разморозили раньше)
+    for (const u of [...cand, ...units.filter((x) => x.rem > 1e-6 && x.frozenUntil != null && x.frozenUntil > t)]) {
+      if (g <= 1e-6) break;
+      const k = Math.min(g, u.rem);
+      u.rem -= k; g -= k; usedCost += k * u.perG;
+      if (u.openedAt == null && !whole && !u.loose) { u.openedAt = t; setExp(u); }
+    }
+    return g;
+  };
+  for (const ev of timeline) {
+    spoilUntil(ev.t);
+    if (ev.buy) {
+      const b = ev.buy;
+      const g = b.grams;
+      added += g;
+      const perG = b.cost && g > 0 ? b.cost / g : refPerG;
+      boughtCost += g * perG;
+      // покупка гасит «долг» готовки, на которую продукта по учёту не было
+      let rest = g;
+      if (debt > 0) { const k = Math.min(debt, rest); debt -= k; rest -= k; }
+      const frozen = (b.frozen || []).filter((f) => f.grams > 0);
+      for (const f of frozen) { const k = Math.min(rest, f.grams); if (k > 0) { units.push(mkUnit(k, b.t, { perG, frozenUntil: f.until, loose: !!b.loose })); rest -= k; } }
+      const pg = b.packGrams > 0 && !b.loose && !whole ? b.packGrams : 0;
+      const n = pg ? Math.max(1, Math.round(rest / pg)) : 1;
+      for (let i = 0; i < n && rest > 1e-6; i++) { const k = i === n - 1 ? rest : Math.min(rest, pg); units.push(mkUnit(k, b.t, { perG, loose: !!b.loose })); rest -= k; }
+    } else {
+      used += ev.use;
+      debt += take(ev.use, ev.t);
+    }
+  }
+  spoilUntil(now);
+  const left = units.filter((u) => u.rem > 0.5);
+  const grams = unknown ? Infinity : Math.max(0, left.reduce((a, u) => a + u.rem, 0) - debt);
+  const lastBuy = buys.filter((b) => b && b.t > at && b.t <= now).reduce((m, b) => Math.max(m, b.t), 0);
+  const freshAt = lastBuy || rec?.freshAt || at || null;
+  const opened = left.filter((u) => u.openedAt != null);
+  return {
+    grams, base, added, used, at, src: rec?.src || (rec ? 'user' : null), freshAt, unknown,
+    openedAt: opened.length ? Math.min(...opened.map((u) => u.openedAt)) : null,
+    exp: left.length && dated ? Math.min(...left.map((u) => (u.frozenUntil != null && u.frozenUntil > now ? Infinity : u.exp))) : null,
+    expMax: left.length && dated ? Math.min(...left.map((u) => (u.frozenUntil != null && u.frozenUntil > now ? Infinity : u.expMax))) : null,
+    frozen: left.filter((u) => u.frozenUntil != null && u.frozenUntil > now).reduce((a, u) => a + u.rem, 0),
+    thawAt: left.filter((u) => u.frozenUntil != null && u.frozenUntil > now).reduce((m, u) => Math.min(m, u.frozenUntil), Infinity),
+    spoiled, spoiledAt, spoiledCost, usedCost, boughtCost,
+    leftCost: left.reduce((a, u) => a + u.rem * u.perG, 0), perG: refPerG,
+  };
 }
 
 // Для списка покупок «на оставшееся»: отмеченное дома минус уже приготовленное с тех пор.
@@ -163,6 +255,7 @@ export function homeAt(pantry = {}, events = [], now = Date.now()) {
   for (const [key, v] of Object.entries(pantry)) {
     if (!v?.have || !isProductKey(key)) continue;
     if (!(v.grams > 0)) { out[key] = true; continue; }
+    if (v.expMax && now >= v.expMax && !(v.frozen > 0)) continue; // перенесённое с прошлой недели уже испортилось
     const left = v.grams - usedBetween(events, key, v.at || 0, now);
     if (left > 0.5) out[key] = left;
   }
@@ -182,11 +275,21 @@ export function stockGrams(stock, products = {}, pantry = {}) {
   return out;
 }
 
-// Скоро испортится: свежие продукты, которые лежат дома дольше 60 % своего срока. [{ key, days, left, over }]
+// Скоро испортится: срок (по нижней границе, с учётом вскрытия) кончается в ближайшие полтора дня или прошло 60 % срока.
+// [{ key, days, left, over, exp }]; без данных о сроках — по дням от покупки (keepDays)
 export function expiringSoon(stock, storage, now = Date.now()) {
   const out = [];
   for (const [key, s] of Object.entries(stock)) {
     if (!(s.grams > 0) || s.grams === Infinity || !s.freshAt) continue;
+    if (s.frozen >= s.grams - 0.5) continue; // всё в морозилке
+    if (s.exp != null && Number.isFinite(s.exp)) {
+      const life = (s.exp - s.freshAt) / DAY;
+      if (life > 30) continue;
+      const leftD = (s.exp - now) / DAY;
+      const days = (now - s.freshAt) / DAY;
+      if (leftD <= 1.5 || days >= life * 0.6) out.push({ key, days: Math.floor(days), left: Math.max(0, Math.ceil(leftD - 1e-9)), over: now >= s.exp, exp: s.exp, opened: s.openedAt != null });
+      continue;
+    }
     const keep = keepDays(key, storage);
     if (keep > 30) continue;
     const days = (now - s.freshAt) / DAY;
@@ -195,14 +298,38 @@ export function expiringSoon(stock, storage, now = Date.now()) {
   return out.sort((a, b) => a.left - b.left);
 }
 
-// Новая неделя: остатки прошлой (по учёту) становятся отметками «дома». Товары каталога — как были.
+// Новая неделя: остатки прошлой (по учёту) становятся отметками «дома». Испорченное уже не в запасах — не переносится;
+// вскрытое переносится со временем вскрытия и сроком, замороженное — отдельно. Товары каталога — как были.
 export function rolloverPantry(pantry, stock, now = Date.now()) {
   const out = Object.fromEntries(Object.entries(pantry).filter(([k]) => !isProductKey(k)));
   for (const [key, s] of Object.entries(stock)) {
     const prev = pantry[key];
     if (s.unknown) { out[key] = { ...prev, have: true, grams: null, at: now }; continue; }
-    if (s.grams > 1) out[key] = { have: true, grams: Math.round(s.grams), at: now, src: s.added || s.used ? 'auto' : prev?.src || 'user', freshAt: s.freshAt || now };
-    else if (prev) out[key] = { have: false, grams: null, at: now, src: 'auto' };
+    if (s.grams > 1) {
+      const r = { have: true, grams: Math.round(s.grams), at: now, src: s.added || s.used ? 'auto' : prev?.src || 'user', freshAt: s.freshAt || now };
+      if (s.openedAt != null) r.openedAt = s.openedAt;
+      if (s.exp != null && Number.isFinite(s.exp)) { r.exp = s.exp; r.expMax = s.expMax; }
+      if (s.frozen > 1) r.frozen = Math.round(s.frozen);
+      out[key] = r;
+    } else if (prev) out[key] = { have: false, grams: null, at: now, src: 'auto', ...(s.spoiled > 1 ? { spoiled: Math.round(s.spoiled) } : {}) };
   }
   return out;
+}
+
+// Итог недели по учёту: что куплено, использовано, испорчено (выброшено) и осталось — граммы и евро по продуктам.
+// stock — currentStock на момент now (сейчас или конец недели по плану). Базовые (масло, соль, специи) не считаются.
+export function weekLedger(stock, products = {}) {
+  const rows = [];
+  const tot = { bought: 0, used: 0, spoiled: 0, left: 0 };
+  for (const [key, s] of Object.entries(stock)) {
+    const p = products[key];
+    if (!p || p.basic || s.unknown) continue;
+    if (!(s.added > 0) && !(s.base > 0)) continue;
+    const row = { key, name: p.name_ru, bought: s.added, boughtCost: s.boughtCost, used: s.used, usedCost: s.usedCost, spoiled: s.spoiled, spoiledCost: s.spoiledCost,
+      spoiledAt: s.spoiledAt, left: s.grams === Infinity ? 0 : s.grams, leftCost: s.leftCost, exp: s.exp, openedAt: s.openedAt, frozen: s.frozen };
+    rows.push(row);
+    tot.bought += s.boughtCost || 0; tot.used += s.usedCost || 0; tot.spoiled += s.spoiledCost || 0; tot.left += s.leftCost || 0;
+  }
+  const all = tot.used + tot.spoiled + tot.left;
+  return { rows, tot, usedPct: all > 0 ? Math.round((100 * tot.used) / all) : null, spoiledPct: all > 0 ? Math.round((100 * tot.spoiled) / all) : null };
 }

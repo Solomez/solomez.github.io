@@ -2,7 +2,9 @@
 // (с доплатой за меньшее число магазинов, если выбран режим «экономить походы») → + свои товары вне плана.
 // Раньше План и Покупки считали по самой дешёвой цене каждой позиции, а походы — по-своему, и суммы расходились (F01).
 import { buildShoppingList, chooseOffer, round2 } from './shopping.js';
-import { planTrips, buyAheadDays } from './trips.js';
+import { planTrips } from './trips.js';
+import { buyAheadDays, canFreeze, closedDays } from './shelf.js';
+import { purchaseLots, addUse } from './spoil.js';
 import { remainingPlan, todayIndex, dayDate } from './calendar.js';
 import { effectivePlan } from './planner.js';
 
@@ -50,9 +52,11 @@ export function checkout(plan, ctx) {
   const base = effectivePlan(plan, ['out']); // «ем вне дома» не покупаем; под прошедшее «не ел» продукты уже куплены
   const listPlan = scope === 'week' ? base : remainingPlan(base, now);
   const list = buildShoppingList(listPlan, ctx.recipeMap, ctx.products, { stores: ctx.prefs?.stores, home: ctx.home, unavailable: ctx.unavailable });
+  if (ctx.storage) attachLots(list, Math.max(0, firstShopDay(plan, now)), ctx);
   const trips = tripsFor(list, listPlan, plan, now, ctx);
   const offerOf = new Map(list.items.map((i) => [i.key, i.offer]));
   for (const t of trips) for (const it of t.items) {
+    if (it.lot) continue; // «взял другое» — для первой покупки
     const c = swapCost(ctx.swaps?.[it.key], offerOf.get(it.key));
     if (c == null) continue;
     t.total = round2(t.total - (it.cost || 0) + c);
@@ -66,7 +70,7 @@ export function checkout(plan, ctx) {
   const own = (ctx.cart || []).filter((c) => !c.done || (c.doneAt || 0) >= since);
   const ownTotal = round2(own.reduce((a, c) => a + ownCost(c), 0));
   const checked = ctx.checked || {};
-  const bought = round2(trips.reduce((a, t) => a + t.items.filter((i) => checked[i.key]).reduce((b, i) => b + (i.cost || 0), 0), 0)
+  const bought = round2(trips.reduce((a, t) => a + t.items.filter((i) => checked[i.ckey || i.key]).reduce((b, i) => b + (i.cost || 0), 0), 0)
     + own.filter((c) => c.done).reduce((a, c) => a + ownCost(c), 0));
   const byStore = {};
   for (const t of trips) {
@@ -83,28 +87,74 @@ export function checkout(plan, ctx) {
   return { list, listPlan, trips, extra, planTotal, own, ownTotal, toPay, bought, left: round2(toPay - bought), byStore, basicsTotal: list.basicsTotal };
 }
 
+/**
+ * Покупка по дням (блок В): у позиции списка — партии lots (core/spoil.js purchaseLots). Первая партия — в offer
+ * (пачки «по вскрытию», порции «заморозить сразу» — freeze), партии второй закупки — lots[1..] со своей упаковкой и ценой
+ * (скоропортящееся, которое нельзя заморозить: бананы, огурцы, помидоры, скир — докупить ближе к готовке).
+ * Сумма списка пересчитывается. buyDay — день первой закупки.
+ */
+export function attachLots(list, buyDay, ctx) {
+  for (const it of list.items) {
+    const p = ctx.products[it.key];
+    if (!p || it.basic || !it.offer) continue;
+    let uses = [];
+    for (const u of it.uses) if (u.day != null) uses = addUse(uses, u.day, u.grams);
+    // приём пищи — для «купить накануне» (к завтраку и обеду)
+    const meals = new Map();
+    for (const u of it.uses) if (u.day != null && (!meals.has(u.day) || order(u.meal) < order(meals.get(u.day)))) meals.set(u.day, u.meal);
+    uses = uses.map((u) => ({ ...u, meal: meals.get(u.day) }));
+    const prod = withStores(p, ctx);
+    const lots = purchaseLots(it.key, uses, prod, ctx.storage, { stores: ctx.prefs?.stores, buyDay, home: it.homeGrams || 0 });
+    if (!lots.length || lots.some((l) => !l.offer)) continue;
+    it.lots = lots;
+    it.offer = lots[0].offer;
+    it.needGrams = lots[0].grams;
+  }
+  list.total = round2(list.items.reduce((a, i) => a + (i.lots ? i.lots.reduce((b, l) => b + (l.offer?.cost || 0), 0) : i.offer?.cost || 0), 0));
+}
+const order = (m) => ({ breakfast: 0, lunch: 1, snack: 2, dinner: 3 })[m] ?? 3;
+// «нет на полке» уже учтено в списке (withoutUnavailable) — упаковки берём из того же продукта
+const withStores = (p, ctx) => {
+  if (!ctx.unavailable?.size) return p;
+  const packs = (p.packs || []).filter((x) => !ctx.unavailable.has(`${x.store}|${p.key}`));
+  return packs.length ? { ...p, packs } : p;
+};
+
 // План походов по списку покупок (логика прежняя — из экрана Покупок; режим «деньги» разрешает два магазина в день)
 export function tripsFor(list, listPlan, plan, now, ctx) {
-  const items = list.items.filter((i) => i.offer);
-  if (!items.length) return [];
+  const listItems = list.items.filter((i) => i.offer);
+  if (!listItems.length) return [];
   const need = lastBuyDay(listPlan, ctx.recipeMap);
   const firstDay = firstShopDay(plan, now);
-  const byKey = new Map(items.map((i) => [i.key, i]));
+  const byKey = new Map(listItems.map((i) => [i.key, i]));
   const money = saveModeOf(ctx.prefs) === 'money';
-  const altCost = (key, store) => {
+  const storage = ctx.storage || {};
+  const altCost = (key, store, grams) => {
     if (ctx.unavailable?.has(`${store}|${key}`)) return null; // там этого не оказалось на полке
     const packs = (ctx.products[key]?.packs || []).filter((p) => p.store === store && !p.stale);
-    return packs.length ? chooseOffer({ packs }, byKey.get(key).needGrams).cost : null;
+    return packs.length ? chooseOffer({ packs }, grams ?? byKey.get(key).needGrams).cost : null;
   };
-  const storage = ctx.storage || {};
-  const trips = planTrips(items.map((i) => ({ key: i.key, store: i.offer.pack.store, cost: i.offer.cost })), {
+  // позиции походов: первая партия продукта и партии второй закупки (ckey — ключ отметки «куплено»: «banana#1»)
+  const items = [];
+  for (const i of listItems) {
+    const lots = i.lots || [{ offer: i.offer, grams: i.needGrams, freeze: [] }];
+    lots.forEach((l, k) => {
+      if (!l.offer) return;
+      const lastBuy = l.first ? l.first.day - (l.first.meal === 'breakfast' || l.first.meal === 'lunch' ? 1 : 0) : null;
+      items.push({ key: i.key, ckey: k ? `${i.key}#${k}` : i.key, lot: k, store: l.offer.pack.store, cost: l.offer.cost, offer: k ? l.offer : undefined, grams: l.grams,
+        freezeUses: l.freeze || [], needDay: k ? lastBuy : undefined,
+        // вторая закупка покрывает дни до последнего использования — купить не раньше, чем позволяет срок
+        ahead: k ? Math.max(0, closedDays(i.key, storage) - (l.last - l.first.day)) : undefined });
+    });
+  }
+  const trips = planTrips(items, {
     needDay: (k) => need[k] ?? firstDay,
     aheadOf: (k) => buyAheadDays(k, storage),
     firstDay,
     dateOf: (d) => dayDate(plan, d),
     // «дешевле» — без доплат: товар не перекладывается в другой магазин дороже (лучше третий магазин в день, чем доплата)
     altCost: money ? () => null : altCost,
-    canFreeze: (k) => { const st = storage[k]; return !!st && st.place === 'fridge' && /нижняя/.test(st.shelf || '') && /^да/.test(st.freeze || ''); },
+    canFreeze: (k) => canFreeze(k, storage),
     maxStoresPerDay: money ? 2 : 1,
     maxExtra: money ? 0 : 2,
   });
@@ -116,6 +166,15 @@ export function tripsFor(list, listPlan, plan, now, ctx) {
     const by = c.slot.day - (c.slot.meal === 'breakfast' ? 1 : 0);
     for (const i of ctx.recipeMap.get(c.id)?.ingredients || []) if (late[i.key] == null || by < late[i.key].by) late[i.key] = { by, day: c.slot.day };
   }
-  for (const t of trips) for (const it of t.items) if (late[it.key] && late[it.key].by < t.day && it.lateFor == null) it.lateFor = late[it.key].day;
+  for (const t of trips) for (const it of t.items) {
+    if (!it.lot && late[it.key] && late[it.key].by < t.day && it.lateFor == null) it.lateFor = late[it.key].day;
+    // «заморозь сразу» — от дня этого похода: что понадобится позже закрытого срока (порциями, по дням готовки)
+    if (it.freezeUses?.length && it.freezeUntil == null) {
+      const c = closedDays(it.key, storage);
+      const fz = it.freezeUses.filter((u) => u.day > t.day + c);
+      if (fz.length) it.freeze = fz.map((u) => ({ ...u }));
+    }
+    delete it.freezeUses;
+  }
   return trips;
 }

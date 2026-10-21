@@ -1,17 +1,28 @@
 // Рецепт как шаблон: количества и названия в шагах подставляются из данных ингредиентов,
-// поэтому «½ стакана риса» в списке не может стать «100 г риса» в шаге (data/kitchen/SCHEMA.md).
+// поэтому «половина стакана риса» в списке не может стать «100 г риса» в шаге (data/kitchen/SCHEMA.md).
 //
-//   {q:rice}      → «1 стакан риса», «2 зубчика чеснока», «½ пачки фарша (500 г)»
+//   {q:rice}      → «1 стакан риса», «2 зубчика чеснока», «половину пачки фарша (пачка 500 г)»
 //   {q:oil*0.5}   → половина количества слота — часть на этот шаг
 //   {a:rice}      → только мера: «1 стакан»
+//   {q:oil.ins}   → мера в падеже: «1 столовой ложкой масла». Без падежа — винительный («влей половину стакана»),
+//                   а в скобках и после двоеточия — именительный («посоли (половина чайной ложки)»)
 //   {n:rice.ins}  → название в падеже: «рисом»
 //   {x:extra}     → текстовый параметр шага
 import { measure, measureText, nameOf, shownCups, gCup, gramsLabel } from './measures.js';
+import { NOUNS, CASES } from './qty.js';
 
 // Подсказка о мерах: показывается у списка ингредиентов и в «Что значит?»
-export const MEASURE_HINT = 'Стакан — 250 мл. Обычная кружка часто больше (300–350 мл). Нет мерного стакана (Messbecher, ~2 € в любом супермаркете) — один раз отмерь кружкой половину бутылки воды 0,5 л и запомни уровень (или отметь его маркером): это и есть «стакан». Литр — две бутылки 0,5 л. Ложки — без горки.';
+export const MEASURE_HINT = 'Стакан — 250 мл. Обычная кружка часто больше (300–350 мл). Нет мерного стакана (Messbecher, ~2 € в любом супермаркете) — один раз отмерь кружкой половину бутылки воды 0,5 л и запомни уровень (или отметь его маркером): это и есть «стакан». Нет и бутылки — стакан это 16 столовых ложек, половина — 8, треть — 5–6, четверть — 4. Крупу и воду для неё мерь одной и той же кружкой — важна пропорция, а не точный объём. Литр — две бутылки 0,5 л. Ложки — без горки: столовая — обычная суповая, чайная — маленькая, в 3 раза меньше.';
 
-export const PLACEHOLDER = /\{([qanNx]):([^}]*)\}/g;
+// {g:self>450:текст} — текст, только если слота в шаге больше N граммов (S21: «жарь в два захода» — когда не помещается)
+export const PLACEHOLDER = /\{([qanNxg]):([^}]*)\}/g;
+
+// Падеж меры без явного падежа: в скобках и сразу после двоеточия — именительный, иначе — винительный (дополнение глагола)
+export function defaultCase(str, at) {
+  const before = String(str).slice(0, at);
+  const open = (before.match(/\(/g) || []).length - (before.match(/\)/g) || []).length;
+  return open > 0 || /:\s*$/.test(before) ? 'nom' : 'acc';
+}
 
 // Ссылка «rice.gen*0.5» → { id, cas, frac }
 export function parseRef(s) {
@@ -32,18 +43,30 @@ export function derivedRatio(r, ing, kitchen) {
   const from = slotOf(r, d.from);
   const prof = kitchen?.profiles?.[from?.key];
   const method = prof?.methods?.[d.method || r._methods?.[d.from]];
+  // соль в воду для варки (S02, S03): граммы на кг жидкости способа или самого продукта
+  if (d.by === 'salt') return method?.salt ? { ratio: method.salt.g_per_kg, by: 'salt', per: method.salt.per || 'self' } : null;
   const liq = method?.liquid;
-  return liq ? { ratio: liq.ratio, by: liq.by || 'volume', max_g: liq.max_g } : null;
+  // scale — часть жидкости даёт само блюдо (томаты из банки): воды меньше пропорции способа во столько раз
+  return liq ? { ratio: liq.ratio * (d.scale > 0 ? d.scale : 1), by: liq.by || 'volume', max_g: liq.max_g } : null;
 }
 
 // Граммы слота при масштабе scale (производные — от показанной меры исходного: пропорция важнее граммов)
+// Вода для варки продукта (картофель, цветная капуста — её сливают): растёт с порциями, но не больше, чем
+// помещается в кастрюлю 3 л — две трети (S51); больше продукта — шаг говорит «вари в два захода»
+export const BOIL_WATER_MAX = 2000;
 export function slotGrams(r, ing, scale, kitchen) {
-  if (!ing.derived) return (ing.grams || 0) * scale;
+  if (!ing.derived) return ing.key === 'water' && ing.for ? Math.min((ing.grams || 0) * scale, Math.max(BOIL_WATER_MAX, ing.grams || 0)) : (ing.grams || 0) * scale;
   const from = slotOf(r, ing.derived.from);
   const dr = derivedRatio(r, ing, kitchen);
   if (!from || !dr) return (ing.grams || 0) * scale;
   const ms = kitchen?.measures || {};
   const fromGrams = (from.grams || 0) * scale;
+  if (dr.by === 'salt') {
+    // соль на воду (паста: 7 г на литр) или на сам продукт (рис, картофель)
+    const liq = dr.per === 'liquid' ? r.ingredients.find((x) => x.derived?.from === ing.derived.from && x.derived.by !== 'salt') : null;
+    const base = liq ? slotGrams(r, liq, scale, kitchen) : fromGrams;
+    return Math.round(base * dr.ratio) / 1000;
+  }
   // вода для варки пасты: 1 л на 100 г, но не больше, чем помещается в обычную кастрюлю (max_g)
   if (dr.by === 'weight') return Math.min(fromGrams * dr.ratio, dr.max_g || Infinity);
   // мл на штуку (вода на пакетик чая): по показанному числу штук
@@ -73,17 +96,32 @@ export function slotMeasure(r, ing, scale, kitchen, { frac = 1, full = false, sh
     const t = ing.amount && Math.abs(scale * frac - 1) < 0.01 ? ing.amount : gramsText;
     return { text: t, measure: t, grams, gramsText, err: 0, unit: 'g', missing: true };
   }
-  const opts = { as: ing.as, exact: !!ing.derived };
+  // точная мера — только для пропорции по объёму (крупа : жидкость); воду для варки макарон (по весу) — литрами
+  const opts = { as: ing.as, exact: !!ing.derived && derivedRatio(r, ing, kitchen)?.by !== 'weight' };
   const res = measure(m, grams, opts);
   const meas = measureText(m, grams, { ...opts, full, cas });
-  const text = showGrams && gramsText ? (meas.endsWith(')') ? `${meas} — ${gramsText}` : `${meas} (${gramsText})`) : meas;
+  // у жидкости миллилитры уже в мере — граммы второй раз не нужны
+  // граммы уже сказаны в мере («около 170 г из пачки 500 г», S42) — второй раз не нужны
+  const text = showGrams && gramsText && !/ мл\)$/.test(meas) && !/около \d/.test(meas) ? (meas.endsWith(')') ? `${meas} — ${gramsText}` : `${meas} (${gramsText})`) : meas;
   return { text, measure: meas, grams, gramsText, err: res?.err ?? 0, unit: res?.unit, n: res?.n };
 }
 
-// Название слота в падеже: из measures.json (бытовое), иначе из карточки
-export function slotName(ing, cas, kitchen) {
+// Название слота в падеже: из measures.json (бытовое), иначе из карточки. count ≥ 2 у штучного продукта, чьё
+// название — сама штука («помидор»), — во множественном числе (S51: «вымой помидоры» на 4 порции)
+const NO_PLURAL = new Set(['куриное филе', 'печенье']);
+export function slotName(ing, cas, kitchen, count = 1) {
   const m = kitchen?.measures?.[ing.key];
+  const nom = m?.ru?.nom;
+  const N = count >= 2 && m?.piece?.forms?.[0] === nom && !NO_PLURAL.has(nom) ? NOUNS[nom] : null;
+  if (N) return N.pl[CASES.indexOf(cas || 'nom')] || N.pl[0];
   return nameOf(m, cas || 'nom', (ing.name_ru || ing.key).toLowerCase());
+}
+// Сколько штук продукта при этом масштабе (для числа в названии)
+function pieces(r, ing, scale, kitchen) {
+  const m = kitchen?.measures?.[ing.key];
+  if (!m?.piece?.g || ing.text) return 1;
+  const g = slotGrams(r, ing, scale, kitchen);
+  return measure(m, g)?.unit === 'piece' ? measure(m, g).n : g / m.piece.g;
 }
 
 // Подстановки в тексте. ctx: { self, liquid, with, scale, kitchen, showGrams, packOf }
@@ -104,35 +142,76 @@ export function renderText(r, text, ctx = {}) {
     }
     return id;
   };
-  let out = String(text || '').replace(PLACEHOLDER, (all, kind, body) => {
+  let out = String(text || '').replace(PLACEHOLDER, (all, kind, body, at, str) => {
     if (kind === 'x') {
       const v = ctx.with?.[body];
-      return v ? renderText(r, v, { ...ctx, cap: false }).text : '';
+      if (!v) return '';
+      // продукты из параметра («посоли кипящую воду ({q:salt_pasta})») — тоже продукты шага (S57)
+      const sub = renderText(r, v, { ...ctx, cap: false });
+      refs.push(...sub.refs.map((x) => ({ ...x, viaParam: true })));
+      return sub.text;
+    }
+    if (kind === 'g') {
+      // {g:self>450:…} — больше N граммов; {g:self<pack:…} — меньше целой упаковки (банки): нужна не вся
+      const m = String(body).match(/^([$\w-]+)([<>])(\d+|pack):(.*)$/s);
+      const gi = m && slotOf(r, resolve(m[1]));
+      if (!gi) return '';
+      const g = slotGrams(r, gi, scale, kitchen);
+      const pack = kitchen?.measures?.[gi.key]?.pack?.g;
+      if (m[3] === 'pack') {
+        if (!pack) return '';
+        const rest = g % pack;
+        return m[2] === '<' && rest > pack * 0.1 && rest < pack * 0.9 ? m[4] : '';
+      }
+      return (m[2] === '>' ? g > +m[3] : g < +m[3]) ? m[4] : '';
     }
     const ref = parseRef(body);
     const id = ref && resolve(ref.id);
     const ing = id && slotOf(r, id);
     if (!ing) return all;
-    refs.push({ id, frac: ref.frac * extra, kind });
+    refs.push({ id, frac: ref.frac * extra, kind, cas: ref.cas || (kind === 'q' || kind === 'a' ? defaultCase(str, at) : null) });
     if (kind === 'n' || kind === 'N') {
-      const n = slotName(ing, ref.cas, kitchen);
+      const n = slotName(ing, ref.cas, kitchen, pieces(r, ing, scale, kitchen));
       return kind === 'N' ? n[0].toUpperCase() + n.slice(1) : n;
     }
-    const mm = slotMeasure(r, ing, scale, kitchen, { frac: ref.frac * extra, full: kind === 'q', showGrams, packOf, cas: ref.cas });
+    const mm = slotMeasure(r, ing, scale, kitchen, { frac: ref.frac * extra, full: kind === 'q', showGrams, packOf, cas: ref.cas || defaultCase(str, at) });
     if (kind === 'q' && ing.text) return `${slotName(ing, 'acc', kitchen)} ${ing.text}`;
     return mm.text;
   });
+  // мера в скобках со своими скобками: «(треть стакана (80 мл))» → «(треть стакана, 80 мл)»
+  out = out.replace(/\(([^()]*?)\s\(([^()]*)\)\)/g, '($1, $2)');
   out = out.replace(/\s+,/g, ',').replace(/[ \t]{2,}/g, ' ').replace(/\s+\./g, '.');
+  // «затем {x:reserve}Слей…» с пустым параметром — «затем слей»
+  out = out.replace(/(затем) ([А-ЯЁ])(?=[а-яё])/g, (m, a, c) => `${a} ${c.toLowerCase()}`);
   if (ctx.cap !== false) out = out.trim();
   if (out && ctx.cap !== false) out = out[0].toUpperCase() + out.slice(1);
   return { text: out, refs };
 }
 
+// Продукты шага, как их видит человек (S57): все подстановки текста, включая параметры общих действий
+// ({x:salt} → «посоли воду ({q:salt_pasta})»). → [{ ing, frac, kind, cas, quantified }] по одному на продукт;
+// у продукта с количеством в шаге — ссылка с количеством (сумма долей, если продукт назван дважды)
+export function stepUses(r, step, kitchen) {
+  const { refs } = renderText(r, step.tpl ?? step.text, { ...step.ctx, kitchen });
+  const by = new Map();
+  for (const x of refs) {
+    const ing = slotOf(r, x.id);
+    if (!ing) continue;
+    const q = x.kind === 'q' || x.kind === 'a';
+    const cur = by.get(ing);
+    if (!cur) by.set(ing, { ing, frac: q ? x.frac : 1, kind: x.kind, cas: x.cas, quantified: q });
+    else if (q && cur.quantified) cur.frac += x.frac;
+    else if (q) Object.assign(cur, { frac: x.frac, kind: x.kind, cas: x.cas, quantified: true });
+    else if (!cur.quantified && x.cas === 'acc') cur.cas = 'acc';
+  }
+  return [...by.values()];
+}
+
 // Какие слоты упоминаются в шаблоне (без подстановки)
 export function refsOf(text) {
   const out = [];
-  String(text || '').replace(PLACEHOLDER, (_, kind, body) => {
-    if (kind !== 'x') { const ref = parseRef(body); if (ref) out.push({ id: ref.id, frac: ref.frac, kind, cas: ref.cas }); }
+  String(text || '').replace(PLACEHOLDER, (_, kind, body, at, str) => {
+    if (kind !== 'x' && kind !== 'g') { const ref = parseRef(body); if (ref) out.push({ id: ref.id, frac: ref.frac, kind, cas: ref.cas || (kind === 'q' || kind === 'a' ? defaultCase(str, at) : null) }); }
     return '';
   });
   return out;

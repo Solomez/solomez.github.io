@@ -6,7 +6,28 @@
   "shelf": "нижняя полка, в контейнере или на тарелке",
   "opened": "1 день после вскрытия упаковки",
   "freeze": "да, до 9 месяцев; заморозь сразу после покупки, если не готовишь в ближайшие 1–2 дня",
-  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе."
+  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе.",
+  "life": {
+   "closed": [
+    1,
+    2
+   ],
+   "opened": [
+    0,
+    1
+   ],
+   "freezer": [
+    8,
+    10
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "AGES",
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "chicken_thigh_fillet": {
   "place": "fridge",
@@ -14,7 +35,28 @@
   "shelf": "нижняя полка, в контейнере или на тарелке",
   "opened": "1 день после вскрытия",
   "freeze": "да, до 9 месяцев",
-  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе."
+  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе.",
+  "life": {
+   "closed": [
+    1,
+    2
+   ],
+   "opened": [
+    0,
+    1
+   ],
+   "freezer": [
+    8,
+    10
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "AGES",
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "chicken_legs": {
   "place": "fridge",
@@ -22,7 +64,28 @@
   "shelf": "нижняя полка, в контейнере или на тарелке",
   "opened": "1 день после вскрытия",
   "freeze": "да, до 9 месяцев",
-  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе."
+  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе.",
+  "life": {
+   "closed": [
+    1,
+    2
+   ],
+   "opened": [
+    0,
+    1
+   ],
+   "freezer": [
+    8,
+    10
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "AGES",
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "turkey_breast": {
   "place": "fridge",
@@ -30,7 +93,27 @@
   "shelf": "нижняя полка, в контейнере или на тарелке",
   "opened": "1 день после вскрытия",
   "freeze": "да, до 9 месяцев",
-  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе."
+  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе.",
+  "life": {
+   "closed": [
+    1,
+    2
+   ],
+   "opened": [
+    0,
+    1
+   ],
+   "freezer": [
+    6,
+    9
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "turkey_mince": {
   "place": "fridge",
@@ -38,7 +121,27 @@
   "shelf": "нижняя полка, в контейнере или на тарелке",
   "opened": "приготовь в тот же день",
   "freeze": "да, до 3–4 месяцев; заморозь плоским пакетом — так быстрее разморозится",
-  "tip": "Фарш покупай в день готовки или замораживай сразу. Серый цвет внутри упаковки — нормально (нет кислорода), неприятный запах — нет."
+  "tip": "Фарш покупай в день готовки или замораживай сразу. Серый цвет внутри упаковки — нормально (нет кислорода), неприятный запах — нет.",
+  "life": {
+   "closed": [
+    1,
+    2
+   ],
+   "opened": [
+    0,
+    1
+   ],
+   "freezer": [
+    3,
+    4
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "mixed_mince": {
   "place": "fridge",
@@ -46,7 +149,30 @@
   "shelf": "нижняя полка, в контейнере или на тарелке",
   "opened": "приготовь в тот же день",
   "freeze": "да, до 3–4 месяцев; плоским пакетом",
-  "tip": "Фарш покупай в день готовки или замораживай сразу."
+  "tip": "Фарш покупай в день готовки или замораживай сразу.",
+  "life": {
+   "closed": [
+    1,
+    2
+   ],
+   "opened": [
+    0,
+    1
+   ],
+   "freezer": [
+    3,
+    4
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "AGES",
+    "AOK",
+    "BfR",
+    "USDA FoodKeeper",
+    "lecker.de"
+   ]
+  }
  },
  "beef_goulash": {
   "place": "fridge",
@@ -54,7 +180,28 @@
   "shelf": "нижняя полка, в контейнере или на тарелке",
   "opened": "1–2 дня после вскрытия",
   "freeze": "да, до 6–9 месяцев",
-  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе."
+  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе.",
+  "life": {
+   "closed": [
+    1,
+    3
+   ],
+   "opened": [
+    0,
+    1
+   ],
+   "freezer": [
+    4,
+    10
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "AGES",
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "pork_schnitzel": {
   "place": "fridge",
@@ -62,7 +209,27 @@
   "shelf": "нижняя полка, в контейнере или на тарелке",
   "opened": "1–2 дня после вскрытия",
   "freeze": "да, до 6 месяцев; переложи прослойками пергамента, чтобы куски не слиплись",
-  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе."
+  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе.",
+  "life": {
+   "closed": [
+    1,
+    3
+   ],
+   "opened": [
+    0,
+    1
+   ],
+   "freezer": [
+    4,
+    8
+   ],
+   "perishable": true,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "pork_shoulder": {
   "place": "fridge",
@@ -70,7 +237,27 @@
   "shelf": "нижняя полка, в контейнере или на тарелке",
   "opened": "1–2 дня после вскрытия",
   "freeze": "да, до 6 месяцев",
-  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе."
+  "tip": "Не мой сырое мясо под краном — брызги разносят бактерии; промокни бумажным полотенцем. Размораживай в холодильнике на тарелке (8–12 ч), не на столе.",
+  "life": {
+   "closed": [
+    1,
+    3
+   ],
+   "opened": [
+    0,
+    1
+   ],
+   "freezer": [
+    4,
+    8
+   ],
+   "perishable": true,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "ham": {
   "place": "fridge",
@@ -78,7 +265,27 @@
   "shelf": "средняя полка",
   "opened": "3–4 дня, в закрытой упаковке или контейнере",
   "freeze": "можно, до 1–2 месяцев, но становится водянистой",
-  "tip": "Бери ломтики чистой вилкой — так нарезка дольше не портится."
+  "tip": "Бери ломтики чистой вилкой — так нарезка дольше не портится.",
+  "life": {
+   "closed": [
+    7,
+    14
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    1,
+    2
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "AGES",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "sausage_frankfurter": {
   "place": "fridge",
@@ -86,14 +293,54 @@
   "shelf": "средняя полка",
   "opened": "3–5 дней в закрытом контейнере",
   "freeze": "да, до 2 месяцев",
-  "tip": "Слизь на поверхности или кислый запах — выбросить."
+  "tip": "Слизь на поверхности или кислый запах — выбросить.",
+  "life": {
+   "closed": [
+    7,
+    14
+   ],
+   "opened": [
+    3,
+    7
+   ],
+   "freezer": [
+    1,
+    2
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "eggs": {
   "place": "fridge",
   "keep": "до даты на упаковке, обычно 3–4 недели",
   "shelf": "средняя полка, в родной коробке (не на дверце — там теплее)",
   "freeze": "не в скорлупе; взбитые — до 4 месяцев",
-  "tip": "Не мой яйца перед хранением — смоется защитный слой. Проверка свежести: свежее тонет в воде, старое всплывает."
+  "tip": "Не мой яйца перед хранением — смоется защитный слой. Проверка свежести: свежее тонет в воде, старое всплывает.",
+  "life": {
+   "closed": [
+    14,
+    28
+   ],
+   "opened": [
+    14,
+    28
+   ],
+   "freezer": [
+    10,
+    12
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "AGES",
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "magertopfen": {
   "place": "fridge",
@@ -101,7 +348,28 @@
   "shelf": "средняя или верхняя полка",
   "opened": "2–3 дня, накрыть крышкой или плёнкой",
   "freeze": "можно, до 2 месяцев, но станет крупитчатым — подходит для запеканок",
-  "tip": "Жидкость сверху — сыворотка, её можно размешать."
+  "tip": "Жидкость сверху — сыворотка, её можно размешать.",
+  "life": {
+   "closed": [
+    7,
+    10
+   ],
+   "opened": [
+    2,
+    4
+   ],
+   "freezer": [
+    1,
+    2
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "Landwirtschaftskammer NÖ",
+    "NÖM Magertopfen, данные производителя",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "skyr": {
   "place": "fridge",
@@ -109,28 +377,104 @@
   "shelf": "средняя или верхняя полка",
   "opened": "3–4 дня с закрытой крышкой",
   "freeze": "не рекомендуется",
-  "tip": "Ешь чистой ложкой, не той, которой уже ел, — так стаканчик дольше не скисает."
+  "tip": "Ешь чистой ложкой, не той, которой уже ел, — так стаканчик дольше не скисает.",
+  "life": {
+   "closed": [
+    7,
+    14
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    1,
+    2
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "Küchenfibel",
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "cottage_cheese": {
   "place": "fridge",
   "keep": "до даты на упаковке",
   "shelf": "средняя полка",
   "opened": "3–5 дней с закрытой крышкой",
-  "freeze": "не рекомендуется"
+  "freeze": "не рекомендуется",
+  "life": {
+   "closed": [
+    7,
+    14
+   ],
+   "opened": [
+    3,
+    7
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "natural_yogurt": {
   "place": "fridge",
   "keep": "до даты на упаковке",
   "shelf": "средняя полка",
   "opened": "3–5 дней",
-  "freeze": "не рекомендуется"
+  "freeze": "не рекомендуется",
+  "life": {
+   "closed": [
+    10,
+    21
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    1,
+    2
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper",
+    "familie.de"
+   ]
+  }
  },
  "sour_cream": {
   "place": "fridge",
   "keep": "до даты на упаковке",
   "shelf": "средняя полка",
   "opened": "3–5 дней, плотно закрыть",
-  "freeze": "не рекомендуется — расслаивается"
+  "freeze": "не рекомендуется — расслаивается",
+  "life": {
+   "closed": [
+    7,
+    14
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "cream": {
   "place": "fridge",
@@ -138,14 +482,56 @@
   "shelf": "дверца или средняя полка",
   "opened": "3–4 дня",
   "freeze": "можно для соусов, до 3 месяцев; взбиваться после заморозки не будет",
-  "tip": "«Länger frisch» до вскрытия хранится дольше, но после вскрытия — так же 3–4 дня."
+  "tip": "«Länger frisch» до вскрытия хранится дольше, но после вскрытия — так же 3–4 дня.",
+  "life": {
+   "closed": [
+    7,
+    30
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    3,
+    4
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "milk": {
   "place": "pantry",
   "keep": "UHT-молоко (haltbar) — до даты, при комнатной температуре; свежее — в холодильнике",
   "opened": "после вскрытия только в холодильнике, 3–5 дней",
   "freeze": "можно, до 3 месяцев; после разморозки взболтать",
-  "tip": "Свежее молоко (Frischmilch) — сразу в холодильник, на полку, не на дверцу."
+  "tip": "Свежее молоко (Frischmilch) — сразу в холодильник, на полку, не на дверцу.",
+  "life": {
+   "closed": [
+    90,
+    180
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    3,
+    3
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "butter": {
   "place": "fridge",
@@ -153,7 +539,27 @@
   "shelf": "дверца, в закрытой маслёнке",
   "opened": "2–3 недели",
   "freeze": "да, до 6 месяцев",
-  "tip": "Впитывает запахи — держи завёрнутым."
+  "tip": "Впитывает запахи — держи завёрнутым.",
+  "life": {
+   "closed": [
+    30,
+    60
+   ],
+   "opened": [
+    14,
+    28
+   ],
+   "freezer": [
+    6,
+    9
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "gouda": {
   "place": "fridge",
@@ -161,240 +567,954 @@
   "shelf": "верхняя полка или ящик для сыра",
   "opened": "5–7 дней, нарезку — в закрытой упаковке",
   "freeze": "тёртый — до 3 месяцев, для запекания",
-  "tip": "Плесень на ломтиках — выбросить всю упаковку нарезки."
+  "tip": "Плесень на ломтиках — выбросить всю упаковку нарезки.",
+  "life": {
+   "closed": [
+    14,
+    28
+   ],
+   "opened": [
+    5,
+    14
+   ],
+   "freezer": [
+    3,
+    6
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "AGES",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "mozzarella": {
   "place": "fridge",
   "keep": "до даты на упаковке, в рассоле",
   "shelf": "средняя полка",
   "opened": "1–2 дня в своём рассоле",
-  "freeze": "для запекания можно, до 1 месяца"
+  "freeze": "для запекания можно, до 1 месяца",
+  "life": {
+   "closed": [
+    7,
+    14
+   ],
+   "opened": [
+    1,
+    3
+   ],
+   "freezer": [
+    1,
+    3
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper",
+    "familie.de"
+   ]
+  }
  },
  "feta": {
   "place": "fridge",
   "keep": "до даты на упаковке",
   "shelf": "средняя полка",
   "opened": "5–7 дней в рассоле; если рассола нет — залей подсоленной водой",
-  "freeze": "можно для запекания, до 2 месяцев, станет крошливее"
+  "freeze": "можно для запекания, до 2 месяцев, станет крошливее",
+  "life": {
+   "closed": [
+    14,
+    30
+   ],
+   "opened": [
+    5,
+    7
+   ],
+   "freezer": [
+    2,
+    6
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper",
+    "heidelberg24"
+   ]
+  }
  },
  "parmesan": {
   "place": "fridge",
   "keep": "до даты на упаковке, долго",
   "shelf": "верхняя полка, завернуть в пергамент",
   "opened": "3–4 недели куском",
-  "freeze": "тёртый — до 3 месяцев"
+  "freeze": "тёртый — до 3 месяцев",
+  "life": {
+   "closed": [
+    90,
+    180
+   ],
+   "opened": [
+    21,
+    28
+   ],
+   "freezer": [
+    6,
+    6
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "rice": {
   "place": "pantry",
   "keep": "1–2 года",
   "opened": "в закрытой банке или пакете с клипсой — до года",
   "freeze": "сухой не нужно; варёный — да, до 1 месяца",
-  "tip": "Варёный рис остуди за 1 час и убери в холодильник — не оставляй на столе на ночь; храни 1–2 дня."
+  "tip": "Варёный рис остуди за 1 час и убери в холодильник — не оставляй на столе на ночь; храни 1–2 дня.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    365,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "pasta": {
   "place": "pantry",
   "keep": "1–2 года",
   "opened": "в закрытой упаковке — до года",
   "freeze": "сухую не нужно",
-  "tip": "Варёную пасту храни 2–3 дня в холодильнике, сбрызнув маслом, чтобы не слиплась."
+  "tip": "Варёную пасту храни 2–3 дня в холодильнике, сбрызнув маслом, чтобы не слиплась.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    180,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "egg_noodles": {
   "place": "pantry",
   "keep": "1 год",
   "opened": "в закрытой упаковке",
-  "freeze": "не нужно"
+  "freeze": "не нужно",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    30,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "bulgur": {
   "place": "pantry",
   "keep": "1 год",
   "opened": "в закрытой банке — защищает от моли",
-  "freeze": "готовый — до 1 месяца"
+  "freeze": "готовый — до 1 месяца",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    180,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "couscous": {
   "place": "pantry",
   "keep": "1 год",
   "opened": "в закрытой банке",
-  "freeze": "не нужно"
+  "freeze": "не нужно",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    180,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "red_lentils": {
   "place": "pantry",
   "keep": "1–2 года",
   "opened": "в закрытой банке",
-  "freeze": "варёную — до 2 месяцев"
+  "freeze": "варёную — до 2 месяцев",
+  "life": {
+   "closed": [
+    365,
+    365
+   ],
+   "opened": [
+    365,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "flour": {
   "place": "pantry",
   "keep": "6–12 месяцев",
   "opened": "в закрытой банке, подальше от влаги — защищает от моли",
-  "freeze": "не нужно"
+  "freeze": "не нужно",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    180,
+    240
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "breadcrumbs": {
   "place": "pantry",
   "keep": "6 месяцев",
   "opened": "в закрытой упаковке",
-  "freeze": "не нужно"
+  "freeze": "не нужно",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    120,
+    180
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "sugar": {
   "place": "pantry",
   "keep": "бессрочно, если сухо",
-  "opened": "в закрытой банке"
+  "opened": "в закрытой банке",
+  "life": {
+   "closed": [
+    3650,
+    3650
+   ],
+   "opened": [
+    540,
+    720
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "salt": {
   "place": "pantry",
   "keep": "бессрочно",
-  "tip": "Держи подальше от пара плиты — комкуется."
+  "tip": "Держи подальше от пара плиты — комкуется.",
+  "life": {
+   "closed": [
+    3650,
+    3650
+   ],
+   "opened": [
+    3650,
+    3650
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "bread": {
   "place": "counter",
   "keep": "2–4 дня в хлебнице или бумажном пакете",
   "freeze": "да, нарезанным, до 3 месяцев; ломтик можно сразу класть в тостер или на сковороду",
-  "tip": "Не храни хлеб в холодильнике — там он черствеет быстрее."
+  "tip": "Не храни хлеб в холодильнике — там он черствеет быстрее.",
+  "life": {
+   "closed": [
+    3,
+    7
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    1,
+    3
+   ],
+   "perishable": true,
+   "estimate": true,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "toast_bread": {
   "place": "counter",
   "keep": "до даты на упаковке, 5–7 дней",
-  "freeze": "да, до 3 месяцев; поджаривай прямо из морозилки"
+  "freeze": "да, до 3 месяцев; поджаривай прямо из морозилки",
+  "life": {
+   "closed": [
+    5,
+    10
+   ],
+   "opened": [
+    3,
+    7
+   ],
+   "freezer": [
+    3,
+    5
+   ],
+   "perishable": true,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "tortilla": {
   "place": "pantry",
   "keep": "до даты на упаковке",
   "opened": "в холодильнике, плотно закрыть, 5–7 дней",
-  "freeze": "да, до 3 месяцев, проложив пергаментом"
+  "freeze": "да, до 3 месяцев, проложив пергаментом",
+  "life": {
+   "closed": [
+    60,
+    90
+   ],
+   "opened": [
+    5,
+    14
+   ],
+   "freezer": [
+    3,
+    6
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "chickpeas_can": {
   "place": "pantry",
   "keep": "1–3 года, до даты на банке",
   "opened": "переложи в контейнер и в холодильник, 3–4 дня",
   "freeze": "можно, до 2 месяцев",
-  "tip": "Открытую банку не храни в самой банке — металл даёт привкус."
+  "tip": "Открытую банку не храни в самой банке — металл даёт привкус.",
+  "life": {
+   "closed": [
+    730,
+    1825
+   ],
+   "opened": [
+    1,
+    4
+   ],
+   "freezer": [
+    1,
+    2
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "kidney_beans_can": {
   "place": "pantry",
   "keep": "1–3 года",
   "opened": "в контейнере в холодильнике, 3–4 дня",
   "freeze": "можно, до 2 месяцев",
-  "tip": "Открытую банку не храни в самой банке."
+  "tip": "Открытую банку не храни в самой банке.",
+  "life": {
+   "closed": [
+    730,
+    1825
+   ],
+   "opened": [
+    3,
+    4
+   ],
+   "freezer": [
+    2,
+    3
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "lentils_can": {
   "place": "pantry",
   "keep": "1–3 года",
   "opened": "в контейнере в холодильнике, 3–4 дня",
-  "freeze": "можно, до 2 месяцев"
+  "freeze": "можно, до 2 месяцев",
+  "life": {
+   "closed": [
+    730,
+    1825
+   ],
+   "opened": [
+    3,
+    4
+   ],
+   "freezer": [
+    2,
+    3
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "corn_can": {
   "place": "pantry",
   "keep": "1–3 года",
   "opened": "в контейнере в холодильнике, 3–4 дня",
-  "freeze": "можно, до 2 месяцев"
+  "freeze": "можно, до 2 месяцев",
+  "life": {
+   "closed": [
+    730,
+    1825
+   ],
+   "opened": [
+    1,
+    4
+   ],
+   "freezer": [
+    1,
+    2
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "tomatoes_can": {
   "place": "pantry",
   "keep": "1–2 года",
   "opened": "в контейнере в холодильнике, 5 дней",
-  "freeze": "да, порциями в пакетах, до 3 месяцев"
+  "freeze": "да, порциями в пакетах, до 3 месяцев",
+  "life": {
+   "closed": [
+    365,
+    540
+   ],
+   "opened": [
+    5,
+    7
+   ],
+   "freezer": [
+    2,
+    3
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "passata": {
   "place": "pantry",
   "keep": "1–2 года",
   "opened": "в холодильнике, 4–5 дней, в закрытой бутылке",
-  "freeze": "да, порциями, до 3 месяцев"
+  "freeze": "да, порциями, до 3 месяцев",
+  "life": {
+   "closed": [
+    365,
+    540
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    2,
+    3
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "tomato_paste": {
   "place": "pantry",
   "keep": "1–2 года",
   "opened": "в холодильнике до 1 недели; сверху залей тонким слоем масла — продержится дольше",
-  "freeze": "да: выложи ложками на пергамент и заморозь шариками, до 3 месяцев"
+  "freeze": "да: выложи ложками на пергамент и заморозь шариками, до 3 месяцев",
+  "life": {
+   "closed": [
+    365,
+    810
+   ],
+   "opened": [
+    5,
+    7
+   ],
+   "freezer": [
+    2,
+    3
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "pesto": {
   "place": "pantry",
   "keep": "до даты на банке",
   "opened": "в холодильнике, 5–7 дней; сверху слой масла",
-  "freeze": "да, порциями в формочке для льда, до 3 месяцев"
+  "freeze": "да, порциями в формочке для льда, до 3 месяцев",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    1,
+    1
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "peanut_butter": {
   "place": "pantry",
   "keep": "до даты, месяцы",
-  "opened": "в шкафу, 2–3 месяца; масло сверху — нормально, размешай"
+  "opened": "в шкафу, 2–3 месяца; масло сверху — нормально, размешай",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    60,
+    90
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "honey": {
   "place": "pantry",
   "keep": "бессрочно",
   "opened": "в шкафу, в закрытой банке",
-  "tip": "Засахарился — подогрей банку в тёплой воде."
+  "tip": "Засахарился — подогрей банку в тёплой воде.",
+  "life": {
+   "closed": [
+    730,
+    730
+   ],
+   "opened": [
+    730,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "mustard": {
   "place": "pantry",
   "keep": "до даты на упаковке",
-  "opened": "в холодильнике, 3–6 месяцев"
+  "opened": "в холодильнике, 3–6 месяцев",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    180,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "soy_sauce": {
   "place": "pantry",
   "keep": "до даты, долго",
-  "opened": "в шкафу или холодильнике, до 6 месяцев"
+  "opened": "в шкафу или холодильнике, до 6 месяцев",
+  "life": {
+   "closed": [
+    730,
+    1095
+   ],
+   "opened": [
+    30,
+    180
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "sriracha": {
   "place": "pantry",
   "keep": "до даты на бутылке",
-  "opened": "в холодильнике или шкафу, до 6 месяцев"
+  "opened": "в холодильнике или шкафу, до 6 месяцев",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    90,
+    180
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "vinegar": {
   "place": "pantry",
-  "keep": "бессрочно"
+  "keep": "бессрочно",
+  "life": {
+   "closed": [
+    730,
+    730
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "oil": {
   "place": "pantry",
   "keep": "до даты на бутылке, в тёмном месте",
   "opened": "2–3 месяца, вдали от плиты и солнца",
-  "tip": "Горький, «олифовый» запах — масло прогоркло."
+  "tip": "Горький, «олифовый» запах — масло прогоркло.",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    90,
+    150
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "olive_oil": {
   "place": "pantry",
   "keep": "до даты на бутылке, в тёмном месте",
-  "opened": "2–3 месяца, плотно закрыть"
+  "opened": "2–3 месяца, плотно закрыть",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    90,
+    150
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "stock_cube": {
   "place": "pantry",
   "keep": "до даты на упаковке",
-  "opened": "в закрытой коробке, сухо"
+  "opened": "в закрытой коробке, сухо",
+  "life": {
+   "closed": [
+    365,
+    365
+   ],
+   "opened": [
+    365,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "frozen_peas": {
   "place": "freezer",
   "keep": "до даты на упаковке, при −18 °C",
   "opened": "закрой пакет клипсой, 2–3 месяца",
-  "tip": "Не размораживай перед готовкой — сразу в сковороду или кастрюлю. Повторно не замораживай."
+  "tip": "Не размораживай перед готовкой — сразу в сковороду или кастрюлю. Повторно не замораживай.",
+  "life": {
+   "closed": [
+    300,
+    540
+   ],
+   "opened": [
+    90,
+    300
+   ],
+   "freezer": [
+    10,
+    18
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "AGES",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "potatoes": {
   "place": "cool",
   "keep": "2–4 недели в прохладном тёмном месте (6–10 °C), в бумажном пакете или ящике",
   "freeze": "сырой — нет; варёный — да, до 1 месяца",
-  "tip": "На свету зеленеет — зелёные места и ростки срезай. Не храни рядом с луком: оба портятся быстрее. Не в холодильнике — крахмал превращается в сахар."
+  "tip": "На свету зеленеет — зелёные места и ростки срезай. Не храни рядом с луком: оба портятся быстрее. Не в холодильнике — крахмал превращается в сахар.",
+  "life": {
+   "closed": [
+    30,
+    60
+   ],
+   "opened": [
+    30,
+    60
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "onion": {
   "place": "cool",
   "keep": "1–2 месяца в прохладном сухом месте, в сетке или корзине",
   "opened": "разрезанная — в холодильнике в контейнере, 7 дней",
   "freeze": "нарезанный — да, для жарки, до 6 месяцев",
-  "tip": "Не храни в пакете и рядом с картофелем."
+  "tip": "Не храни в пакете и рядом с картофелем.",
+  "life": {
+   "closed": [
+    30,
+    60
+   ],
+   "opened": [
+    5,
+    7
+   ],
+   "freezer": [
+    10,
+    12
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "garlic": {
   "place": "cool",
   "keep": "1–3 месяца, головкой, в сухом прохладном месте",
   "opened": "очищенные зубчики — в холодильнике, 1 неделя",
-  "freeze": "очищенный — да, до 6 месяцев"
+  "freeze": "очищенный — да, до 6 месяцев",
+  "life": {
+   "closed": [
+    30,
+    56
+   ],
+   "opened": [
+    3,
+    10
+   ],
+   "freezer": [
+    1,
+    6
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper",
+    "Utopia"
+   ]
+  }
  },
  "carrot": {
   "place": "fridge",
   "keep": "3–4 недели в ящике для овощей, без ботвы",
   "shelf": "ящик для овощей, в пакете с дырочками",
   "freeze": "нарезанную — да, до 9 месяцев (лучше бланшировать 2 мин)",
-  "tip": "Отрежь ботву сразу — она вытягивает влагу."
+  "tip": "Отрежь ботву сразу — она вытягивает влагу.",
+  "life": {
+   "closed": [
+    7,
+    21
+   ],
+   "opened": [
+    5,
+    10
+   ],
+   "freezer": [
+    6,
+    12
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "bell_pepper": {
   "place": "fridge",
   "keep": "1–2 недели",
   "shelf": "ящик для овощей",
   "opened": "разрезанный — 3–4 дня в контейнере",
-  "freeze": "нарезанный — да, для жарки, до 6 месяцев"
+  "freeze": "нарезанный — да, для жарки, до 6 месяцев",
+  "life": {
+   "closed": [
+    4,
+    10
+   ],
+   "opened": [
+    2,
+    4
+   ],
+   "freezer": [
+    6,
+    8
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "cucumber": {
   "place": "fridge",
@@ -402,14 +1522,50 @@
   "shelf": "ящик для овощей, верхняя часть — не у задней стенки",
   "opened": "разрезанный — 1–2 дня, срез в плёнку",
   "freeze": "нет",
-  "tip": "Огурцы не любят холод ниже 7 °C — держи подальше от задней стенки."
+  "tip": "Огурцы не любят холод ниже 7 °C — держи подальше от задней стенки.",
+  "life": {
+   "closed": [
+    4,
+    7
+   ],
+   "opened": [
+    1,
+    3
+   ],
+   "freezer": null,
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "tomato": {
   "place": "counter",
   "keep": "3–5 дней при комнатной температуре, не на солнце",
   "opened": "разрезанный — в холодильнике 1–2 дня",
   "freeze": "для соусов — да",
-  "tip": "В холодильнике помидоры теряют вкус; спелые можно убрать в холодильник на 1–2 дня."
+  "tip": "В холодильнике помидоры теряют вкус; спелые можно убрать в холодильник на 1–2 дня.",
+  "life": {
+   "closed": [
+    3,
+    7
+   ],
+   "opened": [
+    2,
+    3
+   ],
+   "freezer": [
+    2,
+    2
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "white_cabbage": {
   "place": "fridge",
@@ -417,170 +1573,625 @@
   "shelf": "ящик для овощей",
   "opened": "разрезанную — в плёнке, 1 неделя",
   "freeze": "нарезанную бланшированную — до 6 месяцев",
-  "tip": "Снимай верхние листья по мере надобности — внутри кочан остаётся свежим."
+  "tip": "Снимай верхние листья по мере надобности — внутри кочан остаётся свежим.",
+  "life": {
+   "closed": [
+    7,
+    14
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    10,
+    12
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "cauliflower": {
   "place": "fridge",
   "keep": "около 1 недели",
   "shelf": "ящик для овощей, в пакете с дырочками",
-  "freeze": "соцветия бланшированные — до 8 месяцев"
+  "freeze": "соцветия бланшированные — до 8 месяцев",
+  "life": {
+   "closed": [
+    3,
+    7
+   ],
+   "opened": [
+    2,
+    4
+   ],
+   "freezer": [
+    6,
+    12
+   ],
+   "perishable": true,
+   "estimate": true,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "mushrooms": {
   "place": "fridge",
   "keep": "3–5 дней",
   "shelf": "в бумажном пакете, не в пластике",
   "freeze": "обжаренные — да, до 3 месяцев",
-  "tip": "Не мой до готовки — грибы впитывают воду и быстро портятся."
+  "tip": "Не мой до готовки — грибы впитывают воду и быстро портятся.",
+  "life": {
+   "closed": [
+    3,
+    5
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    10,
+    12
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper",
+    "familie.de"
+   ]
+  }
  },
  "leek": {
   "place": "fridge",
   "keep": "1–2 недели",
   "shelf": "ящик для овощей",
-  "freeze": "нарезанный — да, до 6 месяцев"
+  "freeze": "нарезанный — да, до 6 месяцев",
+  "life": {
+   "closed": [
+    7,
+    14
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    10,
+    12
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "spring_onion": {
   "place": "fridge",
   "keep": "5–7 дней",
   "shelf": "ящик для овощей; или корнями в стакан с водой",
-  "freeze": "нарезанный — да, для готовки"
+  "freeze": "нарезанный — да, для готовки",
+  "life": {
+   "closed": [
+    5,
+    7
+   ],
+   "opened": [
+    5,
+    7
+   ],
+   "freezer": [
+    10,
+    12
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "parsley": {
   "place": "fridge",
   "keep": "5–7 дней, как букет в стакане с водой, сверху пакет",
-  "freeze": "мелко нарезанную — да, до 6 месяцев"
+  "freeze": "мелко нарезанную — да, до 6 месяцев",
+  "life": {
+   "closed": [
+    2,
+    3
+   ],
+   "opened": [
+    2,
+    3
+   ],
+   "freezer": [
+    3,
+    4
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "ginger": {
   "place": "fridge",
   "keep": "3 недели в ящике для овощей",
-  "freeze": "да, целым корнем; натирай прямо замороженным — даже удобнее"
+  "freeze": "да, целым корнем; натирай прямо замороженным — даже удобнее",
+  "life": {
+   "closed": [
+    14,
+    21
+   ],
+   "opened": [
+    14,
+    21
+   ],
+   "freezer": [
+    6,
+    6
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "Plantura",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "lemon": {
   "place": "fridge",
   "keep": "2–3 недели в холодильнике (1 неделя при комнатной)",
   "opened": "разрезанный — срезом вниз на блюдце, 3–4 дня",
-  "freeze": "сок — в формочке для льда"
+  "freeze": "сок — в формочке для льда",
+  "life": {
+   "closed": [
+    10,
+    21
+   ],
+   "opened": [
+    3,
+    6
+   ],
+   "freezer": [
+    12,
+    12
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "banana": {
   "place": "counter",
   "keep": "3–6 дней при комнатной температуре, подальше от других фруктов",
   "freeze": "очищенные кусочки — да, до 3 месяцев, для шейка",
-  "tip": "Бананы ускоряют созревание соседних фруктов. Почерневшая кожура в холодильнике — не страшно, внутри нормальные."
+  "tip": "Бананы ускоряют созревание соседних фруктов. Почерневшая кожура в холодильнике — не страшно, внутри нормальные.",
+  "life": {
+   "closed": [
+    3,
+    7
+   ],
+   "opened": [
+    1,
+    2
+   ],
+   "freezer": [
+    2,
+    3
+   ],
+   "perishable": true,
+   "estimate": true,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "italian_herbs": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "oregano": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "thyme": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "marjoram": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "bay_leaf": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "paprika_powder": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Паприку лучше держать в тёмном месте — на свету она теряет цвет и вкус."
+  "tip": "Паприку лучше держать в тёмном месте — на свету она теряет цвет и вкус.",
+  "life": {
+   "closed": [
+    730,
+    1095
+   ],
+   "opened": [
+    730,
+    1095
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "curry_powder": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "cumin": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    730,
+    1095
+   ],
+   "opened": [
+    730,
+    1095
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "chili_flakes": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    730,
+    1095
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "chili_powder": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    730,
+    1095
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "cinnamon": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    730,
+    1095
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "turmeric": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    730,
+    1095
+   ],
+   "opened": [
+    730,
+    1095
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "caraway": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    730,
+    1095
+   ],
+   "opened": [
+    730,
+    1095
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "garlic_powder": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Сушёный чеснок быстро впитывает влагу и комкуется — закрывай плотно."
+  "tip": "Сушёный чеснок быстро впитывает влагу и комкуется — закрывай плотно.",
+  "life": {
+   "closed": [
+    1095,
+    1460
+   ],
+   "opened": [
+    730,
+    1095
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "black_pepper": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "gyros_spice": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой баночке",
   "opened": "после вскрытия — 6–12 месяцев, аромат постепенно слабеет",
   "freeze": "не нужно",
-  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются."
+  "tip": "Держи подальше от плиты: от пара и тепла специи слипаются и выдыхаются.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    365,
+    730
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "water": {
   "place": "pantry",
-  "keep": "—"
+  "keep": "—",
+  "life": {
+   "closed": [
+    3650,
+    3650
+   ],
+   "opened": [
+    1,
+    3
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "beef_mince": {
   "place": "fridge",
@@ -588,71 +2199,268 @@
   "shelf": "нижняя полка, в контейнере или на тарелке",
   "opened": "приготовь в тот же день",
   "freeze": "да, до 3–4 месяцев; плоским пакетом",
-  "tip": "Фарш покупай в день готовки или замораживай сразу."
+  "tip": "Фарш покупай в день готовки или замораживай сразу.",
+  "life": {
+   "closed": [
+    1,
+    2
+   ],
+   "opened": [
+    0,
+    1
+   ],
+   "freezer": [
+    1,
+    3
+   ],
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "AGES",
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "greek_yogurt": {
   "place": "fridge",
   "keep": "до даты на упаковке",
   "shelf": "средняя полка",
   "opened": "3–5 дней",
-  "freeze": "не рекомендуется"
+  "freeze": "не рекомендуется",
+  "life": {
+   "closed": [
+    10,
+    21
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": [
+    1,
+    2
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper",
+    "familie.de"
+   ]
+  }
  },
  "cornflakes": {
   "place": "pantry",
   "keep": "закрытая пачка — до даты, несколько месяцев",
   "opened": "закрой внутренний пакет прищепкой или клипсой, 1–2 месяца",
   "freeze": "не нужно",
-  "tip": "Открытую пачку храни подальше от плиты и чайника: от пара хлопья быстро теряют хруст."
+  "tip": "Открытую пачку храни подальше от плиты и чайника: от пара хлопья быстро теряют хруст.",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    60,
+    90
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "protein_pudding": {
   "place": "fridge",
   "keep": "до даты на упаковке",
   "shelf": "средняя полка",
   "opened": "доешь за 1 день",
-  "freeze": "нет — после разморозки расслаивается"
+  "freeze": "нет — после разморозки расслаивается",
+  "life": {
+   "closed": [
+    7,
+    21
+   ],
+   "opened": [
+    1,
+    2
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper",
+    "Verbraucherzentrale"
+   ]
+  }
  },
  "black_tea": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой коробке",
   "opened": "в шкафу, в закрытой коробке или банке, подальше от специй и кофе",
-  "tip": "Чай легко впитывает чужие запахи и влагу — не держи коробку над плитой или чайником."
+  "tip": "Чай легко впитывает чужие запахи и влагу — не держи коробку над плитой или чайником.",
+  "life": {
+   "closed": [
+    540,
+    1095
+   ],
+   "opened": [
+    180,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "fruit_tea": {
   "place": "pantry",
   "keep": "1–2 года, в закрытой коробке",
   "opened": "в шкафу, в закрытой коробке; пакетики теряют аромат за несколько месяцев",
-  "tip": "Фруктовый чай заваривай крутым кипятком и не меньше 5 минут — иначе вкус слабый."
+  "tip": "Фруктовый чай заваривай крутым кипятком и не меньше 5 минут — иначе вкус слабый.",
+  "life": {
+   "closed": [
+    540,
+    1080
+   ],
+   "opened": [
+    180,
+    360
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "cocoa_drink": {
   "place": "pantry",
   "keep": "до даты, около года",
   "opened": "в шкафу, плотно закрытым — от влаги порошок слёживается комками",
-  "tip": "Насыпай сухой ложкой: от мокрой порошок в банке твердеет."
+  "tip": "Насыпай сухой ложкой: от мокрой порошок в банке твердеет.",
+  "life": {
+   "closed": [
+    90,
+    365
+   ],
+   "opened": [
+    90,
+    120
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "apple": {
   "place": "fridge",
   "keep": "в холодильнике 3–4 недели, при комнатной температуре около недели",
   "shelf": "ящик для овощей и фруктов, в пакете с парой дырок",
   "freeze": "не нужно — после разморозки становятся мягкими",
-  "tip": "Храни отдельно от бананов и овощей: яблоки выделяют этилен и ускоряют их созревание. Одно гнилое яблоко сразу убери."
+  "tip": "Храни отдельно от бананов и овощей: яблоки выделяют этилен и ускоряют их созревание. Одно гнилое яблоко сразу убери.",
+  "life": {
+   "closed": [
+    14,
+    42
+   ],
+   "opened": [
+    14,
+    42
+   ],
+   "freezer": [
+    8,
+    12
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "peanuts": {
   "place": "pantry",
   "keep": "до даты, несколько месяцев",
   "opened": "закрой пакет клипсой; съешь за 2–4 недели, пока не стали горчить",
-  "tip": "Горький или прогорклый запах — значит, жир в орехах испортился, выброси."
+  "tip": "Горький или прогорклый запах — значит, жир в орехах испортился, выброси.",
+  "life": {
+   "closed": [
+    90,
+    180
+   ],
+   "opened": [
+    7,
+    14
+   ],
+   "freezer": [
+    12,
+    24
+   ],
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "rice_cakes": {
   "place": "pantry",
   "keep": "до даты, несколько месяцев",
   "opened": "закрой пакет клипсой, иначе за пару дней отсыреют и перестанут хрустеть",
-  "tip": "Намазку клади прямо перед едой — с собой хлебцы и намазку носи отдельно."
+  "tip": "Намазку клади прямо перед едой — с собой хлебцы и намазку носи отдельно.",
+  "life": {
+   "closed": [
+    180,
+    240
+   ],
+   "opened": [
+    7,
+    30
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "crispbread": {
   "place": "pantry",
   "keep": "до даты, несколько месяцев",
   "opened": "в закрытой пачке или пакете, сухо; 2–3 недели",
-  "tip": "Если хлебцы отсырели, подсуши их 3–4 минуты в духовке при 150 °C."
+  "tip": "Если хлебцы отсырели, подсуши их 3–4 минуты в духовке при 150 °C.",
+  "life": {
+   "closed": [
+    180,
+    240
+   ],
+   "opened": [
+    30,
+    180
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "cabanossi": {
   "place": "pantry",
@@ -660,20 +2468,73 @@
   "shelf": "в холодильнике после вскрытия — средняя полка",
   "opened": "в холодильнике, в закрытой упаковке или контейнере, несколько дней",
   "freeze": "можно, до 1–2 месяцев",
-  "tip": "Удобно брать с собой: целые палочки без холодильника переносят день в рюкзаке."
+  "tip": "Удобно брать с собой: целые палочки без холодильника переносят день в рюкзаке.",
+  "life": {
+   "closed": [
+    14,
+    28
+   ],
+   "opened": [
+    7,
+    14
+   ],
+   "freezer": [
+    1,
+    2
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "dark_chocolate": {
   "place": "pantry",
   "keep": "до даты, около года",
   "opened": "заверни в фольгу или пакет, в шкафу при 15–20 °C",
   "freeze": "не нужно",
-  "tip": "Белый налёт — это жир или сахар вышел на поверхность от перепада температур; есть можно. В холодильнике шоколад отсыревает."
+  "tip": "Белый налёт — это жир или сахар вышел на поверхность от перепада температур; есть можно. В холодильнике шоколад отсыревает.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    180,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "protein_bar": {
   "place": "pantry",
   "keep": "до даты на упаковке, несколько месяцев",
   "opened": "доешь сразу или заверни — открытый батончик за день становится жёстким",
-  "tip": "Летом не оставляй в машине или на солнце — шоколадная глазурь тает."
+  "tip": "Летом не оставляй в машине или на солнце — шоколадная глазурь тает.",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    1,
+    3
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "kefir": {
   "place": "fridge",
@@ -681,7 +2542,24 @@
   "shelf": "дверца или средняя полка",
   "opened": "2–3 дня, в закрытой бутылке",
   "freeze": "нет — после разморозки расслаивается",
-  "tip": "Перед тем как налить, встряхни бутылку: кефир расслаивается, это нормально."
+  "tip": "Перед тем как налить, встряхни бутылку: кефир расслаивается, это нормально.",
+  "life": {
+   "closed": [
+    5,
+    7
+   ],
+   "opened": [
+    1,
+    2
+   ],
+   "freezer": null,
+   "perishable": true,
+   "estimate": false,
+   "src": [
+    "AGES",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "hummus": {
   "place": "fridge",
@@ -689,104 +2567,360 @@
   "shelf": "средняя полка",
   "opened": "3–5 дней, плотно закрытым",
   "freeze": "можно, до 1 месяца; после разморозки размешай",
-  "tip": "Бери чистой ложкой — крошки хлеба в баночке ускоряют порчу."
+  "tip": "Бери чистой ложкой — крошки хлеба в баночке ускоряют порчу.",
+  "life": {
+   "closed": [
+    7,
+    21
+   ],
+   "opened": [
+    3,
+    5
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "AGES",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "dates": {
   "place": "pantry",
   "keep": "до даты, несколько месяцев",
   "opened": "в закрытом пакете или банке; летом — в холодильнике, до 1–2 недель",
-  "tip": "Если финики с косточкой, разрежь вдоль и вынь её перед едой."
+  "tip": "Если финики с косточкой, разрежь вдоль и вынь её перед едой.",
+  "life": {
+   "closed": [
+    60,
+    365
+   ],
+   "opened": [
+    30,
+    180
+   ],
+   "freezer": [
+    12,
+    24
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "snickers": {
   "place": "pantry",
   "keep": "до даты на упаковке, около года",
   "opened": "открытый батончик доешь за день или заверни в фольгу",
   "freeze": "можно — замороженный Snickers едят прямо из морозилки, он не каменеет",
-  "tip": "Летом не оставляй в рюкзаке на солнце и в машине — шоколад тает, а потом покрывается белым налётом (есть можно)."
+  "tip": "Летом не оставляй в рюкзаке на солнце и в машине — шоколад тает, а потом покрывается белым налётом (есть можно).",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    3,
+    14
+   ],
+   "freezer": [
+    3,
+    6
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "twix": {
   "place": "pantry",
   "keep": "до даты на упаковке, около года",
   "opened": "вторую палочку заверни в фольгу — съешь за 1–2 дня, пока печенье хрустит",
   "freeze": "не нужно",
-  "tip": "Летом не оставляй в рюкзаке на солнце и в машине — шоколад тает, а потом покрывается белым налётом (есть можно)."
+  "tip": "Летом не оставляй в рюкзаке на солнце и в машине — шоколад тает, а потом покрывается белым налётом (есть можно).",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    1,
+    3
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "mars": {
   "place": "pantry",
   "keep": "до даты на упаковке, около года",
   "opened": "открытый батончик доешь за день или заверни в фольгу",
   "freeze": "не нужно",
-  "tip": "Летом не оставляй в рюкзаке на солнце и в машине — шоколад тает, а потом покрывается белым налётом (есть можно)."
+  "tip": "Летом не оставляй в рюкзаке на солнце и в машине — шоколад тает, а потом покрывается белым налётом (есть можно).",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    14,
+    60
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "kitkat": {
   "place": "pantry",
   "keep": "до даты на упаковке, около года",
   "opened": "оставшиеся палочки заверни в фольгу — вафля отсыревает за 1–2 дня",
   "freeze": "не нужно",
-  "tip": "Летом не оставляй в рюкзаке на солнце и в машине — шоколад тает, а потом покрывается белым налётом (есть можно)."
+  "tip": "Летом не оставляй в рюкзаке на солнце и в машине — шоколад тает, а потом покрывается белым налётом (есть можно).",
+  "life": {
+   "closed": [
+    120,
+    180
+   ],
+   "opened": [
+    7,
+    30
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "bounty": {
   "place": "pantry",
   "keep": "до даты на упаковке, 6–9 месяцев",
   "opened": "второй батончик заверни в фольгу и съешь за 1–2 дня",
   "freeze": "не нужно",
-  "tip": "Летом не оставляй в рюкзаке на солнце и в машине — шоколад тает, а потом покрывается белым налётом (есть можно)."
+  "tip": "Летом не оставляй в рюкзаке на солнце и в машине — шоколад тает, а потом покрывается белым налётом (есть можно).",
+  "life": {
+   "closed": [
+    90,
+    180
+   ],
+   "opened": [
+    7,
+    30
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE"
+   ]
+  }
  },
  "kinder_bueno": {
   "place": "cool",
   "keep": "до даты на упаковке, несколько месяцев; держи в прохладном месте до 20 °C",
   "opened": "второй батончик заверни — вафля за 1–2 дня теряет хруст",
   "freeze": "не нужно",
-  "tip": "Начинка на молоке и орехах быстро тает в тепле — не держи у батареи и в рюкзаке на солнце."
+  "tip": "Начинка на молоке и орехах быстро тает в тепле — не держи у батареи и в рюкзаке на солнце.",
+  "life": {
+   "closed": [
+    120,
+    180
+   ],
+   "opened": [
+    7,
+    30
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "milk_chocolate": {
   "place": "pantry",
   "keep": "до даты, около года",
   "opened": "заверни в фольгу или пакет, в шкафу при 15–20 °C; 2–3 недели",
   "freeze": "не нужно",
-  "tip": "Белый налёт — это жир или сахар вышел на поверхность от перепада температур; есть можно. В холодильнике шоколад отсыревает и впитывает запахи."
+  "tip": "Белый налёт — это жир или сахар вышел на поверхность от перепада температур; есть можно. В холодильнике шоколад отсыревает и впитывает запахи.",
+  "life": {
+   "closed": [
+    365,
+    540
+   ],
+   "opened": [
+    30,
+    180
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "Milka.at FAQ",
+    "Too Good To Go",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "manner_wafers": {
   "place": "pantry",
   "keep": "до даты на упаковке, несколько месяцев",
   "opened": "пачку плотно закрой или переложи вафли в банку — открытые за 2–3 дня теряют хруст",
   "freeze": "не нужно",
-  "tip": "Не держи рядом с батареей — ореховая начинка размягчается."
+  "tip": "Не держи рядом с батареей — ореховая начинка размягчается.",
+  "life": {
+   "closed": [
+    120,
+    180
+   ],
+   "opened": [
+    7,
+    30
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "butter_biscuits": {
   "place": "pantry",
   "keep": "до даты, несколько месяцев",
   "opened": "закрой пачку клипсой или переложи в банку; 2–3 недели",
   "freeze": "не нужно",
-  "tip": "Если печенье стало мягким — значит, отсырело; держи пачку закрытой и подальше от чайника."
+  "tip": "Если печенье стало мягким — значит, отсырело; держи пачку закрытой и подальше от чайника.",
+  "life": {
+   "closed": [
+    120,
+    180
+   ],
+   "opened": [
+    14,
+    30
+   ],
+   "freezer": [
+    8,
+    12
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "potato_chips": {
   "place": "pantry",
   "keep": "до даты на пакете, несколько месяцев",
   "opened": "закрой пакет клипсой; съешь за 2–3 дня, пока хрустят",
   "freeze": "не нужно",
-  "tip": "Насыпай порцию в миску, а не ешь из пакета — так легко съесть весь пакет (~1300 ккал)."
+  "tip": "Насыпай порцию в миску, а не ешь из пакета — так легко съесть весь пакет (~1300 ккал).",
+  "life": {
+   "closed": [
+    60,
+    120
+   ],
+   "opened": [
+    7,
+    14
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "salt_sticks": {
   "place": "pantry",
   "keep": "до даты, несколько месяцев",
   "opened": "закрой пакет клипсой; 1–2 недели, пока хрустят",
   "freeze": "не нужно",
-  "tip": "Отсыревшие палочки подсуши 3–4 минуты в духовке при 150 °C."
+  "tip": "Отсыревшие палочки подсуши 3–4 минуты в духовке при 150 °C.",
+  "life": {
+   "closed": [
+    120,
+    270
+   ],
+   "opened": [
+    14,
+    21
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "gummy_bears": {
   "place": "pantry",
   "keep": "до даты, около года",
   "opened": "закрой пакет клипсой; мишки засыхают, но не портятся",
   "freeze": "не нужно",
-  "tip": "В жару мармелад слипается — держи пакет в шкафу, а не на подоконнике."
+  "tip": "В жару мармелад слипается — держи пакет в шкафу, а не на подоконнике.",
+  "life": {
+   "closed": [
+    180,
+    270
+   ],
+   "opened": [
+    180,
+    270
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "croissant": {
   "place": "counter",
   "keep": "до даты на упаковке, обычно 1–2 недели",
   "opened": "закрой пакет клипсой; 2–3 дня",
   "freeze": "можно, до 1 месяца; размораживай на столе 30 минут",
-  "tip": "Чтобы круассаны снова стали хрустящими, подержи их 3–4 минуты в духовке при 160 °C."
+  "tip": "Чтобы круассаны снова стали хрустящими, подержи их 3–4 минуты в духовке при 160 °C.",
+  "life": {
+   "closed": [
+    5,
+    14
+   ],
+   "opened": [
+    2,
+    3
+   ],
+   "freezer": [
+    1,
+    3
+   ],
+   "perishable": true,
+   "estimate": true,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "fruit_yogurt": {
   "place": "fridge",
@@ -794,27 +2928,97 @@
   "shelf": "средняя или верхняя полка",
   "opened": "открытый стаканчик доешь в тот же день",
   "freeze": "не рекомендуется",
-  "tip": "Вздутая крышка — признак брожения: такой йогурт не ешь."
+  "tip": "Вздутая крышка — признак брожения: такой йогурт не ешь.",
+  "life": {
+   "closed": [
+    7,
+    21
+   ],
+   "opened": [
+    1,
+    2
+   ],
+   "freezer": [
+    1,
+    2
+   ],
+   "perishable": false,
+   "estimate": true,
+   "src": [
+    "AGES",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "popcorn": {
   "place": "pantry",
   "keep": "до даты, несколько месяцев",
   "opened": "закрой пакет клипсой; 2–3 дня, потом становится мягким",
   "freeze": "не нужно",
-  "tip": "Бери готовый попкорн в пакете — для попкорна из зёрен нужна кастрюля, а для «микроволнового» — микроволновка."
+  "tip": "Бери готовый попкорн в пакете — для попкорна из зёрен нужна кастрюля, а для «микроволнового» — микроволновка.",
+  "life": {
+   "closed": [
+    60,
+    90
+   ],
+   "opened": [
+    7,
+    14
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "brown_rice": {
   "place": "pantry",
   "keep": "6–12 месяцев (в отрубях есть масло — со временем горчит)",
   "opened": "в закрытой банке, в прохладном месте — до 6 месяцев",
   "freeze": "сухой не нужно; варёный — да, до 1 месяца",
-  "tip": "Варёный рис остуди за 1 час и убери в холодильник — не оставляй на столе на ночь; храни 1–2 дня."
+  "tip": "Варёный рис остуди за 1 час и убери в холодильник — не оставляй на столе на ночь; храни 1–2 дня.",
+  "life": {
+   "closed": [
+    180,
+    365
+   ],
+   "opened": [
+    180,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  },
  "basmati_rice": {
   "place": "pantry",
   "keep": "1–2 года",
   "opened": "в закрытой банке или пакете с клипсой — до года",
   "freeze": "сухой не нужно; варёный — да, до 1 месяца",
-  "tip": "Варёный рис остуди за 1 час и убери в холодильник — не оставляй на столе на ночь; храни 1–2 дня."
+  "tip": "Варёный рис остуди за 1 час и убери в холодильник — не оставляй на столе на ночь; храни 1–2 дня.",
+  "life": {
+   "closed": [
+    365,
+    730
+   ],
+   "opened": [
+    180,
+    365
+   ],
+   "freezer": null,
+   "perishable": false,
+   "estimate": false,
+   "src": [
+    "BLE/BZfE",
+    "USDA FoodKeeper"
+   ]
+  }
  }
 }

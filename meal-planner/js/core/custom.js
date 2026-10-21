@@ -3,6 +3,7 @@
 // и учёт запасов. Товар каталога становится своим продуктом (КБЖУ — с этикетки, вводит человек).
 import { chooseOffer, round2 } from './shopping.js';
 import { PIECES } from './stock.js';
+import { qty as qtyWords } from './qty.js';
 
 // Меры для человека: во что удобно считать продукт. per — граммов в одной мере, step — шаг кнопок ±
 const SPOONS = { peanut_butter: 15, honey: 20, butter: 10, hummus: 30, cream_cheese: 30, pesto: 15, sugar: 10, cocoa_drink: 15, sour_cream: 20, mustard: 10 };
@@ -14,11 +15,11 @@ const DEFAULT_G = { cornflakes: 50, milk: 250, kefir: 250, skyr: 150, magertopfe
 
 export function unitOf(key, product) {
   if (BAGS[key]) return { unit: 'пакетик', per: BAGS[key], step: 1, def: 1 };
-  if (SPOONS[key]) return { unit: 'ст. л.', per: SPOONS[key], step: 1, def: 1 };
+  if (SPOONS[key]) return { unit: 'столовая ложка', per: SPOONS[key], step: 1, def: 1 };
   if (PIECES[key]) return { unit: PIECES[key][1], per: PIECES[key][0], step: key === 'eggs' || PIECES[key][0] <= 60 ? 1 : 0.5, def: 1 };
   // свой товар, введённый вручную, в небольшой упаковке (пачка лапши, стаканчик) — считаем упаковками
   const own = product?.manual && (product.packs || [])[0];
-  if (own && own.pack_unit !== 'pcs' && own.grams > 0 && own.grams <= 250) return { unit: 'уп.', per: own.grams, step: 0.5, def: 1 };
+  if (own && own.pack_unit !== 'pcs' && own.grams > 0 && own.grams <= 250) return { unit: 'упаковка', per: own.grams, step: 0.5, def: 1 };
   const ml = (product?.packs || []).some((p) => p.pack_unit === 'ml');
   if (ml) return { unit: 'мл', per: 1, step: 50, def: DEFAULT_G[key] || 200 };
   const pcsPack = (product?.packs || []).find((p) => p.pack_unit === 'pcs' && p.grams > 0 && p.pack_size > 0);
@@ -26,13 +27,12 @@ export function unitOf(key, product) {
   return { unit: 'г', per: 1, step: (DEFAULT_G[key] || 50) <= 30 ? 5 : 10, def: DEFAULT_G[key] || 50 };
 }
 
-const fmt = (x) => String(Math.round(x * 100) / 100).replace('.', ',');
-// Бытовая мера для карточки: «1 стакан (250 мл)», «2 шт.», «1 ст. л.», «50 г»
+// Бытовая мера для карточки словами: «1 стакан (250 мл)», «полторы штуки», «2 столовые ложки», «50 г»
 export function amountText(key, product, qty) {
   const u = unitOf(key, product);
   if (u.unit === 'мл') return qty === 250 ? '1 стакан (250 мл)' : `${Math.round(qty)} мл`;
   if (u.unit === 'г') return `${Math.round(qty)} г`;
-  return `${fmt(qty)} ${u.unit}`;
+  return qtyWords(qty, u.unit === 'шт.' ? 'штука' : u.unit);
 }
 export const gramsOf = (key, product, qty) => {
   const u = unitOf(key, product);

@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated": "2026-10-17",
+  "generated": "2026-10-20",
   "price_date": "2026-10-17",
   "schema": 2,
   "departments": [
@@ -611,7 +611,7 @@
   },
   "bell_pepper": {
    "key": "bell_pepper",
-   "name_ru": "Перец сладкий",
+   "name_ru": "Сладкий перец (болгарский)",
    "name_de": "Paprika Mix",
    "department": "produce",
    "basic": false,
@@ -1328,7 +1328,7 @@
   },
   "cabanossi": {
    "key": "cabanossi",
-   "name_ru": "Кабаносы (сыровяленые колбаски)",
+   "name_ru": "Кабаносы (копчёные колбаски)",
    "name_de": "Clever Cabanossi",
    "department": "deli",
    "basic": false,
@@ -1935,7 +1935,7 @@
   },
   "chicken_thigh_fillet": {
    "key": "chicken_thigh_fillet",
-   "name_ru": "Филе куриных бёдер",
+   "name_ru": "Куриные бёдра (филе без кожи)",
    "name_de": "Hühner-Oberkeulenschnitzel",
    "department": "meat",
    "basic": false,
@@ -2864,7 +2864,7 @@
   },
   "cumin": {
    "key": "cumin",
-   "name_ru": "Кумин (зира) молотый",
+   "name_ru": "Зира (кумин) молотая",
    "name_de": "Kung Fu Kreuzkümmel gemahlen",
    "department": "oils",
    "basic": true,
@@ -3163,7 +3163,7 @@
   },
   "eggs": {
    "key": "eggs",
-   "name_ru": "Яйцо",
+   "name_ru": "Яйца",
    "name_de": "Clever Eier aus Bodenhaltung M",
    "department": "eggs",
    "basic": false,
@@ -3738,7 +3738,7 @@
   },
   "garlic_powder": {
    "key": "garlic_powder",
-   "name_ru": "Чеснок сушёный",
+   "name_ru": "Чеснок сушёный (гранулы)",
    "name_de": "SPAR Knoblauch granuliert 70g",
    "department": "oils",
    "basic": true,
@@ -6114,7 +6114,7 @@
   },
   "paprika_powder": {
    "key": "paprika_powder",
-   "name_ru": "Паприка сладкая",
+   "name_ru": "Паприка молотая (сладкая)",
    "name_de": "S-BUDGET Paprika edelsüß 140g",
    "department": "oils",
    "basic": true,
@@ -6167,7 +6167,7 @@
   },
   "parmesan": {
    "key": "parmesan",
-   "name_ru": "Твёрдый сыр типа пармезан",
+   "name_ru": "Пармезан (или Грана Падано)",
    "name_de": "Clever Grana Padano",
    "department": "cheese",
    "basic": false,
@@ -6394,7 +6394,7 @@
   },
   "pasta": {
    "key": "pasta",
-   "name_ru": "Паста (пенне или спагетти)",
+   "name_ru": "Макароны",
    "name_de": "Teigware Penne, billigstes Produkt, Grundpreis je kg (AK-Erhebung)",
    "department": "grains",
    "basic": false,
@@ -6882,7 +6882,7 @@
   },
   "pork_shoulder": {
    "key": "pork_shoulder",
-   "name_ru": "Свинина кубиками (лопатка)",
+   "name_ru": "Свиная лопатка",
    "name_de": "Clever Schweinefleisch würfelig",
    "department": "meat",
    "basic": false,
@@ -8524,7 +8524,7 @@
   },
   "tomato_paste": {
    "key": "tomato_paste",
-   "name_ru": "Томатная паста",
+   "name_ru": "Томатная паста (концентрат)",
    "name_de": "Clever Tomatenmark",
    "department": "cans",
    "basic": true,

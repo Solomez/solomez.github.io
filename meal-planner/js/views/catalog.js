@@ -244,6 +244,13 @@ function renderHome(root, redraw, rerender) {
       expiring.slice(0, 5).map((e) => `${products[e.key]?.name_ru || e.key}${e.over ? ' (проверьте — срок мог пройти)' : e.left <= 1 ? ' (сегодня-завтра)' : ` (≈ ${e.left} дн.)`}`).join(', '),
       '. Блюда с ними — первыми в ', h('a', { href: '#/recipes?src=home' }, 'Что приготовить'), '.'));
   }
+  // испортилось (срок вышел и по верхней границе) — из запасов убрано, в следующую неделю не переносится (блок В)
+  const gone = Object.entries(stock).filter(([k, s]) => products[k] && !products[k].basic && s.spoiled > 1);
+  if (gone.length) {
+    root.append(h('p', { class: 'notice' }, h('b', null, 'Испортилось — убрано из запасов: '),
+      gone.map(([k, s]) => `${products[k].name_ru.toLowerCase()} ${describeStock(k, s.spoiled, products[k]).replace(/^≈ /, '')}`).join(', '),
+      '. Не ешьте, если сомневаетесь. Если ещё хорошее — отметьте количество заново.'));
+  }
 
   const q = (ui.homeQ || '').trim().toLowerCase();
   root.append(h('input', { type: 'search', id: 'home-q', placeholder: 'Найти: творог, рис, Topfen…', value: ui.homeQ || '', 'aria-label': 'Найти продукт', oninput: (e) => { ui.homeQ = e.target.value; rerender({ keepScroll: true, keepFocus: true }); } }));
@@ -300,6 +307,7 @@ function stockRow(key, p, s, need, exp, redraw) {
   const sub = [
     auto ? `считается само: ${[s.base > 0 && s.base !== Infinity ? `было ${describeStock(key, s.base, p).replace(/^≈ /, '')}` : null, s.added > 0 ? `куплено ${describeStock(key, s.added, p).replace(/^≈ /, '')}` : null, s.used > 0 ? `ушло в готовку ${describeStock(key, s.used, p).replace(/^≈ /, '').replace(/^почти нет \(≈ (.+)\)$/, '$1')}` : null].filter(Boolean).join(', ')}` : null,
     need && !p?.basic ? (grams === Infinity || enough ? 'для плана хватает' : grams > 0 ? `для плана нужно ещё ${needText(key, need - grams, p)}` : `для плана: ${needText(key, need, p)}`) : null,
+    freshLine(s),
   ].filter(Boolean);
   return h('li', { class: 'home-row stock-row' + (open ? ' open' : '') },
     photo(p, thumbPack(p), { cls: 'thumb sm', label: p?.name_ru }),
@@ -312,6 +320,17 @@ function stockRow(key, p, s, need, exp, redraw) {
         h('button', { class: 'btn small', 'aria-expanded': 'false', onclick: () => { ui.editKey = key; redraw(); } }, grams > 0 ? 'Изменить' : 'Есть дома'),
         grams > 0 ? h('button', { class: 'btn small ghost', onclick: () => { const prev = state.pantry[key] ? { ...state.pantry[key] } : null; setStock(key, 0); redraw(); toast(`${p?.name_ru}: закончилось`, { label: 'Отменить', onClick: () => { if (prev) state.pantry[key] = prev; else delete state.pantry[key]; save(); redraw(); } }); } }, 'Закончилось') : null,
       ]));
+}
+
+// Свежесть: вскрыто когда и годно до какого дня (по нижней границе срока), замороженное — отдельно
+function freshLine(s) {
+  if (!(s?.grams > 0) || s.grams === Infinity) return null;
+  const d = (t) => { const x = new Date(t); return `${['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'][x.getDay()]} ${x.getDate()}.${String(x.getMonth() + 1).padStart(2, '0')}`; };
+  const parts = [];
+  if (s.frozen > 1) parts.push(`в морозилке ${Math.round(s.frozen)} г${Number.isFinite(s.thawAt) ? ` — достать ${d(s.thawAt)}` : ''}`);
+  if (s.openedAt != null) parts.push(`вскрыто ${d(s.openedAt)}`);
+  if (s.exp != null && Number.isFinite(s.exp) && s.exp - Date.now() < 21 * 86400000) parts.push(Date.now() >= s.exp ? 'срок вышел — проверьте запах и вид' : `${s.frozen > 1 ? 'остальное ' : ''}годно до ${d(s.exp - 1)}`);
+  return parts.length ? parts.join(', ') : null;
 }
 
 // Сколько нужно — штуками для штучного («≈ 4 шт.»), иначе как в списке покупок

@@ -2,7 +2,7 @@
 // КБЖУ и цена считаются сразу; сохранённое становится обычным рецептом (рецепты, план, покупки, запасы).
 import { h, eur, num, icon, seg, toast, sheet } from '../ui.js';
 import { state, save, targets, applyCustom } from '../state.js';
-import { buildCustomRecipe, unitOf, gramsOf, autoTitle, productFromCatalog, mealHint, similarNutrition } from '../core/custom.js';
+import { buildCustomRecipe, unitOf, gramsOf, amountText, autoTitle, productFromCatalog, mealHint, similarNutrition } from '../core/custom.js';
 import { aisles } from '../core/catalog.js';
 import { photo, thumbPack } from './products.js';
 import { pickFromCatalog } from './catalog.js';
@@ -137,7 +137,7 @@ function itemRow(it, idx, products, redraw) {
     h('div', { class: 'home-actions' },
       h('div', { class: 'stepper', role: 'group', 'aria-label': `Сколько: ${p?.name_ru}` },
         h('button', { 'aria-label': 'Меньше', onclick: () => set(it.qty - u.step) }, '−'),
-        h('span', null, `${String(Math.round(it.qty * 100) / 100).replace('.', ',')} ${u.unit}`),
+        h('span', null, amountText(it.key, p, it.qty)),
         h('button', { 'aria-label': 'Больше', onclick: () => set(it.qty + u.step) }, '+')),
       h('button', { class: 'btn icon ghost small', 'aria-label': `Убрать: ${p?.name_ru}`, onclick: () => { ui.draft.items.splice(idx, 1); redraw(); } }, icon('close'))));
 }

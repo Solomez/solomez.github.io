@@ -10,15 +10,27 @@ const SAFETY = { poultry: 'птица', pork: 'свинина', mince: 'фарш
 
 // Текст признака с подстановками (названия продуктов шага)
 const tx = (r, step, t) => (t ? renderText(r, t, { ...step.ctx, kitchen: state.data.kitchen }).text : '');
+// фраза блока заканчивается точкой (S54: «Если передержал» без точек)
+const dot = (t) => (t && !/[.!?…»)]$/.test(t.trim()) ? `${t.trim()}.` : t);
+// «Как проверить» слово в слово повторяет проверку безопасности — второй раз не показываем (S54)
+const same = (a, b) => String(a || '').toLowerCase().replace(/[^а-яёa-z0-9]/g, '') === String(b || '').toLowerCase().replace(/[^а-яёa-z0-9]/g, '');
+const checkOf = (r, step) => {
+  const c = step.check ? tx(r, step, step.check) : '';
+  return c && !(step.safety || []).some((x) => x.stage === 'final' && same(tx(r, step, x.check), c)) ? c : '';
+};
 
 // есть что проверять по окончании таймера (у первой половины этапа, разделённого «late», признаков нет)
 export function hasReadiness(step) {
   return !!step.cues?.length;
 }
 
-export function cueList(r, step, { big = false, checkable = false } = {}) {
-  return h('ul', { class: 'ready-list' + (big ? ' big' : '') }, (step.cues || []).map((c) => h('li', null,
-    checkable ? h('label', null, h('input', { type: 'checkbox' }), ' ', h('span', { class: 'cue-type' }, `${TYPE[c.type] || c.type}: `), tx(r, step, c.text))
+// checked — номера отмеченных признаков (хранятся в прогрессе готовки, S61: не сбрасываются при уходе с шага);
+// onCheck(номера) — после каждой отметки
+export function cueList(r, step, { big = false, checkable = false, checked = [], onCheck = null } = {}) {
+  const on = new Set(checked);
+  return h('ul', { class: 'ready-list' + (big ? ' big' : '') }, (step.cues || []).map((c, k) => h('li', null,
+    checkable ? h('label', null, h('input', { type: 'checkbox', checked: on.has(k), onchange: (e) => { e.target.checked ? on.add(k) : on.delete(k); onCheck?.([...on].sort((a, b) => a - b)); } }),
+      ' ', h('span', null, h('span', { class: 'cue-type' }, `${TYPE[c.type] || c.type}: `), tx(r, step, c.text)))
       : [h('span', { class: 'cue-type' }, `${TYPE[c.type] || c.type}: `), tx(r, step, c.text)])));
 }
 
@@ -36,16 +48,19 @@ export function safetyBlock(r, step) {
   });
 }
 
-export function readyBlock(r, step, { big = false, checkable = false, open = true } = {}) {
-  if (!hasReadiness(step)) return null;
+export function readyBlock(r, step, { big = false, checkable = false, open = true, checked = [], onCheck = null } = {}) {
+  // этап по таймеру (первая часть, разделённая «late»): признаков нет — что сделать, когда таймер прозвенит (S49)
+  if (!hasReadiness(step)) return step.on_timer ? h('p', { class: 'muted small' }, h('b', null, 'Когда таймер прозвенит: '), tx(r, step, step.on_timer) + '.') : null;
+  // безопасность (мясо) — выше вкуса и вида (S22)
   const body = [
-    step.cues?.length ? cueList(r, step, { big, checkable }) : null,
-    step.check ? h('p', { class: 'ready-check' }, h('b', null, 'Как проверить: '), tx(r, step, step.check)) : null,
     ...safetyBlock(r, step),
-    step.not_ready?.text ? h('p', { class: 'muted' }, h('b', null, 'Ещё не готово? '), tx(r, step, step.not_ready.text)) : null,
+    step.cues?.length ? cueList(r, step, { big, checkable, checked, onCheck }) : null,
+    checkOf(r, step) ? h('p', { class: 'ready-check' }, h('b', null, 'Как проверить: '), dot(checkOf(r, step))) : null,
+    step.not_ready?.text ? h('p', { class: 'muted' }, h('b', null, 'Ещё не готово? '), dot(tx(r, step, step.not_ready.text))) : null,
     step.overdone ? h('details', { class: 'plain' }, h('summary', null, 'Если передержал'),
-      h('p', null, tx(r, step, step.overdone.signs)), step.overdone.rescue ? h('p', null, h('b', null, 'Что делать: '), tx(r, step, step.overdone.rescue)) : null) : null,
-    step.timer_min && step.cues?.length ? h('p', { class: 'muted small' }, 'Ориентируйся на признаки, таймер — только подсказка: всё совпало раньше — переходи дальше; таймер вышел, а признаков нет — подожди.') : null,
+      h('p', null, dot(tx(r, step, step.overdone.signs))), step.overdone.rescue ? h('p', null, h('b', null, 'Что делать: '), dot(tx(r, step, step.overdone.rescue))) : null) : null,
+    step.timer_min && step.cues?.length ? h('p', { class: 'muted small' }, step.timer_strict ? 'Здесь время важнее вида: дождись сигнала таймера, даже если признаки совпали раньше.' : 'Ориентируйся на признаки, таймер — только подсказка: всё совпало раньше — переходи дальше; таймер вышел, а признаков нет — подожди.') : null,
+    step.on_timer ? h('p', { class: 'muted small' }, h('b', null, 'Когда таймер прозвенит: '), tx(r, step, step.on_timer) + '.') : null,
   ];
   if (!step.cues?.length && !step.check) return h('div', { class: 'ready-box' }, ...body);
   return open
@@ -54,16 +69,17 @@ export function readyBlock(r, step, { big = false, checkable = false, open = tru
 }
 
 // «Проверь:» — когда таймер шага закончился
-export function checkPanel(r, step, { onDone, onNotReady }) {
+export function checkPanel(r, step, { onDone, onNotReady, checked = [], onCheck = null }) {
   return h('div', { class: 'check-now' },
     h('div', { class: 'ready-title' }, 'Проверь:'),
-    step.cues?.length ? cueList(r, step, { big: true, checkable: true }) : null,
-    step.check ? h('p', { class: 'ready-check' }, tx(r, step, step.check)) : null,
     ...safetyBlock(r, step).filter((x) => !x.classList.contains('partial')),
-    h('div', { class: 'row', style: { gap: '8px', flexWrap: 'wrap' } },
-      h('button', { class: 'btn primary', onclick: onDone }, 'Готово'),
-      h('button', { class: 'btn', onclick: onNotReady }, 'Ещё не готово')),
-    h('p', { class: 'muted small' }, 'Ориентируйся на признаки, таймер — подсказка.'));
+    step.cues?.length ? cueList(r, step, { big: true, checkable: true, checked, onCheck }) : null,
+    checkOf(r, step) ? h('p', { class: 'ready-check' }, dot(checkOf(r, step))) : null,
+    step.on_timer ? h('p', { class: 'ready-check' }, h('b', null, 'Сейчас: '), tx(r, step, step.on_timer) + '.') : null,
+    h('div', { class: 'check-actions' },
+      h('button', { class: 'btn primary', onclick: onDone }, 'Готово ✓'),
+      h('button', { class: 'btn', onclick: onNotReady }, `Ещё не готово (+${step.not_ready?.add?.[0] || 2} мин)`)),
+    h('p', { class: 'muted small' }, step.timer_strict ? 'Здесь время важнее вида: дождись сигнала.' : 'Ориентируйся на признаки, таймер — подсказка.'));
 }
 
 // Финал блюда

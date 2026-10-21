@@ -1,17 +1,21 @@
-import { h, eur, num, icon, toast, sheet, copyText, download, meter, selectForCopy, seg, plural } from '../ui.js';
+import { h, eur, num, icon, toast, sheet, copyText, download, meter, selectForCopy, seg, plural, shareText, canShare } from '../ui.js';
+import { cookResume } from './timerbar.js';
 import { state, save, targets, IS_ARTIFACT, toggleIn } from '../state.js';
-import { missingTools } from '../core/equipment.js';
+import { missingTools, TOOL, OLD_DEFAULT_TRUE } from '../core/equipment.js';
 import { doneOf, toggleDone, slotTemplate, generatePlan, alternatives, swapBatch, planDays, daySums, MEALS, extraAlternatives, swapExtra, swapFactor, effectivePlan, skipOf, skipKeyOf, toggleSkip, moveBatch, refillPlan, canStore, dropRecipe } from '../core/planner.js';
 import { dayName, dayShort, dayDate, todayIndex, mealPast, cookPast, startOptions, defaultStart, fmtDate, isoDate, planFinished } from '../core/calendar.js';
 import { consumedPlanCost } from '../core/shopping.js';
 import { checkoutNow, weekBudget, homeForPlanning, stockNow, planEvents } from './money.js';
 import { planToText } from '../core/export.js';
 import { rolloverPantry, usedBetween } from '../core/stock.js';
+import { thawWay } from '../core/shelf.js';
 import { difficulty } from '../core/difficulty.js';
 import { diffBadge } from './library.js';
+import { minutesRange } from '../core/qty.js';
 
-// Чего из утвари нет (пустой список не меняет ключ — старые планы не считаются устаревшими)
-const noTools = () => { const n = Object.entries(state.prefs.equipment || {}).filter(([k, v]) => v === false && k !== 'microwave').map(([k]) => k).sort(); return n.length ? [n] : []; };
+// Чего из утвари нет (пустой список не меняет ключ — старые планы не считаются устаревшими). Новая заменимая утварь
+// (миска, лопатка…) на подбор блюд не влияет — в ключ не входит; прежние отметки — как раньше
+const noTools = () => { const n = Object.entries(state.prefs.equipment || {}).filter(([k, v]) => v === false && k !== 'microwave' && (TOOL[k]?.hard || TOOL[k]?.plan || OLD_DEFAULT_TRUE.includes(k))).map(([k]) => k).sort(); return n.length ? [n] : []; };
 
 // Настройки, от которых зависит план: если они изменились, план устарел
 function settingsKey() {
@@ -43,14 +47,30 @@ export function askStart(rerender, opts = {}) {
   const sw = h('div');
   const drawSw = () => sw.replaceChildren(seg([['shop', 'С покупками'], ['home', 'Из того, что дома']], source, (v) => { source = v; drawSw(); drawHint(); }));
   drawSw(); drawHint();
+  let day = def;
+  const daysBox = h('div');
+  const drawDays = () => { const g = seg(startOptions(now).map((o) => [isoDate(o.date), `${o.label} · ${fmtDate(o.date)}`]), day, (v) => { day = v; drawDays(); }); g.classList.add('seg-col'); daysBox.replaceChildren(g); };
+  drawDays();
+  const lt = lossText(state.plan);
+  const losses = lt ? h('p', { class: 'need-line', style: { margin: 0 } }, `⚠ ${lt}`) : null;
   close = sheet('Новая неделя', h('div', { class: 'stack' },
     h('div', { class: 'eyebrow' }, 'Откуда продукты'), sw, hint,
     h('div', { class: 'eyebrow', style: { marginTop: '6px' } }, 'С какого дня начать'),
     h('p', { class: 'muted', style: { margin: 0 } }, 'План на 7 дней. Список покупок покажет только то, что ещё предстоит приготовить.'),
-    h('div', { class: 'start-opts' }, startOptions(now).map((o) => h('button', {
-      class: 'btn' + (isoDate(o.date) === def ? ' primary' : ''),
-      onclick: () => { close(); state.prefs.planSource = source; regenerate(rerender, { ...opts, source, startDate: isoDate(o.date) }); },
-    }, `${o.label} · ${fmtDate(o.date)}`)))));
+    // день — выбор (не сразу пересборка), «Составить» — отдельной кнопкой; что пропадёт из текущей недели (S65)
+    daysBox, losses,
+    h('button', { class: 'btn primary wide', onclick: () => { close(); state.prefs.planSource = source; regenerate(rerender, { ...opts, source, startDate: day }); } }, state.plan ? 'Составить новую неделю' : 'Составить неделю'),
+    h('button', { class: 'btn ghost', onclick: () => close() }, 'Отмена')));
+}
+// Что пропадёт при новой неделе: отметки «Съел / Приготовил», покупок, «вне дома», замены и переносы
+function lossText(plan) {
+  if (!plan || planFinished(plan, new Date())) return '';
+  const done = Object.keys(plan.done || {}).length;
+  const marks = Object.keys(state.checked[plan.id] || {}).length;
+  const skips = Object.keys(plan.skips || {}).length;
+  const edits = (plan.edited || []).length;
+  const xs = [done ? `отметки «Съел / Приготовил»: ${done}` : null, marks ? `отметки покупок: ${marks}` : null, skips ? `«вне дома»: ${skips}` : null, edits ? `ваши замены и переносы: ${edits}` : null].filter(Boolean);
+  return `Текущая неделя заменится целиком${xs.length ? `, пропадут ${xs.join(', ')}` : ''}. Запасы дома и купленное останутся.`;
 }
 
 export function regenerate(rerender, { withUndo = true, startDate, cheap = false, source = state.prefs.planSource || 'shop' } = {}) {
@@ -63,6 +83,7 @@ export function regenerate(rerender, { withUndo = true, startDate, cheap = false
   state.plan = generatePlan({
     recipes, products, targets: targets(), prefs: state.prefs, cheap, home, source, prefer: expiring.map((e) => e.key),
     budget: state.profile.budget, reserve: state.profile.reserve, seed: (Date.now() % 1e9) | 0,
+    storage: state.data.storage, // сроки хранения: скоропортящееся — в начале недели, пачка — в свой срок (блок В)
   });
   state.plan.startDate = startDate || isoDate(defaultStart());
   state.plan.settingsKey = settingsKey();
@@ -83,12 +104,15 @@ const emptyCooks = (plan) => slotTemplate(plan.batchCooking !== false).length - 
 // Запасы для «досоставить»: прошедшие готовки этого плана уже вычтены из запасов, а в подборе они снова
 // займут свои продукты — возвращаем их обратно, иначе продукты посчитаются дважды
 function homeForRefill(now) {
-  const { home, expiring } = homeForPlanning(now);
+  const { home, expiring, stock } = homeForPlanning(now);
   const events = planEvents();
   const out = { ...home };
   for (const k of Object.keys(out)) if (out[k] !== Infinity) out[k] += usedBetween(events, k, state.pantry[k]?.at || 0, now.getTime());
   for (const e of events) if (e.t <= now.getTime()) for (const i of e.items) if (!(i.key in out)) out[i.key] = usedBetween(events, i.key, state.pantry[i.key]?.at || 0, now.getTime());
-  return { home: out, expiring };
+  // до какого дня плана годно то, что дома (по нижней границе срока) — подбор поставит это раньше
+  const homeUntil = {};
+  for (const [k, st] of Object.entries(stock)) if (st.exp != null && Number.isFinite(st.exp) && st.grams > 0) homeUntil[k] = Math.floor((st.exp - 1 - dayDate(state.plan, 0).getTime()) / 86400000);
+  return { home: out, expiring, homeUntil };
 }
 
 // План «из дома» не закрыл все дни — недостающие приготовления подбираются с покупками, остальное не трогаем
@@ -98,7 +122,7 @@ function fillWithShopping(rerender) {
   const { home, expiring } = homeForRefill(now);
   state.plan = refillPlan(prev, { recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs,
     budget: state.profile.budget, reserve: state.profile.reserve, isLocked: () => true, isDone: doneAt(prev, now),
-    seed: (Date.now() % 1e9) | 0, home, source: 'shop', prefer: expiring.map((e) => e.key) });
+    seed: (Date.now() % 1e9) | 0, home, source: 'shop', prefer: expiring.map((e) => e.key), ...freshOpts(prev, now) });
   state.plan.source = 'mixed';
   state.plan.settingsKey = settingsKey();
   save();
@@ -111,19 +135,23 @@ function fillWithShopping(rerender) {
 const weekDelta = (before, after) => checkoutNow(after, 'week').toPay - checkoutNow(before, 'week').toPay;
 const signed = (d) => (Math.abs(d) < 0.005 ? '±€0' : (d > 0 ? '+' : '−') + eur(Math.abs(d)));
 
+// Сроки для генератора: данные о хранении и день закупки — сегодня (докупать будем с сегодняшнего дня)
+const freshOpts = (plan, now) => ({ storage: state.data.storage, buyDay: Math.max(0, todayIndex(plan, now)) });
+
 // «Досоставить оставшиеся дни»: прошедшее и правки вручную остаются (F21)
-// Закреплено: уже приготовленное, сегодня и завтра (продукты под них могли быть уже куплены) — их «досоставить» не трогает
-const lockedFor = (plan, now) => (d, m) => doneAt(plan, now)(d, m) || d <= todayIndex(plan, now) + 1;
+// Закреплено: уже приготовленное и сегодня — их «досоставить» не трогает. Завтра не закрепляется (блок В: после пропуска
+// дня скоропортящееся нужно ставить в ближайшие дни); купленное под завтра — в запасах дома, подбор возьмёт его первым
+const lockedFor = (plan, now) => (d, m) => doneAt(plan, now)(d, m) || d <= todayIndex(plan, now);
 // Уже приготовлено: прошло время готовки или отмечено «приготовил / съел»
 const doneAt = (plan, now) => (d, m) => cookPast(plan, d, m, now) || !!plan.done?.[`${d}|${m}`] || (plan.extras || []).some((x) => x.day === d && x.meal === m && plan.done?.[x.id]);
 
 export function refill(rerender, { cheap = false } = {}) {
   const prev = state.plan;
   const now = new Date();
-  const { home, expiring } = homeForRefill(now);
-  const opts = { recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs,
+  const { home, expiring, homeUntil } = homeForRefill(now);
+  const opts = { homeUntil, recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs,
     budget: state.profile.budget, reserve: state.profile.reserve, isLocked: lockedFor(prev, now), isDone: doneAt(prev, now), cheap,
-    home, source: prev.source === 'home' ? 'home' : 'shop', prefer: expiring.map((e) => e.key) };
+    home, source: prev.source === 'home' ? 'home' : 'shop', prefer: expiring.map((e) => e.key), ...freshOpts(prev, now) };
   const before = checkoutNow(prev, 'week').toPay;
   // несколько вариантов. «Дешевле» — самый дешёвый, и только если он правда дешевле текущего;
   // обычный — первый, что укладывается в бюджет, иначе самый дешёвый (P7: «досоставить» уводило неделю за бюджет)
@@ -143,7 +171,7 @@ export function refill(rerender, { cheap = false } = {}) {
   save();
   rerender({ keepScroll: true });
   const d = best.cost - before;
-  toast(`Оставшиеся дни подобраны заново: неделя ${signed(d)}. Сегодня, завтра и ваши замены — на месте, кроме блюд, которые теперь нельзя готовить`, { label: 'Отменить', onClick: () => { state.plan = prev; save(); rerender({ keepScroll: true }); } });
+  toast(`Оставшиеся дни подобраны заново: неделя ${signed(d)}. Сегодня и ваши замены — на месте, кроме блюд, которые теперь нельзя готовить; сначала — то, что дома и скоро испортится`, { label: 'Отменить', onClick: () => { state.plan = prev; save(); rerender({ keepScroll: true }); } });
 }
 
 // Перед новой неделей — что пропадёт (F21: раньше пересчёт молча стирал правки)
@@ -176,7 +204,7 @@ function doSwap(batchId, recipe, rerender) {
   const restNote = Math.abs(dRest - d) > 0.3 ? ` (с сегодня ${signed(dRest)}: упаковки целые и общие с другими днями)` : '';
   ui.note = { plan: state.plan, id: batchId, text: `Заменено: неделя ${signed(d)}${restNote} · белок ${Math.round(pNew - pOld) >= 0 ? '+' : '−'}${Math.abs(Math.round(pNew - pOld))} г за приём` };
   rerender({ keepScroll: true });
-  toast(`${recipe.title}${both ? ' — ужин и обед на следующий день' : ''} · неделя ${signed(d)}`, { label: 'Отменить', onClick: () => { state.plan = prev; ui.note = null; save(); rerender({ keepScroll: true }); } });
+  toast(`Заменено на «${recipe.title}»${both ? ' — ужин и обед на следующий день' : ''} · неделя ${signed(d)}`, { label: 'Отменить', onClick: () => { state.plan = prev; ui.note = null; save(); rerender({ keepScroll: true }); } });
 }
 
 // «Заменить»: выбор из похожих блюд с разницей суммы и белка (раньше кнопка молча подставляла первое — P7)
@@ -184,7 +212,7 @@ function swapMenu(e, rerender) {
   const r = e.recipe;
   let close;
   const alts = (e.batch
-    ? alternatives(state.plan, e.batch.id, { recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs, limit: 8, home: homeForPlanning().home })
+    ? alternatives(state.plan, e.batch.id, { recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs, limit: 8, home: homeForPlanning().home, ...freshOpts(state.plan, new Date()) })
       .map((a) => ({ ...a, deltaCost: weekDelta(state.plan, swapBatch(state.plan, e.batch.id, a.recipe, targets())) }))
     : extraAlternatives(state.plan, e.extra.id, { recipes: state.data.recipes, prefs: state.prefs }).slice(0, 8).map((x) => {
       const factor = swapFactor(state.recipeMap.get(e.extra.recipeId), e.extra.factor, x);
@@ -194,21 +222,30 @@ function swapMenu(e, rerender) {
   const mineList = state.data.recipes.filter((x) => x.custom && x.id !== r.id && (e.batch ? x.meal_type === 'main' : x.meal_type !== 'main'))
     .map((x) => ({ recipe: x, factor: 1, deltaCost: e.batch ? weekDelta(state.plan, swapBatch(state.plan, e.batch.id, x, targets())) : weekDelta(state.plan, swapExtra(state.plan, e.extra.id, x, state.recipeMap.get(e.extra.recipeId))) }));
   const mineIds = new Set(mineList.map((a) => a.recipe.id));
-  const others = alts.filter((a) => !mineIds.has(a.recipe.id));
+  // уже стоящие в неделе — в конце списка и с пометкой; при равенстве — быстрее сверху (S65)
+  const inWeek = new Set([...state.plan.batches.map((b) => b.recipeId), ...(state.plan.extras || []).map((x) => x.recipeId)]);
+  const others = alts.filter((a) => !mineIds.has(a.recipe.id)).map((a, k) => ({ ...a, k }))
+    .sort((a, b) => inWeek.has(a.recipe.id) - inWeek.has(b.recipe.id) || a.k - b.k);
   if (!others.length && !mineList.length) return toast('Нет подходящих замен');
   const curP = r.per_serving.protein * e.factor;
   const altBtn = (a) => h('button', { class: 'alt', onclick: () => {
       close();
       if (e.batch) doSwap(e.batch.id, a.recipe, rerender);
-      else { const prev = state.plan; state.plan = swapExtra(state.plan, e.extra.id, a.recipe, state.recipeMap.get(e.extra.recipeId)); const d = weekDelta(prev, state.plan); save(); rerender({ keepScroll: true }); toast(`${a.recipe.title} · неделя ${signed(d)}`, { label: 'Отменить', onClick: () => { state.plan = prev; save(); rerender({ keepScroll: true }); } }); }
+      else { const prev = state.plan; state.plan = swapExtra(state.plan, e.extra.id, a.recipe, state.recipeMap.get(e.extra.recipeId)); const d = weekDelta(prev, state.plan); save(); rerender({ keepScroll: true }); toast(`Заменено на «${a.recipe.title}» · неделя ${signed(d)}`, { label: 'Отменить', onClick: () => { state.plan = prev; save(); rerender({ keepScroll: true }); } }); }
     } },
       h('span', { class: 'alt-main' },
         h('span', { class: 'alt-title' }, a.recipe.title),
         a.fromHome ? h('span', { class: 'have-line small' }, 'всё есть дома') : null,
-        h('span', { class: 'muted' }, `${difficulty(a.recipe).short} · ${a.recipe.time.total} мин · ${num(a.recipe.per_serving.protein * a.factor)} г белка (${(() => { const d = Math.round(a.recipe.per_serving.protein * a.factor - curP); return d === 0 ? 'так же' : (d > 0 ? '+' : '−') + Math.abs(d) + ' г'; })()}) · ${num(a.recipe.per_serving.kcal * a.factor)} ккал`)),
+        inWeek.has(a.recipe.id) ? h('span', { class: 'need-line small' }, 'уже есть в этой неделе') : null,
+        // купленное под прежнее блюдо, которое больше никуда не идёт (блок В)
+        a.leaves?.length ? h('span', { class: 'need-line small' }, `останется без дела: ${a.leaves.map((o) => `${state.data.products[o.key]?.name_ru.toLowerCase()} ≈ ${Math.round(o.grams / 10) * 10} г`).join(', ')}`) : null,
+        h('span', { class: 'muted' }, `${difficulty(a.recipe).short} · руками ${minutesRange(a.recipe.time.active_range?.[0] ?? a.recipe.time.active, a.recipe.time.active_range?.[1] ?? a.recipe.time.active)} мин · всего ${a.recipe.time.total} мин · ${num(a.recipe.per_serving.protein * a.factor)} г белка (${(() => { const d = Math.round(a.recipe.per_serving.protein * a.factor - curP); return d === 0 ? 'так же' : (d > 0 ? '+' : '−') + Math.abs(d) + ' г'; })()}) · ${num(a.recipe.per_serving.kcal * a.factor)} ккал`)),
       h('span', { class: 'muted nowrap' }, signed(a.deltaCost)));
+  // после нескольких замен — вернуть то, что было в плане изначально (S71: «Отменить» возвращал только последнюю)
+  const orig = e.batch?.origRecipeId && e.batch.origRecipeId !== r.id ? state.recipeMap.get(e.batch.origRecipeId) : null;
   close = sheet(`Заменить: ${r.title}`, h('div', { class: 'stack' },
-    h('p', { class: 'muted', style: { margin: 0 } }, 'Справа — как изменится сумма к оплате за неделю. В скобках — белок за этот приём пищи.'),
+    orig ? h('button', { class: 'btn', onclick: () => { close(); doSwap(e.batch.id, orig, rerender); } }, `Вернуть исходное: «${orig.title}»`) : null,
+    h('p', { class: 'muted', style: { margin: 0 } }, `Справа — как изменится сумма к оплате за неделю. В скобках — белок за этот приём пищи. Все варианты — руками до 30 минут${state.prefs.maxTotal ? ` и целиком до ${state.prefs.maxTotal} минут` : ''}.`),
     h('div', { class: 'eyebrow' }, 'Мои варианты'),
     mineList.length ? mineList.map(altBtn) : h('p', { class: 'muted', style: { margin: 0 } }, 'Своих пока нет. ', h('a', { href: `#/builder?type=${e.batch ? 'main' : e.meal === 'breakfast' ? 'breakfast' : 'snack'}`, onclick: () => close() }, 'Собрать свой')),
     others.length ? [h('div', { class: 'eyebrow', style: { marginTop: '6px' } }, 'Похожие'), others.map(altBtn)] : null));
@@ -224,11 +261,13 @@ function mealMenu(e, rerender) {
   const content = h('div', { class: 'stack' },
     h('div', { class: 'row' },
       h('a', { class: 'btn', href: `#/recipe/${r.id}?f=${e.factor}&p=${e.portions}`, onclick: () => close() }, 'Открыть рецепт'),
-      !e.leftover && h('a', { class: 'btn primary', href: `#/cook/${r.id}?f=${e.factor}&p=${e.portions}`, onclick: () => close() }, icon('pot'), 'Готовить')),
+      !e.leftover && h('a', { class: 'btn primary', href: cookResume(r.id)?.href || `#/cook/${r.id}?f=${e.factor}&p=${e.portions}`, onclick: () => close() }, icon('pot'), cookResume(r.id) ? `Продолжить · шаг ${cookResume(r.id).step + 1}` : 'Готовить')),
     // факт и гибкость: «ем вне дома» (будущее) или «не ел / ел другое» (прошедшее), перенос ужина (F22, F05)
     h('div', { class: 'eyebrow' }, 'Этот приём пищи'),
     h('button', { class: 'btn', onclick: () => { close(); setSkip(e, past ? 'skipped' : 'out', rerender); } },
       skip ? (past ? 'Вернуть: ел по плану' : 'Вернуть в план') : (past ? 'Не ел это / ел другое' : 'Ем вне дома — не готовлю')),
+    // «Заменить» — и в режиме «Неделя», где на строке только «⋯» (S65)
+    !past && !e.leftover && !doneOf(state.plan, skipKeyOf(e)) ? h('button', { class: 'btn', onclick: () => { close(); swapMenu(e, rerender); } }, icon('swap'), 'Заменить другим блюдом') : null,
     e.batch && !e.leftover && !past ? h('button', { class: 'btn', onclick: () => { close(); moveMenu(e, rerender); } }, 'Перенести на другой день') : null,
     h('div', { class: 'eyebrow', style: { marginTop: '8px' } }, 'Это блюдо'),
     h('button', { class: 'btn', onclick: () => {
@@ -236,7 +275,8 @@ function mealMenu(e, rerender) {
       const on = toggleIn('favorites', r.id);
       toast(on ? 'В избранном — будет чаще в новых неделях' : 'Убрано из избранного', { label: 'Отменить', onClick: () => { toggleIn('favorites', r.id); rerender({ keepScroll: true }); } });
     } }, icon(fav ? 'starOn' : 'star'), fav ? 'Убрать из избранного' : 'В избранное'),
-    h('button', { class: 'btn', onclick: () => { close(); dropFromPlan(r, rerender); } }, icon('eyeOff'), 'Не предлагать — и убрать из этой недели'));
+    h('button', { class: 'btn', onclick: () => { close(); dropFromPlan(r, rerender); } }, icon('eyeOff'), 'Больше не предлагать — навсегда'),
+    h('p', { class: 'muted small', style: { margin: 0 } }, 'Блюдо уберётся из этой недели и не попадёт в новые. Вернуть — Профиль → «Рацион и ограничения».'));
   close = sheet(MEALS[e.meal] + ': ' + r.title, content);
 }
 
@@ -247,7 +287,7 @@ function dropFromPlan(r, rerender) {
   // добавить, а не переключить: блюдо могло быть уже скрыто на странице рецепта
   state.prefs.hidden = [...new Set([...prevHidden, r.id])];
   const now = new Date();
-  const res = dropRecipe(prev, r.id, { recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs, isDone: doneAt(prev, now) });
+  const res = dropRecipe(prev, r.id, { recipes: state.data.recipes, products: state.data.products, targets: targets(), prefs: state.prefs, isDone: doneAt(prev, now), storage: state.data.storage });
   state.plan = res.plan;
   state.plan.settingsKey = settingsKey(); // план уже учитывает скрытое блюдо — без плашки «настройки изменились»
   const d = weekDelta(prev, state.plan);
@@ -294,7 +334,8 @@ function exportPlan() {
   close = sheet('Поделиться планом', h('div', { class: 'stack' },
     h('p', { class: 'muted', style: { margin: 0 } }, 'Текст для заметок и мессенджеров.'),
     h('div', { class: 'row' },
-      h('button', { class: 'btn primary', onclick: async () => { if (await copyText(text)) close(); else selectForCopy('export-plan'); } }, 'Скопировать'),
+      canShare() ? h('button', { class: 'btn primary', onclick: async () => { if (await shareText('План питания', text)) close(); } }, icon('share'), 'Поделиться…') : null,
+      h('button', { class: canShare() ? 'btn' : 'btn primary', onclick: async () => { if (await copyText(text)) close(); else selectForCopy('export-plan'); } }, 'Скопировать'),
       !IS_ARTIFACT && h('button', { class: 'btn', onclick: () => download('plan.txt', text) }, 'Скачать .txt'),
       !IS_ARTIFACT && h('button', { class: 'btn', onclick: () => { close(); ui.mode = 'week'; window.dispatchEvent(new Event('hashchange')); setTimeout(() => window.print(), 150); } }, 'Печать')),
     h('textarea', { class: 'export-text', id: 'export-plan', readonly: true, rows: 10, 'aria-label': 'Текст плана', onfocus: (e) => e.target.select() }, text)));
@@ -371,16 +412,29 @@ export function renderPlan(root, rerender) {
   const over = week.toPay - budget;
   root.append(h('section', { class: 'summary' },
     h('div', { class: 'row between' },
-      h('div', null, h('span', { class: 'big' }, eur(week.toPay)), h('span', { class: 'muted' }, ` к оплате за неделю · бюджет ${eur(budget)}`)),
-      h('a', { class: 'btn small', href: '#/shop' }, 'Покупки')),
+      // одна главная сумма с понятной подписью; вторая — «осталось купить», уменьшается по отметкам в Покупках (S68)
+      h('div', null, h('span', { class: 'big' }, eur(week.toPay)), h('span', { class: 'muted' }, ` всего за неделю · бюджет ${eur(budget)}`)),
+      h('a', { class: 'btn small', href: '#/shop' }, 'Список покупок →')),
     meter(week.toPay, budget, 'budget'),
-    rest.toPay < week.toPay - 0.01 ? h('div', { class: 'muted' }, `С сегодняшнего дня — ${eur(rest.toPay)}${rest.bought > 0.01 ? `, из них уже куплено на ${eur(rest.bought)}` : ''} (как в Покупках, «Оставшееся»).`) : null,
+    rest.left < week.toPay - 0.01 ? h('div', null, h('b', null, `Осталось купить ≈ ${eur(rest.left)}`), h('span', { class: 'muted' }, rest.bought > 0.01 ? ` — уже куплено на ${eur(rest.bought)}` : rest.toPay < week.toPay - 0.01 ? ' — с сегодняшнего дня; прошедшие дни не считаются' : '')) : null,
     over > 0.01 && !plan.acceptOver ? overBudget(plan, over, rerender) : h('div', { class: 'muted' }, over > 0.01
       ? `Дороже бюджета на ${eur(over)} — вы решили оставить так.`
       : `${eur(consumedMain / 14)} за обед или ужин · цель ${num(t.kcal)} ккал и ${num(t.protein)} г белка в день`)));
 
+  // После пропуска («не ел», «ем вне дома») продукты под пропущенное лежат дома — предложить перестроить оставшиеся дни
+  const lastSkip = Math.max(0, ...Object.entries(plan.skips || {}).map(([k]) => plan.skipAt?.[k] || 0));
+  if (lastSkip > (plan.refilledAt || 0) && !planFinished(plan, now) && todayIndex(plan, now) < 6) {
+    const exp = homeForPlanning(now).expiring.filter((x) => !state.data.products[x.key]?.basic).slice(0, 4).map((x) => state.data.products[x.key]?.name_ru.toLowerCase());
+    root.append(h('div', { class: 'notice stack', style: { marginTop: '10px' } },
+      h('span', null, `Есть пропущенные приёмы пищи — продукты под них уже куплены.${exp.length ? ` Скоро испортится: ${exp.join(', ')}.` : ''} Досоставить оставшиеся дни, чтобы они пошли в блюда первыми?`),
+      h('div', { class: 'row' },
+        h('button', { class: 'btn small primary', onclick: () => refill(rerender) }, 'Досоставить оставшиеся дни'),
+        h('button', { class: 'btn small ghost', onclick: () => { plan.refilledAt = Date.now(); save(); rerender({ keepScroll: true }); } }, 'Оставить как есть'))));
+  }
+
   // Дни недели
   const days = planDays(plan, state.recipeMap);
+  const thaws = thawList(plan, now);
   const sums = daySums(effectivePlan(plan), state.recipeMap);
   const goal = hasExtras ? { kcal: t.kcal, protein: t.protein } : t.plannedDay;
   const today = todayIndex(plan, now);
@@ -415,6 +469,9 @@ export function renderPlan(root, rerender) {
       d.dinner && { ...d.dinner, meal: 'dinner' },
       ...d.snacks.map((x) => ({ ...x, meal: 'snack' })),
     ].filter((e) => e && e.recipe);
+    // разморозка: что достать из морозилки сегодня вечером / утром (совет «заморозь сразу» из Покупок)
+    const th = thaws.filter((x) => x.day === i);
+    if (th.length && i >= today) sec.append(h('div', { class: 'freeze-note' }, th.map((x) => x.text).join(' ')));
     const eff = new Map(effectivePlan(plan).batches.map((b) => [b.id, b]));
     for (const e of entries) {
       // после «ем вне дома» на ужин обед следующего дня — уже не остаток, а своя готовка на 1 порцию
@@ -425,6 +482,26 @@ export function renderPlan(root, rerender) {
     root.append(sec);
   }
   planLayout(root);
+}
+
+// Разморозка по дням плана: из позиций походов с «заморозь сразу» — [{ day, text }]
+function thawList(plan, now) {
+  const out = [];
+  const products = state.data.products;
+  const ck = checkoutNow(plan, 'week', now);
+  const acc = (d) => ['понедельник', 'вторник', 'среду', 'четверг', 'пятницу', 'субботу', 'воскресенье'][(dayDate(plan, d).getDay() + 6) % 7];
+  for (const t of ck.trips) for (const ti of t.items) {
+    const offer = ti.offer || ck.list.items.find((i) => i.key === ti.key)?.offer;
+    const fz = ti.freezeUntil != null ? [{ day: ti.freezeUntil, grams: offer?.boughtGrams }] : ti.freeze || [];
+    for (const f of fz) {
+      const way = thawWay(ti.key, state.data.storage);
+      const name = products[ti.key]?.name_ru.toLowerCase();
+      const g = f.grams ? ` ≈ ${Math.round(f.grams / 10) * 10} г` : '';
+      if (way === 'fridge') out.push({ day: f.day - 1, text: `Вечером переложи из морозилки в холодильник: ${name}${g} — на ${acc(f.day)}.` });
+      else if (way === 'counter') out.push({ day: f.day, text: `Утром достань из морозилки: ${name}${g}.` });
+    }
+  }
+  return out;
 }
 
 // Раскладка экрана (research/ui, вариант B): сегодняшние блюда сразу под днями, сводка денег ниже, Итоги, Поделиться и
@@ -492,19 +569,22 @@ function mealRow(e, rerender, past) {
       h('span', { class: 'title' }, r.title),
       h('span', { class: 'meta' },
         `${num(ps.protein * e.factor)}\u00a0г белка · ${num(ps.kcal * e.factor)}\u00a0ккал · ${eur(ps.cost * e.factor)}`,
-        e.leftover ? '' : ` · ${r.time.total}\u00a0мин`),
+        // «руками» и «всего» раздельно (S65): гуляш — руками 25, всего 143 минуты
+        e.leftover || !e.batch ? '' : ` · руками до ${r.time.active_range?.[1] ?? r.time.active}\u00a0мин, всего ${r.time.total}\u00a0мин`),
       h('span', { class: 'meal-tags' },
         note ? h('span', { class: 'badge' + (done ? ' accent' : e.leftover || past ? '' : ' accent') }, note) : null,
         !e.leftover && !past && !done ? diffBadge(r) : null,
         noTools.length ? h('span', { class: 'badge warn' }, `нет: ${noTools.join(', ').toLowerCase()} — замените`) : null,
         (r.tags || []).includes('спорное') ? h('span', { class: 'badge', title: 'Блюдо с необычным сочетанием — на любителя' }, 'необычное') : null)),
     change ? h('div', { class: 'freeze-note' }, change) : null,
+    // S09: «заранее» (H-молоко — в холодильник с вечера) — у сегодняшних и завтрашних блюд
+    !past && !skip && !done && (r.ahead || []).length && e.day <= todayIndex(state.plan, new Date()) + 1 ? h('div', { class: 'freeze-note' }, `Заранее: ${r.ahead.join(' ')}`) : null,
     // действия с подписью: «Готовить» (у будущей готовки), «Заменить» и «Ещё»
     h('div', { class: 'meal-actions no-print' },
       canMark ? h('button', { class: 'btn small' + (done ? ' on' : ''), 'aria-pressed': String(!!done), title: 'Продукты спишутся из запасов дома',
         'aria-label': `${done ? 'Снять отметку' : cookLabel ? 'Приготовил' : 'Съел'}: ${r.title}`, onclick: () => markDone(e, rerender) },
         icon('check'), done ? (cookLabel ? 'Приготовлено' : 'Съедено') : (cookLabel ? 'Приготовил' : 'Съел')) : null,
-      e.batch && !e.leftover && !past && !skip && !done ? h('a', { class: 'btn small', href: `#/cook/${r.id}?f=${e.factor}&p=${e.portions}` }, icon('pot'), 'Готовить') : null,
+      e.batch && !e.leftover && !past && !skip && !done ? h('a', { class: 'btn small', href: cookResume(r.id)?.href || `#/cook/${r.id}?f=${e.factor}&p=${e.portions}` }, icon('pot'), cookResume(r.id) ? `Продолжить · шаг ${cookResume(r.id).step + 1}` : 'Готовить') : null,
       (past && e.day !== todayIndex(state.plan, new Date())) || done ? null : h('button', { class: 'btn small', 'aria-label': `Заменить: ${r.title}`, // прошедшее не заменяют (UX-ревью Н11)
         onclick: () => swapMenu(e, rerender) }, icon('swap'), 'Заменить'),
       h('button', { class: 'btn small', 'aria-label': `Ещё: ${r.title}`, onclick: () => mealMenu(e, rerender) }, icon('more'), 'Ещё')));

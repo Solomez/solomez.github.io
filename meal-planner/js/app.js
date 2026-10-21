@@ -5,6 +5,7 @@ import { renderLibrary } from './views/library.js';
 import { renderRecipe, rememberRoute } from './views/recipe.js';
 import { renderShop } from './views/shop.js';
 import { renderCook, leaveCook } from './views/cook.js';
+import { resumeTimers, cookBar } from './views/timerbar.js';
 import { renderStats } from './views/stats.js';
 import { renderProfile, refreshSyncText } from './views/profile.js';
 import { renderProducts } from './views/catalog.js';
@@ -67,7 +68,9 @@ function render(opts = {}) {
     console.error(err);
     root.append(h('p', { class: 'notice' }, 'Что-то пошло не так: ', String(err.message || err)));
   }
-  main.replaceChildren(root);
+  // идёт готовка, а человек ушёл в План или Покупки — плашка таймера и путь назад на всех экранах (S64)
+  const bar = view === 'cook' ? null : cookBar();
+  main.replaceChildren(...[root, bar].filter(Boolean));
   document.title = `${TITLES[view] || 'План'} · Питание`;
   if (opts.keepScroll || opts.keepFocus) window.scrollTo(0, scrollY);
   if (opts.keepFocus && focusId) {
@@ -81,13 +84,20 @@ function render(opts = {}) {
 
 // Наверх — только при переходе на другой экран; смена параметров (порций) сохраняет прокрутку
 // Окна (листы, просмотр фото) при смене экрана закрываются — в том числе по кнопке «назад» на телефоне
+// Списки (Рецепты, План, Покупки, Продукты) помнят прокрутку: вернулся со страницы рецепта — на том же месте (S66)
+const scrolls = new Map();
+const LISTS = /^#\/(recipes|plan|shop|products)?(\?|$)/;
 window.addEventListener('hashchange', (e) => {
   const oldHash = e.oldURL ? new URL(e.oldURL).hash : location.hash; // без oldURL — перерисовка того же экрана
   rememberRoute(oldHash);
   const samePage = oldHash.split('?')[0] === location.hash.split('?')[0];
+  if (!samePage && LISTS.test(oldHash || '#/')) scrolls.set(oldHash.split('?')[0] || '#/plan', window.scrollY);
   if (!samePage) closeAllLayers();
   render({ keepScroll: samePage });
-  if (!samePage) window.scrollTo(0, 0);
+  if (!samePage) {
+    const back = LISTS.test(location.hash || '#/') ? scrolls.get(location.hash.split('?')[0] || '#/plan') : null;
+    window.scrollTo(0, back || 0);
+  }
 });
 
 // Вход по ссылке из письма: токены приходят в адресе — забираем их до первой отрисовки
@@ -107,6 +117,7 @@ window.__appStarted = true; // модули загрузились — запа�
 loadData()
   .then(() => {
     render();
+    resumeTimers(); // таймеры готовки, которые шли до перезагрузки или закрытия вкладки (S61)
     connectCloud(onSync);
     if (ACCOUNTS_ENABLED) startAccount(onSync).then((ok) => { if (fromLink) render(); if (fromLink?.error) alertLink(fromLink.error); else if (fromLink && ok) toastIn(); });
   })

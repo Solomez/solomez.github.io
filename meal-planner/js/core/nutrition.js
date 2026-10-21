@@ -105,3 +105,20 @@ export function dailyTargets(profile) {
     plannedDay: { kcal: Math.round(kcal * share), protein: Math.round(protein * share) },
   };
 }
+
+const euro = (x) => '€' + (Math.round((x || 0) * 100) / 100).toFixed(2).replace('.', ',');
+// пример под полем — свой у каждого поля (S69: «например 84,5» у возраста)
+export const NUM_EXAMPLE = { age: '22', height: '178', weight: '72,5', budget: '70', reserve: '15', surplusPct: '10', proteinPerKg: '1,8', mealShare: '65' };
+export const NUM_INTEGER = new Set(['age', 'height', 'budget', 'reserve', 'surplusPct', 'mealShare']);
+// Что не так с числом поля; '' — всё в порядке
+export function numError(k, v, p) {
+  const r = RANGES[k];
+  const ex = NUM_EXAMPLE[k] ? `, например ${NUM_EXAMPLE[k]}` : '';
+  if (v == null) return `Введите число${ex}.${p[k] != null ? ` Пока остаётся ${String(p[k]).replace('.', ',')}.` : ''}`;
+  if (NUM_INTEGER.has(k) && Math.abs(v - Math.round(v)) > 1e-9) return `Нужно целое число${ex}.`;
+  if (!validNumber(k, v)) return `Должно быть ${rangeText(k)} ${r?.[2] || ''}${ex}.${p[k] != null ? ` Пока остаётся ${String(p[k]).replace('.', ',')}.` : ''}`;
+  if (k === 'reserve' && v > (p.budget || 0)) return `Не больше общего бюджета (${euro(p.budget || 0)}).`;
+  if (k === 'budget' && v < (p.reserve || 0)) return `Меньше, чем на завтраки и перекусы (${euro(p.reserve || 0)}) — сначала уменьшите их.`;
+  return '';
+}
+
