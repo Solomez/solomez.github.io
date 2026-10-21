@@ -78,6 +78,61 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
     for (const x of all) if (x !== t && x.store !== t.store) { if (!per.has(x.day)) per.set(x.day, new Set()); per.get(x.day).add(x.store); }
     return new Set([...per].filter(([, st]) => st.size >= maxStoresPerDay).map(([d]) => d));
   };
+  // Товар переходит в поход другого магазина: помечаем, откуда он (там дешевле) и сколько доплачиваем
+  const hostIn = (w, store, cost) => {
+    const home = w.it.switchedFrom || w.it.store;
+    const it = { ...w.it, store, cost };
+    if (store === home) { delete it.switchedFrom; delete it.extra; } else { it.switchedFrom = home; it.extra = Math.round(((w.it.extra || 0) + cost - (w.it.cost || 0)) * 100) / 100; }
+    return { w: { ...w, it }, extra: cost - (w.it.cost || 0) };
+  };
+  // Свободного дня для похода t нет: освобождаем день d в его окне. Мешающий поход другого магазина переносим
+  // на его свободный день, сливаем с его же походом в другой день или раскладываем: товары — в другие походы
+  // того же магазина, иначе берём их в t (если там продаются). Пример: банан (только Billa) можно купить
+  // с субботы по вторник, во вторник идём в Spar только за индейкой — её берём в Billa вместе с бананом.
+  // Меняет all на месте; возвращает доплату или null, если день не освободить.
+  const makeRoom = (all, t, r, day) => {
+    for (let d = r.b; d >= r.a; d--) {
+      if (d === day || !open(d)) continue;
+      const blockers = all.filter((x) => x !== t && x.day === d && x.store !== t.store).sort((x, y) => total(x) - total(y));
+      if (!blockers.length) continue;
+      const was = blockers.map((x) => x.day);
+      const moves = []; // [поход, куда, w] — применяются, только если день освободился
+      let extra = 0;
+      t.day = d;
+      for (const x of blockers) {
+        if (!busyDays(all, t).has(d)) break;
+        const used = busyDays(all, x);
+        const rx = rangeOf(x);
+        const same = all.find((y) => y !== x && y.store === x.store && y.day !== d && y.day >= rx.a && y.day <= rx.b && !used.has(y.day));
+        if (same) { for (const w of x.ws) moves.push([x, same, w]); x.day = null; continue; }
+        const nd = latestOpen(rx.a, rx.b, new Set([...used, d, day]));
+        if (nd != null) { x.day = nd; continue; }
+        const mine = [];
+        let add = 0;
+        for (const w of x.ws) {
+          const other = all.find((y) => y !== x && y.store === x.store && y.day !== d && y.day >= w.a && y.day <= w.b && !used.has(y.day));
+          if (other) { mine.push([x, other, w]); continue; }
+          const cost = altCost(w.it.key, t.store, w.it.grams);
+          if (cost == null) break;
+          const h = hostIn(w, t.store, cost);
+          mine.push([x, t, h.w]);
+          add += h.extra;
+        }
+        if (mine.length < x.ws.length) continue;
+        moves.push(...mine);
+        extra += add;
+        x.day = null;
+      }
+      if (!busyDays(all, t).has(d)) {
+        for (const [x, to, w] of moves) { to.ws.push(w); x.ws = []; }
+        return extra;
+      }
+      // не вышло — возвращаем как было
+      t.day = day;
+      blockers.forEach((x, i) => { x.day = was[i]; });
+    }
+    return null;
+  };
   const resolveDay = (src, day, keep) => {
     let all = src.map((t) => ({ ...t, ws: [...t.ws] }));
     let left = 0;
@@ -90,6 +145,8 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
       if (same) { same.ws.push(...t.ws); all = all.filter((x) => x !== t); continue; }
       const d = latestOpen(r.a, r.b, used);
       if (d != null) { t.day = d; continue; }
+      const room = makeRoom(all, t, r, day);
+      if (room != null) { extra += room; continue; }
       // целиком не переносится — раскладываем товары: в другой поход того же магазина, где позволяет свежесть,
       // иначе покупаем в магазине, куда и так идём (если продукт там продаётся)
       const rest = [];
@@ -101,11 +158,9 @@ export function planTrips(items, { needDay, aheadOf, firstDay, dateOf, altCost =
           .sort((p, q) => p.cost - q.cost || (q.x.day === day) - (p.x.day === day)); // сначала дешевле
         if (hosts.length) {
           const { x, cost } = hosts[0];
-          const home = w.it.switchedFrom || w.it.store;
-          const it = { ...w.it, store: x.store, cost };
-          if (x.store === home) { delete it.switchedFrom; delete it.extra; } else { it.switchedFrom = home; it.extra = Math.round(((w.it.extra || 0) + cost - (w.it.cost || 0)) * 100) / 100; }
-          extra += cost - (w.it.cost || 0);
-          x.ws.push({ ...w, it });
+          const h = hostIn(w, x.store, cost);
+          extra += h.extra;
+          x.ws.push(h.w);
         } else { rest.push(w); left++; }
       }
       t.ws = rest;
