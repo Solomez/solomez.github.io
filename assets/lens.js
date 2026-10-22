@@ -220,7 +220,9 @@
     const kind = home ? 'paint' : el.tagName === 'IMG' ? 'img' : el.tagName === 'VIDEO' ? 'video' : 'paint';
     // the marker reaches 5 px past the words, so past the column at the start of a line: the twin is a little wider
     const padX = home && el.matches('.h-case-desc') ? 8 : 0;
-    const t = { el, kind, padX, tex: null, ready: false, busy: false, gen: 0, top: 0, left: 0, w: 0, h: 0, fresh: false };
+    // a case cover grows a little under the pointer (home.css): its twin follows the live box (box() below)
+    const zoom = home && el.classList.contains('h-cover');
+    const t = { el, kind, padX, zoom, tex: null, ready: false, busy: false, gen: 0, top: 0, left: 0, w: 0, h: 0, fresh: false };
     tiles.push(t); byEl.set(el, t);
   }
   const isTile = (n) => byEl.has(n);
@@ -651,7 +653,8 @@
       const y = t.top - sy;
       if (t.left >= left + width || t.left + t.w <= left || y >= top + height || y + t.h <= top) continue;
       if (!t.ready) { all = false; if (!t.busy && t.h > 0) prepare(t); continue; }
-      drawTwin(t, t.left - left, y);
+      const b = box(t, sy);
+      drawTwin(t, b[0] - left, b[1], b[2], b[3]);
     }
     return all;                                              // false: a twin under the rectangle is still being prepared
   }
@@ -796,7 +799,8 @@
       for (const t of live) {
         const whole = tall && t.kind === 'video' && t.src === t.el && !t.el.paused;   // no cross-fade: the twin over all of it
         if (whole) { gl.uniform1f(U.uFade0, -2e6); gl.uniform1f(U.uFade1, -1e6); }
-        drawTwin(t, t.left, t.top - sy);
+        const b = box(t, sy);
+        drawTwin(t, b[0], b[1], b[2], b[3]);
         if (whole) { gl.uniform1f(U.uFade0, fadeTop); gl.uniform1f(U.uFade1, zoneTop); }
       }
     }
@@ -820,8 +824,14 @@
   }
   // a twin at a place on the target: its texture, then (the new home) its layers: sheets and live canvases, which are
   // uploaded anew when their glass changed (home-glass.js counts in glassV)
-  function drawTwin(t, left, top) {
-    const width = t.w, height = t.h;
+  // where a twin is drawn: its measured box, or for a growing cover its box as the browser shows it now
+  function box(t, sy) {
+    if (!t.zoom) return [t.left, t.top - sy, t.w, t.h];
+    const r = t.el.getBoundingClientRect();
+    return [r.left, r.top, r.width, r.height];
+  }
+  function drawTwin(t, left, top, w, h) {
+    const width = w || t.w, height = h || t.h;
     if (t.fresh && t.src === t.el) {
       t.fresh = false;
       gl.bindTexture(gl.TEXTURE_2D, t.tex);

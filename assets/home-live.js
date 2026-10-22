@@ -278,7 +278,8 @@
   // ------------------------------------------------------------------ state
   const stat = { nav: 0, cursor: 0, ms: 0 };          // for the checks of stage 5 (window.homeLive)
   window.homeLive = stat;                             // (stat.jel below: the jelly, for the checks)
-  const cur = { x: -1, y: -1, on: false, k: 0, moved: false, last: 0, phase: 0 };   // k: the morph, 0 arrow … 1 lens
+  const cur = { x: -1, y: -1, on: false, k: 0, moved: false, last: 0, phase: 0, since: 0 };   // k: the morph, 0 arrow … 1 lens
+  const GROW_MS = 800;                // a case cover grows on hover on a 760 ms spring (home.css): the glass redraws meanwhile
   // the jelly: the pointer's speed (target), the shape's speed following it on a spring, and the direction it last had
   const jel = { tx: 0, ty: 0, vx: 0, vy: 0, ax: 0, ay: 0, dir: 0, at: 0, prev: 0 };
   stat.jel = jel;
@@ -320,6 +321,7 @@
           if (SHAPE === SHAPES.blob) { cur.phase += dt * 0.0022; more = true; }   // the blob flows on its own
         } else if (cur.k === 0) { jel.vx = jel.vy = jel.ax = jel.ay = jel.tx = jel.ty = 0; }
       }
+      if (now - cur.since < GROW_MS) { navDirty = curDirty = true; more = true; }   // a cover is growing or shrinking
       const sy = window.scrollY;
       if (sy !== lastSy || moved) { lastSy = sy; navDirty = curDirty = true; more = true; }
       if (!cur.on && cur.k === 0) cur.last = 0;
@@ -385,6 +387,8 @@
       const h = e.target.closest ? e.target.closest(TRIG) : null;
       // no lens over the outline marks (too small) and the list rows (their letters flip; designer, 2026-10-22)
       const on = !!h && !h.closest('.h-toc, .h-row');
+      const card = e.target.closest ? e.target.closest('.h-case') : null;
+      if (card !== cur.card) { cur.card = card; cur.since = performance.now(); api.wake(); }
       if (on !== cur.on) { cur.on = on; api.wake(); }
     });
     document.documentElement.addEventListener('pointerleave', () => { if (cur.on) { cur.on = false; api.wake(); } });

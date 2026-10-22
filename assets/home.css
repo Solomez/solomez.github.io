@@ -379,6 +379,21 @@ body.home .h-cover::after {   /* hover: the cover dims a little, as on the other
   transition: opacity var(--home-fast) ease-out;
 }
 body.home .h-case:hover .h-cover::after { opacity: 0.04; }
+/* hover and keyboard focus: the cover with its chips grows by 2% (designer, 2026-10-22: «чтобы фотография вместе с
+   тегами немного увеличивалась», then «более плавную и интересную анимацию… на 1 процент меньше»):
+   - in on a spring (damping 0.55, 1.9 Hz, 760 ms): a touch past 2% (2.25%), then it settles;
+   - always from the middle, the same every time («чтобы оно всегда центрировалось и увеличивалось одинаково»);
+   - out without the spring, a little faster.
+   lens.js and home-live.js draw its twin at the live box, so the glass keeps up. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  body.home .h-cover { transition: transform 460ms cubic-bezier(0.25, 1, 0.5, 1); }
+  body.home .h-case:hover .h-cover, body.home .h-case:has(.h-case-link:focus-visible) .h-cover {
+    transform: scale(1.02);
+    transition: transform 760ms linear(0, 0.046 4%, 0.162 7%, 0.317 11%, 0.485 14%, 0.648 18%, 0.792 21%, 0.912 25%,
+      1.003 29%, 1.067 32%, 1.106 36%, 1.124 39%, 1.125 43%, 1.116 46%, 1.099 50%, 1.078 54%, 1.057 57%, 1.037 61%,
+      1.02 64%, 1.006 68%, 0.996 71%, 0.989 75%, 0.985 79%, 0.984 82%, 0.985 86%, 0.986 89%, 0.989 93%, 0.991 96%, 1);
+  }
+}
 body.home .h-chips { position: absolute; left: var(--home-chip-offset); top: var(--home-chip-offset); z-index: 1; display: flex; align-items: center; gap: var(--home-gap-chips); }
 body.home .h-chip {
   height: var(--home-chip-height); padding: var(--home-pad-chip); border-radius: var(--home-radius-chip);
