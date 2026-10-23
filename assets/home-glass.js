@@ -24,6 +24,12 @@
 // - c: the stage-4 turn, stripes and glass round one centre (everything refracted turns as one picture).
 // The bottom lens (lens.js) copies these canvases into its twins («home-glass» event); the lens and sphere canvases are
 // marked «live» and counted (glassV) so lens.js and home-live.js draw them fresh each frame («home-glass-tick»).
+// The hero's lens and sphere (not the chips) have a rounded rim (designer, 2026-10-23: «у стекла эппловского прикольный
+// эффект, что грани скруглены, а у тебя они очень острые, резко обрезаются»): the bevel is a quarter circle in section,
+// the bend follows its slope, softly capped so the picture never folds (it grows toward the edge and the stripes roll
+// over it, magnified at most 1/ROUND.min times); the edge is smoothed over ROUND.aa px; the light is a soft specular band
+// on the lit side, a faint Fresnel glow round the whole rim and a slight shade opposite; a soft CSS shadow lies under
+// the lens and the sphere (home.css, body.glass-round). ?round=0 brings back the sharp rim; ?round=roll,spec,fresnel,shade.
 // Off with prefers-reduced-transparency (the CSS tints get denser instead); no turning with prefers-reduced-motion.
 // Tuning: ?glass=gain,power,rim,cap,light-angle (?glass=0 turns it off); ?spin=seconds per turn (?spin=0 stops it);
 // ?field=R1,S1,R2,S2,lobes,tint (a: radius and pull in px of the outer and the inner lens, unevenness, tint),
@@ -58,6 +64,14 @@
     const [g, p, r, c, a] = qs.get('glass').split(',').map(Number);
     if (g > 0) T.gain = g; if (p > 0) T.power = p; if (r >= 0) T.rim = r; if (c >= 0) T.cap = c; if (a) T.ang = a;
   }
+  // the rounded rim of the hero (see the top): min: the least the picture is stretched (1 − the steepest bend change);
+  // roll: how fast the bend reaches it; spec, at, w: the specular band (strength, px inside the edge, half-width px);
+  // fres, fw: the Fresnel glow and how far it reaches (px); shade, sw: the far side's shade; aa: the edge's soft px
+  const ROUND = { on: qs.get('round') !== '0', min: 0.15, roll: 2.5, spec: 0.5, at: 1.8, w: 3, fres: 0.12, fw: 7, shade: 0.16, sw: 9, aa: 1.5 };
+  if (qs.get('round') && qs.get('round') !== '0') {
+    const [r, s, f, d] = qs.get('round').split(',').map(Number);
+    if (r > 0) ROUND.roll = r; if (s >= 0) ROUND.spec = s; if (f >= 0) ROUND.fres = f; if (d >= 0) ROUND.shade = d;
+  }
   const DISP = 0.1;                   // red bends (1 + DISP × dispersion) times green, blue (1 − DISP × dispersion)
 
   // ------------------------------------------------------------------ parameters from tokens.css
@@ -69,6 +83,7 @@
     light: num(`--home-glass-${k}-light-intensity`, d[4]),
   });
   const P = { chip: param('chip', [1, 100, 1, -45, 0.8]), lens: param('lens', [0.8, 42.11, 0.7, 315, 0.9]), sphere: param('sphere', [1, 65.11, 0.5, 315, 1]) };
+  P.lens.round = P.sphere.round = ROUND.on;
   const rgba = (c) => {
     const m = /rgba?\(([^)]+)\)/.exec(c || '');
     if (!m) return [0, 0, 0, 0];
@@ -95,6 +110,9 @@
     uniform vec4 uTint;
     uniform vec3 uSpin;            // turn the backdrop about (x, y) by z radians, clockwise on screen (0 for the chips)
     uniform vec2 uWobble;          // the uneven ring (b): its turn angle, how much the bevel varies (0 = even)
+    uniform float uRound;          // 1: the hero's rounded rim and volume light; 0: the chips, as they were
+    uniform vec4 uRoll;            // rounded rim: 1 − least stretch, slope gain, edge soft px, unused
+    uniform vec4 uSpec, uFres;     // specular: strength, px in, half-width; Fresnel: strength, reach px, shade, its reach px
     varying vec2 vUv;
     vec2 spin(vec2 q) {
       vec2 v = q - uSpin.xy;
@@ -111,7 +129,7 @@
       float r = min(uRadius, min(h.x, h.y));
       vec2 p = vUv * uSize - h;
       float sd = box(p, h, r);
-      float cover = clamp(0.5 - sd, 0.0, 1.0);                 // 1 px soft edge
+      float cover = uRound > 0.5 ? clamp(0.5 - sd / uRoll.z, 0.0, 1.0) : clamp(0.5 - sd, 0.0, 1.0);   // soft edge
       if (cover <= 0.0) discard;
       vec2 e = vec2(0.5, 0.0);                                  // outward normal from the distance field
       vec2 n = normalize(vec2(box(p + e.xy, h, r) - box(p - e.xy, h, r), box(p + e.yx, h, r) - box(p - e.yx, h, r)) + vec2(1e-6, 0.0));
@@ -119,7 +137,13 @@
       float depth = uCap > 0.0 ? min(uDepth, uCap * min(uSize.x, uSize.y)) : uDepth;   // a small pill has a small bevel
       float phi = atan(p.y, p.x) - uWobble.x;                   // poured glass: the bevel widens and narrows round the ring
       depth *= 1.0 + uWobble.y * (0.6 * sin(2.0 * phi) + 0.4 * sin(3.0 * phi + 1.3));
-      float s = depth * uRefr * uGain * pow(clamp(1.0 - d / depth, 0.0, 1.0), uPower);   // bend toward the centre
+      float s;                                                  // bend toward the centre
+      if (uRound > 0.5) {
+        // a quarter circle in section: slope t / sqrt(1 − t²), t = 1 at the edge; the bend changes by its slope × gain,
+        // softly capped at uRoll.x px per px so the picture never folds: s = ∫ b·σ / sqrt(σ² + a²), a = b / gain
+        float t = clamp(1.0 - d / depth, 0.0, 1.0), b = uRoll.x, a = b / max(uRefr * uGain * uRoll.y, 1e-3);
+        s = depth * b * t * t / (sqrt(t * t * (1.0 - a * a) + a * a) + a);
+      } else s = depth * uRefr * uGain * pow(clamp(1.0 - d / depth, 0.0, 1.0), uPower);
       vec3 k = vec3(1.0 + DISP * uDisp, 1.0, 1.0 - DISP * uDisp);
       vec2 at = uOrigin + vUv * uSize;
       vec3 col = vec3(texture2D(tMap, mirror(spin(at - n * s * k.r) / uMap)).r,
@@ -128,9 +152,16 @@
       col = mix(col, uTint.rgb, uTint.a);
       vec2 L = vec2(-cos(uAngle), sin(uAngle));                 // toward the light (315° = top left)
       float lit = dot(n, L);
-      float outer = exp(-d * d * 2.0), inner = exp(-(d - 1.0) * (d - 1.0) * 2.0);
-      float up = lit > 0.0 ? lit * lit : -lit * lit;
-      col += uLight * uRim * (up * outer + 0.6 * max(-lit, 0.0) * max(-lit, 0.0) * inner);
+      if (uRound > 0.5) {                                       // volume: specular band, Fresnel glow, far-side shade
+        float q = (d - uSpec.y) / uSpec.z;
+        float hi = uSpec.x * max(lit, 0.0) * max(lit, 0.0) * exp(-q * q) + uFres.x * exp(-d / uFres.y);
+        col *= 1.0 - uFres.z * max(-lit, 0.0) * max(-lit, 0.0) * exp(-d / uFres.w);
+        col = 1.0 - (1.0 - col) * (1.0 - clamp(uLight * hi, 0.0, 1.0));   // screen: light adds without clipping
+      } else {
+        float outer = exp(-d * d * 2.0), inner = exp(-(d - 1.0) * (d - 1.0) * 2.0);
+        float up = lit > 0.0 ? lit * lit : -lit * lit;
+        col += uLight * uRim * (up * outer + 0.6 * max(-lit, 0.0) * max(-lit, 0.0) * inner);
+      }
       gl_FragColor = vec4(clamp(col, 0.0, 1.0) * cover, cover);
     }`.replace(/DISP/g, DISP.toFixed(3));
   // variant a: the whole panel in one pass. Two soft lenses pull the stripes toward the centre: the pull rises toward
@@ -197,7 +228,7 @@
     prog = link(FS);
     gl.useProgram(prog);
     U = {};
-    ['tMap', 'uSize', 'uRadius', 'uOrigin', 'uMap', 'uDepth', 'uRefr', 'uDisp', 'uAngle', 'uLight', 'uGain', 'uPower', 'uRim', 'uCap', 'uTint', 'uSpin', 'uWobble']
+    ['tMap', 'uSize', 'uRadius', 'uOrigin', 'uMap', 'uDepth', 'uRefr', 'uDisp', 'uAngle', 'uLight', 'uGain', 'uPower', 'uRim', 'uCap', 'uTint', 'uSpin', 'uWobble', 'uRound', 'uRoll', 'uSpec', 'uFres']
       .forEach((n) => { U[n] = gl.getUniformLocation(prog, n); });
     const vb = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vb);
@@ -206,6 +237,8 @@
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
     gl.uniform1i(U.tMap, 0);
     gl.uniform1f(U.uGain, T.gain); gl.uniform1f(U.uPower, T.power); gl.uniform1f(U.uRim, T.rim); gl.uniform1f(U.uCap, T.cap);
+    gl.uniform4f(U.uRoll, 1 - ROUND.min, ROUND.roll, ROUND.aa, 0);
+    gl.uniform4f(U.uSpec, ROUND.spec, ROUND.at, ROUND.w, 0); gl.uniform4f(U.uFres, ROUND.fres, ROUND.fw, ROUND.shade, ROUND.sw);
     flowProg = link(FLOW_FS);
     gl.useProgram(flowProg);
     F = {};
@@ -231,7 +264,7 @@
 
   // ------------------------------------------------------------------ 2D helpers
   const dprOf = () => Math.min(window.devicePixelRatio || 1, 2);
-  const stat = { renders: 0, frames: 0, ms: 0 };       // for the checks of stage 4 (window.homeGlass)
+  const stat = { renders: 0, frames: 0, ms: 0, fms: 0 };   // checks of stage 4 (window.homeGlass); fms: ms in the turn's frames
   window.homeGlass = stat;
   function sheet(w, h, dpr) {                          // a canvas of w × h css px at the screen's density
     const c = document.createElement('canvas');
@@ -291,6 +324,7 @@
     const t = turn || [0, 0, 0], w = wobble || [0, 0];
     gl.uniform3f(U.uSpin, t[0], t[1], t[2]);
     gl.uniform2f(U.uWobble, w[0], w[1]);
+    gl.uniform1f(U.uRound, p.round ? 1 : 0);            // only the hero's lens and sphere
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     return copy(el, box, pw, ph, 'h-glass');
   }
@@ -406,6 +440,7 @@
     }
     hero = h;
     drawHero(turn.angle);
+    body.classList.toggle('glass-round', ROUND.on);  // home.css: the soft shadow under the lens and the sphere
     rendered.set(panel, { key: sizeKey(panel) });
     stat.ms += performance.now() - t0;
     done(panel);
@@ -435,8 +470,9 @@
     turn.speed = Math.min(1, turn.speed + dt / SPIN_RAMP);
     const k = turn.speed * turn.speed * (3 - 2 * turn.speed);
     turn.angle = (turn.angle + (k * 2 * Math.PI * dt) / SPIN_PERIOD) % (2 * Math.PI);
+    const f0 = performance.now();
     try { drawHero(turn.angle); } catch (e) { return; }
-    stat.frames++;
+    stat.frames++; stat.fms += performance.now() - f0;
     main.dispatchEvent(tickEvent);
     turn.raf = requestAnimationFrame(tick);
   }

@@ -490,6 +490,10 @@ body.home .h-lens, body.home .h-sphere { isolation: isolate; }
 body.home .h-chip.glassed, body.home .h-lens.glassed { background: transparent; }
 /* the hero's liquid field (home-glass.js, variant a): one canvas over the stripes, under the photo; no disc, no glow ring */
 body.home .h-flow { position: absolute; left: 0; top: 0; z-index: 0; display: block; pointer-events: none; }
+/* the rounded rim (home-glass.js, 2026-10-23): the glass sits above the stripes on a soft shadow, light from the top left;
+   only once the glass is drawn, so the fallbacks stay as they were; lens.js paints it into the bend's twin */
+body.home.glass-round .h-lens.glassed { box-shadow: 3px 9px 24px -6px rgba(0, 0, 0, 0.3), 1px 3px 7px -2px rgba(0, 0, 0, 0.12); }
+body.home.glass-round .h-lens.glassed ~ .h-sphere { box-shadow: 2px 6px 16px -6px rgba(0, 0, 0, 0.28); }
 body.home.ring-a .h-lens { background: transparent; }
 body.home.ring-a .h-sphere::after { display: none; }
 @media (prefers-reduced-transparency: reduce) {   /* no refraction (home-glass.js stays off): denser tints instead */
