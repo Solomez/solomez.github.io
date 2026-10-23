@@ -20,7 +20,8 @@
 // - battery: nothing runs while nothing moves; the canvas covers only the bend;
 // - keyboard: a link reached with Tab that lands in the bend is lifted above it; print hides the effect;
 // - colours come from the page (curtain = page background, text twin = nearest background), ready for a redesign.
-// Clicks go through the bend. Off with reduced motion, and on phones and tablets (see below).
+// Clicks go through the bend. Off with reduced motion and reduced transparency (as the live glass), and on phones and
+// tablets (see below).
 // Tuning: ?lens=zone,fan,power,chroma px,boost.
 //
 // The new home page (main.h-main, REDESIGN_HOME.md; designer, 2026-10-22: «надо ее сюда поставить без изменений»): the
@@ -33,6 +34,7 @@
 (() => {
   const main = document.querySelector('main.frame, main.h-main');
   if (!main || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(prefers-reduced-transparency: reduce)').matches) return;
   const home = main.classList.contains('h-main');
   // the inner pages of the new design (REDESIGN_PAGES.md, stage 3: body.pg) take the home branch. A page without the bend
   // (About, CV, Contact by D-56: body data-bend="0") keeps this file for the live glass only: no curtain, no bend
@@ -210,17 +212,19 @@
   // ------------------------------------------------------------------ blocks
   const SEL = (home
     ? ['.h-striped', '.h-card', '.h-clip-back', '.h-clip-front', '.h-h2', '.h-cover', '.h-case-title', '.h-case-desc',
-      '.h-contact', '.h-row', '.h-sticker', '.h-copy', '.pg-title', '.pg-body > *']
-    : ['h1.title', '.b-text .leaf', '.b-h2 h2', '.b-h3 h3', '.b-list .row', '.b-page .pg', '.b-file .file',
+      '.h-contact', '.h-row', '.h-sticker', '.h-copy', '.pg-title', '.pg-body > *',
+      '.pg-facts', '.pg-note', '.pg-next', '.pg-figure video', '.vbox > .h-ring']   // a video's ring: over its twin                     // the case pages (REDESIGN_CASES.md)
+    : ['h1.title', '.b-text .leaf', '.b-h2 h2', '.b-h3 h3', '.b-list .row', '.b-page .pg', '.b-file .file', '.b-next .next',
       '.b-toggle > summary', '.b-callout .box', '.b-divider > div', '.cap', '.b-image img', '.b-video video',
       '.page-icon img', '.cover img']).join(', ');
   // blocks that paint their own box: no page-coloured base under them (their corners stay see-through)
-  const OWN_BOX = home ? '.h-striped, .h-card, .h-cover, .h-contact, .h-clip-back, .h-clip-front, .h-sticker, .pg-file, .pg-callout, .pg-hr'
+  const OWN_BOX = home ? '.h-striped, .h-card, .h-cover, .h-contact, .h-clip-back, .h-clip-front, .h-sticker, .pg-file, .pg-callout, .pg-hr, .pg-next, .h-ring'
     : '.b-callout .box, .b-divider > div';
   const tiles = [];
   const byEl = new Map();
   for (const el of main.querySelectorAll(SEL)) {
-    const kind = home ? 'paint' : el.tagName === 'IMG' ? 'img' : el.tagName === 'VIDEO' ? 'video' : 'paint';
+    // a video stays a video twin on the new pages too (its figure is painted round it), so a playing one is drawn whole
+    const kind = el.tagName === 'VIDEO' ? 'video' : home ? 'paint' : el.tagName === 'IMG' ? 'img' : 'paint';
     // the marker reaches 5 px past the words, so past the column at the start of a line: the twin is a little wider
     const padX = home && el.matches('.h-case-desc') ? 8 : 0;
     // a case cover grows a little under the pointer (home.css): its twin follows the live box (box() below)
@@ -314,6 +318,37 @@
         ctx.fillStyle = st.color;
       }
     }
+    return true;
+  }
+  // the number or bullet of a list item on the new pages (::marker is not in the DOM): right-aligned before the item,
+  // on the baseline of its first line, in the marker's colour
+  function drawMarker(ctx, li, st, o, alpha) {
+    const type = st.listStyleType;
+    let mark = type === 'disc' ? '•' : type === 'circle' ? '◦' : type === 'square' ? '▪' : '';
+    if (type === 'decimal') {
+      let k = parseInt(li.parentElement.getAttribute('start'), 10) || 1;
+      for (let p = li.previousElementSibling; p; p = p.previousElementSibling) if (p.tagName === 'LI') k++;
+      mark = k + '.';
+    }
+    if (!mark) return false;
+    const walk = document.createTreeWalker(li, NodeFilter.SHOW_TEXT);
+    let first = null;
+    while (walk.nextNode()) if (walk.currentNode.data.trim()) { first = walk.currentNode; break; }
+    if (!first) return false;
+    const i = first.data.search(/\S/);
+    const range = document.createRange();
+    range.setStart(first, i); range.setEnd(first, i + 1);
+    const rr = range.getClientRects()[0];
+    if (!rr) return false;
+    const fst = getComputedStyle(first.parentElement);
+    ctx.save();
+    ctx.font = `${fst.fontStyle} ${fst.fontWeight} ${fst.fontSize} ${fst.fontFamily}`;
+    ctx.fillStyle = getComputedStyle(li, '::marker').color || st.color;
+    ctx.globalAlpha = alpha; ctx.textAlign = 'right';
+    const fs = parseFloat(fst.fontSize) || 16, m = ctx.measureText('Hg');
+    const asc = m.fontBoundingBoxAscent || fs * 0.8, desc = m.fontBoundingBoxDescent || fs * 0.2;
+    ctx.fillText(mark, li.getBoundingClientRect().left - ctx.measureText(' ').width - o.left, rr.top + (rr.height - asc - desc) / 2 + asc - o.top);
+    ctx.restore();
     return true;
   }
   // --- the new home page: what its cards add to plain boxes and text
@@ -465,6 +500,7 @@
       }
       put(drawBoxHome(cur.ctx, st, st.display === 'inline' ? [...n.getClientRects()] : [nr], r, a, dpr));
       if (n.tagName === 'IMG' || n.tagName === 'CANVAS') { put(drawImg(cur.ctx, n, st, nr, r, a)); return; }
+      if (st.display === 'list-item' && st.listStylePosition === 'outside') put(drawMarker(cur.ctx, n, st, r, a));
       put(drawPseudo(cur.ctx, n, '::before', nr, r, a, dpr));
       for (const ch of n.childNodes) walkHome(ch, a);
       put(drawPseudo(cur.ctx, n, '::after', nr, r, a, dpr));
@@ -588,7 +624,11 @@
     if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     const id = decodeURIComponent(a.getAttribute('href').slice(1));
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (id && syncTo(document.getElementById(id), reduce ? 'auto' : 'smooth')) { e.preventDefault(); history.pushState(null, '', '#' + id); }
+    const el = id && document.getElementById(id);
+    if (el && syncTo(el, reduce ? 'auto' : 'smooth')) {
+      e.preventDefault(); history.pushState(null, '', '#' + id);
+      if (el.hasAttribute('tabindex')) el.focus({ preventScroll: true });   // «Skip to content»: the keyboard goes on from there
+    }
   }
   // back to the plain page (the effect turned off): the page scrolls on its own again
   function teardownSync() {

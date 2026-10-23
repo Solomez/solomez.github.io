@@ -17,6 +17,7 @@ body.pg {
   --home-indent: 28px;           /* lists, toggles, nested blocks */
   --home-radius-file: 24px;
   --home-radius-code: 6px;
+  --home-facts-key: 96px;        /* a case's facts: the key column (Context, Role, Team, When) */
 }
 @media (max-width: 767px) {
   body.pg {
@@ -39,7 +40,7 @@ body.pg {
 
 /* ---------- nav: the key of this page is the current one (the tint the home key has on the home page) ---------- */
 body.pg .h-key--home { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
-body.pg .h-key[aria-current="page"] { background: var(--home-nav-key-tint); }
+body.pg .h-key[aria-current] { background: var(--home-nav-key-tint); }   /* "true" on a case: Work, the section it is in */
 
 /* ---------- column: 700 px, centred; the title, the page, then the © line ---------- */
 /* the © line at the bottom of the window when the page is short (designer, 2026-10-23: «эта плашка должна быть снизу»),
@@ -101,15 +102,17 @@ body.pg .pg-page svg { flex: none; width: 20px; height: 20px; fill: none; stroke
 body.pg .pg-page:hover svg { transform: translateX(4px); }
 
 /* ---------- pictures and videos: rounded like the case covers, caption under ---------- */
-body.pg .pg-figure { margin: 0; }
+/* radius by size, his rule of 2026-10-14 (MEASUREMENTS.md 7: «скругления 24px и меньше в зависимости от размера
+   контента»): 24 px at the full column, down to 16 px on a phone; the case covers keep 48 (designer, 2026-10-23) */
+body.pg .pg-figure { margin: 0; container-type: inline-size; --pg-radius: clamp(16px, 3.47cqi, 24px); }
+body.pg .pg-media, body.pg .vbox { position: relative; border-radius: var(--pg-radius); }
 body.pg .pg-figure img, body.pg .pg-figure video {
-  display: block; width: 100%; height: auto; border-radius: var(--home-radius-cover); background: var(--home-cover-bg);
+  display: block; width: 100%; height: auto; border-radius: var(--pg-radius); background: var(--home-cover-bg);
 }
 body.pg .pg-figure img[style] { object-fit: cover; }
 body.pg .pg-cap { margin-top: 12px; padding: 0 var(--home-pad-card-text); font: var(--home-type-small); color: var(--home-text-muted); text-wrap: pretty; }
 body.pg .pg-figure.b-video { width: var(--w, 100%); max-width: 100%; }
 /* site.js plays the video by itself (D-55); while it waits, a play mark */
-body.pg .vbox { position: relative; }
 body.pg .vmark { display: none; }
 body.pg .b-video.auto video { cursor: pointer; }
 body.pg .b-video.auto video:focus-visible { outline: 2px solid var(--home-focus); outline-offset: 2px; }
@@ -164,4 +167,72 @@ body.pg .pg-toggle > .pg-kids { margin-top: var(--home-gap-item); }
 @media (max-width: 767px) {
   body.pg .h-hl { white-space: normal; }
   body.pg .pg-file { gap: 12px; padding-right: 16px; }
+}
+
+/* ---------- the case pages (REDESIGN_CASES.md: body.pg.pg-case) ---------- */
+/* the head: the cover and chips of its home card (home.css, chips' glass by home-glass.js), his facts as a key–value
+   list, the NDA note muted */
+body.pg .pg-head { display: flex; flex-direction: column; gap: var(--home-gap-media); margin-bottom: var(--home-gap-h2); }
+body.pg .pg-head > .pg-facts + .pg-note { margin-top: calc(var(--home-gap-text) - var(--home-gap-media)); }
+body.pg .pg-cover { width: 100%; }
+body.pg .pg-facts { display: flex; flex-direction: column; gap: var(--home-gap-item); margin: 0; font: var(--home-type-desc); }
+body.pg .pg-fact { display: grid; grid-template-columns: var(--home-facts-key) minmax(0, 1fr); column-gap: 16px; align-items: baseline; }
+body.pg .pg-fact dt { font: var(--home-type-small); color: var(--home-text-muted); }
+body.pg .pg-fact dd { margin: 0; color: var(--home-text); overflow-wrap: break-word; text-wrap: pretty; }
+body.pg .pg-note { font: var(--home-type-small); color: var(--home-text-muted); text-wrap: pretty; }
+
+/* «Next case →»: a white row like the file rows, after the last section; the order of the home cards */
+body.pg .pg-next {
+  position: relative; display: flex; align-items: center; gap: 16px; margin-top: var(--home-gap-h2); padding: 20px 24px;
+  border-radius: var(--home-radius-file); background: var(--home-surface); color: var(--home-text);
+  transition: transform var(--home-fast) ease-out;
+}
+body.pg .pg-next::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; pointer-events: none;
+  transition: opacity var(--home-fast) ease-out;
+}
+body.pg .pg-next:hover::after { opacity: 0.04; }
+body.pg .pg-next:active { transform: scale(0.99); }
+body.pg .pg-next:focus-visible { outline: 2px solid var(--home-focus); outline-offset: 2px; }
+body.pg .pg-next-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+body.pg .pg-next-k { font: var(--home-type-small); color: var(--home-text-muted); }
+body.pg .pg-next-t { font: var(--home-type-h3); text-wrap: balance; overflow-wrap: break-word; }
+body.pg .pg-next svg { flex: none; width: 24px; height: 24px; fill: none; stroke: currentColor; transition: transform var(--home-fast) ease-out; }
+body.pg .pg-next:hover svg { transform: translateX(4px); }
+
+/* the 404 page: the line, then the home's buttons */
+body.pg .pg-flow > .pg-actions { display: flex; flex-wrap: wrap; gap: var(--home-gap-actions); margin-top: var(--home-gap-media); }
+
+@media (prefers-reduced-motion: reduce) {
+  body.pg .pg-next, body.pg .pg-next::after, body.pg .pg-next svg { transition: none; }
+  body.pg .pg-next:active, body.pg .pg-next:hover svg { transform: none; }
+}
+@media (max-width: 767px) {
+  body.pg .pg-fact { grid-template-columns: minmax(0, 1fr); }
+  body.pg .pg-facts { gap: 12px; }
+  body.pg .pg-next { padding: 16px 20px; }
+}
+
+/* ---------- print (the CV first): black on white; no nav, glass, outline marks, lens or © line; a CV entry (role, dates,
+   points) stays on one page; the PDF rows become plain lines ---------- */
+@media print {
+  @page { margin: 16mm 16mm 18mm; }
+  body.pg {
+    --home-bg: #fff; --home-text: #000; --home-text-secondary: #000; --home-text-body: #000; --home-text-muted: #333;
+    background: #fff;
+  }
+  body.pg :is(.h-nav, .h-toc, .h-skip, .pg-end, canvas, [data-lens], .vmark) { display: none !important; }
+  /* desktop Safari's sync mode (lens.js) fixes <main> to the window: print it in the flow */
+  body.pg .h-main { position: static !important; transform: none !important; min-height: 0; padding: 0; }
+  body.pg .pg-col { width: 100%; }
+  body.pg .pg-ln { color: #000; text-decoration-color: currentColor; }
+  body.pg :is(.pg-title, .pg-h2, .pg-h3, .pg-meta) { break-after: avoid; page-break-after: avoid; }
+  body.pg :is(.pg-bullets, .pg-numbers, li, .pg-figure, .pg-callout, .pg-file, .pg-fact, .pg-next, .h-case, .h-contact) { break-inside: avoid; page-break-inside: avoid; }
+  body.pg .pg-file { display: block; padding: 0; border-radius: 0; background: none; transform: none; }
+  body.pg .pg-file::after, body.pg .pg-file-ic { display: none; }
+  body.pg .pg-file-name { font: var(--home-type-desc); text-decoration: underline; text-underline-offset: 0.2em; }
+  body.pg .pg-file-size::before { content: " · "; }
+  /* white cards on white paper keep an edge; glass chips keep their tint (the glass canvases are not printed) */
+  body.pg :is(.pg-callout, .h-contact, .pg-next) { box-shadow: inset 0 0 0 1px #bbb; }
+  body.pg .h-chip.glassed { background: var(--home-chip-tint); }
 }

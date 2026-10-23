@@ -41,3 +41,16 @@
 body { font-family: "Google Sans", ui-sans-serif, -apple-system, "system-ui", "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
 /* no menu on the right of the top bar (designer, 2026-10-23: «справа навигацию убери вообще (кнопки)»); the breadcrumbs lead home and to Work */
 .topbar .menu { display: none; }
+/* «Skip to content»: hidden until it gets keyboard focus, then a pill at the top left */
+.skip { position: fixed; left: 12px; top: 12px; z-index: 40; padding: 8px 16px; border-radius: 999px; background: var(--text); color: #fff; font-weight: 500; text-decoration: none; }
+.skip:not(:focus) { width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.skip:focus-visible { border-radius: 999px; outline-offset: 2px; }
+#content:focus { outline: none; }
+/* «Next case →» at the end of a case, in the order of the home cards (build.py next_case) */
+.b-next { padding: 6px 2px 2px; }
+.b-next .next { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 14px; border: 1px solid var(--line); border-radius: var(--r-s); color: var(--text); text-decoration: none; }
+.b-next .next:hover { background: var(--hover); }
+.next-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.next-k { font-size: 14px; line-height: 20px; color: var(--muted); }
+.next-t { font-weight: 500; }
+.b-next svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; }
