@@ -216,13 +216,13 @@
   // ------------------------------------------------------------------ blocks
   const SEL = (home
     ? ['.h-striped', '.h-card', '.h-clip-back', '.h-clip-front', '.h-h2', '.h-cover', '.h-case-title', '.h-case-desc',
-      '.h-contact', '.h-row', '.h-sticker', '.h-copy', '.pg-title', '.pg-body > *',
+      '.h-contact', '.h-quote', '.h-row', '.h-sticker', '.h-copy', '.pg-title', '.pg-body > *',
       '.pg-facts', '.pg-note', '.pg-next', '.pg-figure video']                     // the case pages (REDESIGN_CASES.md)
     : ['h1.title', '.b-text .leaf', '.b-h2 h2', '.b-h3 h3', '.b-list .row', '.b-page .pg', '.b-file .file', '.b-next .next',
       '.b-toggle > summary', '.b-callout .box', '.b-divider > div', '.cap', '.b-image img', '.b-video video',
       '.page-icon img', '.cover img']).join(', ');
   // blocks that paint their own box: no page-coloured base under them (their corners stay see-through)
-  const OWN_BOX = home ? '.h-striped, .h-card, .h-cover, .h-contact, .h-clip-back, .h-clip-front, .h-sticker, .pg-file, .pg-callout, .pg-hr, .pg-next, .h-ring'
+  const OWN_BOX = home ? '.h-striped, .h-card, .h-cover, .h-contact, .h-quote, .h-clip-back, .h-clip-front, .h-sticker, .pg-file, .pg-callout, .pg-hr, .pg-next, .h-ring'
     : '.b-callout .box, .b-divider > div';
   const tiles = [];
   const byEl = new Map();

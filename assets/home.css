@@ -421,6 +421,17 @@ body.home .h-hl {
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
 
+/* ---------- the recommendation (home, Work; source: the «Recommendation» callout on About): a white card like Contact ---------- */
+body.home .h-quote {
+  width: var(--home-column); max-width: 100%; margin: 0; padding: var(--home-pad-contact); box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 12px; border-radius: var(--home-radius-contact); background: var(--home-surface);
+}
+body.home .h-quote blockquote { margin: 0; font: var(--home-type-desc); color: var(--home-text); }
+body.home .h-quote figcaption p { margin: 0; font: var(--home-type-small); color: var(--home-text-muted); }
+body.home .h-quote a { color: inherit; text-decoration: underline; text-decoration-color: currentColor; }
+body.home .h-quote a:hover { opacity: 0.7; }
+body.home .h-cards + .h-quote { margin-top: 64px; }
+
 /* ---------- contact ---------- */
 body.home .h-contact {
   position: relative; width: var(--home-column); padding: var(--home-pad-contact); overflow: hidden;
