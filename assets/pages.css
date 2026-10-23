@@ -1,0 +1,167 @@
+/* ---------- inner pages (REDESIGN_PAGES.md, stage 1: body.home.pg; build.py --pages-v2 or "pagesV2": true).
+ * The home page's bundle (/assets/home.css) stops before this comment, so the home stays as it was; from here on
+ * the file goes to /assets/pages.css, with pages.css. Reading type reuses the home's tokens: title = --home-type-h2,
+ * h2 = --home-type-title, body = --home-type-desc; only h3 is new. ---------- */
+body.pg {
+  --home-top: 152px;                                    /* page top → title (the nav ends at 80) */
+  --home-type-h3: 500 20px/28px var(--home-font);       /* h3: between h2 (26) and body (18) */
+  --home-font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;   /* the mark «c» */
+  --home-gap-title: 40px;        /* title → first block (or the contact card) */
+  --home-gap-text: 16px;         /* between paragraphs */
+  --home-gap-item: 8px;          /* between list items */
+  --home-gap-h2: 56px;           /* above h2 */
+  --home-gap-h3: 32px;           /* above h3 */
+  --home-gap-heading-text: 12px; /* heading → its text */
+  --home-gap-media: 32px;        /* around pictures, videos, files, callouts, dividers */
+  --home-gap-page-end: 96px;     /* last block → © line, at least (on a short page the line sits at the bottom) */
+  --home-indent: 28px;           /* lists, toggles, nested blocks */
+  --home-radius-file: 24px;
+  --home-radius-code: 6px;
+}
+@media (max-width: 767px) {
+  body.pg {
+    --home-top: 40px;
+    --home-type-h3: 500 18px/26px var(--home-font);     /* 20 → 18 */
+    --home-gap-title: 24px;
+    --home-gap-h2: 44px;
+    --home-gap-h3: 28px;
+    --home-gap-media: 24px;
+    --home-gap-page-end: 64px;
+    --home-indent: 22px;
+    --home-radius-file: 20px;
+  }
+}
+
+/* pages.css: the inner pages in the new home's design (REDESIGN_PAGES.md, stage 1; build.py --pages-v2 or "pagesV2": true).
+   Loaded after home.css on body.home.pg, so the home's nav, buttons, contact card, marker, outline marks and © line
+   come from home.css as they are (no list (1)–(4) here: designer, 2026-10-23); here: the column, the reading type, the page blocks, the current nav key.
+   build.py puts the inner-page part of home/tokens.css in front of this file in /assets/pages.css. site.css is not loaded. */
+
+/* ---------- nav: the key of this page is the current one (the tint the home key has on the home page) ---------- */
+body.pg .h-key--home { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+body.pg .h-key[aria-current="page"] { background: var(--home-nav-key-tint); }
+
+/* ---------- column: 700 px, centred; the title, the page, then the © line ---------- */
+/* the © line at the bottom of the window when the page is short (designer, 2026-10-23: «эта плашка должна быть снизу»),
+   right after the content when it is long; the phone keeps home.css's bottom padding over the nav and the home bar */
+body.pg .h-main { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+@media (min-width: 768px) { body.pg .h-main { padding-bottom: 40px; } }
+body.pg .pg-col, body.pg .pg-end { width: min(var(--home-column), 100%); margin: 0 auto; }
+body.pg .pg-title { margin-bottom: var(--home-gap-title); font: var(--home-type-h2); color: var(--home-text); text-wrap: balance; overflow-wrap: break-word; }
+body.pg .pg-col > .h-contact { width: 100%; }
+body.pg .pg-col > :is(.h-contact, .h-cards) + .pg-body { margin-top: var(--home-gap-media); }   /* Work: the home's cards (home.css) */
+body.pg .pg-end { margin-top: auto; padding-top: var(--home-gap-page-end); }
+body.pg .pg-end .h-foot { width: 100%; }
+
+/* ---------- reading type ---------- */
+body.pg .pg-body { font: var(--home-type-desc); color: var(--home-text-secondary); overflow-wrap: break-word; }
+body.pg .pg-h2 { font: var(--home-type-title); color: var(--home-text); text-wrap: balance; }
+body.pg .pg-h3 { font: var(--home-type-h3); color: var(--home-text); text-wrap: balance; }
+body.pg .pg-p { text-wrap: pretty; }
+body.pg strong { font-weight: var(--home-fw-bold); }
+body.pg .pg-ln {
+  color: var(--home-text); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em;
+  text-decoration-color: rgba(26, 26, 25, 0.35); transition: text-decoration-color var(--home-fast) ease-out;
+}
+body.pg .pg-ln:hover { text-decoration-color: currentColor; }
+body.pg code {
+  padding: 0.1em 0.35em; border-radius: var(--home-radius-code); background: var(--home-surface-subtle);
+  font-family: var(--home-font-mono); font-size: 0.875em; color: var(--home-text);
+}
+
+/* ---------- rhythm: blocks follow each other in .pg-flow (the page, nested blocks, a callout) ---------- */
+body.pg .pg-flow > * + * { margin-top: var(--home-gap-text); }
+body.pg .pg-flow > :is(.pg-figure, .pg-file, .pg-callout, .pg-hr),
+body.pg .pg-flow > :is(.pg-figure, .pg-file, .pg-callout, .pg-hr) + * { margin-top: var(--home-gap-media); }
+body.pg .pg-flow > .pg-file + .pg-file { margin-top: var(--home-gap-item); }
+body.pg .pg-flow > .pg-h2 { margin-top: var(--home-gap-h2); }
+body.pg .pg-flow > .pg-h3 { margin-top: var(--home-gap-h3); }
+body.pg .pg-flow > :is(.pg-h2, .pg-h3) + :not(.pg-figure, .pg-file, .pg-callout, .pg-hr, .pg-h2, .pg-h3) { margin-top: var(--home-gap-heading-text); }
+body.pg .pg-flow > .pg-h3 + .pg-meta { margin-top: var(--home-gap-card-text); color: var(--home-text-muted); }   /* CV: dates under «role · place», 6.1:1 */
+body.pg .pg-kids { padding-left: var(--home-indent); margin-top: var(--home-gap-item); }
+
+/* ---------- lists: bullets and numbers; nested blocks stay inside their item ---------- */
+body.pg .pg-bullets, body.pg .pg-numbers { margin: 0; padding-left: var(--home-indent); }
+body.pg .pg-bullets { list-style: disc; }
+body.pg .pg-bullets .pg-bullets { list-style: circle; }
+body.pg .pg-numbers { list-style: decimal; }
+body.pg :is(.pg-bullets, .pg-numbers) > li { padding-left: 2px; }
+body.pg :is(.pg-bullets, .pg-numbers) > li + li { margin-top: var(--home-gap-item); }
+body.pg :is(.pg-bullets, .pg-numbers) > li::marker { color: var(--home-text-muted); font-variant-numeric: tabular-nums; }
+body.pg li > .pg-kids { padding-left: 0; }
+
+/* ---------- links to pages: rows with the list rows' 2 px line ---------- */
+body.pg .pg-pages > li + li { margin-top: 0; }
+body.pg .pg-page {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding: 12px 0;
+  box-shadow: inset 0 -2px var(--home-divider); font: var(--home-type-h3); color: var(--home-text); transition: color 220ms ease-out;
+}
+body.pg .pg-page:hover, body.pg .pg-page:focus-visible { color: var(--home-text-hover); }
+body.pg .pg-page svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; transition: transform var(--home-fast) ease-out; }
+body.pg .pg-page:hover svg { transform: translateX(4px); }
+
+/* ---------- pictures and videos: rounded like the case covers, caption under ---------- */
+body.pg .pg-figure { margin: 0; }
+body.pg .pg-figure img, body.pg .pg-figure video {
+  display: block; width: 100%; height: auto; border-radius: var(--home-radius-cover); background: var(--home-cover-bg);
+}
+body.pg .pg-figure img[style] { object-fit: cover; }
+body.pg .pg-cap { margin-top: 12px; padding: 0 var(--home-pad-card-text); font: var(--home-type-small); color: var(--home-text-muted); text-wrap: pretty; }
+body.pg .pg-figure.b-video { width: var(--w, 100%); max-width: 100%; }
+/* site.js plays the video by itself (D-55); while it waits, a play mark */
+body.pg .vbox { position: relative; }
+body.pg .vmark { display: none; }
+body.pg .b-video.auto video { cursor: pointer; }
+body.pg .b-video.auto video:focus-visible { outline: 2px solid var(--home-focus); outline-offset: 2px; }
+body.pg .b-video.auto.stopped .vmark {
+  display: block; position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px;
+  border-radius: 50%; background: rgba(25, 25, 25, 0.55); pointer-events: none;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+body.pg .b-video.auto.stopped .vmark::after {
+  content: ""; position: absolute; left: 22px; top: 18px;
+  border-style: solid; border-width: 10px 0 10px 16px; border-color: transparent transparent transparent #fff;
+}
+
+/* ---------- files (the CV PDFs): a white row with the icon, the name and the size ---------- */
+body.pg .pg-file {
+  position: relative; display: flex; align-items: center; gap: 16px; padding: 12px 20px 12px 12px;
+  border-radius: var(--home-radius-file); background: var(--home-surface); color: var(--home-text);
+  transition: transform var(--home-fast) ease-out;
+}
+body.pg .pg-file::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; pointer-events: none;
+  transition: opacity var(--home-fast) ease-out;
+}
+body.pg .pg-file:hover::after { opacity: 0.04; }
+body.pg .pg-file:active { transform: scale(0.99); }
+body.pg .pg-file-ic { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 16px; background: var(--home-surface-subtle); }
+body.pg .pg-file-ic svg { width: 22px; height: 22px; fill: currentColor; }
+body.pg .pg-file-name { flex: 1; min-width: 0; font: var(--home-type-label); overflow-wrap: anywhere; }
+body.pg .pg-file-size { flex: none; font: var(--home-type-small); color: var(--home-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---------- divider: the list rows' 2 px line ---------- */
+body.pg .pg-hr { height: 2px; margin: 0; border: 0; background: var(--home-divider); }
+
+/* ---------- callout: a white card, as the contact card ---------- */
+body.pg .pg-callout { padding: var(--home-pad-contact); border-radius: var(--home-radius-contact); background: var(--home-surface); }
+
+/* ---------- toggle: details / summary with a chevron ---------- */
+body.pg .pg-toggle > summary { display: flex; gap: 6px; list-style: none; cursor: pointer; color: var(--home-text); border-radius: 6px; }
+body.pg .pg-toggle > summary::-webkit-details-marker { display: none; }
+body.pg .pg-toggle > summary:focus-visible { outline: 2px solid var(--home-focus); outline-offset: 2px; }
+body.pg .pg-chev { flex: none; display: grid; place-items: center; width: 22px; height: 28px; }
+body.pg .pg-chev svg { width: 16px; height: 16px; fill: none; stroke: currentColor; transition: transform var(--home-fast) ease-out; }
+body.pg .pg-toggle[open] > summary .pg-chev svg { transform: rotate(90deg); }
+body.pg .pg-toggle > .pg-kids { margin-top: var(--home-gap-item); }
+
+@media (prefers-reduced-motion: reduce) {
+  body.pg .pg-page, body.pg .pg-page svg, body.pg .pg-ln, body.pg .pg-file, body.pg .pg-file::after, body.pg .pg-chev svg { transition: none; }
+  body.pg .pg-page:hover svg, body.pg .pg-file:active { transform: none; }
+}
+
+/* ---------- phone: the home's scale comes from the tokens; the marker may wrap in long reading lines ---------- */
+@media (max-width: 767px) {
+  body.pg .h-hl { white-space: normal; }
+  body.pg .pg-file { gap: 12px; padding-right: 16px; }
+}

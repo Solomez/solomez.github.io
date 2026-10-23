@@ -34,6 +34,9 @@
   const main = document.querySelector('main.frame, main.h-main');
   if (!main || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const home = main.classList.contains('h-main');
+  // the inner pages of the new design (REDESIGN_PAGES.md, stage 3: body.pg) take the home branch. A page without the bend
+  // (About, CV, Contact by D-56: body data-bend="0") keeps this file for the live glass only: no curtain, no bend
+  const bend = !(home && document.body.dataset.bend === '0');
   // Phones and tablets: off by default, as on system.studio (designer on iPhone, 2026-10-20). Their browsers scroll on a
   // separate thread at up to 120 frames a second, while page code gets 60 (30 in Low Power Mode):
   // - drawn as usual, the twin trails the page and the bend shakes («очень дергано»);
@@ -207,12 +210,12 @@
   // ------------------------------------------------------------------ blocks
   const SEL = (home
     ? ['.h-striped', '.h-card', '.h-clip-back', '.h-clip-front', '.h-h2', '.h-cover', '.h-case-title', '.h-case-desc',
-      '.h-contact', '.h-row', '.h-sticker', '.h-copy']
+      '.h-contact', '.h-row', '.h-sticker', '.h-copy', '.pg-title', '.pg-body > *']
     : ['h1.title', '.b-text .leaf', '.b-h2 h2', '.b-h3 h3', '.b-list .row', '.b-page .pg', '.b-file .file',
       '.b-toggle > summary', '.b-callout .box', '.b-divider > div', '.cap', '.b-image img', '.b-video video',
       '.page-icon img', '.cover img']).join(', ');
   // blocks that paint their own box: no page-coloured base under them (their corners stay see-through)
-  const OWN_BOX = home ? '.h-striped, .h-card, .h-cover, .h-contact, .h-clip-back, .h-clip-front, .h-sticker'
+  const OWN_BOX = home ? '.h-striped, .h-card, .h-cover, .h-contact, .h-clip-back, .h-clip-front, .h-sticker, .pg-file, .pg-callout, .pg-hr'
     : '.b-callout .box, .b-divider > div';
   const tiles = [];
   const byEl = new Map();
@@ -858,7 +861,7 @@
 
   // ------------------------------------------------------------------ events
   window.addEventListener('scroll', () => {
-    if (!armed) { armed = true; armT = performance.now(); }       // the first scroll brings the bend in
+    if (!armed && bend) { armed = true; armT = performance.now(); }   // the first scroll brings the bend in
     wake();
   }, { passive: true });
   let rt = 0;
