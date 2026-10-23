@@ -141,7 +141,7 @@
    "ru": "Овощи",
    "en": "Vegetables",
    "de": "Gemüse",
-   "count": 186
+   "count": 187
   },
   {
    "id": "potato_onion",
@@ -149,7 +149,7 @@
    "ru": "Картофель, лук, чеснок",
    "en": "Potatoes, onions & garlic",
    "de": "Kartoffeln, Zwiebeln & Knoblauch",
-   "count": 93
+   "count": 92
   },
   {
    "id": "tomato_fresh",
@@ -165,7 +165,7 @@
    "ru": "Фрукты",
    "en": "Fruit",
    "de": "Obst",
-   "count": 200
+   "count": 202
   },
   {
    "id": "salad_herbs",
@@ -181,7 +181,7 @@
    "ru": "Грибы",
    "en": "Mushrooms",
    "de": "Pilze",
-   "count": 13
+   "count": 15
   },
   {
    "id": "nuts_dried",
@@ -197,7 +197,7 @@
    "ru": "Свежий хлеб и булочки",
    "en": "Fresh bread & rolls",
    "de": "Ofenfrisches Brot & Gebäck",
-   "count": 374
+   "count": 373
   },
   {
    "id": "bread_packed",
@@ -221,7 +221,7 @@
    "ru": "Пирожные, кексы, сдоба",
    "en": "Cakes & pastries",
    "de": "Kuchen, Plunder & Mehlspeisen",
-   "count": 505
+   "count": 503
   },
   {
    "id": "breadcrumbs",
@@ -269,7 +269,7 @@
    "ru": "Маринованное мясо, гриль, прочее",
    "en": "Marinated & other meat",
    "de": "Fleisch-Spezialitäten",
-   "count": 97
+   "count": 112
   },
   {
    "id": "sausages",
@@ -293,7 +293,7 @@
    "ru": "Нарезка, салями, бекон",
    "en": "Cold cuts, salami & bacon",
    "de": "Aufschnitt, Salami & Speck",
-   "count": 351
+   "count": 353
   },
   {
    "id": "feinkost",
@@ -301,7 +301,7 @@
    "ru": "Прилавок Feinkost (на развес)",
    "en": "Deli counter (by weight)",
    "de": "Feinkost-Theke",
-   "count": 225
+   "count": 191
   },
   {
    "id": "meat_alt",
@@ -349,7 +349,7 @@
    "ru": "Мягкий сыр, сыр для жарки",
    "en": "Soft & grilling cheese",
    "de": "Weichkäse & Grillkäse",
-   "count": 265
+   "count": 267
   },
   {
    "id": "milk",
@@ -365,7 +365,7 @@
    "ru": "Йогурт и скир",
    "en": "Yogurt & skyr",
    "de": "Joghurt & Skyr",
-   "count": 454
+   "count": 459
   },
   {
    "id": "cream",
@@ -373,7 +373,7 @@
    "ru": "Сливки, сметана, творог (Topfen)",
    "en": "Cream, sour cream & quark",
    "de": "Rahm, Obers & Topfen",
-   "count": 198
+   "count": 199
   },
   {
    "id": "butter",
@@ -405,7 +405,7 @@
    "ru": "Растительные йогурты и сыры",
    "en": "Plant-based yogurt & cheese",
    "de": "Pflanzliche Alternativen",
-   "count": 105
+   "count": 104
   },
   {
    "id": "eggs",
@@ -453,7 +453,7 @@
    "ru": "Макароны",
    "en": "Pasta",
    "de": "Teigwaren / Pasta",
-   "count": 556
+   "count": 559
   },
   {
    "id": "rice",
@@ -485,7 +485,7 @@
    "ru": "Томаты, пассата, соусы для пасты, песто",
    "en": "Tomatoes, passata, pasta sauces & pesto",
    "de": "Tomatenprodukte, Sugo & Pesto",
-   "count": 225
+   "count": 223
   },
   {
    "id": "canned_veg",
@@ -493,7 +493,7 @@
    "ru": "Овощные консервы, фасоль, нут",
    "en": "Canned vegetables & beans",
    "de": "Gemüsekonserven & Hülsenfrüchte",
-   "count": 289
+   "count": 291
   },
   {
    "id": "pickles",
@@ -517,7 +517,7 @@
    "ru": "Готовые блюда и супы (не в холодильнике)",
    "en": "Shelf-stable meals & soups",
    "de": "Fertiggerichte & Suppen",
-   "count": 411
+   "count": 410
   },
   {
    "id": "canned_spreads",
@@ -541,7 +541,7 @@
    "ru": "Кетчуп, горчица, майонез, соусы",
    "en": "Ketchup, mustard, mayo & sauces",
    "de": "Saucen, Senf & Dressings",
-   "count": 404
+   "count": 407
   },
   {
    "id": "spices",
@@ -565,7 +565,7 @@
    "ru": "Мука",
    "en": "Flour",
    "de": "Mehl",
-   "count": 111
+   "count": 112
   },
   {
    "id": "sugar",
@@ -573,7 +573,7 @@
    "ru": "Сахар и подсластители",
    "en": "Sugar & sweeteners",
    "de": "Zucker & Süßungsmittel",
-   "count": 102
+   "count": 104
   },
   {
    "id": "baking_aids",
@@ -581,7 +581,7 @@
    "ru": "Разрыхлитель, дрожжи, ваниль, орехи",
    "en": "Baking powder, yeast & baking aids",
    "de": "Backpulver, Germ & Backzutaten",
-   "count": 379
+   "count": 383
   },
   {
    "id": "dessert_mixes",
@@ -621,7 +621,7 @@
    "ru": "Мюсли, хлопья, овсянка",
    "en": "Muesli, cereal & oats",
    "de": "Müsli, Cerealien & Haferflocken",
-   "count": 326
+   "count": 325
   },
   {
    "id": "sweet_spreads",
@@ -653,7 +653,7 @@
    "ru": "Чай и какао",
    "en": "Tea & cocoa",
    "de": "Tee & Kakao",
-   "count": 497
+   "count": 501
   },
   {
    "id": "chocolate",
@@ -661,7 +661,7 @@
    "ru": "Шоколад и конфеты",
    "en": "Chocolate & sweets",
    "de": "Schokolade & Süßes",
-   "count": 1526
+   "count": 1514
   },
   {
    "id": "biscuits",
@@ -677,7 +677,7 @@
    "ru": "Чипсы и солёные снеки",
    "en": "Crisps & salty snacks",
    "de": "Chips & Knabbereien",
-   "count": 618
+   "count": 617
   },
   {
    "id": "bars",
@@ -701,7 +701,7 @@
    "ru": "Вода",
    "en": "Water",
    "de": "Mineralwasser",
-   "count": 339
+   "count": 337
   },
   {
    "id": "juice",
@@ -717,7 +717,7 @@
    "ru": "Лимонады, холодный чай, энергетики",
    "en": "Soft drinks, iced tea & energy drinks",
    "de": "Limonaden, Eistee & Energydrinks",
-   "count": 888
+   "count": 891
   },
   {
    "id": "syrup",
@@ -765,7 +765,7 @@
    "ru": "Замороженные овощи и зелень",
    "en": "Frozen vegetables & herbs",
    "de": "TK-Gemüse & Kräuter",
-   "count": 211
+   "count": 208
   },
   {
    "id": "frozen_fruit",
@@ -773,7 +773,7 @@
    "ru": "Замороженные фрукты и ягоды",
    "en": "Frozen fruit & berries",
    "de": "TK-Obst",
-   "count": 45
+   "count": 46
   },
   {
    "id": "frozen_meat",
@@ -789,7 +789,7 @@
    "ru": "Картофель фри и др.",
    "en": "Frozen fries & potato products",
    "de": "Pommes & Kartoffelprodukte",
-   "count": 83
+   "count": 82
   },
   {
    "id": "frozen_pizza",
@@ -797,7 +797,7 @@
    "ru": "Пицца и багеты",
    "en": "Frozen pizza & baguettes",
    "de": "Pizza & Baguette",
-   "count": 181
+   "count": 182
   },
   {
    "id": "frozen_meals",
@@ -805,7 +805,7 @@
    "ru": "Готовые блюда, кнёдели",
    "en": "Frozen meals & dumplings",
    "de": "TK-Gerichte & Knödel",
-   "count": 251
+   "count": 252
   },
   {
    "id": "frozen_sweets",
@@ -813,7 +813,7 @@
    "ru": "Мороженое и выпечка",
    "en": "Ice cream & frozen desserts",
    "de": "Eis & Mehlspeisen",
-   "count": 540
+   "count": 539
   }
  ],
  "concepts": [
@@ -9133,20 +9133,20 @@
   {
    "key": "billa",
    "name": "Billa",
-   "count": 9260,
-   "fetched": "2026-10-21"
+   "count": 9261,
+   "fetched": "2026-10-23"
   },
   {
    "key": "spar",
    "name": "Spar",
-   "count": 12860,
-   "fetched": "2026-10-21"
+   "count": 12826,
+   "fetched": "2026-10-23"
   },
   {
    "key": "penny",
    "name": "Penny",
-   "count": 281,
-   "fetched": "2026-10-21"
+   "count": 306,
+   "fetched": "2026-10-23"
   }
  ]
 }

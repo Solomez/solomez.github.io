@@ -1,7 +1,7 @@
 {
  "meta": {
-  "generated": "2026-10-21",
-  "price_date": "2026-10-21",
+  "generated": "2026-10-23",
+  "price_date": "2026-10-23",
   "schema": 2,
   "departments": [
    {
@@ -3152,7 +3152,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.44,
+    "cost": 2.46,
     "kcal": 712,
     "protein": 44.7,
     "fat": 15.1,
@@ -3187,8 +3187,8 @@
      "key": "bell_pepper",
      "name_ru": "Сладкий перец (болгарский)",
      "grams_per_serving": 75.0,
-     "cost_per_serving": 0.427,
-     "store": "Penny",
+     "cost_per_serving": 0.449,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -4839,7 +4839,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.44,
+    "cost": 2.46,
     "kcal": 905,
     "protein": 42.3,
     "fat": 46.7,
@@ -4866,8 +4866,8 @@
      "key": "bell_pepper",
      "name_ru": "Сладкий перец (болгарский, красный)",
      "grams_per_serving": 75.0,
-     "cost_per_serving": 0.427,
-     "store": "Penny",
+     "cost_per_serving": 0.449,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -6085,7 +6085,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.51,
+    "cost": 2.37,
     "kcal": 784,
     "protein": 44.2,
     "fat": 22.7,
@@ -6096,7 +6096,7 @@
      "key": "chicken_thigh_fillet",
      "name_ru": "Куриные бёдра (филе без кожи)",
      "grams_per_serving": 130.0,
-     "cost_per_serving": 1.136,
+     "cost_per_serving": 0.973,
      "store": "Penny",
      "is_estimate": false
     },
@@ -6120,8 +6120,8 @@
      "key": "bell_pepper",
      "name_ru": "Сладкий перец (болгарский)",
      "grams_per_serving": 75.0,
-     "cost_per_serving": 0.427,
-     "store": "Penny",
+     "cost_per_serving": 0.449,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -6888,7 +6888,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.5,
+    "cost": 2.52,
     "kcal": 792,
     "protein": 49.9,
     "fat": 24.6,
@@ -6923,8 +6923,8 @@
      "key": "bell_pepper",
      "name_ru": "Сладкий перец (болгарский)",
      "grams_per_serving": 75.0,
-     "cost_per_serving": 0.427,
-     "store": "Penny",
+     "cost_per_serving": 0.449,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -7329,7 +7329,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.52,
+    "cost": 2.3,
     "kcal": 746,
     "protein": 40.3,
     "fat": 21.7,
@@ -7340,16 +7340,16 @@
      "key": "turkey_breast",
      "name_ru": "Филе индейки (грудка)",
      "grams_per_serving": 125.0,
-     "cost_per_serving": 1.499,
-     "store": "Spar",
+     "cost_per_serving": 1.249,
+     "store": "Penny",
      "is_estimate": false
     },
     {
      "key": "bell_pepper",
      "name_ru": "Сладкий перец (болгарский, лучше красный)",
      "grams_per_serving": 75.0,
-     "cost_per_serving": 0.427,
-     "store": "Penny",
+     "cost_per_serving": 0.449,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -9122,7 +9122,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.4,
+    "cost": 2.42,
     "kcal": 838,
     "protein": 53.6,
     "fat": 43.4,
@@ -9165,8 +9165,8 @@
      "key": "bell_pepper",
      "name_ru": "Сладкий перец (болгарский)",
      "grams_per_serving": 75.0,
-     "cost_per_serving": 0.427,
-     "store": "Penny",
+     "cost_per_serving": 0.449,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -10022,7 +10022,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.38,
+    "cost": 2.14,
     "kcal": 707,
     "protein": 42.5,
     "fat": 20.3,
@@ -10033,7 +10033,7 @@
      "key": "chicken_thigh_fillet",
      "name_ru": "Куриные бёдра (филе без кожи)",
      "grams_per_serving": 190.0,
-     "cost_per_serving": 1.66,
+     "cost_per_serving": 1.423,
      "store": "Penny",
      "is_estimate": false
     },
@@ -10465,7 +10465,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.54,
+    "cost": 2.33,
     "kcal": 661,
     "protein": 37.5,
     "fat": 23.5,
@@ -10476,7 +10476,7 @@
      "key": "chicken_thigh_fillet",
      "name_ru": "Куриные бёдра (филе без кожи)",
      "grams_per_serving": 180.0,
-     "cost_per_serving": 1.573,
+     "cost_per_serving": 1.348,
      "store": "Penny",
      "is_estimate": false
     },
@@ -10508,8 +10508,8 @@
      "key": "bell_pepper",
      "name_ru": "Сладкий перец (болгарский)",
      "grams_per_serving": 67.5,
-     "cost_per_serving": 0.385,
-     "store": "Penny",
+     "cost_per_serving": 0.404,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -10909,7 +10909,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.43,
+    "cost": 2.27,
     "kcal": 766,
     "protein": 56.0,
     "fat": 33.5,
@@ -10920,7 +10920,7 @@
      "key": "chicken_thigh_fillet",
      "name_ru": "Куриные бёдра (филе без кожи)",
      "grams_per_serving": 125.0,
-     "cost_per_serving": 1.092,
+     "cost_per_serving": 0.936,
      "store": "Penny",
      "is_estimate": false
     },
@@ -10976,8 +10976,8 @@
      "key": "bell_pepper",
      "name_ru": "Сладкий перец (болгарский)",
      "grams_per_serving": 20.0,
-     "cost_per_serving": 0.114,
-     "store": "Penny",
+     "cost_per_serving": 0.12,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -11341,7 +11341,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.4,
+    "cost": 2.19,
     "kcal": 704,
     "protein": 42.8,
     "fat": 24.4,
@@ -11352,7 +11352,7 @@
      "key": "chicken_thigh_fillet",
      "name_ru": "Куриные бёдра (филе без кожи)",
      "grams_per_serving": 165.0,
-     "cost_per_serving": 1.442,
+     "cost_per_serving": 1.235,
      "store": "Penny",
      "is_estimate": false
     },
@@ -12183,7 +12183,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.55,
+    "cost": 2.3,
     "kcal": 809,
     "protein": 48.6,
     "fat": 31.9,
@@ -12194,8 +12194,8 @@
      "key": "turkey_breast",
      "name_ru": "Филе индейки (грудка)",
      "grams_per_serving": 125.0,
-     "cost_per_serving": 1.499,
-     "store": "Spar",
+     "cost_per_serving": 1.249,
+     "store": "Penny",
      "is_estimate": false
     },
     {
@@ -13453,7 +13453,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.4,
+    "cost": 2.42,
     "kcal": 759,
     "protein": 42.3,
     "fat": 37.9,
@@ -13488,8 +13488,8 @@
      "key": "bell_pepper",
      "name_ru": "Сладкий перец (болгарский)",
      "grams_per_serving": 67.5,
-     "cost_per_serving": 0.385,
-     "store": "Penny",
+     "cost_per_serving": 0.404,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -16430,7 +16430,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.22,
+    "cost": 1.97,
     "kcal": 703,
     "protein": 42.2,
     "fat": 14.3,
@@ -16441,8 +16441,8 @@
      "key": "turkey_breast",
      "name_ru": "Филе индейки (грудка)",
      "grams_per_serving": 125.0,
-     "cost_per_serving": 1.499,
-     "store": "Spar",
+     "cost_per_serving": 1.249,
+     "store": "Penny",
      "is_estimate": false
     },
     {
@@ -17571,7 +17571,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.4,
+    "cost": 2.42,
     "kcal": 770,
     "protein": 42.9,
     "fat": 36.9,
@@ -17598,8 +17598,8 @@
      "key": "bell_pepper",
      "name_ru": "Сладкий перец (болгарский)",
      "grams_per_serving": 75.0,
-     "cost_per_serving": 0.427,
-     "store": "Penny",
+     "cost_per_serving": 0.449,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -18337,7 +18337,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.32,
+    "cost": 2.07,
     "kcal": 710,
     "protein": 43.7,
     "fat": 22.2,
@@ -18348,7 +18348,7 @@
      "key": "chicken_thigh_fillet",
      "name_ru": "Куриные бёдра (филе без кожи)",
      "grams_per_serving": 200.0,
-     "cost_per_serving": 1.748,
+     "cost_per_serving": 1.497,
      "store": "Penny",
      "is_estimate": false
     },
@@ -18751,7 +18751,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.39,
+    "cost": 2.21,
     "kcal": 802,
     "protein": 47.7,
     "fat": 33.3,
@@ -18770,7 +18770,7 @@
      "key": "chicken_thigh_fillet",
      "name_ru": "Куриные бёдра (филе без кожи)",
      "grams_per_serving": 150.0,
-     "cost_per_serving": 1.311,
+     "cost_per_serving": 1.123,
      "store": "Penny",
      "is_estimate": false
     },
@@ -19559,7 +19559,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.39,
+    "cost": 2.2,
     "kcal": 861,
     "protein": 43.5,
     "fat": 36.3,
@@ -19578,7 +19578,7 @@
      "key": "chicken_thigh_fillet",
      "name_ru": "Куриные бёдра (филе без кожи)",
      "grams_per_serving": 150.0,
-     "cost_per_serving": 1.311,
+     "cost_per_serving": 1.123,
      "store": "Penny",
      "is_estimate": false
     },
@@ -20341,7 +20341,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.4,
+    "cost": 2.15,
     "kcal": 781,
     "protein": 49.2,
     "fat": 22.1,
@@ -20352,8 +20352,8 @@
      "key": "turkey_breast",
      "name_ru": "Филе индейки (грудка)",
      "grams_per_serving": 125.0,
-     "cost_per_serving": 1.499,
-     "store": "Spar",
+     "cost_per_serving": 1.249,
+     "store": "Penny",
      "is_estimate": false
     },
     {
@@ -27539,7 +27539,7 @@
      "name_ru": "Какао-напиток растворимый",
      "grams_per_serving": 20.0,
      "cost_per_serving": 0.107,
-     "store": "Billa",
+     "store": "Spar",
      "is_estimate": false
     }
    ],
@@ -29434,7 +29434,7 @@
      "name_ru": "Какао-напиток растворимый",
      "grams_per_serving": 20.0,
      "cost_per_serving": 0.107,
-     "store": "Billa",
+     "store": "Spar",
      "is_estimate": false
     }
    ],
@@ -30188,7 +30188,7 @@
    "notes": "",
    "tools": [],
    "per_serving": {
-    "cost": 0.89,
+    "cost": 0.91,
     "kcal": 364,
     "protein": 12.2,
     "fat": 26.2,
@@ -30215,8 +30215,8 @@
      "key": "bell_pepper",
      "name_ru": "Сладкий перец (болгарский)",
      "grams_per_serving": 75.0,
-     "cost_per_serving": 0.427,
-     "store": "Penny",
+     "cost_per_serving": 0.449,
+     "store": "Spar",
      "is_estimate": false
     }
    ],
