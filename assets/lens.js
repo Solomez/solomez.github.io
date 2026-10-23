@@ -131,8 +131,9 @@
   const FS = `
     precision highp float;
     uniform sampler2D tMap;
-    uniform float uChroma, uRadius, uFx, uFade0, uFade1;
+    uniform float uChroma, uRadius, uFx, uFade0, uFade1, uRing;
     uniform vec2 uSize, uUvScale, uUvOffset;
+    uniform vec4 uRingC;           // the ring over a video of the new pages: colour (straight alpha); uRing: its width, css px
     varying vec2 vUv;
     varying float vEdge;
     varying float vY;
@@ -144,13 +145,16 @@
       float r = texture2D(tMap, uv + vec2(ca, 0.0)).r;
       float b = texture2D(tMap, uv - vec2(ca, 0.0)).b;
       float mask = clamp((vY - uFade0) / (uFade1 - uFade0), 0.0, 1.0);   // cross-fade over the page above the curtain
-      if (uRadius > 0.0) {                                        // rounded corners of pictures and videos
-        vec2 q = abs(vUv * uSize - uSize * 0.5) - uSize * 0.5 + uRadius;
-        float d = min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - uRadius;
-        mask *= 1.0 - smoothstep(0.0, 1.5, d);
-      }
+      vec2 q = abs(vUv * uSize - uSize * 0.5) - uSize * 0.5 + uRadius;
+      float d = min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - uRadius;   // distance to the rounded edge, < 0 inside
+      if (uRadius > 0.0) mask *= 1.0 - smoothstep(0.0, 1.5, d);   // rounded corners of pictures and videos
       vec3 rgb = mix(base.rgb, vec3(r, base.g, b), fx);
-      gl_FragColor = vec4(rgb * base.a, base.a) * mask;
+      vec4 col = vec4(rgb * base.a, base.a);
+      if (uRing > 0.0) {                                          // the ring along the inside of the edge, ~1 px soft
+        float ra = uRingC.a * smoothstep(-uRing - 0.5, -uRing + 0.5, d);
+        col = vec4(uRingC.rgb * ra, ra) + col * (1.0 - ra);
+      }
+      gl_FragColor = col * mask;
     }`;
   let U = {}, aUv = 0, grids = new Map(), prog = null;
   function initGL() {
@@ -166,7 +170,7 @@
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
     gl.useProgram(prog);
     U = {};
-    ['uRes', 'uCanvas', 'uRect', 'uZone', 'uFan', 'uPow', 'tMap', 'uChroma', 'uRadius', 'uFx', 'uFade0', 'uFade1', 'uSize', 'uUvScale', 'uUvOffset']
+    ['uRes', 'uCanvas', 'uRect', 'uZone', 'uFan', 'uPow', 'tMap', 'uChroma', 'uRadius', 'uFx', 'uFade0', 'uFade1', 'uSize', 'uUvScale', 'uUvOffset', 'uRing', 'uRingC']
       .forEach((n) => { U[n] = gl.getUniformLocation(prog, n); });
     aUv = gl.getAttribLocation(prog, 'aUv');
     gl.enableVertexAttribArray(aUv);
@@ -213,7 +217,7 @@
   const SEL = (home
     ? ['.h-striped', '.h-card', '.h-clip-back', '.h-clip-front', '.h-h2', '.h-cover', '.h-case-title', '.h-case-desc',
       '.h-contact', '.h-row', '.h-sticker', '.h-copy', '.pg-title', '.pg-body > *',
-      '.pg-facts', '.pg-note', '.pg-next', '.pg-figure video', '.vbox > .h-ring']   // a video's ring: over its twin                     // the case pages (REDESIGN_CASES.md)
+      '.pg-facts', '.pg-note', '.pg-next', '.pg-figure video']                     // the case pages (REDESIGN_CASES.md)
     : ['h1.title', '.b-text .leaf', '.b-h2 h2', '.b-h3 h3', '.b-list .row', '.b-page .pg', '.b-file .file', '.b-next .next',
       '.b-toggle > summary', '.b-callout .box', '.b-divider > div', '.cap', '.b-image img', '.b-video video',
       '.page-icon img', '.cover img']).join(', ');
@@ -574,11 +578,23 @@
           ? { el: L.el, tex: texture(L.el), v: L.el.glassV, dx: L.dx, dy: L.dy, w: L.w, h: L.h }
           : { tex: texture(L.c) }));
       }
+      if (t.kind === 'video') t.ring = ringOf(t.el);
       const rr = getComputedStyle(t.el).borderTopLeftRadius;
       t.radius = home ? Math.min(len(rr, Math.min(t.w, t.h)), t.w / 2, t.h / 2) : parseFloat(rr) || 0;
       t.ready = true;
       dirty = true; wake();
     } catch (e) { /* this twin stays plain */ } finally { t.busy = false; }
+  }
+  // the 2 px ring over a video of the new pages (home.css .h-ring, an inset shadow) is drawn by the shader, so it shows over
+  // a playing video drawn whole and in the bend (designer, 2026-10-23: «в случае если это видео, когда оно начинает
+  // проигрываться обводка перестает появляться»). Old pages have no ring: nothing changes there.
+  function ringOf(el) {
+    const n = home && el.parentElement && el.parentElement.querySelector(':scope > .h-ring');
+    const s = n && shadowsOf(getComputedStyle(n)).find((x) => x.inset);
+    const m = s && /rgba?\(([^)]+)\)/.exec(s.color);
+    if (!m || !(s.spread > 0)) return null;
+    const [r, g, b, a = 1] = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+    return { w: s.spread, c: [r / 255, g / 255, b / 255, a] };
   }
   function evict(t) {
     t.gen++;
@@ -851,8 +867,10 @@
     return true;
   }
   // one quad of the current program: a texture over a box on the target (css px)
-  function quad(tex, left, top, width, height, radius, sx, syc, ox, oy) {
+  function quad(tex, left, top, width, height, radius, sx, syc, ox, oy, ring) {
     gl.uniform4f(U.uRect, left, top, width, height);
+    gl.uniform1f(U.uRing, ring ? ring.w : 0);
+    if (ring) gl.uniform4f(U.uRingC, ring.c[0], ring.c[1], ring.c[2], ring.c[3]);
     gl.uniform2f(U.uSize, width, height);
     gl.uniform1f(U.uRadius, radius);
     gl.uniform2f(U.uUvScale, sx, syc);
@@ -886,7 +904,7 @@
       const boxA = width / height, imgA = t.nw / t.nh;
       if (imgA > boxA * 1.001) { sx = boxA / imgA; ox = (1 - sx) / 2; } else if (imgA < boxA / 1.001) { syc = imgA / boxA; oy = (1 - syc) / 2; }
     }
-    quad(t.tex, left, top, width, height, t.radius || 0, sx, syc, ox, oy);
+    quad(t.tex, left, top, width, height, t.radius || 0, sx, syc, ox, oy, t.ring);
     if (!t.more) return;
     for (const L of t.more) {
       if (!L.el) { quad(L.tex, left, top, width, height, t.radius || 0, 1, 1, 0, 0); continue; }

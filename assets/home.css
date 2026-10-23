@@ -65,7 +65,7 @@ body.home {
   --home-highlight: rgba(255, 225, 77, 0.9);   /* marker #ffe14d @ 0.9, blend multiply */
   --home-highlight-blend: multiply;
   --home-divider: rgba(28, 19, 1, 0.11);       /* list rows, 2 px bottom border */
-  --home-media-stroke: rgba(28, 19, 1, 0.11);  /* 2 px ring over pictures (covers, case images, videos): the divider colour; may become #fff */
+  --home-media-stroke: rgba(28, 19, 1, 0.07);  /* 2 px ring over pictures (covers, case images, videos): the divider colour; may become #fff */
   --home-toc-active: #2c2c2b;
   --home-toc-idle: rgba(55, 53, 47, 0.16);     /* non-text, 1.33:1 — see SPEC questions */
   --home-clip-front: #0e100b;                  /* paper clip, front wire */
@@ -380,8 +380,9 @@ body.home .h-cover::after {   /* hover: the cover dims a little, as on the other
   transition: opacity var(--home-fast) ease-out;
 }
 body.home .h-case:hover .h-cover::after { opacity: 0.04; }
-/* a 2 px ring over the edge of every picture, so a light screenshot does not melt into the grey page (designer,
-   2026-10-23: «обводку небольшую добавить 2px, а то сливается контент»). An element after the picture (an img's own
+/* a 2 px ring over the edge of a picture, so a light screenshot does not melt into the grey page (designer,
+   2026-10-23: «обводку небольшую добавить 2px, а то сливается контент»), only on pictures whose block has «Обводка»
+   («только там где есть проблема с контрастностью»). An element after the picture (an img's own
    inset shadow paints under it), following the corner radius; lens.js paints it into the twins */
 body.home .h-ring { position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 2px var(--home-media-stroke); pointer-events: none; }
 /* hover and keyboard focus: the cover with its chips grows by 2% (designer, 2026-10-22: «чтобы фотография вместе с
