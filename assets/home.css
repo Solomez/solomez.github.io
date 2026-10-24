@@ -430,7 +430,10 @@ body.home .h-quote blockquote { margin: 0; font: var(--home-type-desc); color: v
 body.home .h-quote figcaption p { margin: 0; font: var(--home-type-small); color: var(--home-text-muted); }
 body.home .h-quote a { color: inherit; text-decoration: underline; text-decoration-color: currentColor; }
 body.home .h-quote a:hover { opacity: 0.7; }
-body.home .h-cards + .h-quote { margin-top: 64px; }
+body.home .h-quotes { width: var(--home-column); max-width: 100%; display: flex; flex-direction: column; gap: 16px; }
+body.home .h-quote blockquote p { margin: 0; }
+body.home .h-quote blockquote p + p { margin-top: 12px; }
+body.home .h-cards + .h-quotes { margin-top: 64px; }
 
 /* ---------- contact ---------- */
 body.home .h-contact {
