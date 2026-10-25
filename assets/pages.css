@@ -138,15 +138,6 @@ body.pg .pg-file::after {
 }
 
 body.pg .pg-file:active { transform: scale(0.99); }
-/* hover and keyboard focus of the white rows (CV files, «Next case»): his Figma «Link» hover, node 237:10521 (designer,
-   2026-10-25): a 2 px blue ring #498EE3 at the row's edge, a 2 px gap of the page colour, the white card inside with
-   radius 22 and a soft 8 px shadow */
-body.pg :is(.pg-file, .pg-next) { isolation: isolate; transition: transform var(--home-fast) ease-out, box-shadow var(--home-fast) ease-out, background-color var(--home-fast) ease-out; }
-body.pg :is(.pg-file, .pg-next):is(:hover, :focus-visible) { background: transparent; box-shadow: inset 0 0 0 2px #498ee3; outline: none; }
-body.pg :is(.pg-file, .pg-next):is(:hover, :focus-visible)::after {
-  inset: 4px; z-index: -1; opacity: 1; background: var(--home-surface); border-radius: calc(var(--home-radius-file) - 2px);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.10);
-}
 body.pg .pg-file-ic { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 16px; background: var(--home-surface-subtle); }
 body.pg .pg-file-ic svg { width: 22px; height: 22px; fill: currentColor; }
 body.pg .pg-file-name { flex: 1; min-width: 0; font: var(--home-type-label); overflow-wrap: anywhere; }
@@ -302,6 +293,18 @@ html.pv-lock { overflow: hidden; scrollbar-gutter: stable; }
   .pv-prev { left: calc(50% - 60px); }
   .pv-next { right: calc(50% - 60px); }
 }
+
+/* hover and keyboard focus of the white rows (CV files, «Next case»): his Figma «Link» hover, node 237:10521 (designer,
+   2026-10-25): a 2 px blue ring #498EE3 at the row's edge, a 2 px gap of the page colour, the white card inside with
+   radius 22 and a soft 8 px shadow. The inner card is white in every state, so leaving the row never flashes dark
+   (designer, 2026-10-25: «когда я убираю курсор карточка темнеет»). */
+body.pg :is(.pg-file, .pg-next) { isolation: isolate; transition: transform var(--home-fast) ease-out, box-shadow var(--home-fast) ease-out, background-color var(--home-fast) ease-out; }
+body.pg :is(.pg-file, .pg-next)::after {
+  inset: 4px; z-index: -1; opacity: 0; background: var(--home-surface); border-radius: calc(var(--home-radius-file) - 2px);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.10); transition: opacity var(--home-fast) ease-out;
+}
+body.pg :is(.pg-file, .pg-next):is(:hover, :focus-visible) { background: transparent; box-shadow: inset 0 0 0 2px #498ee3; outline: none; }
+body.pg :is(.pg-file, .pg-next):is(:hover, :focus-visible)::after { opacity: 1; }
 
 @media print {
   @page { margin: 16mm 16mm 18mm; }
