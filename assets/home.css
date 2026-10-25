@@ -65,7 +65,7 @@ body.home {
   --home-highlight: rgba(255, 225, 77, 0.9);   /* marker #ffe14d @ 0.9, blend multiply */
   --home-highlight-blend: multiply;
   --home-divider: rgba(28, 19, 1, 0.11);       /* list rows, 2 px bottom border */
-  --home-media-stroke: rgba(28, 19, 1, 0.07);  /* 2 px ring over pictures (covers, case images, videos): the divider colour; may become #fff */
+  --home-media-stroke: rgba(16, 24, 40, 0.07); /* 2 px ring over pictures (covers, case images, videos); cool to sit on the #E6ECF7 media backing (designer chose it 2026-10-25), was the warm divider colour rgba(28, 19, 1, 0.07) */
   --home-toc-active: #2c2c2b;
   --home-toc-idle: rgba(55, 53, 47, 0.16);     /* non-text, 1.33:1 — see SPEC questions */
   --home-clip-front: #0e100b;                  /* paper clip, front wire */
