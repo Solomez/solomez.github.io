@@ -403,8 +403,10 @@
     ctx.fillStyle = getComputedStyle(panel).backgroundColor; ctx.fillRect(0, 0, pr.width, pr.height);
     if (stripes) drawCover(ctx, stripes, rel(stripes, panel));
     if (hero) { gl.deleteTexture(hero.lensTex); if (hero.sphereTex !== hero.lensTex) gl.deleteTexture(hero.sphereTex); hero = null; }
-    // narrower windows show the panel smaller (home.css, stage 6): the bevels and the turning point shrink with it
-    const k = Math.min(1, pr.width / 397);
+    // narrower windows show the panel smaller (home.css, stage 6) and a phone a lower one (review 12, 4.5): the bevels
+    // and the turning point shrink with the lens (320 px at full size; on a tablet the same as × panel width / 397)
+    const lw = lens ? lens.getBoundingClientRect().width : 0;
+    const k = Math.min(1, lw ? lw / 320 : pr.width / 397);
     const h = { lensTex: upload(c), sphereTex: null, map: [pr.width, pr.height], c: [pr.width / 2, pr.height / 2], lens: null, sphere: null, sphereTint: [0, 0, 0, 0],
       k, pLens: k < 1 ? { ...P.lens, depth: P.lens.depth * k } : P.lens, pSphere: k < 1 ? { ...P.sphere, depth: P.sphere.depth * k } : P.sphere };
     if (RING === 'a') {                                // the field over the whole panel; the lens and sphere discs stay empty
