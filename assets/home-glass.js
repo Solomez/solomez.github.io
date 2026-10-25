@@ -103,6 +103,10 @@
   };
   const pageBg = () => { const c = cs.backgroundColor; return !c || c === 'transparent' || /rgba\([^)]*,\s*0\)$/.test(c) ? '#fff' : c; };
 
+  // the WebGL set-up and everything after it wait for an idle moment (review 12, block 2, speed: on a phone with a 4x
+  // slower CPU it was one ~90 ms task right after the first paint). Meanwhile the CSS glass shows, as it always did
+  // until the first render; the drawn glass is the same, it only comes a moment later.
+  const boot = () => {
   // ------------------------------------------------------------------ WebGL: one canvas off the page
   const glc = document.createElement('canvas');
   const gl = glc.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false });
@@ -600,4 +604,6 @@
     for (const c of covers) io.observe(c);
   };
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start();
+  };
+  if (window.requestIdleCallback) requestIdleCallback(boot, { timeout: 1000 }); else setTimeout(boot, 200);
 })();

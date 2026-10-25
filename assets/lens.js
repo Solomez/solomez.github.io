@@ -942,14 +942,27 @@
   // only real controls: <main> itself takes focus from a plain click (tabindex -1 for the skip link), and lifting it
   // threw the page to its bottom (Chromium) or top (Safari sync); designer, 2026-10-25
   const CONTROL = 'a[href], button, input, select, textarea, summary, [role="button"], [tabindex]:not([tabindex="-1"])';
+  // the fixed nav at the top: a lifted control stops 12 px below it (review 12, block 2: a tall picture lifted out of the
+  // bend went under the nav, its focus ring hidden there); 0 when the nav is not at the top
+  const navEl = document.querySelector('.h-nav-in');
+  const navBottom = () => { const b = navEl ? navEl.getBoundingClientRect().bottom : 0; return b > 0 && b < H / 2 ? b : 0; };
   document.addEventListener('focusin', (e) => {
     if (off || !main.contains(e.target) || e.target === main || !e.target.matches(CONTROL)) return;
     requestAnimationFrame(() => {
       const r = e.target.getBoundingClientRect();
       const lim = H * (1 - P.zone) - FADE - 12;
+      // keyboard focus is also kept clear of the nav: Shift+Tab leaves a control at the top edge and a tall picture is
+      // centred, both under it; focus from a click lifts as before
+      let kb = true;
+      try { kb = e.target.matches(':focus-visible'); } catch (x) { /* an old browser: treat it as the keyboard */ }
+      const top = (kb ? navBottom() : 0) + 12;
       // in sync the browser cannot bring a focused link into view by itself: above the window, or anywhere below
-      if (sync && !off && r.top < 0) window.scrollBy(0, r.top - 12);
-      else if (r.bottom > lim && (r.top < H || (sync && !off))) window.scrollBy(0, r.bottom - lim);
+      if (sync && !off && r.top < (kb ? top : 0)) window.scrollBy(0, r.top - top);
+      else if (kb && r.top < top && r.bottom > 0) window.scrollBy(0, r.top - top);
+      else if (r.bottom > lim && (r.top < H || (sync && !off))) {
+        const up = kb ? Math.min(r.bottom - lim, r.top - top) : r.bottom - lim;   // out of the bend, never under the nav
+        if (up > 0) window.scrollBy(0, up);
+      }
     });
   });
 
