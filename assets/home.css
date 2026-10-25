@@ -344,13 +344,6 @@ body.home .h-card {
 body.home .h-intro { display: flex; flex-direction: column; gap: var(--home-gap-hero-text); }
 body.home .h-name { font: var(--home-type-name); color: var(--home-text-name); }
 body.home .h-lead { font: var(--home-type-lead); color: var(--home-text-body); text-wrap: pretty; }   /* Figma: text-wrap pretty */
-body.home .h-hole {   /* punch hole for the paper clip: 20 px, 2 px ring outside */
-  position: absolute; left: 357px; top: 20px; width: 20px; height: 20px; border-radius: 50%;
-  background: var(--home-bg); box-shadow: 0 0 0 2px var(--home-hole-stroke);
-}
-body.home .h-clip { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-body.home .h-clip-back { position: absolute; left: 752.16px; top: -6.47px; width: 23.7377px; height: 46.4658px; }
-body.home .h-clip-front { position: absolute; left: 747.79px; top: -10.25px; width: 31.4615px; height: 49.8838px; }
 
 /* ---------- buttons (Figma «Button»: Primary, Secondary) ---------- */
 body.home .h-actions { align-self: flex-start; display: flex; gap: var(--home-gap-actions); }
@@ -535,9 +528,6 @@ body.home.ring-a .h-sphere::after { display: none; }
   body.home .h-lens { left: 9.5718%; top: 10%; width: 80.6045%; height: 80%; }               /* 38, 40, 320 of 397 x 400 */
   body.home .h-sphere { left: 18.0554%; top: 18.42%; width: 63.6348%; height: 63.1575%; }    /* 71.68, 73.68, 252.63 */
   body.home .h-photo { left: 1.8842%; top: 1.9871%; width: 96.2633%; height: 96.2633%; }    /* 4.76, 5.02, 243.19 of 252.63 */
-  body.home .h-hole { left: auto; right: 20px; }
-  body.home .h-clip-back { left: auto; right: 24.1px; }      /* the clip keeps its place at the card's top right corner */
-  body.home .h-clip-front { left: auto; right: 20.75px; }
   body.home .h-cover { height: auto; aspect-ratio: 700 / 440; }
   body.home .h-foot { width: 100%; }   /* the page has its gutters now */
 }
@@ -552,12 +542,10 @@ body.home.ring-a .h-sphere::after { display: none; }
   }
   body.home [id] { scroll-margin-top: 24px; }
 
-  /* hero: the striped panel on top, the card under it; the paper clip moves with the card (its top: the panel's height,
-     397:400 of the width, as a margin, whose percentages count the width) */
+  /* hero: the striped panel on top, the card under it */
   body.home .h-hero { flex-direction: column; }
   body.home .h-striped, body.home .h-card { flex: none; width: 100%; }
   body.home .h-card { justify-content: flex-start; gap: 24px; }
-  body.home .h-clip { bottom: auto; height: 0; margin-top: calc(100% * 400 / 397 + var(--home-gap-hero-halves)); }
   body.home .h-actions { flex-wrap: wrap; }
   body.home .h-case { border-radius: calc(var(--home-radius-cover) + 4px); }
   body.home .h-chips { right: var(--home-chip-offset); flex-wrap: wrap; }

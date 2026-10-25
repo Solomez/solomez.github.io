@@ -215,13 +215,69 @@ body.pg .pg-flow > .pg-actions { display: flex; flex-wrap: wrap; gap: var(--home
 
 /* ---------- print (the CV first): black on white; no nav, glass, outline marks, lens or © line; a CV entry (role, dates,
    points) stays on one page; the PDF rows become plain lines ---------- */
+/* ---------- the media viewer of the cases (viewer.js; designer, 2026-10-25) ----------
+   a picture or video of a case opens larger: a dark, blurred backdrop, the media fitted to the window, its caption
+   under it, the count and ✕ on top, ‹ › at the sides (on a phone under the media) */
+body.pg .pg-figure[data-zoom] :is(.pg-media, .vbox), body.pg .pg-figure[data-zoom].b-video.auto video { cursor: zoom-in; }
+body.pg .pg-figure[data-zoom] :is(.pg-media, .vbox):focus-visible { outline: 2px solid var(--home-focus); outline-offset: 3px; }
+html.pv-lock { overflow: hidden; scrollbar-gutter: stable; }
+.pv {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0;
+  border: 0; background: transparent; color: #fff; overflow: hidden; font: var(--home-type-small);
+}
+.pv::backdrop { background: transparent; }
+.pv:focus { outline: none; }
+.pv-bg { position: absolute; inset: 0; background: rgba(14, 14, 16, 0.88); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) { .pv-bg { background: rgba(14, 14, 16, 0.96); } }
+.pv-stage { position: absolute; inset: 0; cursor: zoom-out; touch-action: pinch-zoom; }
+.pv-frame {
+  position: absolute; transform-origin: 0 0; border-radius: 14px; overflow: hidden; background: var(--home-cover-bg);
+  cursor: default; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+}
+.pv-frame > :is(img, video) { display: block; width: 100%; height: 100%; object-fit: contain; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
+.pv-vid > video { cursor: pointer; }
+.pv-vid > video:focus-visible { outline: 2px solid #fff; outline-offset: -4px; border-radius: 14px; }
+.pv-mark {
+  display: none; position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; place-items: center;
+  border-radius: 50%; background: rgba(25, 25, 25, 0.55); color: #fff; pointer-events: none;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.pv-mark svg { margin-left: 4px; }
+.pv-frame.stopped .pv-mark { display: grid; }
+.pv-cap { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; text-align: center; color: rgba(255, 255, 255, 0.78); text-wrap: pretty; }
+.pv-cap[hidden] { display: none; }
+.pv-bar {
+  position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px; pointer-events: none;
+}
+.pv-bar > * { pointer-events: auto; }
+.pv-count { padding-left: 4px; color: rgba(255, 255, 255, 0.72); font-variant-numeric: tabular-nums; }
+.pv-btn {
+  display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12); color: #fff; cursor: pointer; transition: background-color 0.15s ease, opacity 0.15s ease;
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+}
+.pv-btn[hidden] { display: none; }
+.pv-btn:disabled { opacity: 0.3; cursor: default; }
+.pv-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+@media (hover: hover) { .pv-btn:not(:disabled):hover { background: rgba(255, 255, 255, 0.24); } }
+.pv-prev, .pv-next { position: absolute; top: 50%; margin-top: -22px; }
+.pv-prev { left: 28px; }
+.pv-next { right: 28px; }
+@media (max-width: 767px) {
+  .pv-bar { padding: max(10px, env(safe-area-inset-top)) 12px 10px; }
+  .pv-prev, .pv-next { top: auto; bottom: calc(20px + env(safe-area-inset-bottom)); margin-top: 0; }
+  .pv-prev { left: calc(50% - 60px); }
+  .pv-next { right: calc(50% - 60px); }
+}
+
 @media print {
   @page { margin: 16mm 16mm 18mm; }
   body.pg {
     --home-bg: #fff; --home-text: #000; --home-text-secondary: #000; --home-text-body: #000; --home-text-muted: #333;
     background: #fff;
   }
-  body.pg :is(.h-nav, .h-toc, .h-skip, .pg-end, canvas, [data-lens], .vmark) { display: none !important; }
+  body.pg :is(.h-nav, .h-toc, .h-skip, .pg-end, canvas, [data-lens], .vmark, .pv) { display: none !important; }
   /* desktop Safari's sync mode (lens.js) fixes <main> to the window: print it in the flow */
   body.pg .h-main { position: static !important; transform: none !important; min-height: 0; padding: 0; }
   body.pg .pg-col { width: 100%; }
