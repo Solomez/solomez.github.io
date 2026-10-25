@@ -486,6 +486,8 @@ body.home .h-row:focus-visible { outline-offset: 4px; border-radius: 4px; }
 body.home .h-foot { width: 1126.85px; display: flex; flex-direction: column; align-items: center; gap: var(--home-gap-sticker-footer); }
 body.home .h-sticker { width: 1126.85px; height: 1338px; }
 body.home .h-copy { width: 100%; font: var(--home-type-small); color: var(--home-text-secondary); text-align: center; }
+body.home .h-credit { margin-top: calc(4px - var(--home-gap-sticker-footer)); font-size: 14px; line-height: 20px; color: var(--home-text-muted); }   /* where the stickers come from */
+body.home .h-credit-link { color: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
 
 body.home [id] { scroll-margin-top: 100px; }
 

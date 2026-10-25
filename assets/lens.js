@@ -939,8 +939,11 @@
     for (const t of tiles) if (t.more && t.ready && t.top - sy + t.h > fadeTop && t.top - sy < H) { dirty = true; wake(); return; }
   });
   // keyboard: a link or control reached with Tab that lands in the bend is lifted above it
+  // only real controls: <main> itself takes focus from a plain click (tabindex -1 for the skip link), and lifting it
+  // threw the page to its bottom (Chromium) or top (Safari sync); designer, 2026-10-25
+  const CONTROL = 'a[href], button, input, select, textarea, summary, [role="button"], [tabindex]:not([tabindex="-1"])';
   document.addEventListener('focusin', (e) => {
-    if (off || !main.contains(e.target)) return;
+    if (off || !main.contains(e.target) || e.target === main || !e.target.matches(CONTROL)) return;
     requestAnimationFrame(() => {
       const r = e.target.getBoundingClientRect();
       const lim = H * (1 - P.zone) - FADE - 12;
