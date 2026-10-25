@@ -477,7 +477,7 @@
     document.addEventListener('pointerover', (e) => {
       const h = e.target.closest ? e.target.closest(TRIG) : null;
       // no lens over the outline marks (too small) and the list rows (their letters flip; designer, 2026-10-22)
-      const on = !!h && !h.closest('.h-toc, .h-row');
+      const on = !!h && !h.closest('.h-toc, .h-row, .pg-file, .pg-next');   // file rows and «Next case» have their own blue hover ring (2026-10-25)
       const card = e.target.closest ? e.target.closest('.h-case') : null;
       if (card !== cur.card) { cur.card = card; cur.since = performance.now(); api.wake(); }
       cur.el = on ? h : null;
