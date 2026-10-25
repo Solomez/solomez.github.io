@@ -400,6 +400,7 @@ body.home .h-chip {
 }
 body.home .h-case-text { display: flex; flex-direction: column; gap: var(--home-gap-card-text); padding: 0 var(--home-pad-card-text); }
 body.home .h-case-title { font: var(--home-type-title); color: var(--home-text); }
+.nw { white-space: nowrap; }   /* hyphenated words in titles stay whole (build.py keep_compounds, review 12) */
 body.home .h-case-link::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; }   /* the whole card is the link */
 body.home .h-case-link:focus-visible { outline: none; }
 body.home .h-case:has(.h-case-link:focus-visible) { outline: 2px solid var(--home-focus); outline-offset: 4px; }
@@ -554,7 +555,7 @@ body.home.ring-a .h-sphere::after { display: none; }
 
   /* contact: the buttons wrap; the rose, smaller, peeks from the bottom right corner under them */
   body.home .h-contact { padding-bottom: 32px; }
-  body.home .h-rose { left: auto; top: auto; right: -52px; bottom: -66px; width: 190px; height: auto; }
+  body.home .h-rose { left: auto; top: auto; right: -60px; bottom: -104px; width: 190px; height: auto; }   /* clear of the buttons (review 12, 4.8) */
 
   body.home .h-row { height: 44px; }   /* a 44 px tap target */
 }

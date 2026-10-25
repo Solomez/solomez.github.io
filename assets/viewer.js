@@ -240,7 +240,7 @@
     });
   });
 
-  dlg.addEventListener('cancel', (e) => { e.preventDefault(); close(); });
+  dlg.addEventListener('cancel', (e) => { e.preventDefault(); viaKey = true; close(); });   // closed from the keyboard: focus goes back to the picture
   dlg.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
     else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }

@@ -215,6 +215,9 @@ body.pg .pg-flow > .pg-actions { display: flex; flex-wrap: wrap; gap: var(--home
 
 /* ---------- print (the CV first): black on white; no nav, glass, outline marks, lens or © line; a CV entry (role, dates,
    points) stays on one page; the PDF rows become plain lines ---------- */
+/* the 404 page: its secondary button sits on the page background, so it is white (review 12, 4.16) */
+body.pg .pg-actions .h-btn--secondary { background: var(--home-surface); }
+
 /* ---------- the media viewer of the cases (viewer.js; designer, 2026-10-25) ----------
    a picture or video of a case opens larger: a dark, blurred backdrop, the media fitted to the window, its caption
    under it, the count and ✕ on top, ‹ › at the sides (on a phone under the media) */
