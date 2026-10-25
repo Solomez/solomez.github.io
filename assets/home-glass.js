@@ -73,6 +73,17 @@
     if (r > 0) ROUND.roll = r; if (s >= 0) ROUND.spec = s; if (f >= 0) ROUND.fres = f; if (d >= 0) ROUND.shade = d;
   }
   const DISP = 0.1;                   // red bends (1 + DISP × dispersion) times green, blue (1 − DISP × dispersion)
+  // the chips are one component on every cover (review 12, 4.7: a 16 px bevel filled a 32 px chip, so a device edge or
+  // a dark corner under it was pulled in and magnified, and one row showed three materials). Now the bend stays in a
+  // narrow rim (bevel px), the backdrop inside is frosted (Gaussian, blur css px; `edge` of it at the rim, all of it in
+  // the middle), its contrast is evened toward the row's mean (even: 0 … 1), and the tint goes from the CSS tint at the
+  // rim to `tint` in the middle. The rim light stays. ?chip=bevel,blur,edge,tint,even; ?chip=0: as before
+  const CHIP = { bevel: 6, blur: 6, edge: 0.55, tint: 0.5, even: 0.7 };
+  if (qs.get('chip')) {
+    const [b, s, e, t, v] = qs.get('chip').split(',').map(Number);
+    if (qs.get('chip') === '0') CHIP.off = true;
+    if (b > 0) CHIP.bevel = b; if (s >= 0) CHIP.blur = s; if (e >= 0) CHIP.edge = e; if (t >= 0) CHIP.tint = t; if (v >= 0) CHIP.even = v;
+  }
 
   // ------------------------------------------------------------------ parameters from tokens.css
   const cs = getComputedStyle(body);
@@ -113,6 +124,9 @@
     uniform float uRound;          // 1: the hero's rounded rim and volume light; 0: the chips, as they were
     uniform vec4 uRoll;            // rounded rim: 1 − least stretch, slope gain, edge soft px, unused
     uniform vec4 uSpec, uFres;     // specular: strength, px in, half-width; Fresnel: strength, reach px, shade, its reach px
+    uniform sampler2D tSoft;       // the chips' frost: the backdrop, shrunk (a box blur)
+    uniform vec4 uFrost;           // frost at the rim, in the middle (0: none), the tint's alpha in the middle, blur css px
+    uniform vec4 uEven;            // the row's mean colour, how far the frost goes toward it
     varying vec2 vUv;
     vec2 spin(vec2 q) {
       vec2 v = q - uSpin.xy;
@@ -123,6 +137,14 @@
     float box(vec2 p, vec2 h, float r) {                        // signed distance to the rounded box, + outside
       vec2 q = abs(p) - h + r;
       return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
+    }
+    vec3 frost(vec2 at) {          // a Gaussian over the shrunk backdrop, 7 x 7 taps across ±2.4 sigma
+      vec3 acc = vec3(0.0); float sum = 0.0; float dx = uFrost.w / 1.25;
+      for (int i = -3; i <= 3; i++) for (int j = -3; j <= 3; j++) {
+        float w = exp(-0.5 * float(i * i + j * j) / 1.5625);
+        acc += w * texture2D(tSoft, mirror(spin(at + vec2(float(i), float(j)) * dx) / uMap)).rgb; sum += w;
+      }
+      return acc / sum;
     }
     void main() {
       vec2 h = uSize * 0.5;
@@ -149,7 +171,14 @@
       vec3 col = vec3(texture2D(tMap, mirror(spin(at - n * s * k.r) / uMap)).r,
                       texture2D(tMap, mirror(spin(at - n * s * k.g) / uMap)).g,
                       texture2D(tMap, mirror(spin(at - n * s * k.b) / uMap)).b);
-      col = mix(col, uTint.rgb, uTint.a);
+      float tintA = uTint.a;
+      if (uFrost.y > 0.0) {                                     // the chips: frost inside, the bend only at the rim
+        float mid = smoothstep(0.0, depth, d);                  // 0 at the rim … 1 inside the bevel
+        vec3 fr = mix(frost(at - n * s), uEven.rgb, uEven.a);
+        col = mix(col, fr, mix(uFrost.x, uFrost.y, mid));
+        tintA = mix(uTint.a, uFrost.z, mid);
+      }
+      col = mix(col, uTint.rgb, tintA);
       vec2 L = vec2(-cos(uAngle), sin(uAngle));                 // toward the light (315° = top left)
       float lit = dot(n, L);
       if (uRound > 0.5) {                                       // volume: specular band, Fresnel glow, far-side shade
@@ -228,14 +257,14 @@
     prog = link(FS);
     gl.useProgram(prog);
     U = {};
-    ['tMap', 'uSize', 'uRadius', 'uOrigin', 'uMap', 'uDepth', 'uRefr', 'uDisp', 'uAngle', 'uLight', 'uGain', 'uPower', 'uRim', 'uCap', 'uTint', 'uSpin', 'uWobble', 'uRound', 'uRoll', 'uSpec', 'uFres']
+    ['tMap', 'uSize', 'uRadius', 'uOrigin', 'uMap', 'uDepth', 'uRefr', 'uDisp', 'uAngle', 'uLight', 'uGain', 'uPower', 'uRim', 'uCap', 'uTint', 'uSpin', 'uWobble', 'uRound', 'uRoll', 'uSpec', 'uFres', 'tSoft', 'uFrost', 'uEven']
       .forEach((n) => { U[n] = gl.getUniformLocation(prog, n); });
     const vb = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vb);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]), gl.STATIC_DRAW);
     gl.enableVertexAttribArray(0);
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-    gl.uniform1i(U.tMap, 0);
+    gl.uniform1i(U.tMap, 0); gl.uniform1i(U.tSoft, 1);
     gl.uniform1f(U.uGain, T.gain); gl.uniform1f(U.uPower, T.power); gl.uniform1f(U.uRim, T.rim); gl.uniform1f(U.uCap, T.cap);
     gl.uniform4f(U.uRoll, 1 - ROUND.min, ROUND.roll, ROUND.aa, 0);
     gl.uniform4f(U.uSpec, ROUND.spec, ROUND.at, ROUND.w, 0); gl.uniform4f(U.uFres, ROUND.fres, ROUND.fw, ROUND.shade, ROUND.sw);
@@ -298,7 +327,7 @@
     if (!img.complete || !img.naturalWidth) { img.loading = 'eager'; await img.decode().catch(() => {}); }
   }
   // a piece: its glass rendered from the backdrop texture and copied into its own canvas
-  function render(el, box, tex, origin, map, p, tint, turn, wobble) {
+  function render(el, box, tex, origin, map, p, tint, turn, wobble, soft) {
     const dpr = dprOf();
     const pw = Math.ceil(box.width * dpr), ph = Math.ceil(box.height * dpr);
     if (glc.width < pw || glc.height < ph) { glc.width = Math.max(glc.width, pw); glc.height = Math.max(glc.height, ph); }
@@ -325,6 +354,11 @@
     gl.uniform3f(U.uSpin, t[0], t[1], t[2]);
     gl.uniform2f(U.uWobble, w[0], w[1]);
     gl.uniform1f(U.uRound, p.round ? 1 : 0);            // only the hero's lens and sphere
+    // the chips' frost (CHIP); every other piece: none (unit 1 still gets a texture, so nothing samples an empty unit)
+    gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, soft ? soft.tex : tex); gl.activeTexture(gl.TEXTURE0);
+    if (soft) gl.uniform4f(U.uFrost, CHIP.edge, 1, Math.max(CHIP.tint, tint[3]), CHIP.blur); else gl.uniform4f(U.uFrost, 0, 0, 0, 1);
+    const ev = soft && soft.mean ? soft.mean : [0, 0, 0, 0];
+    gl.uniform4f(U.uEven, ev[0], ev[1], ev[2], soft && soft.mean ? CHIP.even : 0);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     return copy(el, box, pw, ph, 'h-glass');
   }
@@ -352,6 +386,34 @@
   const rendered = new Map();                          // element -> the layout it was last drawn at
   const sizeKey = (el) => [el, ...el.querySelectorAll('.h-chip, .h-lens, .h-sphere, .h-photo')]
     .map((n) => { const r = n.getBoundingClientRect(); return `${r.left},${r.top},${r.width},${r.height}`; }).join(';') + '@' + dprOf();
+  // the chips' frost: the backdrop shrunk by halves to about 4 css px a pixel (each halving averages 2 x 2, so no detail
+  // flickers through), and the mean colour under the chips (rects: in the backdrop, css px; w: its width, css px)
+  function frostOf(c, rects, w) {
+    let src = c;
+    while (src.width / 2 >= w / 4 && src.width > 2 && src.height > 2) {
+      const h = document.createElement('canvas');
+      h.width = Math.max(1, Math.round(src.width / 2)); h.height = Math.max(1, Math.round(src.height / 2));
+      const x = h.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+      x.drawImage(src, 0, 0, h.width, h.height);
+      src = h;
+    }
+    let mean = null;
+    try {
+      const k = src.width / w, px = src.getContext('2d').getImageData(0, 0, src.width, src.height).data;
+      const acc = [0, 0, 0]; let n = 0;
+      for (const r of rects) {
+        for (let y = Math.floor(r.top * k); y < Math.ceil((r.top + r.height) * k); y++) {
+          for (let x = Math.floor(r.left * k); x < Math.ceil((r.left + r.width) * k); x++) {
+            if (x < 0 || y < 0 || x >= src.width || y >= src.height) continue;
+            const o = (y * src.width + x) * 4;
+            acc[0] += px[o]; acc[1] += px[o + 1]; acc[2] += px[o + 2]; n++;
+          }
+        }
+      }
+      if (n) mean = acc.map((v) => v / n / 255);
+    } catch (e) { /* a picture from elsewhere: no mean, the frost alone */ }
+    return { tex: upload(src), mean };
+  }
   async function renderCover(cover) {
     const chips = [...cover.querySelectorAll('.h-chip')];
     if (!chips.length) return;
@@ -363,7 +425,9 @@
     const st = getComputedStyle(cover);
     const rects = chips.map((c) => rel(c, cover));
     // the backdrop: the cover (its colour and picture within its corners) and the page around, as far as the bend reaches
-    const reach = Math.ceil(P.chip.depth * P.chip.refr * T.gain) + 4;   // the cap only shortens it
+    // the chips' glass: the bevel narrowed to CHIP.bevel (review 12, 4.7), unless ?chip=0
+    const pc = CHIP.off ? P.chip : { ...P.chip, depth: Math.min(P.chip.depth, CHIP.bevel) };
+    const reach = Math.ceil(pc.depth * pc.refr * T.gain + (CHIP.off ? 0 : 3 * CHIP.blur)) + 4;   // the cap only shortens it
     const x0 = Math.floor(Math.min(...rects.map((r) => r.left)) - reach), y0 = Math.floor(Math.min(...rects.map((r) => r.top)) - reach);
     const x1 = Math.ceil(Math.max(...rects.map((r) => r.left + r.width)) + reach), y1 = Math.ceil(Math.max(...rects.map((r) => r.top + r.height)) + reach);
     const [c, ctx] = sheet(x1 - x0, y1 - y0, dprOf());
@@ -373,12 +437,14 @@
     ctx.fillStyle = st.backgroundColor; ctx.fillRect(0, 0, cr.width, cr.height);
     if (img) drawCover(ctx, img, rel(img, cover));
     const tex = upload(c);
+    const soft = CHIP.off ? null : frostOf(c, rects.map((r) => ({ left: r.left - x0, top: r.top - y0, width: r.width, height: r.height })), x1 - x0);
     chips.forEach((chip, i) => {
       const tint = chip.classList.contains('glassed') ? rendered.get(chip).tint : tintOf(chip);
-      render(chip, rects[i], tex, [rects[i].left - x0, rects[i].top - y0], [x1 - x0, y1 - y0], P.chip, tint);
+      render(chip, rects[i], tex, [rects[i].left - x0, rects[i].top - y0], [x1 - x0, y1 - y0], pc, tint, null, null, soft);
       rendered.set(chip, { key: sizeKey(chip), tint });
     });
     gl.deleteTexture(tex);
+    if (soft) gl.deleteTexture(soft.tex);
     rendered.set(cover, { key: sizeKey(cover) });
     stat.ms += performance.now() - t0;
     done(cover);

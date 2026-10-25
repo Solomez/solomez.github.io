@@ -167,6 +167,10 @@ body.pg .pg-toggle > .pg-kids { margin-top: var(--home-gap-item); }
 @media (max-width: 767px) {
   body.pg .h-hl { white-space: normal; }
   body.pg .pg-file { gap: 12px; padding-right: 16px; }
+  /* About's recommendations: the author's line above the quote, as on the home page (review 12, recruiter 14.4) */
+  body.pg .pg-quote { display: flex; flex-direction: column; gap: var(--home-gap-text); }
+  body.pg .pg-quote > * { margin-top: 0; }
+  body.pg .pg-quote-by { order: -1; }
 }
 
 /* ---------- the case pages (REDESIGN_CASES.md: body.pg.pg-case) ---------- */
@@ -247,8 +251,24 @@ html.pv-lock { overflow: hidden; scrollbar-gutter: stable; }
 }
 .pv-mark svg { margin-left: 4px; }
 .pv-frame.stopped .pv-mark { display: grid; }
-.pv-cap { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; text-align: center; color: rgba(255, 255, 255, 0.78); text-wrap: pretty; }
+.pv-cap { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; text-align: center; color: rgba(255, 255, 255, 0.78); text-wrap: pretty; transition: opacity 0.2s ease-out; }
 .pv-cap[hidden] { display: none; }
+/* zoom (review 12, 4.12): a picture larger than it is fitted opens at its own pixels on a click (a double tap); the copy
+   lies in a scroller over the stage that pans by wheel, trackpad, finger or a mouse drag; a click goes back to fit */
+.pv-frame.pv-zoomable > img { cursor: zoom-in; }
+.pv-zoom {
+  position: absolute; inset: 0; overflow: auto; overscroll-behavior: contain; cursor: zoom-out;
+  touch-action: pan-x pan-y pinch-zoom; scrollbar-width: none; -webkit-user-select: none; user-select: none;
+}
+.pv-zoom::-webkit-scrollbar { display: none; }
+.pv-zoom[hidden] { display: none; }
+.pv-zoom.grabbing { cursor: grabbing; }
+.pv-zoom-in { position: relative; }
+.pv-zoom img {
+  position: absolute; display: block; max-width: none; transform-origin: 0 0; border-radius: 14px; background: var(--home-cover-bg);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35); -webkit-user-drag: none;
+}
+.pv.zoomed .pv-cap { opacity: 0; pointer-events: none; }
 .pv-bar {
   position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between;
   padding: 16px 24px; pointer-events: none;

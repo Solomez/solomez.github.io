@@ -318,6 +318,17 @@ body.home .h-mark.l3::before { left: -15px; right: -15px; }
 body.home .h-mark:hover { background: var(--home-toc-hover); }
 body.home .h-mark.on { background: var(--home-toc-active); }
 body.home .h-mark:focus-visible { outline-offset: 3px; }
+/* the section's name to the left of its mark on hover and keyboard focus (review 12, 4.13): a small white label, the
+   name from aria-label (screen readers keep reading the aria-label alone); clear of the 40 x 14 hit area */
+body.home .h-mark::after {
+  content: attr(aria-label); position: absolute; right: calc(100% + 16px); top: 50%; z-index: 1;
+  width: max-content; max-width: 300px; padding: 4px 10px; border-radius: 10px; box-sizing: border-box;
+  background: var(--home-surface); box-shadow: 0 2px 12px rgba(26, 26, 25, 0.08);
+  font: 400 14px/20px var(--home-font); color: var(--home-text-secondary); text-align: right; text-wrap: balance; overflow-wrap: break-word;
+  opacity: 0; transform: translate(4px, -50%); pointer-events: none; transition: opacity var(--home-fast) ease-out, transform var(--home-fast) ease-out;
+}
+body.home .h-mark:is(:hover, :focus-visible)::after { opacity: 1; transform: translate(0, -50%); }
+@media (prefers-reduced-motion: reduce) { body.home .h-mark::after { transition: none; transform: translate(0, -50%); } }
 
 /* ---------- hero: 800 x 400, 50 px wider than the column on each side ---------- */
 body.home .h-hero { position: relative; flex: none; display: flex; gap: var(--home-gap-hero-halves); width: var(--home-hero-width); height: 400px; }
@@ -410,7 +421,7 @@ body.home .h-case-desc { font: var(--home-type-desc); color: var(--home-text-sec
    multiply as in Figma. The padding stretches the background over the whole line box without moving the text. */
 body.home .h-hl {
   color: inherit; background: var(--home-marker) no-repeat 0 4px / 100% 20px;
-  padding: 3px 5px; margin: 0 -5px;   /* 3 = (28 line − 22 content area of Google Sans 18 px) / 2 */
+  padding: 3px; margin: 0 -3px;   /* 3 = (28 line − 22 content area of Google Sans 18 px) / 2; 3 px past the words, not touching the word before (review 12, 4.15) */
   mix-blend-mode: var(--home-highlight-blend);
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
@@ -559,13 +570,16 @@ body.home.ring-a .h-sphere::after { display: none; }
   body.home .h-case { border-radius: calc(var(--home-radius-cover) + 4px); }
   body.home .h-chips { right: var(--home-chip-offset); flex-wrap: wrap; }
   /* marker for the 16/24 description: the same band, scaled to the line */
-  body.home .h-hl { padding: 2.2px 4.5px; margin: 0 -4.5px; background-position: 0 3.5px; background-size: 100% 17px; white-space: nowrap; }   /* one band, never split */
+  body.home .h-hl { padding: 2.2px 2.7px; margin: 0 -2.7px; background-position: 0 3.5px; background-size: 100% 17px; white-space: nowrap; }   /* one band, never split */
 
   /* contact: the buttons wrap; the rose, smaller, peeks from the bottom right corner under them */
   body.home .h-contact { padding-bottom: 32px; }
   body.home .h-rose { left: auto; top: auto; right: -60px; bottom: -104px; width: 190px; height: auto; }   /* clear of the buttons (review 12, 4.8) */
 
   body.home .h-row { height: 44px; }   /* a 44 px tap target */
+
+  /* a recommendation: who wrote it above the quote, so the author shows before 15 lines of text (review 12, recruiter 14.4) */
+  body.home .h-quote figcaption { order: -1; }
 }
 @media (max-width: 374px) {   /* 360: the nav and the hero buttons still fit in one row */
   body.home .h-striped { --hs: 180px; }   /* a shorter screen: the panel lower still */

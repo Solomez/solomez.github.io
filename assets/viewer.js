@@ -4,7 +4,11 @@
 // - the media grows from its place on the page to fit the window and goes back there on close (reduced motion: a fade);
 // - ← → or the side buttons go through the case's media, Esc, ✕ or a click outside closes; on a phone a swipe
 //   sideways changes the media, a swipe down closes;
-// - a video plays on from where it was; a click on it pauses, as on the page. The page's videos wait meanwhile.
+// - a video plays on from where it was; a click on it pauses, as on the page. The page's videos wait meanwhile;
+// - a second click on a picture (a double tap on a phone; + on the keyboard) shows it at its own pixels: the sharp copy at
+//   1 image pixel per device pixel, never smaller than fitted (review 12, 4.12: six phone screens opened only 1.02x
+//   larger on a phone). Drag, scroll or swipe pans; a click or tap (or −) brings it back to fit. Swipes change the media
+//   and close only while it is fitted; Esc, ← → and the buttons work as before. Videos do not zoom.
 // A native <dialog>: it sits in the top layer, above the glass canvases of lens.js and home-live.js, and the page
 // behind it is inert. Without this script the media stay as they are.
 (() => {
@@ -42,28 +46,30 @@
   dlg.className = 'pv';
   dlg.tabIndex = -1;                                    // opened with the mouse, the dialog itself takes the focus (no ring on ✕)
   dlg.setAttribute('aria-label', 'Media viewer');
-  dlg.innerHTML = '<div class="pv-bg"></div><div class="pv-stage"></div><p class="pv-cap"></p>'
+  dlg.innerHTML = '<div class="pv-bg"></div><div class="pv-stage"></div><div class="pv-zoom" hidden></div><p class="pv-cap"></p>'
     + '<div class="pv-bar"><span class="pv-count" aria-live="polite"></span>'
     + `<button class="pv-btn pv-close" type="button" aria-label="Close">${icon('M5 5l10 10M15 5L5 15')}</button></div>`
     + `<button class="pv-btn pv-prev" type="button" aria-label="Previous">${icon('M12.5 4.5L7 10l5.5 5.5')}</button>`
     + `<button class="pv-btn pv-next" type="button" aria-label="Next">${icon('M7.5 4.5L13 10l-5.5 5.5')}</button>`;
   document.body.appendChild(dlg);
   const $ = (s) => dlg.querySelector(s);
-  const bg = $('.pv-bg'), stage = $('.pv-stage'), cap = $('.pv-cap'), count = $('.pv-count');
+  const bg = $('.pv-bg'), stage = $('.pv-stage'), cap = $('.pv-cap'), count = $('.pv-count'), zoomBox = $('.pv-zoom');
   const prev = $('.pv-prev'), next = $('.pv-next'), shut = $('.pv-close');
   const chrome = [$('.pv-bar'), prev, next, cap];
 
   let list = [], idx = 0, cur = null, open = false, closing = false, viaKey = false, held = [];
 
   // where the media goes: as large as the window allows (never above its own pixels), the caption under it
+  // the room the bar, the buttons and the caption keep round the media
+  const margins = () => (window.innerWidth < 768 ? { side: 12, top: 64, bottom: 84 } : { side: 96, top: 76, bottom: 32 });
   function place(it) {
     const W = window.innerWidth, H = window.innerHeight, phone = W < 768;
-    const side = phone ? 12 : 96, top = phone ? 64 : 76;
+    const { side, top } = margins();
     cap.textContent = it.cap;
     cap.hidden = !it.cap;
     cap.style.width = Math.min(700, W - (phone ? 32 : 2 * side)) + 'px';
     const capH = it.cap ? cap.offsetHeight + 16 : 0;
-    const bottom = (phone ? 84 : 32) + capH;
+    const bottom = margins().bottom + capH;
     const aw = W - 2 * side, ah = Math.max(120, H - top - bottom);
     const s = Math.min(aw / it.w, ah / it.h, 1);
     const w = Math.round(it.w * s), h = Math.round(it.h * s);
@@ -114,6 +120,7 @@
     frame.prepend(media(it, frame));
     const L = place(it);
     put(frame, L);
+    frame.classList.toggle('pv-zoomable', canZoom(it, L));
     stage.appendChild(frame);
     return { frame, L };
   }
@@ -168,6 +175,7 @@
   function go(d, fromX = 0) {
     const j = idx + d;
     if (!open || closing || j < 0 || j >= list.length) return false;
+    zoomOut(true);
     const old = cur;
     const { frame } = frameFor(list[j]);
     cur = frame; idx = j;
@@ -184,6 +192,7 @@
 
   function close() {
     if (!open || closing) return;
+    zoomOut(true);
     closing = true;
     const it = list[idx], frame = cur;
     frame.querySelectorAll('video').forEach((v) => {   // the page's copy goes on from here
@@ -225,6 +234,109 @@
     });
   }
 
+  // ------------------------------------------------------------------ zoom: the picture at its own pixels
+  // The zoomed picture is a copy in its own scroller over the stage (the fitted frame waits hidden under it), so the
+  // browser pans it: wheel and trackpad, a finger with its momentum; a mouse drags it (below).
+  let zoom = null, zoomOuting = null;                  // zoomOuting: ends a zoom-out still running
+  const boxOf = (f) => ({ x: parseFloat(f.style.left), y: parseFloat(f.style.top), w: parseFloat(f.style.width), h: parseFloat(f.style.height) });
+  // the best copy there is: the 2400 px one when the original is wider than the page's 1408 px copy
+  const natW = (it) => Math.min(it.w, it.full ? 2400 : 1408);
+  function zoomSize(it, L) {
+    const w = Math.max(natW(it) / (window.devicePixelRatio || 1), L.w);
+    return { w: Math.round(w), h: Math.round((w * it.h) / it.w) };
+  }
+  const canZoom = (it, L) => it.kind === 'img' && zoomSize(it, L).w > L.w * 1.15;   // worth it: at least 15% larger
+  // the picture's place in the scroller: centred where it is smaller than the window, else with the fitted margins
+  function zoomLayout(z) {
+    const W = zoomBox.clientWidth, H = zoomBox.clientHeight, m = margins();
+    const ah = H - m.top - m.bottom;
+    z.x = z.size.w + 2 * m.side <= W ? Math.round((W - z.size.w) / 2) : m.side;
+    z.y = z.size.h <= ah ? Math.round(m.top + (ah - z.size.h) / 2) : m.top;
+    z.sizer.style.width = Math.max(W, z.x + z.size.w + m.side) + 'px';
+    z.sizer.style.height = Math.max(H, z.y + z.size.h + m.bottom) + 'px';
+    Object.assign(z.img.style, { left: z.x + 'px', top: z.y + 'px', width: z.size.w + 'px', height: z.size.h + 'px' });
+  }
+  // a transform that lays the zoomed picture (now at rect r on screen) over the fitted box L
+  const onto = (L, r) => `translate(${L.x - r.left}px, ${L.y - r.top}px) scale(${L.w / r.width}, ${L.h / r.height})`;
+  // zoom in, keeping the point under the pointer (cx, cy) where it is; without a point, the middle
+  function zoomIn(cx, cy) {
+    const it = list[idx];
+    if (!open || closing || zoom || zoomOuting || !cur || !cur.classList.contains('pv-zoomable')) return;
+    cur.getAnimations().forEach((a) => a.finish());
+    const L = boxOf(cur);
+    if (cx === undefined) { cx = L.x + L.w / 2; cy = L.y + L.h / 2; }
+    const shown = cur.querySelector('img');
+    const img = document.createElement('img');
+    img.src = shown.currentSrc || shown.src;           // loaded already: no blank frame
+    img.alt = shown.alt; img.draggable = false; img.decoding = 'async';
+    if (it.full && !img.src.endsWith(it.full)) {       // the sharp copy as soon as it is decoded
+      const big = new Image(); big.decoding = 'async'; big.src = it.full;
+      (big.decode ? big.decode() : Promise.resolve()).then(() => { if (img.isConnected) img.src = it.full; }).catch(() => {});
+    }
+    const sizer = document.createElement('div');
+    sizer.className = 'pv-zoom-in';
+    sizer.appendChild(img);
+    zoomBox.textContent = '';
+    zoomBox.appendChild(sizer);
+    zoomBox.hidden = false;
+    zoom = { it, img, sizer, size: zoomSize(it, L), x: 0, y: 0 };
+    zoomLayout(zoom);
+    zoomBox.scrollLeft = zoom.x + ((cx - L.x) / L.w) * zoom.size.w - cx;
+    zoomBox.scrollTop = zoom.y + ((cy - L.y) / L.h) * zoom.size.h - cy;
+    dlg.classList.add('zoomed');
+    cur.style.visibility = 'hidden';
+    tap = null;
+    if (calm.matches) { img.animate({ opacity: [0, 1] }, { duration: 160, easing: 'ease-out' }); return; }
+    const r = img.getBoundingClientRect();
+    img.animate([{ transform: onto(L, r), borderRadius: `${(14 * r.width) / L.w}px` }, { transform: 'none', borderRadius: '14px' }],
+                { duration: 380, easing: EASE });
+  }
+  // back to fit: animated, or at once (instant) before the media change or the viewer closes
+  function zoomOut(instant) {
+    const z = zoom;
+    if (!z) { if (instant && zoomOuting) zoomOuting(); return; }
+    zoom = null; tap = null;
+    dlg.classList.remove('zoomed');
+    let ended = false;
+    const back = () => {
+      if (ended) return;
+      ended = true; zoomOuting = null;
+      zoomBox.hidden = true; zoomBox.textContent = '';
+      if (cur) cur.style.visibility = '';
+    };
+    zoomOuting = back;
+    if (instant || !cur) { back(); return; }
+    if (calm.matches) { z.img.animate({ opacity: [1, 0] }, { duration: 140, easing: 'ease-in', fill: 'forwards' }).finished.then(back, back); return; }
+    const L = boxOf(cur), r = z.img.getBoundingClientRect();
+    z.img.animate([{ transform: 'none', borderRadius: '14px' }, { transform: onto(L, r), borderRadius: `${(14 * r.width) / L.w}px` }],
+                  { duration: 320, easing: EASE_BACK, fill: 'forwards' }).finished.then(back, back);
+  }
+  // a mouse drags the zoomed picture; a click without a drag zooms out (a finger pans natively and taps to zoom out)
+  let pan = null, panned = 0;
+  zoomBox.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0 || !zoom) return;
+    pan = { id: e.pointerId, x: e.clientX, y: e.clientY, l: zoomBox.scrollLeft, t: zoomBox.scrollTop, moved: false };
+  });
+  zoomBox.addEventListener('pointermove', (e) => {
+    if (!pan || e.pointerId !== pan.id) return;
+    const dx = e.clientX - pan.x, dy = e.clientY - pan.y;
+    if (!pan.moved && Math.hypot(dx, dy) > 4) {
+      pan.moved = true;
+      try { zoomBox.setPointerCapture(e.pointerId); } catch (err) { /* the drag goes on without capture */ }
+      zoomBox.classList.add('grabbing');
+    }
+    if (pan.moved) { zoomBox.scrollLeft = pan.l - dx; zoomBox.scrollTop = pan.t - dy; }
+  });
+  const panEnd = () => {
+    if (!pan) return;
+    if (pan.moved) panned = performance.now();
+    pan = null;
+    zoomBox.classList.remove('grabbing');
+  };
+  zoomBox.addEventListener('pointerup', panEnd);
+  zoomBox.addEventListener('pointercancel', panEnd);
+  zoomBox.addEventListener('click', () => { if (performance.now() - panned > 250) zoomOut(); });
+
   // ------------------------------------------------------------------ events
   items.forEach((it) => {
     const t = it.trig;
@@ -244,20 +356,28 @@
   dlg.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
     else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    else if ((e.key === '+' || e.key === '=') && !e.metaKey && !e.ctrlKey) { e.preventDefault(); zoomIn(); }
+    else if ((e.key === '-' || e.key === '0') && !e.metaKey && !e.ctrlKey && zoom) { e.preventDefault(); zoomOut(); }
   });
   shut.addEventListener('click', close);
   prev.addEventListener('click', () => go(-1));
   next.addEventListener('click', () => go(1));
-  let swiped = 0;
+  let swiped = 0, tap = null, lastType = '';
+  stage.addEventListener('pointerdown', (e) => { lastType = e.pointerType; }, true);
   stage.addEventListener('click', (e) => {
     if (performance.now() - swiped < 400) return;      // the end of a swipe is not a click
-    if (!cur || !cur.contains(e.target)) close();       // outside the media
+    if (!cur || !cur.contains(e.target)) { close(); return; }   // outside the media
+    if (!cur.classList.contains('pv-zoomable')) return;
+    if (lastType !== 'touch' && lastType !== 'pen') { zoomIn(e.clientX, e.clientY); return; }   // a mouse: one click
+    const now = performance.now();                      // a finger: a double tap
+    if (tap && now - tap.t < 350 && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 40) zoomIn(e.clientX, e.clientY);
+    else tap = { t: now, x: e.clientX, y: e.clientY };
   });
 
   // touch: sideways changes the media, down closes; the frame follows the finger
   let sw = null;
   stage.addEventListener('pointerdown', (e) => {
-    if (e.pointerType === 'mouse' || !e.isPrimary || closing || !cur) return;
+    if (e.pointerType === 'mouse' || !e.isPrimary || closing || !cur || zoom) return;
     if (window.visualViewport && window.visualViewport.scale > 1.01) return;   // pinch-zoomed: the browser pans
     sw = { x: e.clientX, y: e.clientY, axis: '', dx: 0, dy: 0 };
   });
@@ -297,6 +417,20 @@
   window.addEventListener('resize', () => {
     if (!open) return;
     clearTimeout(rt);
-    rt = setTimeout(() => { if (open && !closing && cur) put(cur, place(list[idx])); }, 80);
+    rt = setTimeout(() => {
+      if (!open || closing || !cur) return;
+      const it = list[idx], L = place(it);
+      put(cur, L);
+      cur.classList.toggle('pv-zoomable', canZoom(it, L));
+      if (!zoom) return;
+      if (!canZoom(it, L)) { zoomOut(true); return; }
+      // zoomed: the same point stays in the middle of the window
+      const W = zoomBox.clientWidth, H = zoomBox.clientHeight;
+      const u = (zoomBox.scrollLeft + W / 2 - zoom.x) / zoom.size.w, v = (zoomBox.scrollTop + H / 2 - zoom.y) / zoom.size.h;
+      zoom.size = zoomSize(it, L);
+      zoomLayout(zoom);
+      zoomBox.scrollLeft = zoom.x + u * zoom.size.w - W / 2;
+      zoomBox.scrollTop = zoom.y + v * zoom.size.h - H / 2;
+    }, 80);
   });
 })();
