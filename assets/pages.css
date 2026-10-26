@@ -88,6 +88,8 @@ body.pg .pg-bullets .pg-bullets { list-style: circle; }
 body.pg .pg-numbers { list-style: decimal; }
 body.pg :is(.pg-bullets, .pg-numbers) > li { padding-left: 2px; }
 body.pg :is(.pg-bullets, .pg-numbers) > li + li { margin-top: var(--home-gap-item); }
+/* review 13: a list keeps the paragraph gap from the text around it */
+body.pg .pg-p + :is(.pg-bullets, .pg-numbers), body.pg :is(.pg-bullets, .pg-numbers) + .pg-p { margin-top: var(--home-gap-text); }
 body.pg :is(.pg-bullets, .pg-numbers) > li::marker { color: var(--home-text-muted); font-variant-numeric: tabular-nums; }
 body.pg li > .pg-kids { padding-left: 0; }
 
