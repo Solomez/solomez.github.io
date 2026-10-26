@@ -486,6 +486,15 @@
     });
     document.documentElement.addEventListener('pointerleave', () => { if (cur.on) { cur.on = false; api.wake(); } });
   }
+  // the live cover's loop has a new frame (live-cover.js): the nav or the lens over that cover is drawn anew
+  main.addEventListener('lc-tick', (e) => {
+    if (dead) return;
+    const r = e.detail.getBoundingClientRect(), b = { left: r.left, top: r.top, w: r.width, h: r.height };
+    let any = false;
+    if (nav && hits(b, nav)) { navDirty = true; any = true; }
+    if (cursorOn && cur.k > 0 && cur.x >= 0 && hits(b, lensBox().reg)) { curDirty = true; any = true; }
+    if (any) api.wake();
+  });
   // the hero's glass turned: the nav or the lens over it is drawn anew
   main.addEventListener('home-glass-tick', () => {
     if (dead) return;

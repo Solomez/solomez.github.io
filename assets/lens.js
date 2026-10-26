@@ -489,6 +489,16 @@
     const walkHome = (n, alpha) => {
       if (n.nodeType === 3) { put(drawText(cur.ctx, n, r, alpha, el)); return; }
       if (n.nodeType !== 1 || (n !== el && isTile(n))) return;
+      // the live cover's loop (live-cover.js): a live layer over the whole cover, drawn only while it shows (drawTwin)
+      if (n.tagName === 'VIDEO' && n.classList.contains('lc-v')) {
+        if (n.readyState < 2) return;
+        layers.push({ el: n, dx: 0, dy: 0, w: 0, h: 0 });
+        const c2 = document.createElement('canvas');
+        c2.width = c.width; c2.height = c.height;
+        const x2 = c2.getContext('2d'); x2.scale(dpr, dpr); x2.textBaseline = 'alphabetic';
+        layers.push(cur = { c: c2, ctx: x2, n: 0 });
+        return;
+      }
       const st = getComputedStyle(n);
       if (st.display === 'none' || st.visibility === 'hidden') return;
       const op = parseFloat(st.opacity), a = alpha * (isNaN(op) ? 1 : op);
@@ -908,6 +918,12 @@
     if (!t.more) return;
     for (const L of t.more) {
       if (!L.el) { quad(L.tex, left, top, width, height, t.radius || 0, 1, 1, 0, 0); continue; }
+      if (L.el.tagName === 'VIDEO') {                     // the live cover's loop: only while it shows, its newest frame
+        if (!L.el.parentNode || !L.el.parentNode.classList.contains('lc-on') || L.el.readyState < 2) continue;
+        if (L.v !== L.el.lcV) { L.v = L.el.lcV; gl.bindTexture(gl.TEXTURE_2D, L.tex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, L.el); }
+        quad(L.tex, left, top, width, height, t.radius || 0, 1, 1, 0, 0);
+        continue;
+      }
       if (L.v !== L.el.glassV) {
         L.v = L.el.glassV;
         gl.bindTexture(gl.TEXTURE_2D, L.tex);
@@ -937,6 +953,12 @@
     if (!armed || off || lost || !shown) return;
     const sy = window.scrollY, fadeTop = H * (1 - P.zone) - FADE;
     for (const t of tiles) if (t.more && t.ready && t.top - sy + t.h > fadeTop && t.top - sy < H) { dirty = true; wake(); return; }
+  });
+  // the live cover's loop has a new frame (live-cover.js): a cover in the bend is drawn anew
+  if (home) main.addEventListener('lc-tick', (e) => {
+    if (!armed || off || lost || !shown) return;
+    const t = byEl.get(e.detail), sy = window.scrollY, fadeTop = H * (1 - P.zone) - FADE;
+    if (t && t.ready && t.top - sy + t.h > fadeTop && t.top - sy < H) { dirty = true; wake(); }
   });
   // keyboard: a link or control reached with Tab that lands in the bend is lifted above it
   // only real controls: <main> itself takes focus from a plain click (tabindex -1 for the skip link), and lifting it
