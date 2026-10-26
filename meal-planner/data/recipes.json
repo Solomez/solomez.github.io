@@ -1,7 +1,7 @@
 {
  "meta": {
-  "generated": "2026-10-23",
-  "price_date": "2026-10-23",
+  "generated": "2026-10-26",
+  "price_date": "2026-10-26",
   "schema": 2,
   "departments": [
    {
@@ -770,7 +770,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.52,
+    "cost": 2.57,
     "kcal": 1076,
     "protein": 56.5,
     "fat": 57.9,
@@ -845,8 +845,8 @@
      "key": "lemon",
      "name_ru": "Лимон",
      "grams_per_serving": 25.0,
-     "cost_per_serving": 0.076,
-     "store": "Penny",
+     "cost_per_serving": 0.124,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -5289,7 +5289,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.43,
+    "cost": 2.53,
     "kcal": 787,
     "protein": 40.4,
     "fat": 36.9,
@@ -5316,8 +5316,8 @@
      "key": "lemon",
      "name_ru": "Лимон",
      "grams_per_serving": 50.0,
-     "cost_per_serving": 0.152,
-     "store": "Penny",
+     "cost_per_serving": 0.249,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -6459,7 +6459,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.43,
+    "cost": 2.47,
     "kcal": 827,
     "protein": 42.6,
     "fat": 35.6,
@@ -6494,8 +6494,8 @@
      "key": "lemon",
      "name_ru": "Лимон",
      "grams_per_serving": 25.0,
-     "cost_per_serving": 0.076,
-     "store": "Penny",
+     "cost_per_serving": 0.124,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -11341,7 +11341,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.19,
+    "cost": 2.22,
     "kcal": 704,
     "protein": 42.8,
     "fat": 24.4,
@@ -11392,8 +11392,8 @@
      "key": "lemon",
      "name_ru": "Лимон (сок)",
      "grams_per_serving": 15.0,
-     "cost_per_serving": 0.046,
-     "store": "Penny",
+     "cost_per_serving": 0.075,
+     "store": "Spar",
      "is_estimate": false
     },
     {
@@ -14659,7 +14659,7 @@
     ]
    ],
    "per_serving": {
-    "cost": 2.44,
+    "cost": 2.49,
     "kcal": 687,
     "protein": 42.7,
     "fat": 24.2,
@@ -14710,8 +14710,8 @@
      "key": "lemon",
      "name_ru": "Лимон",
      "grams_per_serving": 25.0,
-     "cost_per_serving": 0.076,
-     "store": "Penny",
+     "cost_per_serving": 0.124,
+     "store": "Spar",
      "is_estimate": false
     },
     {
