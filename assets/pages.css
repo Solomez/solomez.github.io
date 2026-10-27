@@ -296,17 +296,21 @@ html.pv-lock { overflow: hidden; scrollbar-gutter: stable; }
   .pv-next { right: calc(50% - 60px); }
 }
 
-/* hover and keyboard focus of the white rows (CV files, «Next case»): his Figma «Link» hover, node 237:10521 (designer,
-   2026-10-25): a 2 px blue ring #498EE3 at the row's edge, a 2 px gap of the page colour, the white card inside with
-   radius 22 and a soft 8 px shadow. The inner card is white in every state, so leaving the row never flashes dark
-   (designer, 2026-10-25: «когда я убираю курсор карточка темнеет»). */
-body.pg :is(.pg-file, .pg-next) { isolation: isolate; transition: transform var(--home-fast) ease-out, box-shadow var(--home-fast) ease-out, background-color var(--home-fast) ease-out; }
-body.pg :is(.pg-file, .pg-next)::after {
-  inset: 4px; z-index: -1; opacity: 0; background: var(--home-surface); border-radius: calc(var(--home-radius-file) - 2px);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.10); transition: opacity var(--home-fast) ease-out;
+/* hover and keyboard focus of the white rows (CV files, «Next case»), 2026-10-27.
+   Hover (mouse only): the card lifts with a soft shadow and the file icon's tile darkens a step: how white cards react
+   on a grey page (Material elevated card, Apple «lift», make-interfaces-feel-better: shadows for hover lift).
+   Keyboard focus: the site's blue ring, as on every other link. Before (2026-10-25, his Figma «Link» hover, node
+   237:10521) one blue 2 px ring served both and read as focus (designer, 2026-10-27: «мне кажется у нас фокусное тут
+   получилось»). The card stays white in every state, so leaving it never flashes dark («когда я убираю курсор карточка
+   темнеет», 2026-10-25). */
+body.pg :is(.pg-file, .pg-next) { transition: transform var(--home-fast) ease-out, box-shadow var(--home-fast) ease-out; }
+body.pg :is(.pg-file, .pg-next)::after { content: none; }
+body.pg .pg-file-ic { transition: background-color var(--home-fast) ease-out; }
+@media (hover: hover) and (pointer: fine) {
+  body.pg :is(.pg-file, .pg-next):hover { box-shadow: 0 1px 2px rgba(26, 26, 25, 0.04), 0 6px 20px rgba(26, 26, 25, 0.08); }
+  body.pg .pg-file:hover .pg-file-ic { background: #e4e7ee; }
 }
-body.pg :is(.pg-file, .pg-next):is(:hover, :focus-visible) { background: transparent; box-shadow: inset 0 0 0 2px #498ee3; outline: none; }
-body.pg :is(.pg-file, .pg-next):is(:hover, :focus-visible)::after { opacity: 1; }
+body.pg :is(.pg-file, .pg-next):focus-visible { outline: 2px solid var(--home-focus); outline-offset: 2px; }
 
 @media print {
   @page { margin: 16mm 16mm 18mm; }
