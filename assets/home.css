@@ -281,8 +281,15 @@ body.home .h-tabbar.glassed { background: transparent; -webkit-backdrop-filter: 
 @media (prefers-reduced-transparency: reduce) {
   body.home .h-tabbar { background: rgba(255, 255, 255, 0.92); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
-/* the Figma arrow as the cursor (home-live.js adds the class on a computer; hotspot = the tip at 5, 3) */
-body.home.h-arrow { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M5 3L22 15.5L13.8 16.9L9.6 24.5L5 3Z' fill='%231A1A19' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 5 3, auto; }
+/* the Figma arrow as the cursor (68:4123 «Cursor»; home-live.js adds the class on a computer; hotspot = the tip at 5, 3).
+   2026-10-27 (designer: «курсор внутри сайта приведем прям в точности к тому, что есть в фигме»): a 2x picture for
+   Retina screens (the 1x one is scaled up there and looks soft), and the same arrow over links, buttons and media —
+   no hand and no zoom sign (the browser's own cursors); the full-screen viewer keeps its zoom and grab cursors. */
+body.home.h-arrow {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M5 3L22 15.5L13.8 16.9L9.6 24.5L5 3Z' fill='%231A1A19' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 5 3, auto;
+  cursor: image-set(url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M5 3L22 15.5L13.8 16.9L9.6 24.5L5 3Z' fill='%231A1A19' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 1x, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 28 28' fill='none'%3E%3Cpath d='M5 3L22 15.5L13.8 16.9L9.6 24.5L5 3Z' fill='%231A1A19' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E") 2x) 5 3, auto;
+}
+body.home.h-arrow :is(a, button, [role="button"], summary, label, video, [data-zoom], [data-zoom] *):not(.pv, .pv *) { cursor: inherit !important; }
 body.home .h-key {
   position: relative; display: flex; align-items: center; justify-content: center; height: 48px; padding: 1px 12px;
   border-radius: var(--home-radius-nav); font: var(--home-type-nav); color: var(--home-nav-text); white-space: nowrap;
