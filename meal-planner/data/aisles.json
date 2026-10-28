@@ -165,7 +165,7 @@
    "ru": "Фрукты",
    "en": "Fruit",
    "de": "Obst",
-   "count": 198
+   "count": 201
   },
   {
    "id": "salad_herbs",
@@ -197,7 +197,7 @@
    "ru": "Свежий хлеб и булочки",
    "en": "Fresh bread & rolls",
    "de": "Ofenfrisches Brot & Gebäck",
-   "count": 373
+   "count": 374
   },
   {
    "id": "bread_packed",
@@ -205,7 +205,7 @@
    "ru": "Хлеб в упаковке и тостовый",
    "en": "Packaged bread & toast",
    "de": "Brot verpackt & Toastbrot",
-   "count": 163
+   "count": 165
   },
   {
    "id": "crispbread",
@@ -221,7 +221,7 @@
    "ru": "Пирожные, кексы, сдоба",
    "en": "Cakes & pastries",
    "de": "Kuchen, Plunder & Mehlspeisen",
-   "count": 503
+   "count": 502
   },
   {
    "id": "breadcrumbs",
@@ -301,7 +301,7 @@
    "ru": "Прилавок Feinkost (на развес)",
    "en": "Deli counter (by weight)",
    "de": "Feinkost-Theke",
-   "count": 191
+   "count": 190
   },
   {
    "id": "meat_alt",
@@ -517,7 +517,7 @@
    "ru": "Готовые блюда и супы (не в холодильнике)",
    "en": "Shelf-stable meals & soups",
    "de": "Fertiggerichte & Suppen",
-   "count": 409
+   "count": 406
   },
   {
    "id": "canned_spreads",
@@ -645,7 +645,7 @@
    "ru": "Кофе",
    "en": "Coffee",
    "de": "Kaffee",
-   "count": 626
+   "count": 624
   },
   {
    "id": "tea",
@@ -653,7 +653,7 @@
    "ru": "Чай и какао",
    "en": "Tea & cocoa",
    "de": "Tee & Kakao",
-   "count": 499
+   "count": 505
   },
   {
    "id": "chocolate",
@@ -9133,20 +9133,20 @@
   {
    "key": "billa",
    "name": "Billa",
-   "count": 9249,
-   "fetched": "2026-10-26"
+   "count": 9254,
+   "fetched": "2026-10-28"
   },
   {
    "key": "spar",
    "name": "Spar",
    "count": 12830,
-   "fetched": "2026-10-26"
+   "fetched": "2026-10-28"
   },
   {
    "key": "penny",
    "name": "Penny",
    "count": 285,
-   "fetched": "2026-10-26"
+   "fetched": "2026-10-28"
   }
  ]
 }
