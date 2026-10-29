@@ -1,5 +1,3 @@
-// site.js: the floating outline (as on notion.site): sits 18 px below the top of the page title,
-// stays under the top bar when the page scrolls, and marks the section being read.
 (() => {
   const toc = document.querySelector('.toc');
   const title = document.querySelector('.title');
@@ -25,11 +23,6 @@
   tick();
 })();
 
-// D-55: videos play by themselves like moving pictures, without the player bar.
-// They load only near the screen, play only while at least half visible, and pause when scrolled away or the tab
-// is hidden. A tap, a click or Enter/Space pauses and resumes; in a case it opens the video larger (viewer.js).
-// With reduced motion or data saver on, or when the browser blocks autoplay (iOS Low Power Mode), the video waits
-// with a play mark. Without JS the usual player stays.
 (() => {
   const vids = [...document.querySelectorAll('.b-video video')];
   if (!vids.length || !('IntersectionObserver' in window)) return;
@@ -62,7 +55,6 @@
     fig(v).classList.add('auto');
     if (!auto()) stop(v, true);
     v.addEventListener('playing', () => stop(v, false));
-    // in a case a click opens the video larger (viewer.js), where a click pauses; elsewhere it pauses here
     if (!fig(v).hasAttribute('data-zoom')) {
       v.tabIndex = 0;
       v.setAttribute('aria-label', v.getAttribute('aria-label') + '. Video, plays by itself; press to pause or play.');

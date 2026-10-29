@@ -1,39 +1,3 @@
-// home-glass.js: the still glass of the new home page (REDESIGN_HOME.md, stage 4): the chips on every cover, the lens and
-// the sphere over the stripes, drawn as Figma's GLASS effect (home/SPEC.md: refraction, depth, dispersion, light angle
-// and intensity, read from tokens.css; the tint is the element's own CSS background).
-//
-// The effect, read off the Figma renders (home/stage4/): inside a bevel `depth` px wide the backdrop is sampled toward
-// the centre, by depth × refraction × GAIN px at the edge, falling with the cube of the distance; red is bent a tenth
-// × dispersion more than green and blue a tenth less; the tint lies over the result; a 1 px rim is bright on the lit
-// side and dark opposite, with a second bright line 1 px inside on the dark side.
-//
-// Everything is drawn once (again on resize, when the fonts arrive or a picture changes): one WebGL canvas, kept off
-// the page, renders each piece, and the result is copied into a plain 2D <canvas> inside the element, under its text.
-// The CSS tint of a piece goes only once its glass is in place, so without WebGL (or if it fails) the page looks as
-// before. Only the hero moves, clockwise, on its own, frames only while the panel is on screen (stage 5, the designer:
-// «при движении под кольцом картинка не меняется, нужно сделать это динамичным»), in one of three ways (?ring=):
-// - a (?ring=a2), an edgeless field (made for an ask that turned out to be about the cursor lens): the stripes
-//   stand still; one liquid field of refraction turns clockwise over them: two soft lenses (where the lens and the sphere
-//   were) pull the stripes toward the centre, their strength and their radius uneven round the circumference, a few
-//   lobes drifting at different speeds; the pull falls to nothing smoothly at the field's edge and beyond, the colour
-//   split and the faint tint fade with it, no rim lines; so no circle reads anywhere;
-// - a1 «поток под стеклом», the default (the designer's choice): the stripes inside the glass turn about a point beside
-//   the centre, so they slide through the lens and the sphere and bend as they go;
-// - b «живое стекло»: the stripes stand still; the ring is uneven like poured glass (its bevel widens and narrows round
-//   the circumference, WOBBLE) and turns, so the bend travels round over the stripes;
-// - c: the stage-4 turn, stripes and glass round one centre (everything refracted turns as one picture).
-// The bottom lens (lens.js) copies these canvases into its twins («home-glass» event); the lens and sphere canvases are
-// marked «live» and counted (glassV) so lens.js and home-live.js draw them fresh each frame («home-glass-tick»).
-// The hero's lens and sphere (not the chips) have a rounded rim (designer, 2026-10-23: «у стекла эппловского прикольный
-// эффект, что грани скруглены, а у тебя они очень острые, резко обрезаются»): the bevel is a quarter circle in section,
-// the bend follows its slope, softly capped so the picture never folds (it grows toward the edge and the stripes roll
-// over it, magnified at most 1/ROUND.min times); the edge is smoothed over ROUND.aa px; the light is a soft specular band
-// on the lit side, a faint Fresnel glow round the whole rim and a slight shade opposite; a soft CSS shadow lies under
-// the lens and the sphere (home.css, body.glass-round). ?round=0 brings back the sharp rim; ?round=roll,spec,fresnel,shade.
-// Off with prefers-reduced-transparency (the CSS tints get denser instead); no turning with prefers-reduced-motion.
-// Tuning: ?glass=gain,power,rim,cap,light-angle (?glass=0 turns it off); ?spin=seconds per turn (?spin=0 stops it);
-// ?field=R1,S1,R2,S2,lobes,tint (a: radius and pull in px of the outer and the inner lens, unevenness, tint),
-// ?flow=dx,dy (a1), ?wobble=amount (b).
 (() => {
   const body = document.body;
   const main = document.querySelector('main.h-main');
@@ -43,41 +7,28 @@
   if (window.matchMedia('(prefers-reduced-transparency: reduce)').matches) return;
   const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // the ring round the photo turns (designer, 2026-10-22: «хочу чтобы круг вокруг аватарки прокручивался по часовой
-  // стрелке, при этом будет создаваться эффект преломления»; it replaced a hover orbit of the sphere that looked lopsided)
-  const SPIN_PERIOD = (Number(qs.get('spin')) || 20) * 1000;   // ms: one clockwise turn of the stripes in the lens
-  const SPIN_RAMP = 1200;             // ms: the turn eases in after the page loads
-  // a1 is the default: the designer chose the first «поток под стеклом» (2026-10-22, «1 вариант за основу берем»); his
-  // «границы круга не были видны» was about the cursor lens (home-live.js), so the edgeless field stays as ?ring=a2
-  let RING = (qs.get('ring') || 'a1').toLowerCase();           // a1, a2 (= a), b or c, see the top
+  const SPIN_PERIOD = (Number(qs.get('spin')) || 20) * 1000;
+  const SPIN_RAMP = 1200;
+  let RING = (qs.get('ring') || 'a1').toLowerCase();
   if (RING === 'a2') RING = 'a';
-  const FIELD = { R1: 165, S1: 24, R2: 138, S2: 36, lobes: 0.5, tint: 1 };   // a: see the shader FLOW
+  const FIELD = { R1: 165, S1: 24, R2: 138, S2: 36, lobes: 0.5, tint: 1 };
   if (qs.get('field')) {
     const [r1, s1, r2, s2, l, t] = qs.get('field').split(',').map(Number);
     if (r1 > 0) FIELD.R1 = r1; if (s1 >= 0) FIELD.S1 = s1; if (r2 > 0) FIELD.R2 = r2; if (s2 >= 0) FIELD.S2 = s2; if (l >= 0) FIELD.lobes = l; if (t >= 0) FIELD.tint = t;
   }
-  const FLOW = (qs.get('flow') || '-22,18').split(',').map(Number);   // a1: the turning point, px from the lens centre
-  const WOBBLE = qs.get('wobble') !== null ? Number(qs.get('wobble')) : 0.35;   // b: how uneven the ring is (0 = even)
-  // the effect, fitted to the Figma renders
-  const T = { gain: 0.92, power: 3, rim: 0.3, cap: 0.5, ang: 0 };   // cap: the bevel is at most this × the shorter side
+  const FLOW = (qs.get('flow') || '-22,18').split(',').map(Number);
+  const WOBBLE = qs.get('wobble') !== null ? Number(qs.get('wobble')) : 0.35;
+  const T = { gain: 0.92, power: 3, rim: 0.3, cap: 0.5, ang: 0 };
   if (qs.get('glass')) {
     const [g, p, r, c, a] = qs.get('glass').split(',').map(Number);
     if (g > 0) T.gain = g; if (p > 0) T.power = p; if (r >= 0) T.rim = r; if (c >= 0) T.cap = c; if (a) T.ang = a;
   }
-  // the rounded rim of the hero (see the top): min: the least the picture is stretched (1 − the steepest bend change);
-  // roll: how fast the bend reaches it; spec, at, w: the specular band (strength, px inside the edge, half-width px);
-  // fres, fw: the Fresnel glow and how far it reaches (px); shade, sw: the far side's shade; aa: the edge's soft px
   const ROUND = { on: qs.get('round') !== '0', min: 0.15, roll: 2.5, spec: 0.5, at: 1.8, w: 3, fres: 0.12, fw: 7, shade: 0.16, sw: 9, aa: 1.5 };
   if (qs.get('round') && qs.get('round') !== '0') {
     const [r, s, f, d] = qs.get('round').split(',').map(Number);
     if (r > 0) ROUND.roll = r; if (s >= 0) ROUND.spec = s; if (f >= 0) ROUND.fres = f; if (d >= 0) ROUND.shade = d;
   }
-  const DISP = 0.1;                   // red bends (1 + DISP × dispersion) times green, blue (1 − DISP × dispersion)
-  // the chips are one component on every cover (review 12, 4.7: a 16 px bevel filled a 32 px chip, so a device edge or
-  // a dark corner under it was pulled in and magnified, and one row showed three materials). Now the bend stays in a
-  // narrow rim (bevel px), the backdrop inside is frosted (Gaussian, blur css px; `edge` of it at the rim, all of it in
-  // the middle), its contrast is evened toward the row's mean (even: 0 … 1), and the tint goes from the CSS tint at the
-  // rim to `tint` in the middle. The rim light stays. ?chip=bevel,blur,edge,tint,even; ?chip=0: as before
+  const DISP = 0.1;
   const CHIP = { bevel: 6, blur: 6, edge: 0.55, tint: 0.5, even: 0.7 };
   if (qs.get('chip')) {
     const [b, s, e, t, v] = qs.get('chip').split(',').map(Number);
@@ -85,7 +36,6 @@
     if (b > 0) CHIP.bevel = b; if (s >= 0) CHIP.blur = s; if (e >= 0) CHIP.edge = e; if (t >= 0) CHIP.tint = t; if (v >= 0) CHIP.even = v;
   }
 
-  // ------------------------------------------------------------------ parameters from tokens.css
   const cs = getComputedStyle(body);
   const num = (n, d) => { const x = parseFloat(cs.getPropertyValue(n)); return isNaN(x) ? d : x; };
   const param = (k, d) => ({
@@ -103,11 +53,7 @@
   };
   const pageBg = () => { const c = cs.backgroundColor; return !c || c === 'transparent' || /rgba\([^)]*,\s*0\)$/.test(c) ? '#fff' : c; };
 
-  // the WebGL set-up and everything after it wait for an idle moment (review 12, block 2, speed: on a phone with a 4x
-  // slower CPU it was one ~90 ms task right after the first paint). Meanwhile the CSS glass shows, as it always did
-  // until the first render; the drawn glass is the same, it only comes a moment later.
   const boot = () => {
-  // ------------------------------------------------------------------ WebGL: one canvas off the page
   const glc = document.createElement('canvas');
   const gl = glc.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, stencil: false });
   if (!gl) return;
@@ -118,31 +64,31 @@
   const FS = `
     precision highp float;
     uniform sampler2D tMap;
-    uniform vec2 uSize;            // the piece, css px
-    uniform float uRadius;         // its corner radius
-    uniform vec2 uOrigin, uMap;    // where the piece lies in the backdrop, and the backdrop's size (css px)
+    uniform vec2 uSize;
+    uniform float uRadius;
+    uniform vec2 uOrigin, uMap;
     uniform float uDepth, uRefr, uDisp, uAngle, uLight, uGain, uPower, uRim, uCap;
     uniform vec4 uTint;
-    uniform vec3 uSpin;            // turn the backdrop about (x, y) by z radians, clockwise on screen (0 for the chips)
-    uniform vec2 uWobble;          // the uneven ring (b): its turn angle, how much the bevel varies (0 = even)
-    uniform float uRound;          // 1: the hero's rounded rim and volume light; 0: the chips, as they were
-    uniform vec4 uRoll;            // rounded rim: 1 − least stretch, slope gain, edge soft px, unused
-    uniform vec4 uSpec, uFres;     // specular: strength, px in, half-width; Fresnel: strength, reach px, shade, its reach px
-    uniform sampler2D tSoft;       // the chips' frost: the backdrop, shrunk (a box blur)
-    uniform vec4 uFrost;           // frost at the rim, in the middle (0: none), the tint's alpha in the middle, blur css px
-    uniform vec4 uEven;            // the row's mean colour, how far the frost goes toward it
+    uniform vec3 uSpin;
+    uniform vec2 uWobble;
+    uniform float uRound;
+    uniform vec4 uRoll;
+    uniform vec4 uSpec, uFres;
+    uniform sampler2D tSoft;
+    uniform vec4 uFrost;
+    uniform vec4 uEven;
     varying vec2 vUv;
     vec2 spin(vec2 q) {
       vec2 v = q - uSpin.xy;
       float c = cos(uSpin.z), s = sin(uSpin.z);
-      return uSpin.xy + vec2(c * v.x + s * v.y, -s * v.x + c * v.y);   // where the turned stripes came from
+      return uSpin.xy + vec2(c * v.x + s * v.y, -s * v.x + c * v.y);
     }
-    vec2 mirror(vec2 uv) { return 1.0 - abs(mod(uv, 2.0) - 1.0); }     // beyond the backdrop: its reflection
-    float box(vec2 p, vec2 h, float r) {                        // signed distance to the rounded box, + outside
+    vec2 mirror(vec2 uv) { return 1.0 - abs(mod(uv, 2.0) - 1.0); }
+    float box(vec2 p, vec2 h, float r) {
       vec2 q = abs(p) - h + r;
       return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
     }
-    vec3 frost(vec2 at) {          // a Gaussian over the shrunk backdrop, 7 x 7 taps across ±2.4 sigma
+    vec3 frost(vec2 at) {
       vec3 acc = vec3(0.0); float sum = 0.0; float dx = uFrost.w / 1.25;
       for (int i = -3; i <= 3; i++) for (int j = -3; j <= 3; j++) {
         float w = exp(-0.5 * float(i * i + j * j) / 1.5625);
@@ -155,18 +101,16 @@
       float r = min(uRadius, min(h.x, h.y));
       vec2 p = vUv * uSize - h;
       float sd = box(p, h, r);
-      float cover = uRound > 0.5 ? clamp(0.5 - sd / uRoll.z, 0.0, 1.0) : clamp(0.5 - sd, 0.0, 1.0);   // soft edge
+      float cover = uRound > 0.5 ? clamp(0.5 - sd / uRoll.z, 0.0, 1.0) : clamp(0.5 - sd, 0.0, 1.0);
       if (cover <= 0.0) discard;
-      vec2 e = vec2(0.5, 0.0);                                  // outward normal from the distance field
+      vec2 e = vec2(0.5, 0.0);
       vec2 n = normalize(vec2(box(p + e.xy, h, r) - box(p - e.xy, h, r), box(p + e.yx, h, r) - box(p - e.yx, h, r)) + vec2(1e-6, 0.0));
-      float d = max(-sd, 0.0);                                  // px inside the edge
-      float depth = uCap > 0.0 ? min(uDepth, uCap * min(uSize.x, uSize.y)) : uDepth;   // a small pill has a small bevel
-      float phi = atan(p.y, p.x) - uWobble.x;                   // poured glass: the bevel widens and narrows round the ring
+      float d = max(-sd, 0.0);
+      float depth = uCap > 0.0 ? min(uDepth, uCap * min(uSize.x, uSize.y)) : uDepth;
+      float phi = atan(p.y, p.x) - uWobble.x;
       depth *= 1.0 + uWobble.y * (0.6 * sin(2.0 * phi) + 0.4 * sin(3.0 * phi + 1.3));
-      float s;                                                  // bend toward the centre
+      float s;
       if (uRound > 0.5) {
-        // a quarter circle in section: slope t / sqrt(1 − t²), t = 1 at the edge; the bend changes by its slope × gain,
-        // softly capped at uRoll.x px per px so the picture never folds: s = ∫ b·σ / sqrt(σ² + a²), a = b / gain
         float t = clamp(1.0 - d / depth, 0.0, 1.0), b = uRoll.x, a = b / max(uRefr * uGain * uRoll.y, 1e-3);
         s = depth * b * t * t / (sqrt(t * t * (1.0 - a * a) + a * a) + a);
       } else s = depth * uRefr * uGain * pow(clamp(1.0 - d / depth, 0.0, 1.0), uPower);
@@ -176,20 +120,20 @@
                       texture2D(tMap, mirror(spin(at - n * s * k.g) / uMap)).g,
                       texture2D(tMap, mirror(spin(at - n * s * k.b) / uMap)).b);
       float tintA = uTint.a;
-      if (uFrost.y > 0.0) {                                     // the chips: frost inside, the bend only at the rim
-        float mid = smoothstep(0.0, depth, d);                  // 0 at the rim … 1 inside the bevel
+      if (uFrost.y > 0.0) {
+        float mid = smoothstep(0.0, depth, d);
         vec3 fr = mix(frost(at - n * s), uEven.rgb, uEven.a);
         col = mix(col, fr, mix(uFrost.x, uFrost.y, mid));
         tintA = mix(uTint.a, uFrost.z, mid);
       }
       col = mix(col, uTint.rgb, tintA);
-      vec2 L = vec2(-cos(uAngle), sin(uAngle));                 // toward the light (315° = top left)
+      vec2 L = vec2(-cos(uAngle), sin(uAngle));
       float lit = dot(n, L);
-      if (uRound > 0.5) {                                       // volume: specular band, Fresnel glow, far-side shade
+      if (uRound > 0.5) {
         float q = (d - uSpec.y) / uSpec.z;
         float hi = uSpec.x * max(lit, 0.0) * max(lit, 0.0) * exp(-q * q) + uFres.x * exp(-d / uFres.y);
         col *= 1.0 - uFres.z * max(-lit, 0.0) * max(-lit, 0.0) * exp(-d / uFres.w);
-        col = 1.0 - (1.0 - col) * (1.0 - clamp(uLight * hi, 0.0, 1.0));   // screen: light adds without clipping
+        col = 1.0 - (1.0 - col) * (1.0 - clamp(uLight * hi, 0.0, 1.0));
       } else {
         float outer = exp(-d * d * 2.0), inner = exp(-(d - 1.0) * (d - 1.0) * 2.0);
         float up = lit > 0.0 ? lit * lit : -lit * lit;
@@ -197,17 +141,13 @@
       }
       gl_FragColor = vec4(clamp(col, 0.0, 1.0) * cover, cover);
     }`.replace(/DISP/g, DISP.toFixed(3));
-  // variant a: the whole panel in one pass. Two soft lenses pull the stripes toward the centre: the pull rises toward
-  // each lens' edge and falls to nothing there smoothly (x^12 (1-x)^2: flat at the edge, nothing beyond); the edge's
-  // radius and the pull's strength vary round the circumference with lobes that drift at different speeds, the whole
-  // field turning clockwise (uT). The colour split is a tenth × dispersion of the pull, the tint fades out with x.
   const FLOW_FS = `
     precision highp float;
     uniform sampler2D tMap;
-    uniform vec2 uSize;            // the panel, css px
+    uniform vec2 uSize;
     uniform float uRadius;
-    uniform vec2 uC;               // the centre of the field
-    uniform vec4 uOuter, uInner;   // a lens: radius px, pull px, dispersion, unused
+    uniform vec2 uC;
+    uniform vec4 uOuter, uInner;
     uniform float uT, uLobes, uTintA;
     varying vec2 vUv;
     float box(vec2 p, vec2 h, float r) {
@@ -295,18 +235,17 @@
     return tex;
   }
 
-  // ------------------------------------------------------------------ 2D helpers
   const dprOf = () => Math.min(window.devicePixelRatio || 1, 2);
-  const stat = { renders: 0, frames: 0, ms: 0, fms: 0 };   // checks of stage 4 (window.homeGlass); fms: ms in the turn's frames
+  const stat = { renders: 0, frames: 0, ms: 0, fms: 0 };
   window.homeGlass = stat;
-  function sheet(w, h, dpr) {                          // a canvas of w × h css px at the screen's density
+  function sheet(w, h, dpr) {
     const c = document.createElement('canvas');
     c.width = Math.max(1, Math.ceil(w * dpr)); c.height = Math.max(1, Math.ceil(h * dpr));
     const ctx = c.getContext('2d');
     ctx.scale(dpr, dpr);
     return [c, ctx];
   }
-  function rel(el, root) {                             // a box in the coordinates of its root, css px
+  function rel(el, root) {
     const a = el.getBoundingClientRect(), b = root.getBoundingClientRect();
     return { left: a.left - b.left, top: a.top - b.top, width: a.width, height: a.height };
   }
@@ -317,7 +256,7 @@
     ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
     ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
   }
-  function drawCover(ctx, img, r) {                    // a picture with object-fit: cover, clipped to its corners
+  function drawCover(ctx, img, r) {
     if (!img || !img.naturalWidth) return;
     ctx.save();
     round(ctx, r.left, r.top, r.width, r.height, radiusOf(img, r)); ctx.clip();
@@ -330,7 +269,6 @@
     if (!img) return;
     if (!img.complete || !img.naturalWidth) { img.loading = 'eager'; await img.decode().catch(() => {}); }
   }
-  // a piece: its glass rendered from the backdrop texture and copied into its own canvas
   function render(el, box, tex, origin, map, p, tint, turn, wobble, soft) {
     const dpr = dprOf();
     const pw = Math.ceil(box.width * dpr), ph = Math.ceil(box.height * dpr);
@@ -338,7 +276,7 @@
     gl.viewport(0, glc.height - ph, pw, ph); gl.scissor(0, glc.height - ph, pw, ph);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex);
-    if (p === FIELD) {                                 // variant a: the field over the whole panel
+    if (p === FIELD) {
       gl.useProgram(flowProg);
       gl.uniform2f(F.uSize, box.width, box.height); gl.uniform1f(F.uRadius, radiusOf(el, box));
       gl.uniform2f(F.uC, turn[0], turn[1]); gl.uniform1f(F.uT, turn[2]);
@@ -357,8 +295,7 @@
     const t = turn || [0, 0, 0], w = wobble || [0, 0];
     gl.uniform3f(U.uSpin, t[0], t[1], t[2]);
     gl.uniform2f(U.uWobble, w[0], w[1]);
-    gl.uniform1f(U.uRound, p.round ? 1 : 0);            // only the hero's lens and sphere
-    // the chips' frost (CHIP); every other piece: none (unit 1 still gets a texture, so nothing samples an empty unit)
+    gl.uniform1f(U.uRound, p.round ? 1 : 0);
     gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, soft ? soft.tex : tex); gl.activeTexture(gl.TEXTURE0);
     if (soft) gl.uniform4f(U.uFrost, CHIP.edge, 1, Math.max(CHIP.tint, tint[3]), CHIP.blur); else gl.uniform4f(U.uFrost, 0, 0, 0, 1);
     const ev = soft && soft.mean ? soft.mean : [0, 0, 0, 0];
@@ -366,7 +303,6 @@
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     return copy(el, box, pw, ph, 'h-glass');
   }
-  // the drawn piece into its own canvas: .h-glass as the first child, under the text; .h-flow (variant a) over the stripes
   function copy(el, box, pw, ph, cls) {
     let cv = cls === 'h-flow' ? el.querySelector(':scope > .h-flow') : el.firstElementChild;
     if (!cv || !cv.classList.contains(cls)) {
@@ -383,15 +319,12 @@
     stat.renders++;
     return cv;
   }
-  const tintOf = (el) => rgba(getComputedStyle(el).backgroundColor);   // the CSS tint before the glass replaces it
+  const tintOf = (el) => rgba(getComputedStyle(el).backgroundColor);
   const done = (el) => main.dispatchEvent(new CustomEvent('home-glass', { detail: el }));
 
-  // ------------------------------------------------------------------ the chips of a cover
-  const rendered = new Map();                          // element -> the layout it was last drawn at
+  const rendered = new Map();
   const sizeKey = (el) => [el, ...el.querySelectorAll('.h-chip, .h-lens, .h-sphere, .h-photo')]
     .map((n) => { const r = n.getBoundingClientRect(); return `${r.left},${r.top},${r.width},${r.height}`; }).join(';') + '@' + dprOf();
-  // the chips' frost: the backdrop shrunk by halves to about 4 css px a pixel (each halving averages 2 x 2, so no detail
-  // flickers through), and the mean colour under the chips (rects: in the backdrop, css px; w: its width, css px)
   function frostOf(c, rects, w) {
     let src = c;
     while (src.width / 2 >= w / 4 && src.width > 2 && src.height > 2) {
@@ -415,7 +348,7 @@
         }
       }
       if (n) mean = acc.map((v) => v / n / 255);
-    } catch (e) { /* a picture from elsewhere: no mean, the frost alone */ }
+    } catch (e) {   }
     return { tex: upload(src), mean };
   }
   async function renderCover(cover) {
@@ -428,10 +361,8 @@
     if (!cr.width) return;
     const st = getComputedStyle(cover);
     const rects = chips.map((c) => rel(c, cover));
-    // the backdrop: the cover (its colour and picture within its corners) and the page around, as far as the bend reaches
-    // the chips' glass: the bevel narrowed to CHIP.bevel (review 12, 4.7), unless ?chip=0
     const pc = CHIP.off ? P.chip : { ...P.chip, depth: Math.min(P.chip.depth, CHIP.bevel) };
-    const reach = Math.ceil(pc.depth * pc.refr * T.gain + (CHIP.off ? 0 : 3 * CHIP.blur)) + 4;   // the cap only shortens it
+    const reach = Math.ceil(pc.depth * pc.refr * T.gain + (CHIP.off ? 0 : 3 * CHIP.blur)) + 4;
     const x0 = Math.floor(Math.min(...rects.map((r) => r.left)) - reach), y0 = Math.floor(Math.min(...rects.map((r) => r.top)) - reach);
     const x1 = Math.ceil(Math.max(...rects.map((r) => r.left + r.width)) + reach), y1 = Math.ceil(Math.max(...rects.map((r) => r.top + r.height)) + reach);
     const [c, ctx] = sheet(x1 - x0, y1 - y0, dprOf());
@@ -454,12 +385,7 @@
     done(cover);
   }
 
-  // ------------------------------------------------------------------ the hero: lens, then the sphere over lens and photo
-  // Lens and sphere are circles round one centre, so the turning is drawn from the still stripes: every frame the glass
-  // is rendered anew with its samples turned about that centre. The bend and the colour split travel with the stripes,
-  // the light on the rims stays put, and the stripes outside the lens stay still. The sphere's backdrop (the stripes
-  // seen through the lens) is made once at rest: the lens' own rim lies outside what the sphere's bevel reaches.
-  let hero = null;                                     // the two backdrops, kept for the turning
+  let hero = null;
   async function renderHero() {
     const panel = main.querySelector('.h-striped');
     if (!panel) return;
@@ -473,20 +399,18 @@
     ctx.fillStyle = getComputedStyle(panel).backgroundColor; ctx.fillRect(0, 0, pr.width, pr.height);
     if (stripes) drawCover(ctx, stripes, rel(stripes, panel));
     if (hero) { gl.deleteTexture(hero.lensTex); if (hero.sphereTex !== hero.lensTex) gl.deleteTexture(hero.sphereTex); hero = null; }
-    // narrower windows show the panel smaller (home.css, stage 6) and a phone a lower one (review 12, 4.5): the bevels
-    // and the turning point shrink with the lens (320 px at full size; on a tablet the same as × panel width / 397)
     const lw = lens ? lens.getBoundingClientRect().width : 0;
     const k = Math.min(1, lw ? lw / 320 : pr.width / 397);
     const h = { lensTex: upload(c), sphereTex: null, map: [pr.width, pr.height], c: [pr.width / 2, pr.height / 2], lens: null, sphere: null, sphereTint: [0, 0, 0, 0],
       k, pLens: k < 1 ? { ...P.lens, depth: P.lens.depth * k } : P.lens, pSphere: k < 1 ? { ...P.sphere, depth: P.sphere.depth * k } : P.sphere };
-    if (RING === 'a') {                                // the field over the whole panel; the lens and sphere discs stay empty
+    if (RING === 'a') {
       const r = lens ? rel(lens, panel) : null;
       if (r) h.c = [r.left + r.width / 2, r.top + r.height / 2];
       h.flow = { el: panel, box: { left: 0, top: 0, width: pr.width, height: pr.height }, tint: lens ? (lens.classList.contains('glassed') ? rendered.get(lens).tint : tintOf(lens)) : [1, 1, 1, 0.2] };
       for (const el of [lens, sphere]) if (el) { const cv = el.querySelector(':scope > .h-glass'); if (cv) cv.remove(); el.classList.remove('glassed'); }
       hero = h;
       drawHero(turn.angle);
-      body.classList.add('ring-a');                    // home.css: no CSS disc, no glow ring
+      body.classList.add('ring-a');
       rendered.set(panel, { key: sizeKey(panel) });
       stat.ms += performance.now() - t0;
       done(panel);
@@ -500,19 +424,17 @@
       h.c = [r.left + r.width / 2, r.top + r.height / 2];
       const cv = render(lens, r, h.lensTex, [r.left, r.top], h.map, h.pLens, tint, [h.c[0], h.c[1], 0]);
       rendered.set(lens, { key: sizeKey(lens), tint });
-      ctx.drawImage(cv, r.left, r.top, r.width, r.height);   // the sphere sees the stripes through the lens
+      ctx.drawImage(cv, r.left, r.top, r.width, r.height);
     }
     if (sphere) {
       const b = rel(sphere, panel);
       if (!lens) h.c = [b.left + b.width / 2, b.top + b.height / 2];
-      // a: the stripes drift under the sphere, so it looks at them directly, through the lens' tint (its bevel lies
-      // outside what the sphere reaches); b and c: through the lens as drawn once at rest
       if (RING === 'a1' && lens) { h.sphereTex = h.lensTex; h.sphereTint = h.lens.tint; } else h.sphereTex = upload(c);
       h.sphere = { el: sphere, box: b };
     }
     hero = h;
     drawHero(turn.angle);
-    body.classList.toggle('glass-round', ROUND.on);  // home.css: the soft shadow under the lens and the sphere
+    body.classList.toggle('glass-round', ROUND.on);
     rendered.set(panel, { key: sizeKey(panel) });
     stat.ms += performance.now() - t0;
     done(panel);
@@ -528,11 +450,9 @@
     if (h.lens) live(render(h.lens.el, h.lens.box, h.lensTex, [h.lens.box.left, h.lens.box.top], h.map, h.pLens, h.lens.tint, t, w));
     if (h.sphere) live(render(h.sphere.el, h.sphere.box, h.sphereTex, [h.sphere.box.left, h.sphere.box.top], h.map, h.pSphere, h.sphereTint, t, [w[0], w[1] * 0.5]));
   }
-  const live = (cv) => { cv.classList.add('live'); cv.glassV = stamp; };   // for lens.js and home-live.js: drawn fresh each frame
+  const live = (cv) => { cv.classList.add('live'); cv.glassV = stamp; };
   const tickEvent = new Event('home-glass-tick');
 
-  // ------------------------------------------------------------------ the turn
-  // a steady clockwise turn, eased in once after load; frames only while the panel is on screen and the tab is shown
   const turn = { angle: 0, speed: 0, raf: 0, last: 0, seen: false };
   function tick(now) {
     turn.raf = 0;
@@ -558,7 +478,6 @@
     document.addEventListener('visibilitychange', go);
   }
 
-  // ------------------------------------------------------------------ when to draw
   const covers = [...main.querySelectorAll('.h-cover')];
   const panel = main.querySelector('.h-striped');
   const pending = new Set();
@@ -579,16 +498,13 @@
     if (!timer) timer = setTimeout(flush, 80);
   }
   const owner = (n) => (panel && panel.contains(n) ? panel : covers.find((c) => c.contains(n)) || null);
-  // covers far down the page wait until they come near (their pictures load lazily)
   const seen = new Set();
   const io = new IntersectionObserver((es) => {
     for (const e of es) if (e.isIntersecting && !seen.has(e.target)) { seen.add(e.target); io.unobserve(e.target); schedule(e.target); }
   }, { rootMargin: '1000px 0px' });
-  // sizes change when the fonts arrive (home.js widens the chips) and on resize; pictures when the admin swaps them
   const ro = new ResizeObserver((es) => { for (const e of es) { const o = owner(e.target); if (o && rendered.has(o)) schedule(o); } });
   for (const n of main.querySelectorAll('.h-chip, .h-cover, .h-striped, .h-sphere, .h-lens')) ro.observe(n);
   for (const im of main.querySelectorAll('.h-cover img, .h-stripes, .h-photo')) im.addEventListener('load', () => { const o = owner(im); if (o) schedule(o, true); });
-  // a height change alone is the iPhone toolbar folding away while scrolling: the glass stays as drawn
   let rt = 0, rw = window.innerWidth + '@' + dprOf();
   window.addEventListener('resize', () => {
     const k = window.innerWidth + '@' + dprOf();
@@ -596,8 +512,8 @@
     rw = k; clearTimeout(rt);
     rt = setTimeout(() => { for (const el of rendered.keys()) if (el === panel || covers.includes(el)) schedule(el, true); }, 150);
   });
-  glc.addEventListener('webglcontextlost', (e) => { e.preventDefault(); hero = null; });   // the drawn canvases stay
-  glc.addEventListener('webglcontextrestored', () => { try { initGL(); schedule(panel, true); for (const c of covers) if (seen.has(c)) schedule(c, true); } catch (e) { /* stays as drawn */ } });
+  glc.addEventListener('webglcontextlost', (e) => { e.preventDefault(); hero = null; });
+  glc.addEventListener('webglcontextrestored', () => { try { initGL(); schedule(panel, true); for (const c of covers) if (seen.has(c)) schedule(c, true); } catch (e) {   } });
 
   const start = () => {
     if (panel) schedule(panel);

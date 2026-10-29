@@ -1,18 +1,15 @@
-/* site.css: the published Notion page, measured on 2026-10-14 (site/MEASUREMENTS.md), plus the site menu.
-   Desktop numbers are from notion.site at 1440x900; phone numbers from notion.site at 390x844. */
 :root {
   --text: rgb(44, 44, 43);
-  --muted: rgb(120, 117, 112);   /* Notion: rgb(125, 122, 117) = 4.28:1; 5 steps darker gives 4.6:1 (contrast rule 4.5:1, CHECKLISTS) */
+  --muted: rgb(120, 117, 112);
   --line: rgba(28, 19, 1, 0.11);
   --link-line: rgba(55, 53, 47, 0.4);
   --icon: rgb(142, 139, 134);
   --hover: rgba(55, 53, 47, 0.06);
   --side: 96px;
-  /* corner radii by size (designer, 2026-10-14): 24 px for the biggest content, smaller for smaller things */
-  --r-l: 16px;   /* text cards (callout) */
-  --r-m: 12px;   /* page photo, outline panel */
-  --r-s: 8px;    /* rows and buttons: menu, page links, file, toggle */
-  --r-xs: 4px;   /* tiny: icon in the top bar, inline code, focus ring */
+  --r-l: 16px;
+  --r-m: 12px;
+  --r-s: 8px;
+  --r-xs: 4px;
   --lh: 24px;
 }
 *, *::before, *::after { box-sizing: border-box; }
@@ -26,12 +23,10 @@ body {
 img, video { max-width: 100%; }
 a:focus-visible, summary:focus-visible { outline: 2px solid rgba(35, 131, 226, 0.57); outline-offset: 1px; border-radius: var(--r-xs); }
 
-/* top bar: breadcrumbs as on notion.site (icon 18 px at 15,13; text 14 px at x 38), menu instead of Notion's buttons */
 .topbar { position: sticky; top: 0; z-index: 20; height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 10px 0 9px; background: #fff; }
 .crumbs { display: flex; align-items: center; min-width: 0; font-size: 14px; line-height: 1.2; }
 .crumb { display: inline-flex; align-items: center; min-width: 0; height: 24px; padding: 0 5px 0 6px; border-radius: var(--r-s); color: var(--text); text-decoration: none; white-space: nowrap; }
 .crumb span { overflow: hidden; text-overflow: ellipsis; }
-/* only the current page shortens when space runs out; the home and Work crumbs stay whole (review 11) */
 .crumb:not(.here) { flex: none; }
 .crumb.here { flex: 0 1 auto; }
 .crumb:hover { background: var(--hover); }
@@ -41,7 +36,6 @@ a:focus-visible, summary:focus-visible { outline: 2px solid rgba(35, 131, 226, 0
 .mi { display: inline-flex; align-items: center; height: 28px; padding: 0 8px; border-radius: var(--r-s); font-size: 14px; line-height: 1.2; color: var(--text); text-decoration: none; white-space: nowrap; }
 .mi:hover, .mi.here { background: var(--hover); }
 
-/* frame: a 720 px column with at least 96 px on each side (Notion's grid) */
 .layout { display: grid; grid-template-columns: minmax(var(--side), 1fr) minmax(auto, 720px) minmax(var(--side), 1fr); }
 .layout > * { grid-column: 2; min-width: 0; }
 .cover { height: 30vh; overflow: hidden; }
@@ -56,10 +50,8 @@ a:focus-visible, summary:focus-visible { outline: 2px solid rgba(35, 131, 226, 0
 .title { margin: 0; padding: 0 8px; font-size: 40px; line-height: 1.2; font-weight: 700; word-break: break-word; }
 .page-content { margin-top: 8px; padding: 8px 0 30vh; }
 
-/* blocks: outer padding per type, text leaf 2 px; lists and page links group with 1 px inside a group */
 .b { position: relative; margin: 0; }
 .leaf { padding: 2px; min-height: calc(var(--lh) + 4px); }
-/* Notion keeps spaces at line ends (break-spaces), so its lines wrap a little earlier than pre-wrap would */
 .leaf, h2, h3, .title, .cap { white-space: break-spaces; word-break: break-word; overflow-wrap: break-word; }
 .b-text { padding: 6px; }
 .b-h2 { padding: 26px 6px 6px; }
@@ -72,7 +64,6 @@ code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mo
 a.ln { color: inherit; opacity: 0.7; text-decoration: underline; text-decoration-color: var(--link-line); text-decoration-thickness: 0.05em; text-underline-offset: 0.1em; }
 a.ln:hover { opacity: 1; }
 
-/* case cards on the home page and Work: the whole card (cover, title, line) is one link */
 .card { position: relative; }
 .card > .b { position: static; }
 .card h3 a.ln::after { content: ""; position: absolute; inset: 0; z-index: 1; }
@@ -94,14 +85,11 @@ a.ln:hover { opacity: 1; }
 .kids { padding-left: 26px; }
 
 .b-image, .b-video { padding: 8px; }
-/* pictures and videos: 24 px at the full column (704 px), down to 16 px on a phone; the radius follows the width of the block (container units) */
 .b-image, .b-video { container-type: inline-size; }
 .b-image img, .b-video video { border-radius: clamp(16px, 3.47cqi, 24px); }
 .b-image img { display: block; width: 100%; height: auto; object-fit: cover; }
 .b-video { margin-left: 6px; width: var(--w, auto); max-width: calc(100% - 12px); }
 .b-video video { display: block; width: 100%; height: auto; }
-/* D-55: videos play by themselves, without the player bar. A video that is not playing (paused by the reader,
-   reduced motion, data saver, autoplay blocked) shows a small play mark in the middle; tap or Enter toggles it. */
 .vbox { position: relative; }
 .vmark { display: none; }
 .b-video.auto video { cursor: pointer; }
@@ -143,7 +131,6 @@ a.ln:hover { opacity: 1; }
 .b-cols { display: flex; gap: 46px; }
 .b-cols .col { min-width: 0; }
 
-/* Notion's floating outline: 16x2 px dashes, 14 px apart, 20 px from the right edge */
 .toc { position: fixed; right: 8px; top: 146px; z-index: 10; display: none; }
 .toc-dashes { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; padding: 0 12px 0 16px; }
 .toc .d { display: block; width: 16px; height: 2px; border-radius: 2px; background: rgba(55, 53, 47, 0.16); }
@@ -157,7 +144,6 @@ a.ln:hover { opacity: 1; }
 .toc .t.on { color: var(--text); }
 @media (min-width: 1100px) { .toc { display: block; } }
 
-/* phone (notion.site at 390x844): 18 px sides, body line 22 px, title 28 px, cover 200 px */
 @media (max-width: 600px) {
   :root { --side: 18px; --lh: 22px; }
   .cover { height: 200px; }
@@ -170,7 +156,6 @@ a.ln:hover { opacity: 1; }
   .b-h3 { padding-top: 18.7px; }
   .crumb:not(:first-child), .sep { display: none; }
   .mi { padding: 0 6px; }
-  /* phone: file names wrap instead of being cut, so the English and Russian CV differ (review 11) */
   .file { height: auto; min-height: 28px; align-items: flex-start; padding-top: 2px; padding-bottom: 2px; }
   .fname { white-space: normal; overflow-wrap: anywhere; }
   .ic-file { margin-top: 1px; }

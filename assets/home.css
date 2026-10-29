@@ -1,13 +1,4 @@
-/* Google Sans — self-hosted copy of the Google Fonts files (fetched 2026-10-22, fonts.gstatic.com/s/googlesans/v71).
- * One variable file per subset with two axes: wght 400–700 and opsz 17–18 (stage 2: requested as
- * family=Google+Sans:opsz,wght@17..18,400..700). The opsz axis matters: Figma sets optical size «auto», so 16 px text
- * uses opsz 17, which is up to 3 px wider per label than opsz 18 (the stage 1 files, google-sans-var-*.woff2, unused now).
- * Browsers do the same with font-optical-sizing: auto (the default).
- * The design uses 400 / 500 / 700. Licence: SIL Open Font License 1.1 (Google Fonts metadata: license "ofl";
- * font name table: "Copyright 2025 The Google Sans Project Authors (github.com/googlefonts/googlesans)", licence URL https://openfontlicense.org).
- * unicode-range values are copied verbatim from Google's CSS. */
 
-/* cyrillic — source: https://fonts.gstatic.com/s/googlesans/v71/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2ugCIhM907-0x.woff2 */
 @font-face {
   font-family: 'Google Sans';
   font-style: normal;
@@ -17,7 +8,6 @@
   unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
-/* latin-ext — source: https://fonts.gstatic.com/s/googlesans/v71/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2sACIhM907-0x.woff2 */
 @font-face {
   font-family: 'Google Sans';
   font-style: normal;
@@ -27,7 +17,6 @@
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-/* latin — source: https://fonts.gstatic.com/s/googlesans/v71/4UaRrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iq2vgCIhM907w.woff2 */
 @font-face {
   font-family: 'Google Sans';
   font-style: normal;
@@ -37,90 +26,78 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Home page design tokens — taken from Figma kUHw4T0qcDoi1zaDB0cdGa, frame 2:3 «2056w final» (2026-10-22).
- * Scoped to body.home so no other page is affected. Values are the Figma values unless a comment says
- * "adjusted". Colours in Figma are mostly unbound; a few are Figma variables (named in comments).
- * Contrast (WCAG 2.x) is checked in SPEC.md § Tokens and contrast. */
 
 body.home {
-  /* ---------- Colour: surfaces ---------- */
-  --home-bg: #f2f4f7;                 /* page / frame 2:3 fill */
-  --home-surface: #ffffff;            /* hero card, Striped panel, Contact card · var color/bg/surface */
-  --home-surface-subtle: #eef0f5;     /* secondary buttons · var color/bg/subtle */
-  --home-surface-inverse: #1a1a19;    /* primary button · var color/bg/inverse */
-  --home-cover-bg: #e6ecf7;           /* case cover frame fill */
-  --home-cover-line: #d3dced;         /* «Vector 1» stroke on covers (70 px) */
+  --home-bg: #f2f4f7;
+  --home-surface: #ffffff;
+  --home-surface-subtle: #eef0f5;
+  --home-surface-inverse: #1a1a19;
+  --home-cover-bg: #e6ecf7;
+  --home-cover-line: #d3dced;
 
-  /* ---------- Colour: text ---------- */
-  --home-text: #1a1a19;               /* headings, list, email, buttons · var color/text/primary */
-  --home-text-name: #1d1d1f;          /* hero name only */
-  --home-text-body: #3f3f40;          /* hero body lines */
-  --home-text-secondary: #3b3b39;     /* case descriptions, footer */
-  --home-text-muted: #5c5c58;         /* Contact body · var color/text/secondary */
-  --home-text-hover: #8a8a86;         /* list rows on hover (designer, 2026-10-22: «сделай серой текст при наведении»); 3.3:1 on the page, large bold text */
-  --home-text-inverse: #ffffff;       /* primary button label, chips · var color/text/inverse */
-  --home-nav-text: #000000;           /* nav labels */
+  --home-text: #1a1a19;
+  --home-text-name: #1d1d1f;
+  --home-text-body: #3f3f40;
+  --home-text-secondary: #3b3b39;
+  --home-text-muted: #5c5c58;
+  --home-text-hover: #8a8a86;
+  --home-text-inverse: #ffffff;
+  --home-nav-text: #000000;
 
-  /* ---------- Colour: marks, lines, accents ---------- */
-  --home-highlight: rgba(255, 225, 77, 0.9);   /* marker #ffe14d @ 0.9, blend multiply */
+  --home-highlight: rgba(255, 225, 77, 0.9);
   --home-highlight-blend: multiply;
-  --home-divider: rgba(28, 19, 1, 0.11);       /* list rows, 2 px bottom border */
-  --home-media-stroke: rgba(16, 24, 40, 0.07); /* 2 px ring over pictures (covers, case images, videos); cool to sit on the #E6ECF7 media backing (designer chose it 2026-10-25), was the warm divider colour rgba(28, 19, 1, 0.07) */
+  --home-divider: rgba(28, 19, 1, 0.11);
+  --home-media-stroke: rgba(16, 24, 40, 0.07);
   --home-toc-active: #2c2c2b;
-  --home-toc-idle: rgba(55, 53, 47, 0.16);     /* non-text, 1.33:1 — see SPEC questions */
-  --home-clip-front: #0e100b;                  /* paper clip, front wire */
-  --home-clip-back: #f6f3ec;                   /* paper clip, back wire */
-  --home-hole-stroke: #cfd1d4;                 /* punch hole ring on hero card, 2 px outside */
-  --home-accent-red: #ff2f0b;                  /* rose sticker */
-  --home-accent-green: #71b717;                /* rose sticker leaves */
-  --home-accent-pink: #ffb8d3;                 /* BE KIND heart */
+  --home-toc-idle: rgba(55, 53, 47, 0.16);
+  --home-clip-front: #0e100b;
+  --home-clip-back: #f6f3ec;
+  --home-hole-stroke: #cfd1d4;
+  --home-accent-red: #ff2f0b;
+  --home-accent-green: #71b717;
+  --home-accent-pink: #ffb8d3;
 
-  /* ---------- Glass tints ---------- */
-  --home-nav-tint: rgba(255, 255, 255, 0.7);   /* Tab Bar fill · Figma var «Color 15» #ffffffb2 */
-  --home-nav-key-tint: rgba(0, 0, 0, 0.1);     /* home action_key fill */
-  --home-nav-key-blur: 15px;                   /* home action_key BACKGROUND_BLUR radius (Figma) */
-  --home-lens-tint: rgba(255, 255, 255, 0.2);  /* hero lens and cursor lens */
+  --home-nav-tint: rgba(255, 255, 255, 0.7);
+  --home-nav-key-tint: rgba(0, 0, 0, 0.1);
+  --home-nav-key-blur: 15px;
+  --home-lens-tint: rgba(255, 255, 255, 0.2);
   --home-chip-tint-figma: rgba(0, 0, 0, 0.4);
-  --home-chip-tint: rgba(0, 0, 0, 0.55);       /* adjusted: 0.4 → 0.55; white 16 px text over the light cover 1
-                                                  is 3.29:1 at 0.4, 5.43:1 at 0.55 (4.74:1 even over pure white) */
+  --home-chip-tint: rgba(0, 0, 0, 0.55);
 
-  /* ---------- Typography ---------- */
   --home-font: 'Google Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --home-fw-regular: 400;
   --home-fw-medium: 500;
   --home-fw-bold: 700;
-  /* size / line height (Figma «auto» line height = 1.252 × size, written here as the rendered px) */
-  --home-type-name: 700 36px/45px var(--home-font);        /* hero name */
-  --home-type-list: 700 36px/45px var(--home-font);        /* (1) WORK … rows, text-transform: uppercase */
-  --home-type-h2: 500 32px/40px var(--home-font);          /* «My work» */
-  --home-type-title: 500 26px/32px var(--home-font);       /* case titles, «Let’s work together» */
-  --home-type-lead: 500 18px/26px var(--home-font);        /* hero body */
-  --home-type-desc: 400 18px/28px var(--home-font);        /* case descriptions */
-  --home-type-label: 500 16px/24px var(--home-font);       /* buttons, chips · var Label/M */
-  --home-type-nav: 500 16px/20px var(--home-font);         /* nav labels (auto line height) */
-  --home-type-small: 400 16px/24px var(--home-font);       /* Contact body + email, footer */
+  --home-type-name: 700 36px/45px var(--home-font);
+  --home-type-list: 700 36px/45px var(--home-font);
+  --home-type-h2: 500 32px/40px var(--home-font);
+  --home-type-title: 500 26px/32px var(--home-font);
+  --home-type-lead: 500 18px/26px var(--home-font);
+  --home-type-desc: 400 18px/28px var(--home-font);
+  --home-type-label: 500 16px/24px var(--home-font);
+  --home-type-nav: 500 16px/20px var(--home-font);
+  --home-type-small: 400 16px/24px var(--home-font);
   --home-letter-spacing: 0;
 
-  /* ---------- Layout and spacing (px at the 2057 design width) ---------- */
-  --home-column: 700px;          /* content column, centred (x 678 in a 2057 frame) */
-  --home-hero-width: 800px;      /* hero is 50 px wider than the column on each side */
-  --home-top: 180px;             /* frame top → hero */
-  --home-gap-hero-work: 100px;   /* hero → «My work» */
-  --home-gap-sections: 64px;     /* work block → Contact → list → sticker */
-  --home-gap-heading: 24px;      /* «My work» → first card */
+  --home-column: 700px;
+  --home-hero-width: 800px;
+  --home-top: 180px;
+  --home-gap-hero-work: 100px;
+  --home-gap-sections: 64px;
+  --home-gap-heading: 24px;
   --home-gap-cards: 32px;
-  --home-gap-card-inner: 16px;   /* cover → text block */
-  --home-gap-card-text: 4px;     /* title → description (card 1 uses 8 px in Figma) */
-  --home-pad-card-text: 12px;    /* left/right padding of the text block */
+  --home-gap-card-inner: 16px;
+  --home-gap-card-text: 4px;
+  --home-pad-card-text: 12px;
   --home-gap-hero-halves: 6px;
   --home-pad-hero-card: 32px;
   --home-gap-hero-text: 8px;
   --home-gap-actions: 8px;
   --home-pad-button: 12px 20px;
   --home-chip-height: 32px;
-  --home-pad-chip: 4px 12px;     /* 4/8 outer + 0/4 inner */
+  --home-pad-chip: 4px 12px;
   --home-gap-chips: 6px;
-  --home-chip-offset: 20px;      /* chips row from cover top-left */
+  --home-chip-offset: 20px;
   --home-pad-contact: 24px;
   --home-gap-contact: 24px;
   --home-gap-list: 16px;
@@ -130,26 +107,23 @@ body.home {
   --home-nav-pad: 4px;
   --home-nav-height: 56px;
 
-  /* ---------- Radii ---------- */
-  --home-radius-hero: 48px;      /* Striped panel and hero card */
+  --home-radius-hero: 48px;
   --home-radius-cover: 48px;
-  --home-radius-contact: 40px;   /* var radius/card */
-  --home-radius-pill: 999px;     /* buttons · var radius/pill */
+  --home-radius-contact: 40px;
+  --home-radius-pill: 999px;
   --home-radius-chip: 200px;
-  --home-radius-nav: 100px;      /* Tab Bar; Figma corner smoothing 0.6 (no CSS equivalent) */
+  --home-radius-nav: 100px;
   --home-radius-toc: 2px;
 
-  /* ---------- Shadows ---------- */
   --home-shadow-nav: 0 4px 12px 0 rgba(0, 0, 0, 0.1);
-  --home-shadow-sphere-inner: inset 0 2.6px 19.6px 5.86px rgba(255, 255, 255, 0.52); /* blend LINEAR_DODGE (plus-lighter) */
+  --home-shadow-sphere-inner: inset 0 2.6px 19.6px 5.86px rgba(255, 255, 255, 0.52);
 
-  /* ---------- Glass (Figma GLASS effect parameters) ---------- */
   --home-glass-nav-refraction: 0.46;
   --home-glass-nav-depth: 32;
   --home-glass-nav-dispersion: 0.21;
   --home-glass-nav-light-angle: -45deg;
   --home-glass-nav-light-intensity: 0.3;
-  --home-glass-nav-radius: 1;          /* frost / blur radius */
+  --home-glass-nav-radius: 1;
   --home-glass-nav-splay: 0;
 
   --home-glass-chip-refraction: 1;
@@ -184,16 +158,13 @@ body.home {
   --home-glass-cursor-radius: 0;
   --home-glass-cursor-splay: 0;
 
-  /* ---------- Motion ---------- */
-  --home-ease-sphere: cubic-bezier(0.85, -0.005, 0.2, 0.995); /* Sphere ON_HOVER smart animate */
+  --home-ease-sphere: cubic-bezier(0.85, -0.005, 0.2, 0.995);
   --home-dur-sphere: 500ms;
 
   background: var(--home-bg);
 }
 
-/* ---------- Narrower widths (stage 6). Figma has only the 2057 px frame; these are ours, a calm scale in the same
- * style: one step down for each size, line heights kept near Figma's ratios, nothing under 16 px. ---------- */
-@media (max-width: 899px) {   /* tablet: the hero halves are ~357 px wide, so its card gets the smaller name and lines */
+@media (max-width: 899px) {
   body.home {
     --home-gutter: 24px;
     --home-type-name: 700 32px/40px var(--home-font);
@@ -201,18 +172,18 @@ body.home {
     --home-pad-hero-card: 24px;
   }
 }
-@media (max-width: 767px) {   /* phone: one column, the nav at the bottom */
+@media (max-width: 767px) {
   body.home {
     --home-gutter: 16px;
-    --home-type-name: 700 28px/35px var(--home-font);     /* 36 → 28 */
-    --home-type-list: 700 28px/44px var(--home-font);     /* 36 → 28; 44 px rows to tap */
-    --home-type-h2: 500 26px/32px var(--home-font);       /* 32 → 26 */
-    --home-type-title: 500 22px/28px var(--home-font);    /* 26 → 22 */
-    --home-type-lead: 500 16px/24px var(--home-font);     /* 18 → 16 */
-    --home-type-desc: 400 16px/24px var(--home-font);     /* 18 → 16, the smallest reading size */
-    --home-top: 16px;              /* the nav is at the bottom now */
-    --home-nav-bottom: 12px;       /* nav above the bottom edge, plus env(safe-area-inset-bottom) */
-    --home-gap-hero-work: 40px;    /* 56 → 40 with the lower hero panel: the first case on the first screen (review 12, 4.5) */
+    --home-type-name: 700 28px/35px var(--home-font);
+    --home-type-list: 700 28px/44px var(--home-font);
+    --home-type-h2: 500 26px/32px var(--home-font);
+    --home-type-title: 500 22px/28px var(--home-font);
+    --home-type-lead: 500 16px/24px var(--home-font);
+    --home-type-desc: 400 16px/24px var(--home-font);
+    --home-top: 16px;
+    --home-nav-bottom: 12px;
+    --home-gap-hero-work: 40px;
     --home-gap-sections: 48px;
     --home-gap-heading: 16px;
     --home-gap-cards: 32px;
@@ -227,21 +198,14 @@ body.home {
   }
 }
 
-/* home.css: the home page from the Figma redesign (REDESIGN_HOME.md, stage 2; values in home/SPEC.md).
-   build.py --home-v2 puts home/fonts.css + home/tokens.css + this file into /assets/home.css, for the page "/" only.
-   Every rule is scoped to body.home, so nothing reaches the other pages (they do not load this file anyway).
-   Px values are Figma's at 2057 px; the narrower widths (stage 6) are the media queries at the end, so 1200 px and up
-   is exactly the desktop of stage 2.
-   Glass and shaders are plain CSS placeholders here; stages 4 and 5 attach WebGL to [data-glass] and [data-shader]. */
 
-/* ---------- decisions of the designer (2026-10-22) over the stage 1 tokens ---------- */
 body.home {
-  --home-chip-tint: var(--home-chip-tint-figma);   /* chips as in Figma: black @ 0.4 (he checks legibility on the site) */
-  --home-toc-idle: rgba(55, 53, 47, 0.3);           /* idle outline marks a little darker than Figma's @ 0.16 */
+  --home-chip-tint: var(--home-chip-tint-figma);
+  --home-toc-idle: rgba(55, 53, 47, 0.3);
   --home-toc-hover: rgba(55, 53, 47, 0.55);
-  --home-focus: #2383e2;                           /* the other pages' ring (site.css, rgba(35,131,226,.57)) made solid: 3.5:1 on the page, 3.9:1 on white (stage 7 check: 2.0:1) */
-  --home-press: scale(0.96);                        /* make-interfaces-feel-better: press feedback */
-  --home-fast: 150ms;                               /* hover and press, ease-out */
+  --home-focus: #2383e2;
+  --home-press: scale(0.96);
+  --home-fast: 150ms;
   --home-marker: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90.7 20' preserveAspectRatio='none'%3E%3Cpath d='M0 0.5L30 0.5L62.6 0L90.7 0.6L90.5 19.6L61.9 17.5L31.7 19.7L1.6 20L0 0.5Z' fill='%23FFE14D' fill-opacity='0.9'/%3E%3C/svg%3E");
 
   margin: 0;
@@ -260,16 +224,12 @@ body.home img { display: block; max-width: none; }
 body.home a { color: inherit; text-decoration: none; }
 body.home a:focus-visible { outline: 2px solid var(--home-focus); outline-offset: 2px; }
 
-/* ---------- page stack: 180 px to the hero, blocks 64 px apart; 100 px below the footer line (designer, 2026-10-22; Figma had 646) ---------- */
 body.home .h-main { padding: var(--home-top) 0 100px; }
 body.home .h-stack { display: flex; flex-direction: column; align-items: center; gap: var(--home-gap-sections); }
 body.home .h-top { width: var(--home-column); display: flex; flex-direction: column; align-items: center; gap: var(--home-gap-hero-work); }
 
-/* ---------- navigation (fixed, centred, 24 px from the top) ---------- */
 body.home .h-nav { position: fixed; top: var(--home-nav-top); left: 0; right: 0; z-index: 20; display: flex; justify-content: center; pointer-events: none; }
 body.home .h-nav-in { display: flex; gap: var(--home-nav-gap); pointer-events: auto; }
-/* CSS glass (phones, tablets, no WebGL, reduced motion): the tint, a blur of the page behind, a bright edge on the lit
-   side (−45° = top left). On a computer home-live.js draws the real glass under the pill (.glassed): then only the shadow. */
 body.home .h-tabbar {
   position: relative; isolation: isolate;
   display: flex; height: var(--home-nav-height); padding: var(--home-nav-pad);
@@ -281,14 +241,6 @@ body.home .h-tabbar.glassed { background: transparent; -webkit-backdrop-filter: 
 @media (prefers-reduced-transparency: reduce) {
   body.home .h-tabbar { background: rgba(255, 255, 255, 0.92); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
-/* the cursor: the arrow of Figma Community «Figma Cursor Chat» (curb7wcfhHylGgb2laGe9t, node 1202:628, designer 2026-10-27:
-   «сам курсор стилистически сделай таким»): black, 1.5 px white outside stroke, drop shadow 0 1 / blur 4 at 50 %;
-   80 % of Figma's size (designer: «немного уменьшить, чтобы пропорции были схожи с другими состояниями курсора»), stroke
-   and shadow kept at Figma's on-screen size; 24 × 25 with the shadow, hotspot = the tip at 4, 3 (home-live.js adds the class
-   on a computer). Before: 68:4123 of his file.
-   2026-10-27: a 2x picture for Retina screens (the 1x one is scaled up there and looks soft). Over links and buttons the
-   system hand stays, over zoomable pictures the zoom sign, while dragging a zoomed picture the closed hand (designer,
-   2026-10-27: «эти состояния надо вернуть» — an arrow over everything was tried and taken back). */
 body.home.h-arrow {
   cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='25' viewBox='0 0 30 31.25' fill='none'%3E%3Cdefs%3E%3Cfilter id='s' x='0' y='0' width='30' height='31.25' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeDropShadow dx='0' dy='1.25' stdDeviation='2.5' flood-color='%23000' flood-opacity='0.5'/%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23s)'%3E%3Cpath d='M6.45365 4.59505C5.97565 4.31028 5.39061 4.74122 5.52084 5.28217L9.60654 22.2535C9.74091 22.8117 10.4917 22.9123 10.7684 22.4093L14.0951 16.3606L21.0619 14.5432C21.6017 14.4024 21.7042 13.6805 21.225 13.395L6.45365 4.59505Z' stroke='%23fff' stroke-width='3.75'/%3E%3Cpath d='M6.45365 4.59505C5.97565 4.31028 5.39061 4.74122 5.52084 5.28217L9.60654 22.2535C9.74091 22.8117 10.4917 22.9123 10.7684 22.4093L14.0951 16.3606L21.0619 14.5432C21.6017 14.4024 21.7042 13.6805 21.225 13.395L6.45365 4.59505Z' fill='%23000'/%3E%3C/g%3E%3C/svg%3E") 4 3, auto;
   cursor: image-set(url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='25' viewBox='0 0 30 31.25' fill='none'%3E%3Cdefs%3E%3Cfilter id='s' x='0' y='0' width='30' height='31.25' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeDropShadow dx='0' dy='1.25' stdDeviation='2.5' flood-color='%23000' flood-opacity='0.5'/%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23s)'%3E%3Cpath d='M6.45365 4.59505C5.97565 4.31028 5.39061 4.74122 5.52084 5.28217L9.60654 22.2535C9.74091 22.8117 10.4917 22.9123 10.7684 22.4093L14.0951 16.3606L21.0619 14.5432C21.6017 14.4024 21.7042 13.6805 21.225 13.395L6.45365 4.59505Z' stroke='%23fff' stroke-width='3.75'/%3E%3Cpath d='M6.45365 4.59505C5.97565 4.31028 5.39061 4.74122 5.52084 5.28217L9.60654 22.2535C9.74091 22.8117 10.4917 22.9123 10.7684 22.4093L14.0951 16.3606L21.0619 14.5432C21.6017 14.4024 21.7042 13.6805 21.225 13.395L6.45365 4.59505Z' fill='%23000'/%3E%3C/g%3E%3C/svg%3E") 1x, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='50' viewBox='0 0 30 31.25' fill='none'%3E%3Cdefs%3E%3Cfilter id='s' x='0' y='0' width='30' height='31.25' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3E%3CfeDropShadow dx='0' dy='1.25' stdDeviation='2.5' flood-color='%23000' flood-opacity='0.5'/%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23s)'%3E%3Cpath d='M6.45365 4.59505C5.97565 4.31028 5.39061 4.74122 5.52084 5.28217L9.60654 22.2535C9.74091 22.8117 10.4917 22.9123 10.7684 22.4093L14.0951 16.3606L21.0619 14.5432C21.6017 14.4024 21.7042 13.6805 21.225 13.395L6.45365 4.59505Z' stroke='%23fff' stroke-width='3.75'/%3E%3Cpath d='M6.45365 4.59505C5.97565 4.31028 5.39061 4.74122 5.52084 5.28217L9.60654 22.2535C9.74091 22.8117 10.4917 22.9123 10.7684 22.4093L14.0951 16.3606L21.0619 14.5432C21.6017 14.4024 21.7042 13.6805 21.225 13.395L6.45365 4.59505Z' fill='%23000'/%3E%3C/g%3E%3C/svg%3E") 2x) 4 3, auto;
@@ -311,7 +263,6 @@ body.home .h-key:hover::after { opacity: 0.06; }
 body.home .h-key:active { transform: var(--home-press); }
 body.home .h-key:focus-visible { outline-offset: 0; }
 
-/* ---------- on-this-page marks (fixed, top right) ---------- */
 body.home .h-toc { position: fixed; top: 160px; right: 8px; z-index: 20; width: 44px; height: 86px; }
 body.home .h-mark { position: absolute; height: 2px; border-radius: var(--home-radius-toc); background: var(--home-toc-idle); }
 body.home .h-mark.l2 { left: 16px; width: 16px; }
@@ -323,13 +274,11 @@ body.home .h-mark:nth-child(4) { top: 42px; }
 body.home .h-mark:nth-child(5) { top: 56px; }
 body.home .h-mark:nth-child(6) { top: 70px; }
 body.home .h-mark:nth-child(7) { top: 84px; }
-body.home .h-mark::before { content: ""; position: absolute; top: -6px; bottom: -6px; left: -12px; right: -12px; }   /* 40 x 14 hit area */
+body.home .h-mark::before { content: ""; position: absolute; top: -6px; bottom: -6px; left: -12px; right: -12px; }
 body.home .h-mark.l3::before { left: -15px; right: -15px; }
 body.home .h-mark:hover { background: var(--home-toc-hover); }
 body.home .h-mark.on { background: var(--home-toc-active); }
 body.home .h-mark:focus-visible { outline-offset: 3px; }
-/* the section's name to the left of its mark on hover and keyboard focus (review 12, 4.13): a small white label, the
-   name from aria-label (screen readers keep reading the aria-label alone); clear of the 40 x 14 hit area */
 body.home .h-mark::after {
   content: attr(aria-label); position: absolute; right: calc(100% + 16px); top: 50%; z-index: 1;
   width: max-content; max-width: 300px; padding: 4px 10px; border-radius: 10px; box-sizing: border-box;
@@ -340,19 +289,18 @@ body.home .h-mark::after {
 body.home .h-mark:is(:hover, :focus-visible)::after { opacity: 1; transform: translate(0, -50%); }
 @media (prefers-reduced-motion: reduce) { body.home .h-mark::after { transition: none; transform: translate(0, -50%); } }
 
-/* ---------- hero: 800 x 400, 50 px wider than the column on each side ---------- */
 body.home .h-hero { position: relative; flex: none; display: flex; gap: var(--home-gap-hero-halves); width: var(--home-hero-width); height: 400px; }
 body.home .h-striped {
   position: relative; flex: none; width: 397px; height: 400px; overflow: hidden; isolation: isolate;
   border-radius: var(--home-radius-hero); background: var(--home-surface);
 }
-body.home .h-striped::after {   /* 4 px white stroke inside */
+body.home .h-striped::after {
   content: ""; position: absolute; inset: 0; z-index: 3; border-radius: inherit; box-shadow: inset 0 0 0 4px var(--home-surface); pointer-events: none;
 }
 body.home .h-stripes { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 body.home .h-lens { position: absolute; left: 38px; top: 40px; width: 320px; height: 320px; border-radius: 50%; background: var(--home-lens-tint); }
 body.home .h-sphere { position: absolute; left: 71.68px; top: 73.68px; width: 252.63px; height: 252.63px; border-radius: 50%; overflow: hidden; }
-body.home .h-sphere::after {   /* Figma inner shadow, blend «linear dodge»; ::after so it lies over the photo, as effects do in Figma */
+body.home .h-sphere::after {
   content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: var(--home-shadow-sphere-inner); mix-blend-mode: plus-lighter; pointer-events: none;
 }
 body.home .h-photo { position: absolute; left: 4.76px; top: 5.02px; width: 243.19px; height: 243.19px; border-radius: 50%; object-fit: cover; }
@@ -364,9 +312,8 @@ body.home .h-card {
 }
 body.home .h-intro { display: flex; flex-direction: column; gap: var(--home-gap-hero-text); }
 body.home .h-name { font: var(--home-type-name); color: var(--home-text-name); }
-body.home .h-lead { font: var(--home-type-lead); color: var(--home-text-body); text-wrap: pretty; }   /* Figma: text-wrap pretty */
+body.home .h-lead { font: var(--home-type-lead); color: var(--home-text-body); text-wrap: pretty; }
 
-/* ---------- buttons (Figma «Button»: Primary, Secondary) ---------- */
 body.home .h-actions { align-self: flex-start; display: flex; gap: var(--home-gap-actions); }
 body.home .h-btn {
   position: relative; display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: var(--home-pad-button);
@@ -379,7 +326,6 @@ body.home .h-btn:hover::after { opacity: 0.08; }
 body.home .h-btn--secondary:hover::after { opacity: 0.05; }
 body.home .h-btn:active { transform: var(--home-press); }
 
-/* ---------- my work ---------- */
 body.home .h-work { width: var(--home-column); display: flex; flex-direction: column; gap: var(--home-gap-heading); }
 body.home .h-h2 { font: var(--home-type-h2); color: var(--home-text); }
 body.home .h-cards { display: flex; flex-direction: column; gap: var(--home-gap-cards); }
@@ -389,22 +335,12 @@ body.home .h-cover {
   border-radius: var(--home-radius-cover); background: var(--home-cover-bg);
 }
 body.home .h-cover img { width: 100%; height: 100%; object-fit: cover; }
-body.home .h-cover::after {   /* hover: the cover dims a little, as on the other pages (brightness 0.96) */
+body.home .h-cover::after {
   content: ""; position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none;
   transition: opacity var(--home-fast) ease-out;
 }
 body.home .h-case:hover .h-cover::after { opacity: 0.04; }
-/* a 2 px ring over the edge of a picture, so a light screenshot does not melt into the grey page (designer,
-   2026-10-23: «обводку небольшую добавить 2px, а то сливается контент»), only on pictures whose block has «Обводка»
-   («только там где есть проблема с контрастностью»). An element after the picture (an img's own
-   inset shadow paints under it), following the corner radius; lens.js paints it into the twins */
 body.home .h-ring { position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 2px var(--home-media-stroke); pointer-events: none; }
-/* hover and keyboard focus: the cover with its chips grows by 2% (designer, 2026-10-22: «чтобы фотография вместе с
-   тегами немного увеличивалась», then «более плавную и интересную анимацию… на 1 процент меньше»):
-   - in on a spring (damping 0.55, 1.9 Hz, 760 ms): a touch past 2% (2.25%), then it settles;
-   - always from the middle, the same every time («чтобы оно всегда центрировалось и увеличивалось одинаково»);
-   - out without the spring, a little faster.
-   lens.js and home-live.js draw its twin at the live box, so the glass keeps up. */
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   body.home .h-cover { transition: transform 460ms cubic-bezier(0.25, 1, 0.5, 1); }
   body.home .h-case:hover .h-cover, body.home .h-case:has(.h-case-link:focus-visible) .h-cover {
@@ -421,22 +357,19 @@ body.home .h-chip {
 }
 body.home .h-case-text { display: flex; flex-direction: column; gap: var(--home-gap-card-text); padding: 0 var(--home-pad-card-text); }
 body.home .h-case-title { font: var(--home-type-title); color: var(--home-text); }
-.nw { white-space: nowrap; }   /* hyphenated words in titles stay whole (build.py keep_compounds, review 12) */
-body.home .h-case-link::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; }   /* the whole card is the link */
+.nw { white-space: nowrap; }
+body.home .h-case-link::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
 body.home .h-case-link:focus-visible { outline: none; }
 body.home .h-case:has(.h-case-link:focus-visible) { outline: 2px solid var(--home-focus); outline-offset: 4px; }
-body.home .h-case-desc { font: var(--home-type-desc); color: var(--home-text-secondary); text-wrap: pretty; }   /* Figma: text-wrap pretty */
+body.home .h-case-desc { font: var(--home-type-desc); color: var(--home-text-secondary); text-wrap: pretty; }
 
-/* marker: a hand-drawn band 20 px high, 4 px below the top of the 28 px line, 5 px past the words on each side;
-   multiply as in Figma. The padding stretches the background over the whole line box without moving the text. */
 body.home .h-hl {
   color: inherit; background: var(--home-marker) no-repeat 0 4px / 100% 20px;
-  padding: 3px; margin: 0 -3px;   /* 3 = (28 line − 22 content area of Google Sans 18 px) / 2; 3 px past the words, not touching the word before (review 12, 4.15) */
+  padding: 3px; margin: 0 -3px;
   mix-blend-mode: var(--home-highlight-blend);
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
 
-/* ---------- the recommendation (home, Work; source: the «Recommendation» callout on About): a white card like Contact ---------- */
 body.home .h-quote {
   width: var(--home-column); max-width: 100%; margin: 0; padding: var(--home-pad-contact); box-sizing: border-box;
   display: flex; flex-direction: column; gap: 12px; border-radius: var(--home-radius-contact); background: var(--home-surface);
@@ -450,7 +383,6 @@ body.home .h-quote blockquote p { margin: 0; }
 body.home .h-quote blockquote p + p { margin-top: 12px; }
 body.home .h-cards + .h-quotes { margin-top: 64px; }
 
-/* ---------- contact ---------- */
 body.home .h-contact {
   position: relative; width: var(--home-column); padding: var(--home-pad-contact); overflow: hidden;
   display: flex; flex-direction: column; gap: var(--home-gap-contact);
@@ -466,7 +398,6 @@ body.home .h-contact-email a:hover { opacity: 0.7; }
 body.home .h-contact .h-actions { position: relative; z-index: 1; }
 body.home .h-rose { position: absolute; left: 483.84px; top: 16.85px; width: 298.554px; height: 302.31px; pointer-events: none; }
 
-/* ---------- list (1)–(4) ---------- */
 body.home .h-list { width: var(--home-column); display: flex; flex-direction: column; gap: var(--home-gap-list); }
 body.home .h-row {
   position: relative; display: block; height: 45px; overflow: hidden;
@@ -475,10 +406,6 @@ body.home .h-row {
 body.home .h-row::before, body.home .h-row::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; }
 body.home .h-row::after { background: var(--home-divider); }
 body.home .h-row::before { z-index: 1; background: var(--home-text); opacity: 0; transition: opacity var(--home-fast) ease-out; }
-/* hover: the line stays as it is; the letters flip over instead (home.js; designer, 2026-10-22: «чтобы при наведении не
-   становилась полоска черной, а текст имел анимацию переворачивания… что-то уникальное»). The wave starts at the letter
-   under the pointer and spreads both ways; the letters turn up when the pointer comes from below, down when from above;
-   halfway through each turn the letter splits into red and blue for a moment, as the site's glass does. */
 body.home .h-flip { display: inline-block; white-space: pre; perspective: 520px; }
 body.home .h-row { transition: color 220ms ease-out; }
 body.home .h-row:hover, body.home .h-row:focus-visible { color: var(--home-text-hover); }
@@ -492,31 +419,24 @@ body.home .h-ch.go { animation: h-flip 660ms cubic-bezier(0.62, 0.04, 0.28, 1) c
 }
 body.home .h-row:focus-visible { outline-offset: 4px; border-radius: 4px; }
 
-/* ---------- sticker and footer ---------- */
 body.home .h-foot { width: 1126.85px; display: flex; flex-direction: column; align-items: center; gap: var(--home-gap-sticker-footer); }
 body.home .h-sticker { width: 1126.85px; height: 1338px; }
 body.home .h-copy { width: 100%; font: var(--home-type-small); color: var(--home-text-secondary); text-align: center; }
-body.home .h-credit { margin-top: calc(4px - var(--home-gap-sticker-footer)); font-size: 14px; line-height: 20px; color: var(--home-text-muted); }   /* where the stickers come from */
+body.home .h-credit { margin-top: calc(4px - var(--home-gap-sticker-footer)); font-size: 14px; line-height: 20px; color: var(--home-text-muted); }
 body.home .h-credit-link { color: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
 
 body.home [id] { scroll-margin-top: 100px; }
 
-/* ---------- still glass (stage 4, home-glass.js): a canvas drawn once lies under the text of each chip, in the lens and
-   in the sphere; the CSS tint of a piece stays until its canvas is in place (.glassed), so without WebGL nothing changes.
-   The lens and sphere canvases are redrawn while the stripes in the lens turn (home-glass.js); the photo stays on top. */
 body.home .h-glass { position: absolute; left: 0; top: 0; z-index: -1; display: block; pointer-events: none; }
 body.home .h-chip { position: relative; isolation: isolate; }
 body.home .h-lens, body.home .h-sphere { isolation: isolate; }
 body.home .h-chip.glassed, body.home .h-lens.glassed { background: transparent; }
-/* the hero's liquid field (home-glass.js, variant a): one canvas over the stripes, under the photo; no disc, no glow ring */
 body.home .h-flow { position: absolute; left: 0; top: 0; z-index: 0; display: block; pointer-events: none; }
-/* the rounded rim (home-glass.js, 2026-10-23): the glass sits above the stripes on a soft shadow, light from the top left;
-   only once the glass is drawn, so the fallbacks stay as they were; lens.js paints it into the bend's twin */
 body.home.glass-round .h-lens.glassed { box-shadow: 3px 9px 24px -6px rgba(0, 0, 0, 0.3), 1px 3px 7px -2px rgba(0, 0, 0, 0.12); }
 body.home.glass-round .h-lens.glassed ~ .h-sphere { box-shadow: 2px 6px 16px -6px rgba(0, 0, 0, 0.28); }
 body.home.ring-a .h-lens { background: transparent; }
 body.home.ring-a .h-sphere::after { display: none; }
-@media (prefers-reduced-transparency: reduce) {   /* no refraction (home-glass.js stays off): denser tints instead */
+@media (prefers-reduced-transparency: reduce) {
   body.home .h-chip { background: rgba(0, 0, 0, 0.6); }
   body.home .h-lens { background: rgba(255, 255, 255, 0.5); }
 }
@@ -527,14 +447,6 @@ body.home.ring-a .h-sphere::after { display: none; }
   body.home .h-key:active, body.home .h-btn:active { transform: none; }
 }
 
-/* ---------- widths (stage 6; designer, 2026-10-22: «адаптив главной… в соответствии визуальному стилю веба (панель
-   навигации может уйти вниз)»). Figma has only the 2057 px frame; every rule below sits in a max-width query, so the
-   desktop above keeps its boxes to the pixel. The phone type scale and spacing are tokens (tokens.css, the end).
-   - below 1200: the BE KIND sticker shrinks with the window;
-   - below 1100: no outline marks;
-   - below 900 (tablet): the page gets side gutters, the hero halves share the width and keep 397:400, the lens,
-     sphere and photo inside go in percentages (home-glass.js reads their boxes, so the glass follows);
-   - below 768 (phone): one column, the hero stacked, the nav at the bottom above the iPhone home bar. ---------- */
 @media (max-width: 1199px) {
   body.home .h-foot { width: min(1126.85px, 100% - 48px); }
   body.home .h-sticker { width: 100%; height: auto; aspect-ratio: 1126.85 / 1338; }
@@ -549,14 +461,13 @@ body.home.ring-a .h-sphere::after { display: none; }
   body.home .h-hero { width: 100%; height: auto; }
   body.home .h-striped { flex: 1 1 0; width: auto; height: auto; aspect-ratio: 397 / 400; align-self: flex-start; }
   body.home .h-card { flex: 1 1 0; width: auto; height: auto; min-width: 0; }
-  body.home .h-lens { left: 9.5718%; top: 10%; width: 80.6045%; height: 80%; }               /* 38, 40, 320 of 397 x 400 */
-  body.home .h-sphere { left: 18.0554%; top: 18.42%; width: 63.6348%; height: 63.1575%; }    /* 71.68, 73.68, 252.63 */
-  body.home .h-photo { left: 1.8842%; top: 1.9871%; width: 96.2633%; height: 96.2633%; }    /* 4.76, 5.02, 243.19 of 252.63 */
+  body.home .h-lens { left: 9.5718%; top: 10%; width: 80.6045%; height: 80%; }
+  body.home .h-sphere { left: 18.0554%; top: 18.42%; width: 63.6348%; height: 63.1575%; }
+  body.home .h-photo { left: 1.8842%; top: 1.9871%; width: 96.2633%; height: 96.2633%; }
   body.home .h-cover { height: auto; aspect-ratio: 700 / 440; }
-  body.home .h-foot { width: 100%; }   /* the page has its gutters now */
+  body.home .h-foot { width: 100%; }
 }
 @media (max-width: 767px) {
-  /* the nav at the bottom; content ends above it (footer included), whatever the home bar takes */
   body.home .h-nav { top: auto; bottom: calc(var(--home-nav-bottom) + env(safe-area-inset-bottom)); padding: 0 max(8px, env(safe-area-inset-left)); }
   body.home .h-nav-in { gap: 8px; }
   body.home .h-key { min-width: 44px; }
@@ -566,11 +477,8 @@ body.home.ring-a .h-sphere::after { display: none; }
   }
   body.home [id] { scroll-margin-top: 24px; }
 
-  /* hero: the striped panel on top, the card under it */
   body.home .h-hero { flex-direction: column; }
   body.home .h-striped, body.home .h-card { flex: none; width: 100%; }
-  /* the panel is low on a phone, so the first case shows on the first screen (review 12, 4.5: 358 → 200 px, 180 at
-     360); the lens and the sphere keep Figma's proportions to the panel's height (80% and 63%), circles in its middle */
   body.home .h-striped { --hs: 200px; height: var(--hs); aspect-ratio: auto; }
   body.home .h-lens { left: calc(50% - var(--hs) * 0.4); top: calc(var(--hs) * 0.1); width: calc(var(--hs) * 0.8); height: calc(var(--hs) * 0.8); }
   body.home .h-sphere {
@@ -581,30 +489,26 @@ body.home.ring-a .h-sphere::after { display: none; }
   body.home .h-actions { flex-wrap: wrap; }
   body.home .h-case { border-radius: calc(var(--home-radius-cover) + 4px); }
   body.home .h-chips { right: var(--home-chip-offset); flex-wrap: wrap; }
-  /* marker for the 16/24 description: the same band, scaled to the line */
-  body.home .h-hl { padding: 2.2px 2.7px; margin: 0 -2.7px; background-position: 0 3.5px; background-size: 100% 17px; white-space: nowrap; }   /* one band, never split */
+  body.home .h-hl { padding: 2.2px 2.7px; margin: 0 -2.7px; background-position: 0 3.5px; background-size: 100% 17px; white-space: nowrap; }
 
-  /* contact: the buttons wrap; the rose, smaller, peeks from the bottom right corner under them */
   body.home .h-contact { padding-bottom: 32px; }
-  body.home .h-rose { left: auto; top: auto; right: -60px; bottom: -104px; width: 190px; height: auto; }   /* clear of the buttons (review 12, 4.8) */
+  body.home .h-rose { left: auto; top: auto; right: -60px; bottom: -104px; width: 190px; height: auto; }
 
-  body.home .h-row { height: 44px; }   /* a 44 px tap target */
+  body.home .h-row { height: 44px; }
 
-  /* a recommendation: who wrote it above the quote, so the author shows before 15 lines of text (review 12, recruiter 14.4) */
   body.home .h-quote figcaption { order: -1; }
 }
-@media (max-width: 374px) {   /* 360: the nav and the hero buttons still fit in one row */
-  body.home .h-striped { --hs: 180px; }   /* a shorter screen: the panel lower still */
+@media (max-width: 374px) {
+  body.home .h-striped { --hs: 180px; }
   body.home .h-key { padding: 1px 9px; }
   body.home .h-nav-in { gap: 6px; }
   body.home { --home-pad-button: 12px 16px; }
 }
 
-/* ---------- «Skip to content»: hidden until it gets keyboard focus, then a pill at the top left, over the nav ---------- */
 body.home .h-skip {
   position: fixed; left: max(12px, env(safe-area-inset-left)); top: max(12px, env(safe-area-inset-top)); z-index: 40;
   padding: var(--home-pad-button); border-radius: 999px; background: var(--home-surface-inverse); color: var(--home-text-inverse);
   font: var(--home-type-label); text-decoration: none; outline: 2px solid var(--home-focus); outline-offset: 2px;
 }
 body.home .h-skip:not(:focus) { width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; outline: 0; }
-body.home #content:focus { outline: none; }   /* the skip target: focus only says where Tab goes on */
+body.home #content:focus { outline: none; }

@@ -1,28 +1,14 @@
-// viewer.js: the pictures and videos of a case open larger on a click (designer, 2026-10-25: «добавить возможность
-// открыть медиа в более большой формат по клику в кейсах»). build.py marks each figure of a case page with data-zoom;
-// a picture wider than its 1408 px page copy also carries data-full, a 2400 px copy that loads only here.
-// - the media grows from its place on the page to fit the window and goes back there on close (reduced motion: a fade);
-// - ← → or the side buttons go through the case's media, Esc, ✕ or a click outside closes; on a phone a swipe
-//   sideways changes the media, a swipe down closes;
-// - a video plays on from where it was; a click on it pauses, as on the page. The page's videos wait meanwhile;
-// - a second click on a picture (a double tap on a phone; + on the keyboard) shows it at its own pixels: the sharp copy at
-//   1 image pixel per device pixel, never smaller than fitted (review 12, 4.12: six phone screens opened only 1.02x
-//   larger on a phone). Drag, scroll or swipe pans; a click or tap (or −) brings it back to fit. Swipes change the media
-//   and close only while it is fitted; Esc, ← → and the buttons work as before. Videos do not zoom.
-// A native <dialog>: it sits in the top layer, above the glass canvases of lens.js and home-live.js, and the page
-// behind it is inert. Without this script the media stay as they are.
 (() => {
   const figs = [...document.querySelectorAll('figure[data-zoom]')];
   if (!figs.length || typeof HTMLDialogElement !== 'function') return;
   const root = document.documentElement;
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
   const save = !!(navigator.connection && navigator.connection.saveData);
-  const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';     // a soft stop, no overshoot
+  const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
   const EASE_BACK = 'cubic-bezier(0.4, 0, 0.2, 1)';
   const PLAY = '<svg width="20" height="22" viewBox="0 0 20 22" aria-hidden="true"><path d="M2 2.2v17.6c0 .8.9 1.3 1.6.9l14.6-8.8c.6-.4.6-1.4 0-1.8L3.6 1.3C2.9.9 2 1.4 2 2.2Z" fill="currentColor"/></svg>';
   const icon = (d) => `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="${d}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-  // ------------------------------------------------------------------ the media of the page
   const items = figs.map((fig) => {
     const trig = fig.querySelector('.pg-media, .vbox');
     const img = trig && trig.querySelector('img');
@@ -39,12 +25,11 @@
     return null;
   }).filter((it) => it && it.trig);
   if (!items.length) return;
-  const shown = (it) => it.trig.getClientRects().length > 0;          // not inside a closed toggle
+  const shown = (it) => it.trig.getClientRects().length > 0;
 
-  // ------------------------------------------------------------------ the dialog
   const dlg = document.createElement('dialog');
   dlg.className = 'pv';
-  dlg.tabIndex = -1;                                    // opened with the mouse, the dialog itself takes the focus (no ring on ✕)
+  dlg.tabIndex = -1;
   dlg.setAttribute('aria-label', 'Media viewer');
   dlg.innerHTML = '<div class="pv-bg"></div><div class="pv-stage"></div><div class="pv-zoom" hidden></div><p class="pv-cap"></p>'
     + '<div class="pv-bar"><span class="pv-count" aria-live="polite"></span>'
@@ -59,8 +44,6 @@
 
   let list = [], idx = 0, cur = null, open = false, closing = false, viaKey = false, held = [];
 
-  // where the media goes: as large as the window allows (never above its own pixels), the caption under it
-  // the room the bar, the buttons and the caption keep round the media
   const margins = () => (window.innerWidth < 768 ? { side: 12, top: 64, bottom: 84 } : { side: 96, top: 76, bottom: 32 });
   function place(it) {
     const W = window.innerWidth, H = window.innerHeight, phone = W < 768;
@@ -83,9 +66,9 @@
   function media(it, frame) {
     if (it.kind === 'img') {
       const im = document.createElement('img');
-      im.src = it.el.currentSrc || it.el.src;          // the page's copy, already loaded: shows at once
+      im.src = it.el.currentSrc || it.el.src;
       im.alt = it.alt; im.draggable = false; im.decoding = 'async';
-      if (it.full) {                                    // then the sharp one, when it is ready
+      if (it.full) {
         const big = new Image(); big.decoding = 'async'; big.src = it.full;
         (big.decode ? big.decode() : Promise.resolve()).then(() => { if (im.isConnected) im.src = it.full; }).catch(() => {});
       }
@@ -98,7 +81,7 @@
     v.tabIndex = 0;
     v.setAttribute('aria-label', (it.cap || 'Video') + '. Press to pause or play.');
     const at = it.el.currentTime || 0;
-    if (at) v.addEventListener('loadedmetadata', () => { try { v.currentTime = at; } catch (e) { /* keeps 0 */ } }, { once: true });
+    if (at) v.addEventListener('loadedmetadata', () => { try { v.currentTime = at; } catch (e) {   } }, { once: true });
     v.src = it.src;
     const mark = document.createElement('span');
     mark.className = 'pv-mark'; mark.innerHTML = PLAY;
@@ -130,7 +113,7 @@
     prev.hidden = next.hidden = list.length < 2;
     prev.disabled = i === 0;
     next.disabled = i === list.length - 1;
-    for (const j of [i - 1, i + 1]) {                   // the neighbours' sharp copies, ahead of time
+    for (const j of [i - 1, i + 1]) {
       const n = list[j];
       if (n && n.full && !n.pre) { n.pre = new Image(); n.pre.decoding = 'async'; n.pre.src = n.full; }
     }
@@ -138,14 +121,12 @@
 
   const inView = (r) => r.width > 0 && r.bottom > 0 && r.top < window.innerHeight;
   const radius = (el) => parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0;
-  // a transform that lays the frame (rect L) over the rect r of the page
   const over = (r, L) => `translate(${r.left - L.x}px, ${r.top - L.y}px) scale(${r.width / L.w}, ${r.height / L.h})`;
 
   function show(it) {
     list = items.filter(shown);
     idx = Math.max(0, list.indexOf(it));
     viaKey = viaKey && !!it;
-    // pause the page's videos behind the viewer; they go on when it closes
     held = [...document.querySelectorAll('main video')].filter((v) => !v.paused);
     held.forEach((v) => v.pause());
     if (!viaKey && document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
@@ -195,16 +176,15 @@
     zoomOut(true);
     closing = true;
     const it = list[idx], frame = cur;
-    frame.querySelectorAll('video').forEach((v) => {   // the page's copy goes on from here
-      if (it.kind === 'video' && v.currentTime) try { it.el.currentTime = v.currentTime; } catch (e) { /* stays */ }
+    frame.querySelectorAll('video').forEach((v) => {
+      if (it.kind === 'video' && v.currentTime) try { it.el.currentTime = v.currentTime; } catch (e) {   }
       v.pause();
     });
     let r = it.trig.getBoundingClientRect();
-    if (!inView(r)) {                                   // went through the media: the page comes to the last one
+    if (!inView(r)) {
       window.scrollTo(0, window.scrollY + r.top - Math.max(16, (window.innerHeight - r.height) / 2));
       r = it.trig.getBoundingClientRect();
     }
-    // the frame's own box (left/top/size); where it is drawn now may differ: mid-animation or dragged by a finger
     const L = { x: parseFloat(frame.style.left), y: parseFloat(frame.style.top), w: parseFloat(frame.style.width), h: parseFloat(frame.style.height) };
     const from = getComputedStyle(frame).transform;
     const dragged = !!frame.style.transform;
@@ -234,19 +214,14 @@
     });
   }
 
-  // ------------------------------------------------------------------ zoom: the picture at its own pixels
-  // The zoomed picture is a copy in its own scroller over the stage (the fitted frame waits hidden under it), so the
-  // browser pans it: wheel and trackpad, a finger with its momentum; a mouse drags it (below).
-  let zoom = null, zoomOuting = null;                  // zoomOuting: ends a zoom-out still running
+  let zoom = null, zoomOuting = null;
   const boxOf = (f) => ({ x: parseFloat(f.style.left), y: parseFloat(f.style.top), w: parseFloat(f.style.width), h: parseFloat(f.style.height) });
-  // the best copy there is: the 2400 px one when the original is wider than the page's 1408 px copy
   const natW = (it) => Math.min(it.w, it.full ? 2400 : 1408);
   function zoomSize(it, L) {
     const w = Math.max(natW(it) / (window.devicePixelRatio || 1), L.w);
     return { w: Math.round(w), h: Math.round((w * it.h) / it.w) };
   }
-  const canZoom = (it, L) => it.kind === 'img' && zoomSize(it, L).w > L.w * 1.15;   // worth it: at least 15% larger
-  // the picture's place in the scroller: centred where it is smaller than the window, else with the fitted margins
+  const canZoom = (it, L) => it.kind === 'img' && zoomSize(it, L).w > L.w * 1.15;
   function zoomLayout(z) {
     const W = zoomBox.clientWidth, H = zoomBox.clientHeight, m = margins();
     const ah = H - m.top - m.bottom;
@@ -256,9 +231,7 @@
     z.sizer.style.height = Math.max(H, z.y + z.size.h + m.bottom) + 'px';
     Object.assign(z.img.style, { left: z.x + 'px', top: z.y + 'px', width: z.size.w + 'px', height: z.size.h + 'px' });
   }
-  // a transform that lays the zoomed picture (now at rect r on screen) over the fitted box L
   const onto = (L, r) => `translate(${L.x - r.left}px, ${L.y - r.top}px) scale(${L.w / r.width}, ${L.h / r.height})`;
-  // zoom in, keeping the point under the pointer (cx, cy) where it is; without a point, the middle
   function zoomIn(cx, cy) {
     const it = list[idx];
     if (!open || closing || zoom || zoomOuting || !cur || !cur.classList.contains('pv-zoomable')) return;
@@ -267,9 +240,9 @@
     if (cx === undefined) { cx = L.x + L.w / 2; cy = L.y + L.h / 2; }
     const shown = cur.querySelector('img');
     const img = document.createElement('img');
-    img.src = shown.currentSrc || shown.src;           // loaded already: no blank frame
+    img.src = shown.currentSrc || shown.src;
     img.alt = shown.alt; img.draggable = false; img.decoding = 'async';
-    if (it.full && !img.src.endsWith(it.full)) {       // the sharp copy as soon as it is decoded
+    if (it.full && !img.src.endsWith(it.full)) {
       const big = new Image(); big.decoding = 'async'; big.src = it.full;
       (big.decode ? big.decode() : Promise.resolve()).then(() => { if (img.isConnected) img.src = it.full; }).catch(() => {});
     }
@@ -291,7 +264,6 @@
     img.animate([{ transform: onto(L, r), borderRadius: `${(14 * r.width) / L.w}px` }, { transform: 'none', borderRadius: '14px' }],
                 { duration: 380, easing: EASE });
   }
-  // back to fit: animated, or at once (instant) before the media change or the viewer closes
   function zoomOut(instant) {
     const z = zoom;
     if (!z) { if (instant && zoomOuting) zoomOuting(); return; }
@@ -311,7 +283,6 @@
     z.img.animate([{ transform: 'none', borderRadius: '14px' }, { transform: onto(L, r), borderRadius: `${(14 * r.width) / L.w}px` }],
                   { duration: 320, easing: EASE_BACK, fill: 'forwards' }).finished.then(back, back);
   }
-  // a mouse drags the zoomed picture; a click without a drag zooms out (a finger pans natively and taps to zoom out)
   let pan = null, panned = 0;
   zoomBox.addEventListener('pointerdown', (e) => {
     if (e.pointerType !== 'mouse' || e.button !== 0 || !zoom) return;
@@ -322,7 +293,7 @@
     const dx = e.clientX - pan.x, dy = e.clientY - pan.y;
     if (!pan.moved && Math.hypot(dx, dy) > 4) {
       pan.moved = true;
-      try { zoomBox.setPointerCapture(e.pointerId); } catch (err) { /* the drag goes on without capture */ }
+      try { zoomBox.setPointerCapture(e.pointerId); } catch (err) {   }
       zoomBox.classList.add('grabbing');
     }
     if (pan.moved) { zoomBox.scrollLeft = pan.l - dx; zoomBox.scrollTop = pan.t - dy; }
@@ -337,22 +308,21 @@
   zoomBox.addEventListener('pointercancel', panEnd);
   zoomBox.addEventListener('click', () => { if (performance.now() - panned > 250) zoomOut(); });
 
-  // ------------------------------------------------------------------ events
   items.forEach((it) => {
     const t = it.trig;
     t.tabIndex = 0;
     t.setAttribute('role', 'button');
     t.setAttribute('aria-haspopup', 'dialog');
     t.setAttribute('aria-label', (it.kind === 'video' ? 'Open the video larger' : 'Open the picture larger') + (it.cap ? ': ' + it.cap : ''));
-    if (it.kind === 'video') it.el.tabIndex = -1;   // one stop for the keyboard: the frame
-    t.addEventListener('mousedown', (e) => { if (e.button === 0) e.preventDefault(); });   // no focus jump (lens.js lifts focused things)
+    if (it.kind === 'video') it.el.tabIndex = -1;
+    t.addEventListener('mousedown', (e) => { if (e.button === 0) e.preventDefault(); });
     t.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); viaKey = false; show(it); });
     t.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); viaKey = true; show(it); }
     });
   });
 
-  dlg.addEventListener('cancel', (e) => { e.preventDefault(); viaKey = true; close(); });   // closed from the keyboard: focus goes back to the picture
+  dlg.addEventListener('cancel', (e) => { e.preventDefault(); viaKey = true; close(); });
   dlg.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
     else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
@@ -365,20 +335,19 @@
   let swiped = 0, tap = null, lastType = '';
   stage.addEventListener('pointerdown', (e) => { lastType = e.pointerType; }, true);
   stage.addEventListener('click', (e) => {
-    if (performance.now() - swiped < 400) return;      // the end of a swipe is not a click
-    if (!cur || !cur.contains(e.target)) { close(); return; }   // outside the media
+    if (performance.now() - swiped < 400) return;
+    if (!cur || !cur.contains(e.target)) { close(); return; }
     if (!cur.classList.contains('pv-zoomable')) return;
-    if (lastType !== 'touch' && lastType !== 'pen') { zoomIn(e.clientX, e.clientY); return; }   // a mouse: one click
-    const now = performance.now();                      // a finger: a double tap
+    if (lastType !== 'touch' && lastType !== 'pen') { zoomIn(e.clientX, e.clientY); return; }
+    const now = performance.now();
     if (tap && now - tap.t < 350 && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 40) zoomIn(e.clientX, e.clientY);
     else tap = { t: now, x: e.clientX, y: e.clientY };
   });
 
-  // touch: sideways changes the media, down closes; the frame follows the finger
   let sw = null;
   stage.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'mouse' || !e.isPrimary || closing || !cur || zoom) return;
-    if (window.visualViewport && window.visualViewport.scale > 1.01) return;   // pinch-zoomed: the browser pans
+    if (window.visualViewport && window.visualViewport.scale > 1.01) return;
     sw = { x: e.clientX, y: e.clientY, axis: '', dx: 0, dy: 0 };
   });
   stage.addEventListener('pointermove', (e) => {
@@ -402,7 +371,7 @@
       const old = cur, t = old.style.transform;
       old.style.transform = '';
       if (go(s.dx < 0 ? 1 : -1, s.dx)) return;
-      old.style.transform = t;                          // the first or the last: springs back below
+      old.style.transform = t;
     }
     if (s.axis === 'y' && s.dy > 90) { close(); return; }
     const was = cur.style.transform;
@@ -424,7 +393,6 @@
       cur.classList.toggle('pv-zoomable', canZoom(it, L));
       if (!zoom) return;
       if (!canZoom(it, L)) { zoomOut(true); return; }
-      // zoomed: the same point stays in the middle of the window
       const W = zoomBox.clientWidth, H = zoomBox.clientHeight;
       const u = (zoomBox.scrollLeft + W / 2 - zoom.x) / zoom.size.w, v = (zoomBox.scrollTop + H / 2 - zoom.y) / zoom.size.h;
       zoom.size = zoomSize(it, L);

@@ -1,28 +1,24 @@
-/* ---------- inner pages (REDESIGN_PAGES.md, stage 1: body.home.pg; build.py --pages-v2 or "pagesV2": true).
- * The home page's bundle (/assets/home.css) stops before this comment, so the home stays as it was; from here on
- * the file goes to /assets/pages.css, with pages.css. Reading type reuses the home's tokens: title = --home-type-h2,
- * h2 = --home-type-title, body = --home-type-desc; only h3 is new. ---------- */
 body.pg {
-  --home-top: 152px;                                    /* page top → title (the nav ends at 80) */
-  --home-type-h3: 500 20px/28px var(--home-font);       /* h3: between h2 (26) and body (18) */
-  --home-font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;   /* the mark «c» */
-  --home-gap-title: 40px;        /* title → first block (or the contact card) */
-  --home-gap-text: 16px;         /* between paragraphs */
-  --home-gap-item: 8px;          /* between list items */
-  --home-gap-h2: 56px;           /* above h2 */
-  --home-gap-h3: 32px;           /* above h3 */
-  --home-gap-heading-text: 12px; /* heading → its text */
-  --home-gap-media: 32px;        /* around pictures, videos, files, callouts, dividers */
-  --home-gap-page-end: 96px;     /* last block → © line, at least (on a short page the line sits at the bottom) */
-  --home-indent: 28px;           /* lists, toggles, nested blocks */
+  --home-top: 152px;
+  --home-type-h3: 500 20px/28px var(--home-font);
+  --home-font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --home-gap-title: 40px;
+  --home-gap-text: 16px;
+  --home-gap-item: 8px;
+  --home-gap-h2: 56px;
+  --home-gap-h3: 32px;
+  --home-gap-heading-text: 12px;
+  --home-gap-media: 32px;
+  --home-gap-page-end: 96px;
+  --home-indent: 28px;
   --home-radius-file: 24px;
   --home-radius-code: 6px;
-  --home-facts-key: 96px;        /* a case's facts: the key column (Context, Role, Team, When) */
+  --home-facts-key: 96px;
 }
 @media (max-width: 767px) {
   body.pg {
     --home-top: 40px;
-    --home-type-h3: 500 18px/26px var(--home-font);     /* 20 → 18 */
+    --home-type-h3: 500 18px/26px var(--home-font);
     --home-gap-title: 24px;
     --home-gap-h2: 44px;
     --home-gap-h3: 28px;
@@ -33,28 +29,19 @@ body.pg {
   }
 }
 
-/* pages.css: the inner pages in the new home's design (REDESIGN_PAGES.md, stage 1; build.py --pages-v2 or "pagesV2": true).
-   Loaded after home.css on body.home.pg, so the home's nav, buttons, contact card, marker, outline marks and © line
-   come from home.css as they are (no list (1)–(4) here: designer, 2026-10-23); here: the column, the reading type, the page blocks, the current nav key.
-   build.py puts the inner-page part of home/tokens.css in front of this file in /assets/pages.css. site.css is not loaded. */
 
-/* ---------- nav: the key of this page is the current one (the tint the home key has on the home page) ---------- */
 body.pg .h-key--home { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
-body.pg .h-key[aria-current] { background: var(--home-nav-key-tint); }   /* "true" on a case: Work, the section it is in */
+body.pg .h-key[aria-current] { background: var(--home-nav-key-tint); }
 
-/* ---------- column: 700 px, centred; the title, the page, then the © line ---------- */
-/* the © line at the bottom of the window when the page is short (designer, 2026-10-23: «эта плашка должна быть снизу»),
-   right after the content when it is long; the phone keeps home.css's bottom padding over the nav and the home bar */
 body.pg .h-main { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
 @media (min-width: 768px) { body.pg .h-main { padding-bottom: 40px; } }
 body.pg .pg-col, body.pg .pg-end { width: min(var(--home-column), 100%); margin: 0 auto; }
 body.pg .pg-title { margin-bottom: var(--home-gap-title); font: var(--home-type-h2); color: var(--home-text); text-wrap: balance; overflow-wrap: break-word; }
 body.pg .pg-col > .h-contact { width: 100%; }
-body.pg .pg-col > :is(.h-contact, .h-cards) + .pg-body { margin-top: var(--home-gap-media); }   /* Work: the home's cards (home.css) */
+body.pg .pg-col > :is(.h-contact, .h-cards) + .pg-body { margin-top: var(--home-gap-media); }
 body.pg .pg-end { margin-top: auto; padding-top: var(--home-gap-page-end); }
 body.pg .pg-end .h-foot { width: 100%; }
 
-/* ---------- reading type ---------- */
 body.pg .pg-body { font: var(--home-type-desc); color: var(--home-text-secondary); overflow-wrap: break-word; }
 body.pg .pg-h2 { font: var(--home-type-title); color: var(--home-text); text-wrap: balance; }
 body.pg .pg-h3 { font: var(--home-type-h3); color: var(--home-text); text-wrap: balance; }
@@ -70,7 +57,6 @@ body.pg code {
   font-family: var(--home-font-mono); font-size: 0.875em; color: var(--home-text);
 }
 
-/* ---------- rhythm: blocks follow each other in .pg-flow (the page, nested blocks, a callout) ---------- */
 body.pg .pg-flow > * + * { margin-top: var(--home-gap-text); }
 body.pg .pg-flow > :is(.pg-figure, .pg-file, .pg-callout, .pg-hr),
 body.pg .pg-flow > :is(.pg-figure, .pg-file, .pg-callout, .pg-hr) + * { margin-top: var(--home-gap-media); }
@@ -78,22 +64,19 @@ body.pg .pg-flow > .pg-file + .pg-file { margin-top: var(--home-gap-item); }
 body.pg .pg-flow > .pg-h2 { margin-top: var(--home-gap-h2); }
 body.pg .pg-flow > .pg-h3 { margin-top: var(--home-gap-h3); }
 body.pg .pg-flow > :is(.pg-h2, .pg-h3) + :not(.pg-figure, .pg-file, .pg-callout, .pg-hr, .pg-h2, .pg-h3) { margin-top: var(--home-gap-heading-text); }
-body.pg .pg-flow > .pg-h3 + .pg-meta { margin-top: var(--home-gap-card-text); color: var(--home-text-muted); }   /* CV: dates under «role · place», 6.1:1 */
+body.pg .pg-flow > .pg-h3 + .pg-meta { margin-top: var(--home-gap-card-text); color: var(--home-text-muted); }
 body.pg .pg-kids { padding-left: var(--home-indent); margin-top: var(--home-gap-item); }
 
-/* ---------- lists: bullets and numbers; nested blocks stay inside their item ---------- */
 body.pg .pg-bullets, body.pg .pg-numbers { margin: 0; padding-left: var(--home-indent); }
 body.pg .pg-bullets { list-style: disc; }
 body.pg .pg-bullets .pg-bullets { list-style: circle; }
 body.pg .pg-numbers { list-style: decimal; }
 body.pg :is(.pg-bullets, .pg-numbers) > li { padding-left: 2px; }
 body.pg :is(.pg-bullets, .pg-numbers) > li + li { margin-top: var(--home-gap-item); }
-/* review 13: a list keeps the paragraph gap from the text around it */
 body.pg .pg-p + :is(.pg-bullets, .pg-numbers), body.pg :is(.pg-bullets, .pg-numbers) + .pg-p { margin-top: var(--home-gap-text); }
 body.pg :is(.pg-bullets, .pg-numbers) > li::marker { color: var(--home-text-muted); font-variant-numeric: tabular-nums; }
 body.pg li > .pg-kids { padding-left: 0; }
 
-/* ---------- links to pages: rows with the list rows' 2 px line ---------- */
 body.pg .pg-pages > li + li { margin-top: 0; }
 body.pg .pg-page {
   display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; padding: 12px 0;
@@ -103,9 +86,6 @@ body.pg .pg-page:hover, body.pg .pg-page:focus-visible { color: var(--home-text-
 body.pg .pg-page svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; transition: transform var(--home-fast) ease-out; }
 body.pg .pg-page:hover svg { transform: translateX(4px); }
 
-/* ---------- pictures and videos: rounded like the case covers, caption under ---------- */
-/* radius by size, his rule of 2026-10-14 (MEASUREMENTS.md 7: «скругления 24px и меньше в зависимости от размера
-   контента»): 24 px at the full column, down to 16 px on a phone; the case covers keep 48 (designer, 2026-10-23) */
 body.pg .pg-figure { margin: 0; container-type: inline-size; --pg-radius: clamp(16px, 3.47cqi, 24px); }
 body.pg .pg-media, body.pg .vbox { position: relative; border-radius: var(--pg-radius); }
 body.pg .pg-figure img, body.pg .pg-figure video {
@@ -114,7 +94,6 @@ body.pg .pg-figure img, body.pg .pg-figure video {
 body.pg .pg-figure img[style] { object-fit: cover; }
 body.pg .pg-cap { margin-top: 12px; padding: 0 var(--home-pad-card-text); font: var(--home-type-small); color: var(--home-text-muted); text-wrap: pretty; }
 body.pg .pg-figure.b-video { width: var(--w, 100%); max-width: 100%; }
-/* site.js plays the video by itself (D-55); while it waits, a play mark */
 body.pg .vmark { display: none; }
 body.pg .b-video.auto video { cursor: pointer; }
 body.pg .b-video.auto video:focus-visible { outline: 2px solid var(--home-focus); outline-offset: 2px; }
@@ -128,7 +107,6 @@ body.pg .b-video.auto.stopped .vmark::after {
   border-style: solid; border-width: 10px 0 10px 16px; border-color: transparent transparent transparent #fff;
 }
 
-/* ---------- files (the CV PDFs): a white row with the icon, the name and the size ---------- */
 body.pg .pg-file {
   position: relative; display: flex; align-items: center; gap: 16px; padding: 12px 20px 12px 12px;
   border-radius: var(--home-radius-file); background: var(--home-surface); color: var(--home-text);
@@ -145,13 +123,10 @@ body.pg .pg-file-ic svg { width: 22px; height: 22px; fill: currentColor; }
 body.pg .pg-file-name { flex: 1; min-width: 0; font: var(--home-type-label); overflow-wrap: anywhere; }
 body.pg .pg-file-size { flex: none; font: var(--home-type-small); color: var(--home-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
-/* ---------- divider: the list rows' 2 px line ---------- */
 body.pg .pg-hr { height: 2px; margin: 0; border: 0; background: var(--home-divider); }
 
-/* ---------- callout: a white card, as the contact card ---------- */
 body.pg .pg-callout { padding: var(--home-pad-contact); border-radius: var(--home-radius-contact); background: var(--home-surface); }
 
-/* ---------- toggle: details / summary with a chevron ---------- */
 body.pg .pg-toggle > summary { display: flex; gap: 6px; list-style: none; cursor: pointer; color: var(--home-text); border-radius: 6px; }
 body.pg .pg-toggle > summary::-webkit-details-marker { display: none; }
 body.pg .pg-toggle > summary:focus-visible { outline: 2px solid var(--home-focus); outline-offset: 2px; }
@@ -165,19 +140,14 @@ body.pg .pg-toggle > .pg-kids { margin-top: var(--home-gap-item); }
   body.pg .pg-page:hover svg, body.pg .pg-file:active { transform: none; }
 }
 
-/* ---------- phone: the home's scale comes from the tokens; the marker may wrap in long reading lines ---------- */
 @media (max-width: 767px) {
   body.pg .h-hl { white-space: normal; }
   body.pg .pg-file { gap: 12px; padding-right: 16px; }
-  /* About's recommendations: the author's line above the quote, as on the home page (review 12, recruiter 14.4) */
   body.pg .pg-quote { display: flex; flex-direction: column; gap: var(--home-gap-text); }
   body.pg .pg-quote > * { margin-top: 0; }
   body.pg .pg-quote-by { order: -1; }
 }
 
-/* ---------- the case pages (REDESIGN_CASES.md: body.pg.pg-case) ---------- */
-/* the head: the cover and chips of its home card (home.css, chips' glass by home-glass.js), his facts as a key–value
-   list, the NDA note muted */
 body.pg .pg-head { display: flex; flex-direction: column; gap: var(--home-gap-media); margin-bottom: var(--home-gap-h2); }
 body.pg .pg-head > .pg-facts + .pg-note { margin-top: calc(var(--home-gap-text) - var(--home-gap-media)); }
 body.pg .pg-cover { width: 100%; }
@@ -187,7 +157,6 @@ body.pg .pg-fact dt { font: var(--home-type-small); color: var(--home-text-muted
 body.pg .pg-fact dd { margin: 0; color: var(--home-text); overflow-wrap: break-word; text-wrap: pretty; }
 body.pg .pg-note { font: var(--home-type-small); color: var(--home-text-muted); text-wrap: pretty; }
 
-/* «Next case →»: a white row like the file rows, after the last section; the order of the home cards */
 body.pg .pg-next {
   position: relative; display: flex; align-items: center; gap: 16px; margin-top: var(--home-gap-h2); padding: 20px 24px;
   border-radius: var(--home-radius-file); background: var(--home-surface); color: var(--home-text);
@@ -206,7 +175,6 @@ body.pg .pg-next-t { font: var(--home-type-h3); text-wrap: balance; overflow-wra
 body.pg .pg-next svg { flex: none; width: 24px; height: 24px; fill: none; stroke: currentColor; transition: transform var(--home-fast) ease-out; }
 body.pg .pg-next:hover svg { transform: translateX(4px); }
 
-/* the 404 page: the line, then the home's buttons */
 body.pg .pg-flow > .pg-actions { display: flex; flex-wrap: wrap; gap: var(--home-gap-actions); margin-top: var(--home-gap-media); }
 
 @media (prefers-reduced-motion: reduce) {
@@ -219,14 +187,8 @@ body.pg .pg-flow > .pg-actions { display: flex; flex-wrap: wrap; gap: var(--home
   body.pg .pg-next { padding: 16px 20px; }
 }
 
-/* ---------- print (the CV first): black on white; no nav, glass, outline marks, lens or © line; a CV entry (role, dates,
-   points) stays on one page; the PDF rows become plain lines ---------- */
-/* the 404 page: its secondary button sits on the page background, so it is white (review 12, 4.16) */
 body.pg .pg-actions .h-btn--secondary { background: var(--home-surface); }
 
-/* ---------- the media viewer of the cases (viewer.js; designer, 2026-10-25) ----------
-   a picture or video of a case opens larger: a dark, blurred backdrop, the media fitted to the window, its caption
-   under it, the count and ✕ on top, ‹ › at the sides (on a phone under the media) */
 body.pg .pg-figure[data-zoom] :is(.pg-media, .vbox), body.pg .pg-figure[data-zoom].b-video.auto video { cursor: zoom-in; }
 body.pg .pg-figure[data-zoom] :is(.pg-media, .vbox):focus-visible { outline: 2px solid var(--home-focus); outline-offset: 3px; }
 html.pv-lock { overflow: hidden; scrollbar-gutter: stable; }
@@ -255,8 +217,6 @@ html.pv-lock { overflow: hidden; scrollbar-gutter: stable; }
 .pv-frame.stopped .pv-mark { display: grid; }
 .pv-cap { position: absolute; left: 50%; transform: translateX(-50%); margin: 0; text-align: center; color: rgba(255, 255, 255, 0.78); text-wrap: pretty; transition: opacity 0.2s ease-out; }
 .pv-cap[hidden] { display: none; }
-/* zoom (review 12, 4.12): a picture larger than it is fitted opens at its own pixels on a click (a double tap); the copy
-   lies in a scroller over the stage that pans by wheel, trackpad, finger or a mouse drag; a click goes back to fit */
 .pv-frame.pv-zoomable > img { cursor: zoom-in; }
 .pv-zoom {
   position: absolute; inset: 0; overflow: auto; overscroll-behavior: contain; cursor: zoom-out;
@@ -296,13 +256,6 @@ html.pv-lock { overflow: hidden; scrollbar-gutter: stable; }
   .pv-next { right: calc(50% - 60px); }
 }
 
-/* hover and keyboard focus of the white rows (CV files, «Next case»), 2026-10-27.
-   Hover (mouse only): the card lifts with a soft shadow and the file icon's tile darkens a step: how white cards react
-   on a grey page (Material elevated card, Apple «lift», make-interfaces-feel-better: shadows for hover lift).
-   Keyboard focus: the site's blue ring, as on every other link. Before (2026-10-25, his Figma «Link» hover, node
-   237:10521) one blue 2 px ring served both and read as focus (designer, 2026-10-27: «мне кажется у нас фокусное тут
-   получилось»). The card stays white in every state, so leaving it never flashes dark («когда я убираю курсор карточка
-   темнеет», 2026-10-25). */
 body.pg :is(.pg-file, .pg-next) { transition: transform var(--home-fast) ease-out, box-shadow var(--home-fast) ease-out; }
 body.pg :is(.pg-file, .pg-next)::after { content: none; }
 body.pg .pg-file-ic { transition: background-color var(--home-fast) ease-out; }
@@ -319,7 +272,6 @@ body.pg :is(.pg-file, .pg-next):focus-visible { outline: 2px solid var(--home-fo
     background: #fff;
   }
   body.pg :is(.h-nav, .h-toc, .h-skip, .pg-end, canvas, [data-lens], .vmark, .pv) { display: none !important; }
-  /* desktop Safari's sync mode (lens.js) fixes <main> to the window: print it in the flow */
   body.pg .h-main { position: static !important; transform: none !important; min-height: 0; padding: 0; }
   body.pg .pg-col { width: 100%; }
   body.pg .pg-ln { color: #000; text-decoration-color: currentColor; }
@@ -329,7 +281,6 @@ body.pg :is(.pg-file, .pg-next):focus-visible { outline: 2px solid var(--home-fo
   body.pg .pg-file::after, body.pg .pg-file-ic { display: none; }
   body.pg .pg-file-name { font: var(--home-type-desc); text-decoration: underline; text-underline-offset: 0.2em; }
   body.pg .pg-file-size::before { content: " · "; }
-  /* white cards on white paper keep an edge; glass chips keep their tint (the glass canvases are not printed) */
   body.pg :is(.pg-callout, .h-contact, .pg-next) { box-shadow: inset 0 0 0 1px #bbb; }
   body.pg .h-chip.glassed { background: var(--home-chip-tint); }
 }

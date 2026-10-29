@@ -1,92 +1,41 @@
-// lens.js: the bottom edge of the screen bends like curved glass while the page scrolls (D-56).
-//
-// Technique of system.studio/work/patch (Daryl Ginn, studied 2026-10-20), turned from their sideways rail to
-// vertical scroll and written anew for this site: every block of the page (text, heading, list row, picture,
-// video, caption, frame, divider) gets a twin in one WebGL canvas; pictures and videos are uploaded as they are,
-// text is drawn line by line onto a canvas from the positions the browser gives each word. Near the bottom edge
-// the twin's mesh fans out sideways from the middle of the screen, and red and blue split apart along the fan.
-//
-// Changes over the original, for this site:
-// - hand-off: the twin fades in over the page across 40 px, below that a fixed curtain in the page colour hides the
-//   real page, so scrolling never shows a white line or a step;
-// - the width follows the scroll speed (px per ms) through a critically damped spring (~0.2 s): a flick widens the
-//   fan from +60% up to +210%, slow reading barely moves it, and it glides to rest as the page stops;
-// - the colour split is set in pixels, the same for text and pictures, and grows with speed;
-// - the bend appears with the first scroll, not on the first screen;
-// - safety: if WebGL is lost (iPhone does that under memory pressure) or anything fails, the curtain goes and the
-//   plain page shows; if scrolling stays below ~40 frames a second, the effect turns itself off for the session;
-// - memory: twins are kept only within about three screens around the window, pictures are uploaded at the size
-//   they are shown; text twins are drawn at the screen's density up to 3x, pictures up to 2x;
-// - battery: nothing runs while nothing moves; the canvas covers only the bend;
-// - keyboard: a link reached with Tab that lands in the bend is lifted above it; print hides the effect;
-// - colours come from the page (curtain = page background, text twin = nearest background), ready for a redesign.
-// Clicks go through the bend. Off with reduced motion and reduced transparency (as the live glass), and on phones and
-// tablets (see below).
-// Tuning: ?lens=zone,fan,power,chroma px,boost.
-//
-// The new home page (main.h-main, REDESIGN_HOME.md; designer, 2026-10-22: «надо ее сюда поставить без изменений»): the
-// same bend, but each card is painted whole into its twin: pictures, stickers, the marker, shadows and the decorations
-// drawn by ::before and ::after. The other pages (main.frame) keep their own path, unchanged.
-// There the canvas covers the window and the live glass of home-live.js (stage 5: the nav refracting the page under it,
-// the cursor lens) draws into it through window.__homeLens: the same twins, context and safety. A glass canvas of the
-// hero that changes every frame (home-glass.js marks it «live») is not baked into its twin: the twin is cut into layers
-// round it and the canvas is drawn between them from its own texture, fresh each frame (so the ring turns in the bend).
 (() => {
   const main = document.querySelector('main.frame, main.h-main');
   if (!main || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (window.matchMedia('(prefers-reduced-transparency: reduce)').matches) return;
   const home = main.classList.contains('h-main');
-  // the inner pages of the new design (REDESIGN_PAGES.md, stage 3: body.pg) take the home branch. A page without the bend
-  // (About, CV, Contact by D-56: body data-bend="0") keeps this file for the live glass only: no curtain, no bend
   const bend = !(home && document.body.dataset.bend === '0');
-  // Phones and tablets: off by default, as on system.studio (designer on iPhone, 2026-10-20). Their browsers scroll on a
-  // separate thread at up to 120 frames a second, while page code gets 60 (30 in Low Power Mode):
-  // - drawn as usual, the twin trails the page and the bend shakes («очень дергано»);
-  // - with the page moved by this code in the same frame as the bend («sync»), the two stay together, but the whole
-  //   scroll drops to the page's frame rate and trails the finger («очень лагает»).
-  // For trials: ?touch=sync (page moved by this code) or ?touch=on (drawn as usual).
   const touch = window.matchMedia('(pointer: coarse)').matches || /iPad|iPhone|iPod/.test(navigator.userAgent)
     || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
   const touchMode = new URLSearchParams(location.search).get('touch');
   if (touch && touchMode !== 'sync' && touchMode !== 'on') return;
-  // Safari on a computer scrolls on its own thread at up to 120 frames a second while page code gets 60, so the bend
-  // trails the page there too (designer, 2026-10-22: «в safari лагает»). He compared the ways in Safari: «3 вариант
-  // наиболее хорошо работает, все остальные имеют артифакты при скролле», so desktop Safari moves the page in the same
-  // frame as the bend (sync), on every page with the bend (he then asked to finish the effect everywhere: «давай
-  // доработаем полноценно эту анимацию»). ?touch=sync tries it in other browsers, ?sync=0 turns it off.
   const desktopSafari = !touch && /^((?!chrome|chromium|crios|edg|opr|fxios|firefox|android).)*safari/i.test(navigator.userAgent);
   const sync = touchMode === 'sync' || (desktopSafari && new URLSearchParams(location.search).get('sync') !== '0');
-  try { if (sessionStorage.getItem('lens-off')) return; } catch (e) { /* storage blocked: carry on */ }
+  try { if (sessionStorage.getItem('lens-off')) return; } catch (e) {   }
 
   const qs = new URLSearchParams(location.search);
-  // a phone gets a gentler bend: its text column fills the screen, so the desktop fan threw pictures far off the edges
-  // (designer on iPhone: «картинка слишком сильно искажается»)
   const narrow = window.innerWidth <= 600;
   const P = narrow ? { zone: 0.1, fan: 0.3, pow: 2.6, chroma: 6, boost: 0.5 }
     : { zone: 0.1, fan: 0.6, pow: 2.6, chroma: 10, boost: 1.5 };
-  let SLOW = 25;             // ms per frame that counts as slow (below 40 frames a second)
+  let SLOW = 25;
   if (qs.get('lens')) {
     const [z, f, p, c, b, s] = qs.get('lens').split(',').map(Number);
     if (z) P.zone = z; if (f) P.fan = f; if (p) P.pow = p; if (c >= 0) P.chroma = c; if (b >= 0) P.boost = b;
-    if (s > 0) SLOW = s;     // for measurements on a slow machine
+    if (s > 0) SLOW = s;
   }
-  const FULL_SPEED = touch ? 5 : 3.5;   // px per ms that counts as a full-speed flick (a finger flicks faster)
-  const SMOOTH = 24;         // ms: first pass against uneven trackpad steps
-  const OMEGA = 22;          // rad/s: the width follows the speed like a critically damped spring, ~0.2 s
-  const FX = 0.012;          // the rainbow fades in over the first part of the bend
-  const FADE = 40;           // px: the page and its twin cross-fade above the bend
-  const GATE = 300;          // ms: the bend grows in after the first scroll
+  const FULL_SPEED = touch ? 5 : 3.5;
+  const SMOOTH = 24;
+  const OMEGA = 22;
+  const FX = 0.012;
+  const FADE = 40;
+  const GATE = 300;
 
   const canvas = document.createElement('canvas');
   const curtain = document.createElement('div');
   for (const n of [canvas, curtain]) { n.setAttribute('aria-hidden', 'true'); n.dataset.lens = ''; }
-  canvas.style.cssText = 'position:fixed;left:0;bottom:0;pointer-events:none;z-index:15';   // anchored to the bottom, like the curtain
+  canvas.style.cssText = 'position:fixed;left:0;bottom:0;pointer-events:none;z-index:15';
   curtain.style.cssText = 'position:fixed;left:0;right:0;bottom:0;pointer-events:none;z-index:14;display:none';
   const css = document.createElement('style');
   css.textContent = '@media print{[data-lens]{display:none!important}}';
-  // Safari lag on the new home (designer, 2026-10-22: «эффект при скролле (нижняя часть) в safari лагает»): switches to
-  // measure it, ?aa=0 (no multisampling on the window-sized canvas) and ?strip=1 (the canvas only over the bend, as on the
-  // other pages; with ?live=0, since the nav and cursor glass draw in the window-sized canvas)
   const homeQs = new URLSearchParams(location.search);
   const strip = home && homeQs.get('strip') === '1';
   const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: !(home && homeQs.get('aa') === '0') });
@@ -94,7 +43,6 @@
   document.head.appendChild(css);
   document.body.append(curtain, canvas);
 
-  // ------------------------------------------------------------------ colours from the page
   const transparent = (c) => !c || c === 'transparent' || /rgba\([^)]*,\s*0\)$/.test(c);
   const pageBg = () => { const c = getComputedStyle(document.body).backgroundColor; return transparent(c) ? '#fff' : c; };
   function bgOf(el) {
@@ -106,13 +54,12 @@
   }
   curtain.style.background = pageBg();
 
-  // ------------------------------------------------------------------ WebGL
   const VS = `
     precision highp float;
-    attribute vec2 aUv;            // 0..1 across the block, y down
-    uniform vec2 uRes;             // window, css px
-    uniform vec2 uCanvas;          // the canvas covers only the bend: its top and height in the window, css px
-    uniform vec4 uRect;            // block: left, top, width, height (css px, y down)
+    attribute vec2 aUv;
+    uniform vec2 uRes;
+    uniform vec2 uCanvas;
+    uniform vec4 uRect;
     uniform float uZone, uFan, uPow;
     varying vec2 vUv;
     varying float vEdge;
@@ -121,9 +68,9 @@
       vUv = aUv;
       vec2 s = uRect.xy + aUv * uRect.zw;
       vY = s.y;
-      float dist = 1.0 - s.y / uRes.y;                            // 0 at the bottom edge
-      float edge = pow(1.0 - smoothstep(0.0, uZone, dist), uPow); // 0 above the bend, 1 at the edge
-      float cx = uRes.x * 0.5;                                    // one centre line for the whole page
+      float dist = 1.0 - s.y / uRes.y;
+      float edge = pow(1.0 - smoothstep(0.0, uZone, dist), uPow);
+      float cx = uRes.x * 0.5;
       float x = cx + (s.x - cx) * (1.0 + uFan * edge);
       gl_Position = vec4(x / uRes.x * 2.0 - 1.0, 1.0 - (s.y - uCanvas.x) / uCanvas.y * 2.0, 0.0, 1.0);
       vEdge = edge;
@@ -133,7 +80,7 @@
     uniform sampler2D tMap;
     uniform float uChroma, uRadius, uFx, uFade0, uFade1, uRing;
     uniform vec2 uSize, uUvScale, uUvOffset;
-    uniform vec4 uRingC;           // the ring over a video of the new pages: colour (straight alpha); uRing: its width, css px
+    uniform vec4 uRingC;
     varying vec2 vUv;
     varying float vEdge;
     varying float vY;
@@ -141,16 +88,16 @@
       vec2 uv = uUvOffset + vUv * uUvScale;
       vec4 base = texture2D(tMap, uv);
       float fx = smoothstep(0.0003, uFx, vEdge);
-      float ca = uChroma / max(uSize.x, 1.0) * uUvScale.x * fx * (0.4 + vEdge);  // px -> uv; widens toward the edge
+      float ca = uChroma / max(uSize.x, 1.0) * uUvScale.x * fx * (0.4 + vEdge);
       float r = texture2D(tMap, uv + vec2(ca, 0.0)).r;
       float b = texture2D(tMap, uv - vec2(ca, 0.0)).b;
-      float mask = clamp((vY - uFade0) / (uFade1 - uFade0), 0.0, 1.0);   // cross-fade over the page above the curtain
+      float mask = clamp((vY - uFade0) / (uFade1 - uFade0), 0.0, 1.0);
       vec2 q = abs(vUv * uSize - uSize * 0.5) - uSize * 0.5 + uRadius;
-      float d = min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - uRadius;   // distance to the rounded edge, < 0 inside
-      if (uRadius > 0.0) mask *= 1.0 - smoothstep(0.0, 1.5, d);   // rounded corners of pictures and videos
+      float d = min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - uRadius;
+      if (uRadius > 0.0) mask *= 1.0 - smoothstep(0.0, 1.5, d);
       vec3 rgb = mix(base.rgb, vec3(r, base.g, b), fx);
       vec4 col = vec4(rgb * base.a, base.a);
-      if (uRing > 0.0) {                                          // the ring along the inside of the edge, ~1 px soft
+      if (uRing > 0.0) {
         float ra = uRingC.a * smoothstep(-uRing - 0.5, -uRing + 0.5, d);
         col = vec4(uRingC.rgb * ra, ra) + col * (1.0 - ra);
       }
@@ -182,7 +129,6 @@
   }
   try { initGL(); } catch (e) { canvas.remove(); curtain.remove(); return; }
 
-  // a grid mesh per size: few columns (the fan is straight across a row), rows every ~4 px so the bend is smooth
   function grid(nx, ny) {
     const key = nx + 'x' + ny;
     if (grids.has(key)) return grids.get(key);
@@ -213,36 +159,27 @@
     return tex;
   }
 
-  // ------------------------------------------------------------------ blocks
   const SEL = (home
     ? ['.h-striped', '.h-card', '.h-clip-back', '.h-clip-front', '.h-h2', '.h-cover', '.h-case-title', '.h-case-desc',
       '.h-contact', '.h-quote', '.h-row', '.h-sticker', '.h-copy', '.pg-title', '.pg-body > *',
-      '.pg-facts', '.pg-note', '.pg-next', '.pg-figure video']                     // the case pages (REDESIGN_CASES.md)
+      '.pg-facts', '.pg-note', '.pg-next', '.pg-figure video']
     : ['h1.title', '.b-text .leaf', '.b-h2 h2', '.b-h3 h3', '.b-list .row', '.b-page .pg', '.b-file .file', '.b-next .next',
       '.b-toggle > summary', '.b-callout .box', '.b-divider > div', '.cap', '.b-image img', '.b-video video',
       '.page-icon img', '.cover img']).join(', ');
-  // blocks that paint their own box: no page-coloured base under them (their corners stay see-through)
   const OWN_BOX = home ? '.h-striped, .h-card, .h-cover, .h-contact, .h-quote, .h-clip-back, .h-clip-front, .h-sticker, .pg-file, .pg-callout, .pg-hr, .pg-next, .h-ring'
     : '.b-callout .box, .b-divider > div';
   const tiles = [];
   const byEl = new Map();
   for (const el of main.querySelectorAll(SEL)) {
-    // a video stays a video twin on the new pages too (its figure is painted round it), so a playing one is drawn whole
     const kind = el.tagName === 'VIDEO' ? 'video' : home ? 'paint' : el.tagName === 'IMG' ? 'img' : 'paint';
-    // the marker reaches 5 px past the words, so past the column at the start of a line: the twin is a little wider
     const padX = home && el.matches('.h-case-desc') ? 8 : 0;
-    // a case cover grows a little under the pointer (home.css): its twin follows the live box (box() below)
     const zoom = home && el.classList.contains('h-cover');
     const t = { el, kind, padX, zoom, tex: null, ready: false, busy: false, gen: 0, top: 0, left: 0, w: 0, h: 0, fresh: false };
     tiles.push(t); byEl.set(el, t);
   }
   const isTile = (n) => byEl.has(n);
-  // a playing video crossing the bend is drawn whole by its twin (see the frame): its twin gets new frames a moment after
-  // the page does, so a page frame above and a twin frame below cut the picture (designer, 2026-10-22: «артефакты при
-  // проигрывании видео, оно режет картинку»). For that the canvas covers the window on pages with videos, as on the new home.
   const tall = home || tiles.some((t) => t.kind === 'video');
 
-  // --- painting a block onto a canvas: boxes, borders, icons and text at the positions the browser laid them out
   function roundRect(ctx, x, y, w, h, r) {
     r = Math.max(0, Math.min(r, w / 2, h / 2));
     ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
@@ -290,7 +227,7 @@
     const m = ctx.measureText('Hg');
     const asc = m.fontBoundingBoxAscent || m.actualBoundingBoxAscent || fs * 0.8;
     const desc = m.fontBoundingBoxDescent || m.actualBoundingBoxDescent || fs * 0.2;
-    let ul = null;   // underline of links (a.ln): from the nearest underlined ancestor inside the block
+    let ul = null;
     for (let a = el; a && a !== tileEl.parentElement; a = a.parentElement) {
       const s = getComputedStyle(a);
       if ((s.textDecorationLine || '').includes('underline')) { ul = s; break; }
@@ -308,7 +245,7 @@
       if (last && Math.abs(last.top - rr.top) < 2) { last.end = mm.index + mm[0].length; last.right = rr.right; }
       else lines.push({ start: mm.index, end: mm.index + mm[0].length, left: rr.left, right: rr.right, top: rr.top, height: rr.height });
     }
-    const upper = home && st.textTransform === 'uppercase';   // the (1)–(4) list on the new home
+    const upper = home && st.textTransform === 'uppercase';
     if (!lines.length) return false;
     for (const ln of lines) {
       const base = ln.top + (ln.height - asc - desc) / 2 + asc - o.top;
@@ -324,8 +261,6 @@
     }
     return true;
   }
-  // the number or bullet of a list item on the new pages (::marker is not in the DOM): right-aligned before the item,
-  // on the baseline of its first line, in the marker's colour
   function drawMarker(ctx, li, st, o, alpha) {
     const type = st.listStyleType;
     let mark = type === 'disc' ? '•' : type === 'circle' ? '◦' : type === 'square' ? '▪' : '';
@@ -355,7 +290,6 @@
     ctx.restore();
     return true;
   }
-  // --- the new home page: what its cards add to plain boxes and text
   const len = (v, of) => (v && v.endsWith('%') ? (parseFloat(v) / 100) * of : parseFloat(v) || 0);
   const blend = (m) => (m === 'multiply' ? 'multiply' : m === 'plus-lighter' ? 'lighter' : 'source-over');
   function shadowsOf(st) {
@@ -365,13 +299,11 @@
     while ((m = re.exec(st.boxShadow || ''))) out.push({ color: m[1], x: +m[2], y: +m[3], blur: +m[4], spread: +m[5], inset: !!m[6] });
     return out;
   }
-  function addRound(ctx, x, y, w, h, r) {           // a rounded rectangle added to the current path
+  function addRound(ctx, x, y, w, h, r) {
     r = Math.max(0, Math.min(r, w / 2, h / 2));
     ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
     ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
   }
-  // a box shadow as CSS draws it: the shape is drawn far to the left and only its shadow lands here
-  // (canvas shadows ignore the scale, hence the dpr)
   const FAR = 10000;
   function drawShadow(ctx, x, y, w, h, rad, s, dpr) {
     ctx.save();
@@ -390,9 +322,8 @@
     }
     ctx.restore();
   }
-  const pics = new Map();                            // background pictures (the marker), decoded once
+  const pics = new Map();
   const picUrl = (st) => { const m = /^url\("(.+)"\)$/.exec(st.backgroundImage || ''); return m ? m[1] : null; };
-  // a box in CSS paint order: outer shadow, colour, picture, inner shadow, border; inline boxes line by line
   function drawBoxHome(ctx, st, frags, o, alpha, dpr) {
     const sh = shadowsOf(st), url = picUrl(st), pic = url && pics.get(url);
     const bw = ['Top', 'Right', 'Bottom', 'Left'].map((s) => (st['border' + s + 'Style'] !== 'none' ? parseFloat(st['border' + s + 'Width']) || 0 : 0));
@@ -421,7 +352,6 @@
     ctx.restore();
     return true;
   }
-  // ::before and ::after placed absolutely over the box (the panel's white rim, the sphere's glow, list dividers)
   function drawPseudo(ctx, n, which, nr, o, alpha, dpr) {
     const ps = getComputedStyle(n, which);
     if (!ps.content || ps.content === 'none' || ps.content === 'normal' || ps.display === 'none' || ps.position !== 'absolute') return;
@@ -433,7 +363,6 @@
     const top = nr.top + (parseFloat(ns.borderTopWidth) || 0) + len(ps.top, nr.height);
     return drawBoxHome(ctx, ps, [{ left, top, width: w, height: h }], o, a, dpr);
   }
-  // a picture, or a canvas of the glass (home-glass.js), at its box
   function drawImg(ctx, img, st, r, o, alpha) {
     const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
     if (!iw || !ih || (img.tagName === 'IMG' && !img.complete)) return;
@@ -442,8 +371,6 @@
     ctx.globalAlpha = alpha;
     const rad = Math.min(len(st.borderTopLeftRadius, Math.min(w, h)), w / 2, h / 2);
     ctx.beginPath(); addRound(ctx, x, y, w, h, rad); ctx.clip();
-    // object-fit: cover by scaling the whole picture over the box, never by a source rectangle: with srcset the
-    // browser reports the size divided by the screen density, while a source rectangle counts the file's pixels
     const ia = iw / ih, ba = w / h;
     if (st.objectFit === 'cover' && Math.abs(ia / ba - 1) > 0.002) {
       const dw = ia > ba ? h * ia : w, dh = ia > ba ? h : w / ia;
@@ -452,7 +379,6 @@
     ctx.restore();
     return true;
   }
-  // pictures inside the card load first (covers further down are lazy), so the card is painted in one pass, in order
   async function preload(el) {
     const imgs = el.tagName === 'IMG' ? [el] : [...el.querySelectorAll('img')];
     for (const im of imgs) if (!im.complete || !im.naturalWidth) im.loading = 'eager';
@@ -471,25 +397,21 @@
     const b = el.getBoundingClientRect();
     if (b.width < 1 || b.height < 1) return null;
     const r = t.padX ? { left: b.left - t.padX, top: b.top, width: b.width + 2 * t.padX, height: b.height } : b;
-    let dpr = Math.min(window.devicePixelRatio || 1, home ? 2 : 3);  // text as sharp as the screen, up to 3x
-    if (home) dpr = Math.min(dpr, 2048 / Math.max(r.width, r.height));  // the big sticker: at most 2048 px a side
+    let dpr = Math.min(window.devicePixelRatio || 1, home ? 2 : 3);
+    if (home) dpr = Math.min(dpr, 2048 / Math.max(r.width, r.height));
     const c = document.createElement('canvas');
     c.width = Math.ceil(r.width * dpr); c.height = Math.ceil(r.height * dpr);
     const ctx = c.getContext('2d');
     ctx.scale(dpr, dpr);
     ctx.textBaseline = 'alphabetic';
-    // text twins sit on their background: an opaque twin gives the colour split something to split
     if (!el.matches(OWN_BOX)) { ctx.fillStyle = bgOf(el); ctx.fillRect(0, 0, r.width, r.height); }
     const jobs = [];
-    // a glass canvas that changes every frame (home-glass.js marks it «live») is left out: the twin is cut there into a
-    // sheet under it and a sheet over it, and the canvas is drawn between them from its own texture (drawTwin)
-    const layers = [{ c, ctx, n: el.matches(OWN_BOX) ? 0 : 1 }];   // n: how much was drawn on the sheet
+    const layers = [{ c, ctx, n: el.matches(OWN_BOX) ? 0 : 1 }];
     let cur = layers[0];
     const put = (ok) => { if (ok) cur.n++; };
     const walkHome = (n, alpha) => {
       if (n.nodeType === 3) { put(drawText(cur.ctx, n, r, alpha, el)); return; }
       if (n.nodeType !== 1 || (n !== el && isTile(n))) return;
-      // the live cover's loop (live-cover.js): a live layer over the whole cover, drawn only while it shows (drawTwin)
       if (n.tagName === 'VIDEO' && n.classList.contains('lc-v')) {
         if (n.readyState < 2) return;
         layers.push({ el: n, dx: 0, dy: 0, w: 0, h: 0 });
@@ -539,7 +461,6 @@
     await Promise.all(jobs);
     return c;
   }
-  // a picture is uploaded at the size it is shown (up to 2x), not at the size of the file
   function shrink(img, nw, nh, shownW) {
     const w = Math.max(1, Math.min(nw, Math.ceil(shownW * Math.min(window.devicePixelRatio || 1, 2))));
     if (w >= nw) return img;
@@ -565,7 +486,7 @@
         const v = t.el;
         if (v.readyState >= 2) {
           t.src = v; t.nw = v.videoWidth; t.nh = v.videoHeight; src = v;
-          if (!t.hooked) {           // upload a new video frame only when the video has one
+          if (!t.hooked) {
             t.hooked = true;
             if (v.requestVideoFrameCallback) { const on = () => { t.fresh = true; wake(); v.requestVideoFrameCallback(on); }; v.requestVideoFrameCallback(on); }
             else { let last = -1; t.poll = () => { if (v.currentTime !== last) { last = v.currentTime; t.fresh = true; } }; }
@@ -580,10 +501,10 @@
         src = await paint(t);
         if (!src) return;
       }
-      if (gen !== t.gen || lost || off) return;          // evicted or reset while preparing
+      if (gen !== t.gen || lost || off) return;
       if (t.tex) gl.deleteTexture(t.tex);
       t.tex = texture(src);
-      if (src.more) {                                     // the new home: the layers over the first sheet (see paint)
+      if (src.more) {
         t.more = src.more.map((L) => (L.el
           ? { el: L.el, tex: texture(L.el), v: L.el.glassV, dx: L.dx, dy: L.dy, w: L.w, h: L.h }
           : { tex: texture(L.c) }));
@@ -593,11 +514,8 @@
       t.radius = home ? Math.min(len(rr, Math.min(t.w, t.h)), t.w / 2, t.h / 2) : parseFloat(rr) || 0;
       t.ready = true;
       dirty = true; wake();
-    } catch (e) { /* this twin stays plain */ } finally { t.busy = false; }
+    } catch (e) {   } finally { t.busy = false; }
   }
-  // the 2 px ring over a video of the new pages (home.css .h-ring, an inset shadow) is drawn by the shader, so it shows over
-  // a playing video drawn whole and in the bend (designer, 2026-10-23: «в случае если это видео, когда оно начинает
-  // проигрываться обводка перестает появляться»). Old pages have no ring: nothing changes there.
   function ringOf(el) {
     const n = home && el.parentElement && el.parentElement.querySelector(':scope > .h-ring');
     const s = n && shadowsOf(getComputedStyle(n)).find((x) => x.inset);
@@ -613,7 +531,6 @@
     t.tex = null; t.more = null; t.ready = false;
   }
 
-  // block positions on the page (layout is static; refreshed on resize and when the page height changes)
   function measure() {
     const sy = window.scrollY;
     for (const t of tiles) {
@@ -622,20 +539,18 @@
     }
   }
 
-  // ------------------------------------------------------------------ sync mode (phones, trial)
   let syncTop = 0, syncRO = null, tocHome = null;
   function moveMain(sy) { main.style.transform = `translate3d(0, ${syncTop - sy}px, 0)`; }
   function setupSync() {
     syncTop = main.getBoundingClientRect().top + window.scrollY;
     const toc = main.querySelector('.toc');
-    if (toc) { tocHome = [toc, toc.parentNode, toc.nextSibling]; document.body.appendChild(toc); }   // a fixed outline must not ride along
+    if (toc) { tocHome = [toc, toc.parentNode, toc.nextSibling]; document.body.appendChild(toc); }
     const fit = () => { document.body.style.minHeight = Math.ceil(syncTop + main.offsetHeight) + 'px'; };
     fit();
     Object.assign(main.style, { position: 'fixed', top: '0', left: '0', right: '0', willChange: 'transform' });
     moveMain(window.scrollY);
     syncRO = new ResizeObserver(fit);
     syncRO.observe(main);
-    // the page under main no longer scrolls by itself, so links within the page scroll it by hand (an address with #… too)
     document.addEventListener('click', syncLink);
     if (location.hash) requestAnimationFrame(() => syncTo(document.getElementById(decodeURIComponent(location.hash.slice(1))), 'auto'));
   }
@@ -653,10 +568,9 @@
     const el = id && document.getElementById(id);
     if (el && syncTo(el, reduce ? 'auto' : 'smooth')) {
       e.preventDefault(); history.pushState(null, '', '#' + id);
-      if (el.hasAttribute('tabindex')) el.focus({ preventScroll: true });   // «Skip to content»: the keyboard goes on from there
+      if (el.hasAttribute('tabindex')) el.focus({ preventScroll: true });
     }
   }
-  // back to the plain page (the effect turned off): the page scrolls on its own again
   function teardownSync() {
     if (!sync) return;
     if (syncRO) syncRO.disconnect();
@@ -667,7 +581,6 @@
   }
   if (sync) setupSync();
 
-  // ------------------------------------------------------------------ state, sleep and wake
   let W = 0, H = 0, lastW = 0, cTop = 0, cH = 0;
   let dirty = true, running = false, off = false, lost = false, shown = false;
   let armed = false, armT = 0;
@@ -683,12 +596,12 @@
     for (const t of tiles) evict(t);
     canvas.remove(); curtain.remove();
     if (hooks) { const h = hooks; hooks = null; h.off(); }
-    try { sessionStorage.setItem('lens-off', why); } catch (e) { /* ignore */ }
+    try { sessionStorage.setItem('lens-off', why); } catch (e) {   }
   }
   function wake() { if (!running && !off) { running = true; lastT = 0; requestAnimationFrame(frame); } }
 
   canvas.addEventListener('webglcontextlost', (e) => {
-    e.preventDefault();                                      // ask for it back; meanwhile the plain page shows
+    e.preventDefault();
     lost = true; hideCurtain();
     for (const t of tiles) { t.tex = null; t.more = null; t.ready = false; t.gen++; }
     if (hooks) hooks.lost();
@@ -697,12 +610,8 @@
     try { initGL(); lost = false; dirty = true; resize(); idle(prepareAhead, { timeout: 500 }); if (hooks) hooks.restored(); wake(); } catch (e) { turnOff('webgl'); }
   });
 
-  // ------------------------------------------------------------------ the new home: the live glass draws here too
-  // home-live.js registers hooks: want(now, moved) says whether it has something new to draw this frame, draw(now) draws
-  // after the bend (the canvas is cleared once per frame, so it draws whenever the bend does), lost / restored / off
-  // follow the context. drawTwins paints the twins under a window rectangle (css px), flat, into whatever is bound.
   let hooks = null;
-  function own() {                                           // back to this file's program and canvas after the live glass
+  function own() {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.useProgram(prog);
@@ -725,10 +634,10 @@
       const b = box(t, sy);
       drawTwin(t, b[0] - left, b[1], b[2], b[3]);
     }
-    return all;                                              // false: a twin under the rectangle is still being prepared
+    return all;
   }
   if (home) window.__homeLens = {
-    gl, canvas, drawTwins, tiles,                            // tiles: for the checks of stage 5
+    gl, canvas, drawTwins, tiles,
     hook(h) { hooks = h; dirty = true; wake(); },
     wake() { dirty = true; wake(); },
     size() { return { W, H, dpr: Math.min(window.devicePixelRatio || 1, 2) }; },
@@ -737,8 +646,6 @@
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = window.innerWidth; H = window.innerHeight;
-    // the canvas covers only the bend and the fade above it; the whole window on the new home (the live glass draws in it)
-    // and on pages with videos (a playing one is drawn whole)
     cTop = Math.floor(H * (1 - P.zone) - FADE) - 2;
     cH = H - cTop;
     if (tall && !strip) { cTop = 0; cH = H; }
@@ -747,13 +654,11 @@
     if (!lost) gl.viewport(0, 0, canvas.width, canvas.height);
     curtain.style.height = Math.ceil(H * P.zone) + 'px';
     curtain.style.background = pageBg();
-    // text wraps anew only when the width changes (the iPhone address bar changes only the height)
     if (W !== lastW) { for (const t of tiles) if (t.kind !== 'video' || !t.ready) evict(t); lastW = W; }
     measure();
     dirty = true;
   }
 
-  // twins are prepared ahead in idle time, nearest to the bend first; far ones are let go to save memory
   const idle = window.requestIdleCallback || ((f) => setTimeout(() => f({ timeRemaining: () => 6 }), 60));
   let idleQueued = false;
   function inWindow(t, sy) { return t.top + t.h > sy - H && t.top < sy + 2 * H; }
@@ -772,38 +677,35 @@
   }
   function queueIdle() { if (!idleQueued) { idleQueued = true; idle(prepareAhead, { timeout: 500 }); } }
 
-  // ------------------------------------------------------------------ frame
   function frame(now) {
     if (off) { running = false; return; }
     try {
       if (!step(now)) { running = false; return; }
       requestAnimationFrame(frame);
     } catch (e) {
-      turnOff('error');                                       // anything unexpected: back to the plain page
+      turnOff('error');
     }
   }
 
-  // returns whether another frame is needed
   function step(now) {
     if (document.hidden) { lastT = 0; lastY = -1; return false; }
     const sy = window.scrollY;
-    if (sync) moveMain(sy);                                        // page and bend move in the same frame
+    if (sync) moveMain(sy);
     const hNow = window.innerHeight;
-    if (hNow !== H) {                                              // toolbar shown or hidden: follow the bottom at once
+    if (hNow !== H) {
       H = hNow;
       if (tall || H * P.zone + FADE + 4 > cH) resize(); else { cTop = H - cH; curtain.style.height = Math.ceil(H * P.zone) + 'px'; }
       dirty = true;
     }
-    const raw = lastT ? now - lastT : 16.7;                        // ms since the last frame
+    const raw = lastT ? now - lastT : 16.7;
     const dt = Math.min(Math.max(raw, 4), 100);
     lastT = now;
     const dy = lastY < 0 ? 0 : Math.abs(sy - lastY);
     const moved = dy > 0;
     lastY = sy;
     still = moved ? 0 : still + 1;
-    if (still >= 2) vel = 0;                                       // the page has stopped: the target is rest
-    else vel += (dy / dt - vel) * (1 - Math.exp(-dt / SMOOTH));    // px per ms, lightly smoothed
-    // the width moves like a physical body: a critically damped spring toward the speed, no jumps, no overshoot
+    if (still >= 2) vel = 0;
+    else vel += (dy / dt - vel) * (1 - Math.exp(-dt / SMOOTH));
     const target = Math.min(vel / FULL_SPEED, 1);
     const sdt = dt / 1000;
     kv += (OMEGA * OMEGA * (target - k) - 2 * OMEGA * kv) * sdt;
@@ -811,8 +713,6 @@
     if (k < 0) { k = 0; kv = 0; } else if (k > 1) { k = 1; kv = 0; }
     if (still >= 2 && k < 0.002 && Math.abs(kv) < 0.01) { k = 0; kv = 0; }
 
-    // a device too slow for the effect: over 1.2 s of scrolling the average frame is longer than 25 ms (below
-    // 40 frames a second): turn it off for the session. A gap over 1 s is a hidden tab, not a slow device.
     if (moved && raw < 1000) {
       movingMs += raw; movingFrames++;
       if (movingMs >= 1200) {
@@ -822,7 +722,7 @@
     }
     if (moved && still === 0 && Math.abs(sy - (prepareAhead.at || 0)) > H / 2) { prepareAhead.at = sy; queueIdle(); }
 
-    const want = hooks ? hooks.want(now, moved) : false;           // the new home: the live glass has something new
+    const want = hooks ? hooks.want(now, moved) : false;
     if (!armed || lost) {
       hideCurtain();
       if (!hooks || lost || (!want && !dirty)) return false;
@@ -832,7 +732,7 @@
       hooks.draw(now);
       return want;
     }
-    const g = Math.min(1, (now - armT) / GATE);                    // the bend grows in after the first scroll
+    const g = Math.min(1, (now - armT) / GATE);
     const gate = g * g * (3 - 2 * g);
 
     const zoneTop = H * (1 - P.zone);
@@ -843,30 +743,26 @@
       const top = t.top - sy, bottom = top + t.h;
       if (bottom <= fadeTop || top >= H) continue;
       live.push(t);
-      // a video twin made from the poster before the video had frames gives way to the video itself once it has them
-      // (else the bend showed the still poster under the playing video)
       if (t.kind === 'video' && t.ready && t.src !== t.el && t.el.readyState >= 2) evict(t);
       if (!t.ready) { allReady = false; if (!t.busy) prepare(t); }
       if (t.kind === 'video' && t.src === t.el && !t.el.paused) { video = true; if (t.poll) t.poll(); }
     }
     const busy = moved || k > 0 || kv !== 0 || video || gate < 1 || want;
-    if (!dirty && !busy) return false;                             // nothing changed: sleep until the next scroll
+    if (!dirty && !busy) return false;
     dirty = false;
     if (hooks) own();
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
-    // a twin is missing: show the plain page for this frame rather than a gap
     if (!allReady || !live.length) { hideCurtain(); if (!allReady) dirty = true; }
     else {
       if (!shown) { curtain.style.display = 'block'; shown = true; }
-      const e = k * k * (3 - 2 * k);                               // soft at low speed (reading stays calm), full on a flick
+      const e = k * k * (3 - 2 * k);
       gl.uniform2f(U.uRes, W, H);
       gl.uniform2f(U.uCanvas, cTop, cH);
       gl.uniform1f(U.uFan, (P.fan + P.boost * e) * gate);
       gl.uniform1f(U.uChroma, P.chroma * (0.6 + 0.9 * e) * gate);
       gl.uniform1f(U.uFade0, fadeTop); gl.uniform1f(U.uFade1, zoneTop);
-      // positions from the cache and this frame's scroll: every twin moves by exactly the same amount
       for (const t of live) {
-        const whole = tall && t.kind === 'video' && t.src === t.el && !t.el.paused;   // no cross-fade: the twin over all of it
+        const whole = tall && t.kind === 'video' && t.src === t.el && !t.el.paused;
         if (whole) { gl.uniform1f(U.uFade0, -2e6); gl.uniform1f(U.uFade1, -1e6); }
         const b = box(t, sy);
         drawTwin(t, b[0], b[1], b[2], b[3]);
@@ -876,7 +772,6 @@
     if (hooks) hooks.draw(now);
     return true;
   }
-  // one quad of the current program: a texture over a box on the target (css px)
   function quad(tex, left, top, width, height, radius, sx, syc, ox, oy, ring) {
     gl.uniform4f(U.uRect, left, top, width, height);
     gl.uniform1f(U.uRing, ring ? ring.w : 0);
@@ -893,9 +788,6 @@
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gr.ib);
     gl.drawElements(gl.TRIANGLES, gr.count, gl.UNSIGNED_SHORT, 0);
   }
-  // a twin at a place on the target: its texture, then (the new home) its layers: sheets and live canvases, which are
-  // uploaded anew when their glass changed (home-glass.js counts in glassV)
-  // where a twin is drawn: its measured box, or for a growing cover its box as the browser shows it now
   function box(t, sy) {
     if (!t.zoom) return [t.left, t.top - sy, t.w, t.h];
     const r = t.el.getBoundingClientRect();
@@ -908,7 +800,6 @@
       gl.bindTexture(gl.TEXTURE_2D, t.tex);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, t.el);
     }
-    // object-fit: cover crop for pictures and videos whose box differs from the file
     let sx = 1, syc = 1, ox = 0, oy = 0;
     if (t.nw && t.nh) {
       const boxA = width / height, imgA = t.nw / t.nh;
@@ -918,7 +809,7 @@
     if (!t.more) return;
     for (const L of t.more) {
       if (!L.el) { quad(L.tex, left, top, width, height, t.radius || 0, 1, 1, 0, 0); continue; }
-      if (L.el.tagName === 'VIDEO') {                     // the live cover's loop: only while it shows, its newest frame
+      if (L.el.tagName === 'VIDEO') {
         if (!L.el.parentNode || !L.el.parentNode.classList.contains('lc-on') || L.el.readyState < 2) continue;
         if (L.v !== L.el.lcV) { L.v = L.el.lcV; gl.bindTexture(gl.TEXTURE_2D, L.tex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, L.el); }
         quad(L.tex, left, top, width, height, t.radius || 0, 1, 1, 0, 0);
@@ -933,9 +824,8 @@
     }
   }
 
-  // ------------------------------------------------------------------ events
   window.addEventListener('scroll', () => {
-    if (!armed && bend) { armed = true; armT = performance.now(); }   // the first scroll brings the bend in
+    if (!armed && bend) { armed = true; armT = performance.now(); }
     wake();
   }, { passive: true });
   let rt = 0;
@@ -943,29 +833,21 @@
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { dirty = true; wake(); } });
   new ResizeObserver(() => { measure(); dirty = true; wake(); }).observe(main);
   window.addEventListener('load', () => { measure(); dirty = true; queueIdle(); });
-  // the new home: a card got its glass (home-glass.js), its twin is painted anew
   if (home) main.addEventListener('home-glass', (e) => {
     for (const t of tiles) if (e.detail.contains(t.el) || t.el.contains(e.detail)) evict(t);
     dirty = true; queueIdle(); wake();
   });
-  // the new home: the hero's glass turned (home-glass.js): a twin with live layers that is in the bend is drawn anew
   if (home) main.addEventListener('home-glass-tick', () => {
     if (!armed || off || lost || !shown) return;
     const sy = window.scrollY, fadeTop = H * (1 - P.zone) - FADE;
     for (const t of tiles) if (t.more && t.ready && t.top - sy + t.h > fadeTop && t.top - sy < H) { dirty = true; wake(); return; }
   });
-  // the live cover's loop has a new frame (live-cover.js): a cover in the bend is drawn anew
   if (home) main.addEventListener('lc-tick', (e) => {
     if (!armed || off || lost || !shown) return;
     const t = byEl.get(e.detail), sy = window.scrollY, fadeTop = H * (1 - P.zone) - FADE;
     if (t && t.ready && t.top - sy + t.h > fadeTop && t.top - sy < H) { dirty = true; wake(); }
   });
-  // keyboard: a link or control reached with Tab that lands in the bend is lifted above it
-  // only real controls: <main> itself takes focus from a plain click (tabindex -1 for the skip link), and lifting it
-  // threw the page to its bottom (Chromium) or top (Safari sync); designer, 2026-10-25
   const CONTROL = 'a[href], button, input, select, textarea, summary, [role="button"], [tabindex]:not([tabindex="-1"])';
-  // the fixed nav at the top: a lifted control stops 12 px below it (review 12, block 2: a tall picture lifted out of the
-  // bend went under the nav, its focus ring hidden there); 0 when the nav is not at the top
   const navEl = document.querySelector('.h-nav-in');
   const navBottom = () => { const b = navEl ? navEl.getBoundingClientRect().bottom : 0; return b > 0 && b < H / 2 ? b : 0; };
   document.addEventListener('focusin', (e) => {
@@ -973,16 +855,13 @@
     requestAnimationFrame(() => {
       const r = e.target.getBoundingClientRect();
       const lim = H * (1 - P.zone) - FADE - 12;
-      // keyboard focus is also kept clear of the nav: Shift+Tab leaves a control at the top edge and a tall picture is
-      // centred, both under it; focus from a click lifts as before
       let kb = true;
-      try { kb = e.target.matches(':focus-visible'); } catch (x) { /* an old browser: treat it as the keyboard */ }
+      try { kb = e.target.matches(':focus-visible'); } catch (x) {   }
       const top = (kb ? navBottom() : 0) + 12;
-      // in sync the browser cannot bring a focused link into view by itself: above the window, or anywhere below
       if (sync && !off && r.top < (kb ? top : 0)) window.scrollBy(0, r.top - top);
       else if (kb && r.top < top && r.bottom > 0) window.scrollBy(0, r.top - top);
       else if (r.bottom > lim && (r.top < H || (sync && !off))) {
-        const up = kb ? Math.min(r.bottom - lim, r.top - top) : r.bottom - lim;   // out of the bend, never under the nav
+        const up = kb ? Math.min(r.bottom - lim, r.top - top) : r.bottom - lim;
         if (up > 0) window.scrollBy(0, up);
       }
     });

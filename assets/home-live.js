@@ -1,24 +1,3 @@
-// home-live.js: the live glass of the new home page (REDESIGN_HOME.md, stage 5; the designer, 2026-10-22: «курсор
-// работал как преломление под кликабельными областями»). Two pieces of glass move over the page and refract it:
-// - the navigation (two Tab Bars, fixed at the top): the page scrolling under it is bent at the bevel, red and blue
-//   come apart, a light rim, with Figma's GLASS numbers for the nav (tokens.css); a soft frost and a denser tint in the
-//   middle keep the page's text from reading behind the labels (FROST); the keys' background blur stays CSS;
-// - the cursor: the Figma arrow is the system cursor (home.css); over anything clickable (links, buttons, the case
-//   cards, the nav keys; not the list rows, whose letters flip) a 120 px lens grows round it in ~180 ms and refracts what it is over, moving
-//   with the pointer (no easing on the position; the morph eases). It has no edge (designer, 2026-10-22: «надо сделать
-//   так, чтобы границы круга не были видны вообще (надо настроить как-то преломление не ровно)»): the bend grows from
-//   nothing at the rim to the middle and back, smooth all the way, its reach and strength uneven round the circle (a few
-//   soft lobes that drift as the pointer travels), no tint, no rim light, and the last part fades into the page.
-//   Over text (buttons, links, a card's title) it bends far less, so the label stays readable (review 12, 4.1; LQ).
-// Both draw through lens.js (D-56): its twins of the page blocks, its WebGL context and its canvas (on this page it
-// covers the window), its safety: off for the session on a slow device, the plain page while the context is lost,
-// nothing without WebGL. Each frame: the twins under the nav are drawn flat into a texture, the glass is drawn from it
-// into the canvas under the nav's text (the text stays DOM); the cursor the same over its own small texture, which also
-// holds the nav's glass where the two overlap. Frames only while something moves (scroll, pointer, morph, the hero's
-// turn); nothing while idle. The glass model is that of home-glass.js (bevel, dispersion, rim).
-// Phones and tablets, reduced motion, reduced transparency and browsers without the twins keep the CSS glass of
-// home.css and the system cursor. Tuning: ?live=0 (off), ?live=nav or ?live=cursor (one of the two); ?cursor= (LQ),
-// ?frost= (FROST), ?shape=, ?morph= below.
 (() => {
   const body = document.body, main = document.querySelector('main.h-main');
   if (!body.classList.contains('home') || !main) return;
@@ -29,7 +8,7 @@
     || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
   if (touch) return;
   const fine = window.matchMedia('(pointer: fine)').matches;
-  if (fine && mode !== 'nav') body.classList.add('h-arrow');   // the Figma arrow; the lens below needs the twins
+  if (fine && mode !== 'nav') body.classList.add('h-arrow');
   if (window.matchMedia('(prefers-reduced-transparency: reduce)').matches) return;
   const api = window.__homeLens;
   if (!api) return;
@@ -39,7 +18,6 @@
   const cursorOn = fine && mode !== 'nav';
   if (!pills.length && !cursorOn) return;
 
-  // ------------------------------------------------------------------ parameters (tokens.css, the fit of home-glass.js)
   const cs = getComputedStyle(body);
   const num = (n, d) => { const x = parseFloat(cs.getPropertyValue(n)); return isNaN(x) ? d : x; };
   const param = (k, d) => ({
@@ -47,7 +25,7 @@
     disp: num(`--home-glass-${k}-dispersion`, d[2]), angle: num(`--home-glass-${k}-light-angle`, d[3]),
     light: num(`--home-glass-${k}-light-intensity`, d[4]),
   });
-  const P = { nav: param('nav', [0.46, 32, 0.21, -45, 0.3]) };   // the cursor lens has its own model (LQ below)
+  const P = { nav: param('nav', [0.46, 32, 0.21, -45, 0.3]) };
   const T = { gain: 0.92, power: 3, rim: 0.3, cap: 0.5 };
   const rgba = (c) => {
     const m = /rgba?\(([^)]+)\)/.exec(c || '');
@@ -57,70 +35,48 @@
   };
   const bg = rgba(cs.backgroundColor);
   const navTint = pills.length ? rgba(getComputedStyle(pills[0]).backgroundColor) : [1, 1, 1, 0.7];
-  // the lens (Figma 96 px; the designer asked for it «немного больше», 2026-10-22), and how far its centre sits up-left
-  // of the arrow's tip (Figma canvas)
   const LENS = 120, OFF = 9;
-  const slow = Number(qs.get('morph')) || 1;                   // ?morph=10: the morph ten times slower, for the eye
-  const GROW = 180 * slow, SHRINK = 150 * slow;                // ms: the morph
-  const PAD = 16;                     // px of page round a piece in its backdrop texture (room for the frost's blur)
-  // the nav's frost (Figma's glass had a frost, blur radius 1; review 12, 4.2: page text magnified behind the labels
-  // competed with them): the backdrop is blurred (Gaussian, `blur` css px) and laid over the refracted page, fully in
-  // the middle of the pill and `edge` of it at the rim, so the bevel keeps its bend and colour split; the tint goes from
-  // the CSS tint (0.7) at the rim to `tint` in the middle. The page still moves under it. ?frost=blur,tint,edge, ?frost=0 off
+  const slow = Number(qs.get('morph')) || 1;
+  const GROW = 180 * slow, SHRINK = 150 * slow;
+  const PAD = 16;
   const FROST = { blur: 5, tint: 0.8, edge: 0.75 };
   if (qs.get('frost')) {
     const [a, b, c] = qs.get('frost').split(',').map(Number);
     if (a >= 0) FROST.blur = a; if (b >= 0) FROST.tint = b; if (c >= 0) FROST.edge = c;
-    if (qs.get('frost') === '0') FROST.tint = -1;   // off: the CSS tint all over, as before
+    if (qs.get('frost') === '0') FROST.tint = -1;
   }
   const TRIG = 'a, button, [role="button"], summary, label, input, select, textarea, .h-case, .h-row, .h-key, .h-btn';
-  // the cursor lens: reach (× the lens radius), pull (× the radius), unevenness, colour split, and the pull over text
-  // targets; ?cursor=reach,pull,lobes,split,text (all five, e.g. ?cursor=0.92,0.22,0.6,0.6,0.06)
-  // - pull 0.22: the designer's pick (letters may fold a little), over pictures: the case covers, the media of a case;
-  // - text 0.06: over buttons, links in running text, «Next case», the file rows and a card's title and description
-  //   (review 12, 4.1: at 0.22 «Email me» read as «Em ai/ me»); the label stays readable, the glass still moves.
-  //   Between a cover and its title the strength eases over the morph's time (TEXT below)
   const LQ = { reach: 0.92, pull: 0.22, lobes: 0.6, split: 0.6, text: 0.06 };
   if (qs.get('cursor')) {
     const [a, b, c, d, t] = qs.get('cursor').split(',').map(Number);
     if (a > 0) LQ.reach = a; if (b >= 0) LQ.pull = b; if (c >= 0) LQ.lobes = c; if (d >= 0) LQ.split = d; if (t >= 0) LQ.text = t;
   }
-  // text targets (LQ.text); an inline link (in a paragraph, a quote, the contact line) counts too. A case card is one link
-  // over its cover and text, so there the pointer decides: over the card's text block (.h-case-text) it is text
   const TEXT = '.h-btn, .h-case-text, .pg-next, .pg-file, .pg-page, summary';
-  const DRIFT = 0.015;                // rad of the lobes' drift per px the pointer travels (still pointer: still lens)
-  // the lens' shape (designer, 2026-10-22: «линза курсора была более динамичной, сейчас это чистый круг, можно попробовать
-  // разные формы»); ?shape= to try the others:
-  // - drop: stretches along the pointer's motion and trails a tail, then settles like jelly when it stops;
-  // - blob: deep lobes that keep flowing, even while the pointer rests;
-  // - squircle: a rounded square that turns toward the motion;
-  // - circle, the default (the designer's pick after trying them, 2026-10-22: «давай круг»): the lens of before.
+  const DRIFT = 0.015;
   const SHAPES = { circle: 0, drop: 1, blob: 2, squircle: 3 };
   const SHAPE = SHAPES[qs.get('shape')] !== undefined ? SHAPES[qs.get('shape')] : SHAPES.circle;
-  const JELLY = { k: 260, c: 15 };    // the spring between the pointer's speed and the shape: stiffness, damping (a little overshoot)
-  const CPAD = 92;                    // px of page round the lens in its backdrop: room for the stretch and the tail
+  const JELLY = { k: 260, c: 15 };
+  const CPAD = 92;
 
-  // ------------------------------------------------------------------ WebGL, in lens.js's context
   const VS = `
     attribute vec2 aPos;
-    uniform vec4 uRect;            // where to draw: left, top, width, height (css px of the target, y down)
-    uniform vec2 uRes;             // the target, css px
+    uniform vec4 uRect;
+    uniform vec2 uRes;
     varying vec2 vUv;
     void main() {
       vUv = aPos;
       vec2 p = uRect.xy + aPos * uRect.zw;
       gl_Position = vec4(p.x / uRes.x * 2.0 - 1.0, 1.0 - p.y / uRes.y * 2.0, 0.0, 1.0);
     }`;
-  // the glass of home-glass.js, over a backdrop that was drawn into a texture (so rows run bottom-up: flipped here)
   const FS = `
     precision highp float;
-    uniform sampler2D tMap, tSoft; // the backdrop, and the same blurred (the frost)
-    uniform vec2 uSize;            // the piece, css px
+    uniform sampler2D tMap, tSoft;
+    uniform vec2 uSize;
     uniform float uRadius;
-    uniform vec2 uOrigin, uMap;    // where the piece lies in the backdrop, and the backdrop's size (css px)
+    uniform vec2 uOrigin, uMap;
     uniform float uDepth, uRefr, uDisp, uAngle, uLight, uGain, uPower, uRim, uCap;
     uniform vec4 uTint;
-    uniform vec3 uFrost;           // share of the blurred backdrop at the rim and in the middle; the tint's alpha in the middle
+    uniform vec3 uFrost;
     varying vec2 vUv;
     float box(vec2 p, vec2 h, float r) {
       vec2 q = abs(p) - h + r;
@@ -143,7 +99,7 @@
       vec3 k = vec3(1.0 + DISP * uDisp, 1.0, 1.0 - DISP * uDisp);
       vec2 at = uOrigin + vUv * uSize;
       vec3 col = vec3(look(at - n * s * k.r).r, look(at - n * s * k.g).g, look(at - n * s * k.b).b);
-      float mid = smoothstep(0.0, depth, d);                    // 0 at the rim … 1 along the middle of the pill
+      float mid = smoothstep(0.0, depth, d);
       float fr = mix(uFrost.x, uFrost.y, mid);
       if (fr > 0.0) col = mix(col, vec3(soft(at - n * s * k.r).r, soft(at - n * s * k.g).g, soft(at - n * s * k.b).b), fr);
       col = mix(col, uTint.rgb, mix(uTint.a, uFrost.z, mid));
@@ -154,53 +110,50 @@
       col += uLight * uRim * (up * outer + 0.6 * max(-lit, 0.0) * max(-lit, 0.0) * inner);
       gl_FragColor = vec4(clamp(col, 0.0, 1.0) * cover, cover);
     }`.replace(/DISP/g, '0.1');
-  // the cursor lens without an edge: a smooth bulge, uneven round the circle, fading out at its reach
   const LIQ = `
     precision highp float;
     uniform sampler2D tMap;
-    uniform vec2 uSize;            // the region round the lens, css px (its backdrop texture covers exactly it)
+    uniform vec2 uSize;
     uniform float uR, uS, uT, uLobes, uDisp, uShape;
-    uniform vec3 uMove;            // the pointer's direction (x, y) and speed, px per ms, after the jelly spring
+    uniform vec3 uMove;
     varying vec2 vUv;
     vec4 look(vec2 at) { vec2 uv = at / uSize; return texture2D(tMap, vec2(uv.x, 1.0 - uv.y)); }
     void main() {
       vec2 at = vUv * uSize;
       vec2 v = at - uSize * 0.5;
       float sp = min(uMove.z, 2.5);
-      vec2 q = vec2(dot(v, uMove.xy), dot(v, vec2(-uMove.y, uMove.x)));   // along the motion, across it
+      vec2 q = vec2(dot(v, uMove.xy), dot(v, vec2(-uMove.y, uMove.x)));
       float lob = uLobes;
       bool drop = uShape > 0.5 && uShape < 1.5, blob = uShape > 1.5 && uShape < 2.5, sq = uShape > 2.5;
-      float sd = min(sp, 1.0);                                   // an ordinary hand move is 0.5–1.5 px per ms
-      if (drop) { float st = 1.0 + 0.7 * sd; q = vec2(q.x / st, q.y * sqrt(st)); }   // up to 1.7× longer along, thinner across
+      float sd = min(sp, 1.0);
+      if (drop) { float st = 1.0 + 0.7 * sd; q = vec2(q.x / st, q.y * sqrt(st)); }
       if (blob) lob = uLobes * 2.6;
       float phi = atan(q.y, q.x);
       float r = sq ? pow(pow(abs(q.x), 6.0) + pow(abs(q.y), 6.0), 1.0 / 6.0) * 1.08 : length(q);
       float R = uR * (1.0 + lob * (0.09 * sin(2.0 * phi + uT) + 0.06 * sin(3.0 * phi - 1.3 * uT + 1.7) + 0.04 * sin(5.0 * phi + 0.7 * uT + 0.4)));
-      if (drop) R *= 1.0 + 0.5 * sd * smoothstep(0.2, 1.0, -cos(phi));     // the tail trails behind, up to 1.5×
+      if (drop) R *= 1.0 + 0.5 * sd * smoothstep(0.2, 1.0, -cos(phi));
       float x = length(q) > 0.0 ? r / max(R, 0.001) : 0.0;
       if (x >= 1.0) discard;
       float m = 1.0 + uLobes * (0.35 * sin(2.0 * phi - 0.8 * uT + 1.0) + 0.25 * sin(4.0 * phi + 1.1 * uT + 2.3));
-      float g = 16.0 * x * x * (1.0 - x) * (1.0 - x);          // 0 at the middle and at the reach, flat at both, 1 between
+      float g = 16.0 * x * x * (1.0 - x) * (1.0 - x);
       float s = uS * g * max(m, 0.0);
       vec2 n = v / max(length(v), 0.001);
       vec3 k = vec3(1.0 + 0.1 * uDisp, 1.0, 1.0 - 0.1 * uDisp);
       vec3 col = vec3(look(at - n * s * k.r).r, look(at - n * s * k.g).g, look(at - n * s * k.b).b);
-      float a = 1.0 - smoothstep(0.82, 1.0, x);                 // the last part fades into the page itself
+      float a = 1.0 - smoothstep(0.82, 1.0, x);
       gl_FragColor = vec4(col * a, a);
     }`;
   const BLIT = `
     precision mediump float;
     uniform sampler2D tMap;
-    uniform vec4 uUv;              // the part of the texture: origin and size, texture space
+    uniform vec4 uUv;
     varying vec2 vUv;
     void main() { gl_FragColor = texture2D(tMap, uUv.xy + vUv * uUv.zw); }`;
-  // the frost: one pass of a Gaussian blur (25 taps over ±3 sigma) along uStep, a whole texture into another of the
-  // same proportions (the rows keep their order: both are read and written by the target's own pixel)
   const BLUR = `
     precision highp float;
     uniform sampler2D tMap;
-    uniform vec2 uPx;              // the target, device px
-    uniform vec2 uStep;            // one tap (sigma / 4) along the pass, texture space
+    uniform vec2 uPx;
+    uniform vec2 uStep;
     varying vec2 vUv;
     void main() {
       vec2 uv = gl_FragCoord.xy / uPx;
@@ -230,7 +183,7 @@
     for (const n of names) o[n] = gl.getUniformLocation(p, n);
     return o;
   }
-  function fbo(w, h) {                                 // a texture to draw into, w × h device px
+  function fbo(w, h) {
     const tex = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -261,7 +214,7 @@
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]), gl.STATIC_DRAW);
     fboA = fboB = fboC = fboH = fboV = null; scale = 0;
   }
-  function target(f, w, h, s) {                        // bind a texture of at least w × h css px to draw into (s: px per css px)
+  function target(f, w, h, s) {
     const pw = Math.ceil(w * (s || scale)), ph = Math.ceil(h * (s || scale));
     if (!f || f.w !== pw || f.h !== ph) { if (f) { gl.deleteFramebuffer(f.fb); gl.deleteTexture(f.tex); } f = fbo(pw, ph); }
     gl.bindFramebuffer(gl.FRAMEBUFFER, f.fb);
@@ -275,8 +228,6 @@
     gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
     gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
   }
-  // the glass of a piece: from its backdrop texture (map, css px; the piece at origin in it) to a box on the target
-  // (soft: the backdrop blurred, for the frost; null: no frost)
   function glass(tex, soft, map, origin, box, radius, p, tint, res, k) {
     begin(G);
     gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, soft || tex);
@@ -290,7 +241,6 @@
     gl.uniform4f(G.uTint, tint[0], tint[1], tint[2], tint[3]);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
-  // the cursor lens: from the backdrop of its region onto the same region of the target
   function liquid(tex, reg, radius, phase, move, res) {
     begin(Q);
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -301,7 +251,6 @@
     gl.uniform1f(Q.uShape, SHAPE); gl.uniform3f(Q.uMove, move[0], move[1], move[2]);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
-  // one pass of the frost's blur: texture f into the bound target t, sigma css px along dir; map: the backdrop, css px
   function blur(f, t, map, sigma, dir) {
     begin(Z);
     gl.disable(gl.BLEND);
@@ -312,7 +261,6 @@
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     gl.enable(gl.BLEND);
   }
-  // a texture (all of it, drawn bottom-up) onto a box of the target
   function blit(f, box, res) {
     begin(B);
     gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, f.tex);
@@ -322,8 +270,7 @@
   }
   try { init(); } catch (e) { return; }
 
-  // ------------------------------------------------------------------ the nav: where it is
-  let nav = null;                                      // its box on screen, with PAD, and the pills' boxes within it
+  let nav = null;
   function measure() {
     if (!pills.length) return;
     const r = navIn.getBoundingClientRect();
@@ -337,20 +284,16 @@
     navDirty = true;
   }
 
-  // ------------------------------------------------------------------ state
-  const stat = { nav: 0, cursor: 0, ms: 0 };          // for the checks of stage 5 (window.homeLive)
-  window.homeLive = stat;                             // (stat.jel below: the jelly, for the checks)
-  // k: the morph, 0 arrow … 1 lens; t: the strength, 0 full (LQ.pull) … 1 text (LQ.text), easing toward tt
+  const stat = { nav: 0, cursor: 0, ms: 0 };
+  window.homeLive = stat;
   const cur = { x: -1, y: -1, on: false, k: 0, moved: false, last: 0, phase: 0, since: 0, el: null, t: 0, tt: 0 };
-  const GROW_MS = 800;                // a case cover grows on hover on a 760 ms spring (home.css): the glass redraws meanwhile
-  // the jelly: the pointer's speed (target), the shape's speed following it on a spring, and the direction it last had
+  const GROW_MS = 800;
   const jel = { tx: 0, ty: 0, vx: 0, vy: 0, ax: 0, ay: 0, dir: 0, at: 0, prev: 0 };
   stat.jel = jel;
   let navDirty = true, curDirty = true, lastSy = -1, glassed = false, dead = false;
   const ease = (k) => 1 - Math.pow(1 - k, 3);
   const smooth = (k) => k * k * (3 - 2 * k);
   const pullNow = () => LQ.pull + (LQ.text - LQ.pull) * smooth(cur.t);
-  // is the pointer over a text target? (TEXT above)
   function overText(x, y) {
     if (cur.card) {
       const tx = cur.card.querySelector('.h-case-text');
@@ -359,7 +302,7 @@
     const h = cur.el;
     return !!h && (h.matches(TEXT) || (h.tagName === 'A' && getComputedStyle(h).display === 'inline'));
   }
-  function aim(x, y) {                                 // the strength the lens heads for; kept while it shrinks away
+  function aim(x, y) {
     if (!cur.on) return;
     const to = overText(x, y) ? 1 : 0;
     if (to !== cur.tt) { cur.tt = to; api.wake(); }
@@ -369,7 +312,6 @@
     glassed = on;
     for (const p of pills) p.classList.toggle('glassed', on);
   }
-  // the lens: its centre and the backdrop region round it (css px on screen)
   function lensBox() {
     const cx = cur.x - OFF, cy = cur.y - OFF, d = LENS * ease(cur.k);
     return { cx, cy, d, left: cx - d / 2, top: cy - d / 2, reg: { left: cx - LENS / 2 - CPAD, top: cy - LENS / 2 - CPAD, w: LENS + 2 * CPAD, h: LENS + 2 * CPAD } };
@@ -384,8 +326,8 @@
         const dt = cur.last ? Math.min(now - cur.last, 50) : 0;
         cur.last = now;
         const to = cur.on ? 1 : 0;
-        if (cur.k === 0) cur.t = cur.tt;                         // a lens growing from nothing starts at its strength
-        else if (cur.t !== cur.tt) {                             // cover ↔ title: the strength eases over the morph's time
+        if (cur.k === 0) cur.t = cur.tt;
+        else if (cur.t !== cur.tt) {
           cur.t = cur.tt > cur.t ? Math.min(cur.tt, cur.t + dt / GROW) : Math.max(cur.tt, cur.t - dt / GROW);
           more = true;
         }
@@ -395,17 +337,17 @@
         }
         if (cur.moved) { cur.moved = false; curDirty = true; more = true; }
         if (cur.k > 0 && SHAPE !== SHAPES.circle) {
-          if (now - jel.at > 60) { jel.tx = 0; jel.ty = 0; }        // the pointer rests: the shape settles
+          if (now - jel.at > 60) { jel.tx = 0; jel.ty = 0; }
           const s = dt / 1000;
           jel.ax += (JELLY.k * (jel.tx - jel.vx) - JELLY.c * jel.ax) * s; jel.vx += jel.ax * s;
           jel.ay += (JELLY.k * (jel.ty - jel.vy) - JELLY.c * jel.ay) * s; jel.vy += jel.ay * s;
           const sp = Math.hypot(jel.vx, jel.vy);
           if (sp > 0.05) jel.dir = Math.atan2(jel.vy, jel.vx);
           if (sp > 0.002 || Math.hypot(jel.ax, jel.ay) > 0.002 || jel.tx || jel.ty) more = true;
-          if (SHAPE === SHAPES.blob) { cur.phase += dt * 0.0022; more = true; }   // the blob flows on its own
+          if (SHAPE === SHAPES.blob) { cur.phase += dt * 0.0022; more = true; }
         } else if (cur.k === 0) { jel.vx = jel.vy = jel.ax = jel.ay = jel.tx = jel.ty = 0; }
       }
-      if (now - cur.since < GROW_MS) { navDirty = curDirty = true; more = true; }   // a cover is growing or shrinking
+      if (now - cur.since < GROW_MS) { navDirty = curDirty = true; more = true; }
       const sy = window.scrollY;
       if (sy !== lastSy || moved) { lastSy = sy; navDirty = curDirty = true; more = true; }
       if (!cur.on && cur.k === 0) cur.last = 0;
@@ -419,19 +361,19 @@
       const res = [W, H];
       if (nav) {
         if (navDirty) {
-          fboA = target(fboA, nav.w, nav.h);                       // the page under the nav, flat
+          fboA = target(fboA, nav.w, nav.h);
           gl.clearColor(bg[0], bg[1], bg[2], 1); gl.clear(gl.COLOR_BUFFER_BIT);
           const all = api.drawTwins(nav.left, nav.top, nav.w, nav.h);
           let soft = null;
-          if (FROST.blur > 0) {                                    // the frost: the same, blurred (at 1 px per css px)
+          if (FROST.blur > 0) {
             fboH = target(fboH, nav.w, nav.h, 1); blur(fboA, fboH, [nav.w, nav.h], FROST.blur, [1, 0]);
             fboV = target(fboV, nav.w, nav.h, 1); blur(fboH, fboV, [nav.w, nav.h], FROST.blur, [0, 1]);
             soft = fboV.tex;
           }
-          fboB = target(fboB, nav.w, nav.h);                       // the glass of the two pills
+          fboB = target(fboB, nav.w, nav.h);
           gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
           for (const p of nav.pills) glass(fboA.tex, soft, [nav.w, nav.h], [p.left, p.top], [p.left, p.top, p.w, p.h], p.rad, P.nav, navTint, [nav.w, nav.h]);
-          navDirty = !all;                                         // a twin still being prepared: again next frame
+          navDirty = !all;
           stat.nav++;
         }
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -442,7 +384,7 @@
       if (cursorOn && cur.k > 0 && cur.x >= 0) {
         const L = lensBox();
         if (curDirty) {
-          fboC = target(fboC, L.reg.w, L.reg.h);                   // the page under the lens, and the nav's glass on it
+          fboC = target(fboC, L.reg.w, L.reg.h);
           gl.clearColor(bg[0], bg[1], bg[2], 1); gl.clear(gl.COLOR_BUFFER_BIT);
           api.drawTwins(L.reg.left, L.reg.top, L.reg.w, L.reg.h);
           if (nav && hits(L.reg, nav)) blit(fboB, [nav.left - L.reg.left, nav.top - L.reg.top, nav.w, nav.h], [L.reg.w, L.reg.h]);
@@ -451,7 +393,7 @@
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.viewport(0, 0, api.canvas.width, api.canvas.height);
         liquid(fboC.tex, L.reg, L.d / 2, cur.phase, [Math.cos(jel.dir), Math.sin(jel.dir), Math.hypot(jel.vx, jel.vy)], res);
-        stat.cursor++; stat.pull = pullNow();                    // (the strength drawn last, for the checks)
+        stat.cursor++; stat.pull = pullNow();
       }
       stat.ms += performance.now() - t0;
     },
@@ -460,7 +402,6 @@
     off() { setGlassed(false); dead = true; },
   };
 
-  // ------------------------------------------------------------------ events
   if (cursorOn) {
     window.addEventListener('pointermove', (e) => {
       if (e.pointerType && e.pointerType !== 'mouse') return;
@@ -471,13 +412,12 @@
       }
       jel.prev = e.timeStamp;
       cur.x = e.clientX; cur.y = e.clientY; cur.moved = true;
-      if (cur.card) aim(cur.x, cur.y);                 // within a card: cover or text
+      if (cur.card) aim(cur.x, cur.y);
       if (cur.on || cur.k > 0) api.wake();
     }, { passive: true });
     document.addEventListener('pointerover', (e) => {
       const h = e.target.closest ? e.target.closest(TRIG) : null;
-      // no lens over the outline marks (too small) and the list rows (their letters flip; designer, 2026-10-22)
-      const on = !!h && !h.closest('.h-toc, .h-row, .pg-file, .pg-next');   // file rows and «Next case» have their own blue hover ring (2026-10-25)
+      const on = !!h && !h.closest('.h-toc, .h-row, .pg-file, .pg-next');
       const card = e.target.closest ? e.target.closest('.h-case') : null;
       if (card !== cur.card) { cur.card = card; cur.since = performance.now(); api.wake(); }
       cur.el = on ? h : null;
@@ -486,7 +426,6 @@
     });
     document.documentElement.addEventListener('pointerleave', () => { if (cur.on) { cur.on = false; api.wake(); } });
   }
-  // the live cover's loop has a new frame (live-cover.js): the nav or the lens over that cover is drawn anew
   main.addEventListener('lc-tick', (e) => {
     if (dead) return;
     const r = e.detail.getBoundingClientRect(), b = { left: r.left, top: r.top, w: r.width, h: r.height };
@@ -495,7 +434,6 @@
     if (cursorOn && cur.k > 0 && cur.x >= 0 && hits(b, lensBox().reg)) { curDirty = true; any = true; }
     if (any) api.wake();
   });
-  // the hero's glass turned: the nav or the lens over it is drawn anew
   main.addEventListener('home-glass-tick', () => {
     if (dead) return;
     const panel = main.querySelector('.h-striped');
