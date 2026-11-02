@@ -505,6 +505,11 @@ body.home.ring-a .h-sphere::after { display: none; }
   body.home { --home-pad-button: 12px 16px; }
 }
 
+@media (max-width: 335px) {
+  body.home .h-key { padding: 1px 7px; }
+  body.home .h-nav-in { gap: 4px; }
+}
+
 body.home .h-skip {
   position: fixed; left: max(12px, env(safe-area-inset-left)); top: max(12px, env(safe-area-inset-top)); z-index: 40;
   padding: var(--home-pad-button); border-radius: 999px; background: var(--home-surface-inverse); color: var(--home-text-inverse);
