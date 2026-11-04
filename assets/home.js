@@ -118,3 +118,5 @@ const splitRows = () => {
   }
 };
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(splitRows); else splitRows();
+
+document.addEventListener("touchstart", () => {}, { passive: true });

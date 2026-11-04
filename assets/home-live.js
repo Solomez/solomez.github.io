@@ -51,7 +51,7 @@
     const [a, b, c, d, t] = qs.get('cursor').split(',').map(Number);
     if (a > 0) LQ.reach = a; if (b >= 0) LQ.pull = b; if (c >= 0) LQ.lobes = c; if (d >= 0) LQ.split = d; if (t >= 0) LQ.text = t;
   }
-  const TEXT = '.h-btn, .h-case-text, .pg-next, .pg-file, .pg-page, summary';
+  const TEXT = '.h-btn, .h-case-text, .pg-next, .pg-file, .pg-page, summary, .pg-figure[data-zoom] :is(.pg-media, .vbox)';
   const DRIFT = 0.015;
   const SHAPES = { circle: 0, drop: 1, blob: 2, squircle: 3 };
   const SHAPE = SHAPES[qs.get('shape')] !== undefined ? SHAPES[qs.get('shape')] : SHAPES.circle;

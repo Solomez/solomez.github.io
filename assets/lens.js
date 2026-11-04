@@ -492,8 +492,8 @@
             else { let last = -1; t.poll = () => { if (v.currentTime !== last) { last = v.currentTime; t.fresh = true; } }; }
             v.addEventListener('play', wake);
           }
-        } else if (v.poster) {
-          const im = new Image(); im.src = v.poster; await im.decode().catch(() => {});
+        } else if (v.poster || v.dataset.poster) {
+          const im = new Image(); im.src = v.poster || v.dataset.poster; await im.decode().catch(() => {});
           if (!im.naturalWidth) return;
           t.nw = im.naturalWidth; t.nh = im.naturalHeight; t.src = im; src = shrink(im, t.nw, t.nh, t.w);
         } else return;

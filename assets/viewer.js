@@ -17,7 +17,7 @@
     const cap = capEl ? capEl.textContent.replace(/\s+/g, ' ').trim() : '';
     if (vid) {
       const s = vid.querySelector('source');
-      return { trig, kind: 'video', el: vid, cap, src: (s && s.src) || vid.currentSrc || vid.src, poster: vid.poster,
+      return { trig, kind: 'video', el: vid, cap, src: (s && s.src) || vid.currentSrc || vid.src, poster: vid.poster || vid.dataset.poster,
                w: +vid.getAttribute('width') || 16, h: +vid.getAttribute('height') || 9 };
     }
     if (img) return { trig, kind: 'img', el: img, cap, alt: img.alt || cap, full: img.dataset.full || '',
@@ -178,6 +178,11 @@
     const it = list[idx], frame = cur;
     frame.querySelectorAll('video').forEach((v) => {
       if (it.kind === 'video' && v.currentTime) try { it.el.currentTime = v.currentTime; } catch (e) {   }
+      if (it.kind === 'video') {
+        const f = it.el.closest('.b-video');
+        if (v.paused) { it.el.dataset.held = '1'; if (f) f.classList.add('stopped'); }
+        else { delete it.el.dataset.held; if (!held.includes(it.el)) held.push(it.el); }
+      }
       v.pause();
     });
     let r = it.trig.getBoundingClientRect();
@@ -218,7 +223,8 @@
   const boxOf = (f) => ({ x: parseFloat(f.style.left), y: parseFloat(f.style.top), w: parseFloat(f.style.width), h: parseFloat(f.style.height) });
   const natW = (it) => Math.min(it.w, it.full ? 2400 : 1408);
   function zoomSize(it, L) {
-    const w = Math.max(natW(it) / (window.devicePixelRatio || 1), L.w);
+    const dpr = window.devicePixelRatio || 1, k = matchMedia('(pointer: coarse)').matches ? Math.min(dpr, 2) : dpr;
+    const w = Math.max(natW(it) / k, L.w);
     return { w: Math.round(w), h: Math.round((w * it.h) / it.w) };
   }
   const canZoom = (it, L) => it.kind === 'img' && zoomSize(it, L).w > L.w * 1.15;
@@ -313,7 +319,7 @@
     t.tabIndex = 0;
     t.setAttribute('role', 'button');
     t.setAttribute('aria-haspopup', 'dialog');
-    t.setAttribute('aria-label', (it.kind === 'video' ? 'Open the video larger' : 'Open the picture larger') + (it.cap ? ': ' + it.cap : ''));
+    t.setAttribute('aria-label', it.kind === 'video' ? 'Open the video larger' : 'Open the picture larger');
     if (it.kind === 'video') it.el.tabIndex = -1;
     t.addEventListener('mousedown', (e) => { if (e.button === 0) e.preventDefault(); });
     t.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); viaKey = false; show(it); });

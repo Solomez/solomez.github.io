@@ -25,7 +25,9 @@
 
 (() => {
   const vids = [...document.querySelectorAll('.b-video video')];
-  if (!vids.length || !('IntersectionObserver' in window)) return;
+  const poster = (v) => { if (v.dataset.poster && !v.getAttribute('poster')) v.poster = v.dataset.poster; };
+  if (!vids.length) return;
+  if (!('IntersectionObserver' in window)) { vids.forEach(poster); return; }
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
   const save = !!(navigator.connection && navigator.connection.saveData);
   const auto = () => !calm.matches && !save;
@@ -36,7 +38,7 @@
     if (p && p.catch) p.catch(() => stop(v, true));
   };
   const near = new IntersectionObserver((es) => es.forEach((e) => {
-    if (e.isIntersecting && e.target.preload !== 'auto') { e.target.preload = 'auto'; near.unobserve(e.target); }
+    if (e.isIntersecting) { poster(e.target); if (e.target.preload !== 'auto') e.target.preload = 'auto'; near.unobserve(e.target); }
   }), { rootMargin: '800px 0px' });
   const seen = new IntersectionObserver((es) => es.forEach((e) => {
     const v = e.target;

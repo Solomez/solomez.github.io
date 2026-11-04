@@ -263,7 +263,7 @@ body.home .h-key:hover::after { opacity: 0.06; }
 body.home .h-key:active { transform: var(--home-press); }
 body.home .h-key:focus-visible { outline-offset: 0; }
 
-body.home .h-toc { position: fixed; top: 160px; right: 8px; z-index: 20; width: 44px; height: 86px; }
+body.home .h-toc { position: fixed; top: 160px; right: 8px; z-index: 20; width: 44px; height: 100px; }
 body.home .h-mark { position: absolute; height: 2px; border-radius: var(--home-radius-toc); background: var(--home-toc-idle); }
 body.home .h-mark.l2 { left: 16px; width: 16px; }
 body.home .h-mark.l3 { left: 22px; width: 10px; }
@@ -274,6 +274,7 @@ body.home .h-mark:nth-child(4) { top: 42px; }
 body.home .h-mark:nth-child(5) { top: 56px; }
 body.home .h-mark:nth-child(6) { top: 70px; }
 body.home .h-mark:nth-child(7) { top: 84px; }
+body.home .h-mark:nth-child(8) { top: 98px; }
 body.home .h-mark::before { content: ""; position: absolute; top: -6px; bottom: -6px; left: -12px; right: -12px; }
 body.home .h-mark.l3::before { left: -15px; right: -15px; }
 body.home .h-mark:hover { background: var(--home-toc-hover); }
@@ -375,7 +376,7 @@ body.home .h-quote {
   display: flex; flex-direction: column; gap: 12px; border-radius: var(--home-radius-contact); background: var(--home-surface);
 }
 body.home .h-quote blockquote { margin: 0; font: var(--home-type-desc); color: var(--home-text); }
-body.home .h-quote figcaption p { margin: 0; font: var(--home-type-small); color: var(--home-text-muted); }
+body.home .h-quote figcaption p { margin: 0; font: var(--home-type-small); color: var(--home-text-muted); text-wrap: pretty; }
 body.home .h-quote a { color: inherit; text-decoration: underline; text-decoration-color: currentColor; }
 body.home .h-quote a:hover { opacity: 0.7; }
 body.home .h-quotes { width: var(--home-column); max-width: 100%; display: flex; flex-direction: column; gap: 16px; }
@@ -498,6 +499,9 @@ body.home.ring-a .h-sphere::after { display: none; }
   body.home .h-row { height: 44px; }
 
   body.home .h-quote figcaption { order: -1; }
+}
+@media (max-width: 389px) {
+  body.home { --home-pad-button: 12px 18px; }
 }
 @media (max-width: 374px) {
   body.home .h-striped { --hs: 180px; }
