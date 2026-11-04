@@ -9,6 +9,8 @@
 
   const SPIN_PERIOD = (Number(qs.get('spin')) || 20) * 1000;
   const SPIN_RAMP = 1200;
+  const SPIN_HOLD = 5000;
+  const SPIN_STOP = 1800;
   let RING = (qs.get('ring') || 'a1').toLowerCase();
   if (RING === 'a2') RING = 'a';
   const FIELD = { R1: 165, S1: 24, R2: 138, S2: 36, lobes: 0.5, tint: 1 };
@@ -453,28 +455,38 @@
   const live = (cv) => { cv.classList.add('live'); cv.glassV = stamp; };
   const tickEvent = new Event('home-glass-tick');
 
-  const turn = { angle: 0, speed: 0, raf: 0, last: 0, seen: false };
+  const turn = { angle: 0, speed: 0, raf: 0, last: 0, seen: false, until: 0 };
   function tick(now) {
     turn.raf = 0;
     if (!hero || !turn.seen || document.hidden) { turn.last = 0; return; }
     const dt = turn.last ? Math.min(now - turn.last, 50) : 0;
     turn.last = now;
-    turn.speed = Math.min(1, turn.speed + dt / SPIN_RAMP);
+    const on = now < turn.until;
+    turn.speed = on ? Math.min(1, turn.speed + dt / SPIN_RAMP) : Math.max(0, turn.speed - dt / SPIN_STOP);
     const k = turn.speed * turn.speed * (3 - 2 * turn.speed);
     turn.angle = (turn.angle + (k * 2 * Math.PI * dt) / SPIN_PERIOD) % (2 * Math.PI);
     const f0 = performance.now();
     try { drawHero(turn.angle); } catch (e) { return; }
     stat.frames++; stat.fms += performance.now() - f0;
     main.dispatchEvent(tickEvent);
+    if (!on && turn.speed === 0) { turn.last = 0; return; }
     turn.raf = requestAnimationFrame(tick);
   }
   function go() {
     if (noMotion || qs.get('spin') === '0' || turn.raf || !hero || !turn.seen || document.hidden) return;
+    if (!turn.until) turn.until = performance.now() + SPIN_HOLD;
+    if (performance.now() >= turn.until && turn.speed === 0) return;
     turn.raf = requestAnimationFrame(tick);
+  }
+  function wake() {
+    if (!turn.until) return;
+    turn.until = Math.max(turn.until, performance.now() + SPIN_HOLD);
+    go();
   }
   {
     const panel = main.querySelector('.h-striped');
     if (panel) new IntersectionObserver(([e]) => { turn.seen = e.isIntersecting; go(); }).observe(panel);
+    if (panel) panel.addEventListener('pointerenter', wake);
     document.addEventListener('visibilitychange', go);
   }
 

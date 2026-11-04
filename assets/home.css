@@ -201,8 +201,8 @@ body.home {
 
 body.home {
   --home-chip-tint: var(--home-chip-tint-figma);
-  --home-toc-idle: rgba(55, 53, 47, 0.3);
-  --home-toc-hover: rgba(55, 53, 47, 0.55);
+  --home-toc-idle: rgba(55, 53, 47, 0.55);
+  --home-toc-hover: rgba(55, 53, 47, 0.75);
   --home-focus: #2383e2;
   --home-press: scale(0.96);
   --home-fast: 150ms;
@@ -263,19 +263,19 @@ body.home .h-key:hover::after { opacity: 0.06; }
 body.home .h-key:active { transform: var(--home-press); }
 body.home .h-key:focus-visible { outline-offset: 0; }
 
-body.home .h-toc { position: fixed; top: 160px; right: 8px; z-index: 20; width: 44px; height: 100px; }
+body.home .h-toc { position: fixed; top: 160px; right: 8px; z-index: 20; width: 44px; height: 170px; }
 body.home .h-mark { position: absolute; height: 2px; border-radius: var(--home-radius-toc); background: var(--home-toc-idle); }
 body.home .h-mark.l2 { left: 16px; width: 16px; }
 body.home .h-mark.l3 { left: 22px; width: 10px; }
 body.home .h-mark:nth-child(1) { top: 0; }
-body.home .h-mark:nth-child(2) { top: 14px; }
-body.home .h-mark:nth-child(3) { top: 28px; }
-body.home .h-mark:nth-child(4) { top: 42px; }
-body.home .h-mark:nth-child(5) { top: 56px; }
-body.home .h-mark:nth-child(6) { top: 70px; }
-body.home .h-mark:nth-child(7) { top: 84px; }
-body.home .h-mark:nth-child(8) { top: 98px; }
-body.home .h-mark::before { content: ""; position: absolute; top: -6px; bottom: -6px; left: -12px; right: -12px; }
+body.home .h-mark:nth-child(2) { top: 24px; }
+body.home .h-mark:nth-child(3) { top: 48px; }
+body.home .h-mark:nth-child(4) { top: 72px; }
+body.home .h-mark:nth-child(5) { top: 96px; }
+body.home .h-mark:nth-child(6) { top: 120px; }
+body.home .h-mark:nth-child(7) { top: 144px; }
+body.home .h-mark:nth-child(8) { top: 168px; }
+body.home .h-mark::before { content: ""; position: absolute; top: -11px; bottom: -11px; left: -12px; right: -12px; }
 body.home .h-mark.l3::before { left: -15px; right: -15px; }
 body.home .h-mark:hover { background: var(--home-toc-hover); }
 body.home .h-mark.on { background: var(--home-toc-active); }
@@ -491,6 +491,7 @@ body.home.ring-a .h-sphere::after { display: none; }
   body.home .h-case { border-radius: var(--home-radius-cover) var(--home-radius-cover) 12px 12px; }
   body.home .h-case:has(.h-case-link:focus-visible) { outline-offset: 6px; }
   body.home .h-chips { right: var(--home-chip-offset); flex-wrap: wrap; }
+  body.home .h-chip { --home-chip-tint: rgba(0, 0, 0, 0.62); height: 28px; padding: 4px 10px; font: 500 14px/20px var(--home-font); }
   body.home .h-hl { padding: 2.2px 2.7px; margin: 0 -2.7px; background-position: 0 3.5px; background-size: 100% 17px; white-space: nowrap; }
 
   body.home .h-contact { padding-bottom: 32px; }

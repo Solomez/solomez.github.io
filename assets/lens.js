@@ -28,6 +28,8 @@
   const FX = 0.012;
   const FADE = 40;
   const GATE = 300;
+  const REST_HOLD = 700;
+  const REST_FADE = 600;
 
   const canvas = document.createElement('canvas');
   const curtain = document.createElement('div');
@@ -583,7 +585,7 @@
 
   let W = 0, H = 0, lastW = 0, cTop = 0, cH = 0;
   let dirty = true, running = false, off = false, lost = false, shown = false;
-  let armed = false, armT = 0;
+  let armed = false, armT = 0, gv = 0, restT = 0;
   let lastT = 0, lastY = -1, k = 0, kv = 0, vel = 0, still = 2;
   let movingMs = 0, movingFrames = 0;
 
@@ -732,8 +734,17 @@
       hooks.draw(now);
       return want;
     }
-    const g = Math.min(1, (now - armT) / GATE);
-    const gate = g * g * (3 - 2 * g);
+    if (moved) restT = 0; else if (!restT) restT = now;
+    const resting = restT && now - restT > REST_HOLD;
+    gv = resting ? Math.max(0, gv - dt / REST_FADE) : Math.min(1, gv + dt / GATE);
+    if (resting && gv === 0) {
+      armed = false; hideCurtain();
+      if (hooks) own();
+      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+      if (hooks) hooks.draw(now);
+      return want;
+    }
+    const gate = gv * gv * (3 - 2 * gv);
 
     const zoneTop = H * (1 - P.zone);
     const fadeTop = zoneTop - FADE;
@@ -747,7 +758,7 @@
       if (!t.ready) { allReady = false; if (!t.busy) prepare(t); }
       if (t.kind === 'video' && t.src === t.el && !t.el.paused) { video = true; if (t.poll) t.poll(); }
     }
-    const busy = moved || k > 0 || kv !== 0 || video || gate < 1 || want;
+    const busy = moved || k > 0 || kv !== 0 || video || gv < 1 || !resting || want;
     if (!dirty && !busy) return false;
     dirty = false;
     if (hooks) own();
@@ -825,7 +836,7 @@
   }
 
   window.addEventListener('scroll', () => {
-    if (!armed && bend) { armed = true; armT = performance.now(); }
+    if (!armed && bend) { armed = true; armT = performance.now(); gv = 0; restT = 0; }
     wake();
   }, { passive: true });
   let rt = 0;
