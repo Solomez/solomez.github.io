@@ -329,7 +329,7 @@ body.home .h-btn:active { transform: var(--home-press); }
 body.home .h-work { width: var(--home-column); display: flex; flex-direction: column; gap: var(--home-gap-heading); }
 body.home .h-h2 { font: var(--home-type-h2); color: var(--home-text); }
 body.home .h-cards { display: flex; flex-direction: column; gap: var(--home-gap-cards); }
-body.home .h-case { position: relative; display: flex; flex-direction: column; gap: var(--home-gap-card-inner); border-radius: 52px; }
+body.home .h-case { position: relative; display: flex; flex-direction: column; gap: var(--home-gap-card-inner); border-radius: var(--home-radius-cover) var(--home-radius-cover) 16px 16px; }
 body.home .h-cover {
   position: relative; height: 440px; overflow: hidden; isolation: isolate;
   border-radius: var(--home-radius-cover); background: var(--home-cover-bg);
@@ -360,7 +360,7 @@ body.home .h-case-title { font: var(--home-type-title); color: var(--home-text);
 .nw { white-space: nowrap; }
 body.home .h-case-link::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
 body.home .h-case-link:focus-visible { outline: none; }
-body.home .h-case:has(.h-case-link:focus-visible) { outline: 2px solid var(--home-focus); outline-offset: 4px; }
+body.home .h-case:has(.h-case-link:focus-visible) { outline: 2px solid var(--home-focus); outline-offset: 10px; }
 body.home .h-case-desc { font: var(--home-type-desc); color: var(--home-text-secondary); text-wrap: pretty; }
 
 body.home .h-hl {
@@ -487,7 +487,8 @@ body.home.ring-a .h-sphere::after { display: none; }
   }
   body.home .h-card { justify-content: flex-start; gap: 24px; }
   body.home .h-actions { flex-wrap: wrap; }
-  body.home .h-case { border-radius: calc(var(--home-radius-cover) + 4px); }
+  body.home .h-case { border-radius: var(--home-radius-cover) var(--home-radius-cover) 12px 12px; }
+  body.home .h-case:has(.h-case-link:focus-visible) { outline-offset: 6px; }
   body.home .h-chips { right: var(--home-chip-offset); flex-wrap: wrap; }
   body.home .h-hl { padding: 2.2px 2.7px; margin: 0 -2.7px; background-position: 0 3.5px; background-size: 100% 17px; white-space: nowrap; }
 
